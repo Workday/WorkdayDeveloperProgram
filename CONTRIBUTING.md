@@ -1,4 +1,4 @@
-# Contributing to the Workday Use Case Hub
+# Contributing to the Workday Examples Hub
 
 Thanks for helping build the open home for Workday Build examples. Adding an example is deliberately low effort: a folder, two small files, one validation command.
 

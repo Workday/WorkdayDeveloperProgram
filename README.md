@@ -63,7 +63,7 @@ Open the folder you want and follow its README. What "use it" means depends on t
 
 ## All examples
 
-This table is generated from each example's `example.json` by `scripts/validate-examples.mjs`. Do not edit it by hand.
+This table is kept in sync with each example's `example.json` by `scripts/validate-examples.mjs`.
 
 <!-- examples:start -->
 
@@ -77,14 +77,14 @@ This table is generated from each example's `example.json` by `scripts/validate-
 
 ## Contributing
 
-We want your examples, and adding one is deliberately low effort:
+We want your examples, and adding one doesn't take much:
 
 1. Scaffold a folder: `node scripts/new-example.mjs your-example-name`
 2. Drop your artifact in, and fill in the generated `example.json` and README.
 3. Validate: `node scripts/validate-examples.mjs`
 4. Open a pull request. Workday DevRel reviews every submission before merge.
 
-Prefer to do it by hand? No tooling is required. Copy [`examples/_template`](examples/_template) into a new folder (you can even create the files straight from the GitHub web UI), fill in the two files, and open the PR. The index table below can be edited by hand, or a reviewer will regenerate it for you during review.
+Prefer to do it by hand? No tooling is required. Copy [`examples/_template`](examples/_template) into a new folder (you can even create the files straight from the GitHub web UI), fill in the two files, and open the PR. The index table above can be edited by hand, or a reviewer will regenerate it for you during review.
 
 The full guide is in [CONTRIBUTING.md](CONTRIBUTING.md).
 
