@@ -1,0 +1,38 @@
+{
+  "org": "Workday",
+  "repo": "Developer-Relations",
+  "repoUrl": "https://github.com/Workday/Developer-Relations",
+  "pagesUrl": "https://workday.github.io/Developer-Relations",
+  "defaultBranch": "main",
+  "types": [
+    "Extend App",
+    "Integration App",
+    "Orchestration",
+    "Agent Skill",
+    "Reference"
+  ],
+  "components": [
+    "Presentation",
+    "Model",
+    "Orchestration",
+    "Template",
+    "Card",
+    "Business Process",
+    "Graph API",
+    "WQL",
+    "AWS Integration",
+    "3rd-Party Technology"
+  ],
+  "products": [
+    "Workday REST API",
+    "Workday SOAP API",
+    "Workday RaaS",
+    "Workday Extend",
+    "Workday Orchestrate",
+    "Workday Prism Analytics",
+    "Workday Absence Management",
+    "Workday HCM",
+    "Workday Financials",
+    "Workday Payroll"
+  ]
+}
