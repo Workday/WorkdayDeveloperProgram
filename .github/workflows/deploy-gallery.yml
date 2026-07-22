@@ -1,19 +1,20 @@
-# Deploys the optional gallery site (site/) to GitHub Pages.
+# Deploys the gallery site (site/) to GitHub Pages.
 #
-# The gallery is an option, not a dependency: nothing else in this repo
-# relies on it. To go live: enable GitHub Pages in the repo settings
-# (source: GitHub Actions), then run this workflow manually from the
-# Actions tab. When you want automatic deploys on every merge, add a
-# push trigger:
-#
-#   on:
-#     push:
-#       branches: [main]
-#     workflow_dispatch:
+# One-time setup: enable GitHub Pages in the repo settings with
+# "GitHub Actions" as the source. After that, every merge to main that
+# touches the examples, the site, or hub.config.json rebuilds and
+# redeploys the gallery, so new examples show up on their own. The
+# manual trigger stays around for one-off redeploys.
 
 name: Deploy gallery
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "examples/**"
+      - "site/**"
+      - "hub.config.json"
   workflow_dispatch:
 
 permissions:

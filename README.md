@@ -92,7 +92,7 @@ The [`site/`](site) folder holds a gallery that renders every example as a card 
 cd site && npm install && npm run dev
 ```
 
-To publish it, enable GitHub Pages in the repo settings (source: GitHub Actions) and run the "Deploy gallery" workflow from the Actions tab. It rebuilds straight from the `example.json` files, so merged examples appear automatically on the next deploy.
+To publish it, enable GitHub Pages in the repo settings (source: GitHub Actions) once. After that, every merge that touches `examples/`, `site/`, or `hub.config.json` rebuilds and redeploys the gallery automatically, so new examples show up on their own. The "Deploy gallery" workflow can also be run manually from the Actions tab for a one-off redeploy.
 
 ## Community and support
 
