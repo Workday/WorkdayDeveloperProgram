@@ -1,0 +1,46 @@
+---
+import TypeIcon from "./TypeIcon.astro";
+import { withBase } from "../lib/examples.js";
+
+const { example } = Astro.props;
+const detailUrl = withBase(`examples/${example.id}/`);
+const tags = [...new Set([example.type, ...example.components, ...example.products])];
+const searchText = [example.title, example.description, example.id, example.type, ...example.components, ...example.products]
+  .join(" ")
+  .toLowerCase();
+---
+<a
+  href={detailUrl}
+  class="example-card group flex flex-col gap-3 rounded-xl border border-neutral-200 bg-white p-5 transition-colors hover:border-neutral-400 dark:border-neutral-800 dark:bg-neutral-950 dark:hover:border-neutral-500"
+  data-type={example.type}
+  data-components={example.components.join("|")}
+  data-products={example.products.join("|")}
+  data-search={searchText}
+>
+  <div class="flex items-center justify-between">
+    <TypeIcon type={example.type} />
+    <svg
+      class="text-neutral-300 transition group-hover:translate-x-0.5 group-hover:text-neutral-500 dark:text-neutral-700 dark:group-hover:text-neutral-400"
+      viewBox="0 0 16 16"
+      width="16"
+      height="16"
+      aria-hidden="true"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M2 8h11M9 3.5 13.5 8 9 12.5"></path>
+    </svg>
+  </div>
+  <h2 class="text-base font-semibold tracking-tight">{example.title}</h2>
+  <p class="flex-1 text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">{example.description}</p>
+  <div class="flex flex-wrap gap-1.5">
+    {tags.map((tag) => (
+      <span class="rounded-full bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-neutral-600 dark:bg-neutral-900 dark:text-neutral-400">
+        {tag}
+      </span>
+    ))}
+  </div>
+</a>

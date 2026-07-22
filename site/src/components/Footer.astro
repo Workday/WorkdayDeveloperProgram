@@ -1,0 +1,16 @@
+---
+const { contributeUrl } = Astro.props;
+---
+<footer class="border-t border-neutral-200 dark:border-neutral-800">
+  <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 py-8 sm:flex-row">
+    <span class="text-sm text-neutral-500 dark:text-neutral-400">Workday examples and usecases, maintained by Workday DevRel.</span>
+    <a
+      href={contributeUrl}
+      target="_blank"
+      rel="noopener"
+      class="rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-neutral-700 dark:bg-white dark:text-black dark:hover:bg-neutral-200"
+    >
+      Add your example
+    </a>
+</div>
+</footer>

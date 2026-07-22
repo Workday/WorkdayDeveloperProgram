@@ -1,0 +1,21 @@
+---
+const { label, name, options } = Astro.props;
+---
+{options.length > 0 && (
+  <fieldset>
+    <legend class="text-sm font-medium text-neutral-900 dark:text-neutral-100">{label}</legend>
+    <div class="mt-3 space-y-2.5">
+      {options.map((option) => (
+        <label class="flex cursor-pointer items-center gap-2.5 text-sm text-neutral-600 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100">
+          <input
+            type="checkbox"
+            data-filter={name}
+            value={option}
+            class="h-4 w-4 rounded accent-wd-blue"
+          />
+          {option}
+        </label>
+      ))}
+    </div>
+  </fieldset>
+)}

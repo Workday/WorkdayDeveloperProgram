@@ -1,0 +1,18 @@
+---
+const { type } = Astro.props;
+
+const paths = {
+  "Extend App":
+    "M13 5h4a1 1 0 0 1 1 1v4h-2.5a2.5 2.5 0 0 0 0 5H18v4a1 1 0 0 1-1 1h-4v-2.5a2.5 2.5 0 0 0-5 0V20H4a1 1 0 0 1-1-1v-4h2.5a2.5 2.5 0 0 0 0-5H3V6a1 1 0 0 1 1-1h4V2.5a2.5 2.5 0 0 1 5 0V5Z",
+  "Integration App": "M9 7V3M15 7V3M7 7h10v5a5 5 0 0 1-10 0V7ZM12 17v4",
+  "Orchestration": "M5 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm14 0a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM12 21a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM5 7v4a4 4 0 0 0 4 4h1m9-8v4a4 4 0 0 1-4 4h-1",
+  "Agent Skill": "M12 3v3m-5 4a5 5 0 0 1 10 0v5a4 4 0 0 1-4 4h-2a4 4 0 0 1-4-4v-5Zm3 3h.01M14 13h.01M3 12h2m14 0h2",
+  "Reference": "M4 19V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2Zm0 0a2 2 0 0 0 2 2h13M8 7h7"
+};
+const d = paths[type] || paths["Reference"];
+---
+<span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-neutral-200 text-neutral-600 dark:border-neutral-800 dark:text-neutral-400">
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d={d}></path>
+  </svg>
+</span>
