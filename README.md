@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="https://avatars.githubusercontent.com/u/328102?s=200&v=4" width="96" height="96" alt="Workday" />
+
 # Workday Use Case Hub
 
 **A single, open home for Workday Build examples.**
