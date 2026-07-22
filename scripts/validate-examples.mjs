@@ -85,17 +85,26 @@ if (errors.length > 0) {
 
 examples.sort((a, b) => a.title.localeCompare(b.title));
 
+// Compare the table by content, not formatting, so tools like Prettier
+// can reflow it without the check calling it stale.
 const readme = readFileSync(readmePath, "utf8");
-const updated = withFreshTable(readme);
+const expectedRows = examples.map((example) => [
+  `[\`${example.id}\`](examples/${example.id})`,
+  example.description,
+  example.type
+]);
+const inSync = JSON.stringify(tableRows(readme)) === JSON.stringify(expectedRows);
 
 if (checkOnly) {
-  if (updated !== readme) {
+  if (!inSync) {
     console.error("README.md example table is out of date. Run: node scripts/validate-examples.mjs");
     process.exit(1);
   }
   console.log(`OK: ${examples.length} example(s) validated, README table in sync.`);
+} else if (inSync) {
+  console.log(`Validated ${examples.length} example(s), README table already up to date.`);
 } else {
-  writeFileSync(readmePath, updated);
+  writeFileSync(readmePath, withFreshTable(readme));
   console.log(`Validated ${examples.length} example(s) and updated README.md.`);
 }
 
@@ -105,7 +114,21 @@ function asList(value) {
   return [];
 }
 
-function withFreshTable(text) {
+function tableRows(text) {
+  const [startAt, endAt] = markerPositions(text);
+  const rows = [];
+  for (const line of text.slice(startAt, endAt).split("\n")) {
+    const trimmed = line.trim();
+    if (!trimmed.startsWith("|")) continue;
+    const cells = trimmed.split("|").slice(1, -1).map((cell) => cell.trim());
+    if (cells.length === 0 || cells[0] === "Example") continue;
+    if (/^:?-+:?$/.test(cells[0])) continue;
+    rows.push(cells);
+  }
+  return rows;
+}
+
+function markerPositions(text) {
   const start = "<!-- examples:start -->";
   const end = "<!-- examples:end -->";
   const startAt = text.indexOf(start);
@@ -114,11 +137,14 @@ function withFreshTable(text) {
     console.error(`README.md is missing the ${start} / ${end} markers.`);
     process.exit(1);
   }
+  return [startAt + start.length, endAt];
+}
 
+function withFreshTable(text) {
+  const [startAt, endAt] = markerPositions(text);
   const rows = examples.map(
     (example) => `| [\`${example.id}\`](examples/${example.id}) | ${example.description} | ${example.type} |`
   );
   const table = ["| Example | Description | Type |", "| --- | --- | --- |", ...rows].join("\n");
-
-  return text.slice(0, startAt + start.length) + "\n" + table + "\n" + text.slice(endAt);
+  return text.slice(0, startAt) + "\n" + table + "\n" + text.slice(endAt);
 }
