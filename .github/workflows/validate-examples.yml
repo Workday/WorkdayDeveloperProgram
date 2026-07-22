@@ -1,0 +1,20 @@
+name: Validate examples
+
+on:
+  pull_request:
+    paths:
+      - "examples/**"
+      - "scripts/**"
+      - "hub.config.json"
+      - "README.md"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Validate example metadata and README index
+        run: node scripts/validate-examples.mjs --check
