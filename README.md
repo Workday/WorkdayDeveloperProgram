@@ -64,6 +64,11 @@ Open the folder you want and follow its README. What "use it" means depends on t
 This table is generated from each example's `example.json` by `scripts/validate-examples.mjs`. Do not edit it by hand.
 
 <!-- examples:start -->
+| Example | Description | Type |
+| --- | --- | --- |
+| [`expense-policy-agent-skill`](examples/expense-policy-agent-skill) | A markdown skill that teaches an agent to answer expense policy questions and escalate anything it cannot verify. | Agent Skill |
+| [`employee-data-orchestration`](examples/employee-data-orchestration) | An orchestration that reads worker data from one tenant and creates matching records through the Workday REST API. | Orchestration |
+| [`work-from-anywhere-extend-app`](examples/work-from-anywhere-extend-app) | Enable employees to request to work from anywhere, for a manager to approve, and see requests on a calendar view. | Extend App |
 <!-- examples:end -->
 
 ## Contributing
