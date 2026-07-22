@@ -6,7 +6,8 @@ const { repoUrl } = Astro.props;
 <header class="border-b border-neutral-200 bg-white dark:border-neutral-800 dark:bg-black">
   <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
     <a href={withBase("")} class="flex items-center gap-2.5 text-[15px] font-semibold tracking-tight">
-     Examples and usecases
+      <img src={withBase("favicon.png")} alt="" width="24" height="24" class="h-6 w-6 rounded-full" />
+      Examples and usecases
     </a>
     <a
       href={repoUrl}
