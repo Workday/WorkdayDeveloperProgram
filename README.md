@@ -9,10 +9,10 @@
 Browse working examples, copy them into your own projects, and contribute your own.
 
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-2da44e.svg)](CONTRIBUTING.md)
-[![Gallery](https://img.shields.io/badge/gallery-browse-0875e1.svg)](https://workday.github.io/Developer-Relations)
+[![Gallery](https://img.shields.io/badge/gallery-browse-0875e1.svg)](#browse-visually-optional)
 [![Maintained by DevRel](https://img.shields.io/badge/maintained%20by-Workday%20DevRel-0875e1.svg)](#community-and-support)
 
-[**Browse the gallery**](https://workday.github.io/Developer-Relations) · [Use an example](#use-an-example) · [Contribute](#contributing)
+[**Browse the gallery**](#browse-visually-optional) · [Use an example](#use-an-example) · [Contribute](#contributing)
 
 </div>
 
@@ -42,11 +42,11 @@ hub.config.json          Repo URLs and the approved type, component, and product
 
 ## Example types
 
-- 🧩 **[Extend App](https://workday.github.io/Developer-Relations/?type=Extend%20App)**: full app source built in App Builder, ready to import into your development tenant.
-- 🔌 **[Integration App](https://workday.github.io/Developer-Relations/?type=Integration%20App)**: orchestration-driven integrations connecting Workday to other systems.
-- ⚙️ **[Orchestration](https://workday.github.io/Developer-Relations/?type=Orchestration)**: focused orchestration definitions for Orchestration Builder.
-- 🤖 **[Agent Skill](https://workday.github.io/Developer-Relations/?type=Agent%20Skill)**: agent skills and instructions, written as markdown.
-- 📄 **[Reference](https://workday.github.io/Developer-Relations/?type=Reference)**: design patterns, diagrams, and other material worth copying.
+- 🧩 **Extend App**: full app source built in App Builder, ready to import into your development tenant.
+- 🔌 **Integration App**: orchestration-driven integrations connecting Workday to other systems.
+- ⚙️ **Orchestration**: focused orchestration definitions for Orchestration Builder.
+- 🤖 **Agent Skill**: agent skills and instructions, written as markdown.
+- 📄 **Reference**: design patterns, diagrams, and other material worth copying.
 
 ## Use an example
 
@@ -90,13 +90,19 @@ The full guide is in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Browse visually (optional)
 
-The [`site/`](site) folder holds a gallery that renders every example as a card with search and type filters. Nothing in the repo depends on it; the examples are fully usable without it. To run it locally:
+The [`site/`](site) folder holds a gallery that renders every example as a card with search and type filters, and every example gets its own page built from its README. Nothing in the repo depends on it; the examples are fully usable without it.
+
+![The gallery](.github/images/gallery.png)
+
+![An example page](.github/images/example-page.png)
+
+To run it locally:
 
 ```bash
 cd site && npm install && npm run dev
 ```
 
-To publish it, enable GitHub Pages in the repo settings (source: GitHub Actions) once. After that, every merge that touches `examples/`, `site/`, or `hub.config.json` rebuilds and redeploys the gallery automatically, so new examples show up on their own. The "Deploy gallery" workflow can also be run manually from the Actions tab for a one-off redeploy.
+There is no hosted version while this repository is private. Once it is public, enable GitHub Pages (source: GitHub Actions) and the deploy workflow takes it from there, redeploying automatically whenever examples change.
 
 ## Community and support
 
