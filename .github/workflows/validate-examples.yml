@@ -3,6 +3,7 @@ name: Validate examples
 on:
   pull_request:
     paths:
+      - "catalog/**"
       - "examples/**"
       - "scripts/**"
       - "hub.config.json"
