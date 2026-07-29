@@ -42,7 +42,7 @@ hub.config.json          Repo URLs and the approved type, component, and product
 
 ## Example types
 
-- 🧩 **Extend App**: full app source built in App Builder, ready to import into your development tenant.
+- 🧩 **Extend App**: full app source, ready to deploy to your development tenant with whatever tooling you build with.
 - 🔌 **Integration App**: orchestration-driven integrations connecting Workday to other systems.
 - ⚙️ **Orchestration**: focused orchestration definitions for Orchestration Builder.
 - 🤖 **Agent Skill**: agent skills and instructions, written as markdown.
@@ -57,8 +57,8 @@ cd Developer-Relations/examples
 
 Open the folder you want and follow its README. What "use it" means depends on the type:
 
-- **Extend app source**: import the folder into App Builder against your WCP development tenant (or upload the ZIP to App Hub), then deploy, install, and launch.
-- **Orchestrations and integration apps**: import into Orchestration Builder and point the credentials at your tenant.
+- **Extend app source**: deploy to your WCP development tenant with your usual tooling (App Builder, the IDE plugins, or the WDCLI), then install and launch.
+- **Orchestrations and integration apps**: import into Orchestration Builder, promote if your tenant needs it, and deploy to your tenant.
 - **Agent skills and reference material**: read, copy, adapt.
 
 ## All examples
@@ -109,6 +109,10 @@ There is no hosted version while this repository is private. Once it is public, 
 - **Questions and ideas**: open a [discussion](https://github.com/Workday/Developer-Relations/discussions) or start a thread on the Workday community forum.
 - **Bugs in an example**: open an [issue](https://github.com/Workday/Developer-Relations/issues) using the bug report template.
 - **New example proposals**: open an issue with the proposal template before you build, if you want early feedback.
+
+## Use at your own pace, verify everything
+
+Everything in this repository is provided as is, without warranty of any kind. Examples are starting points, not production software. Review the code, adapt it to your configuration, and always test in a non-production tenant before deploying anything to a tenant you care about. Submissions are reviewed before merge, but review does not replace your own verification.
 
 ## License
 
