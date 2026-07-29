@@ -15,7 +15,7 @@ const checkOnly = process.argv.includes("--check");
 
 const config = JSON.parse(readFileSync(join(repoRoot, "hub.config.json"), "utf8"));
 
-// catalog/ holds Workday-built apps, examples/ holds community samples.
+// catalog/ holds Workday-built apps, examples/ holds community examples.
 const sections = [
   { dir: "catalog", markers: "catalog", defaultSource: "workday" },
   { dir: "examples", markers: "examples", defaultSource: "community" }

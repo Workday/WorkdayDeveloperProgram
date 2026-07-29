@@ -48,6 +48,15 @@ const badge = sourceLabel(example);
             </svg>
           </a>
           <div class="min-w-0">
+            <p class="mb-1.5 text-xs">
+              <a
+                href={withBase(`?section=${example.section === "App catalog" ? "catalog" : "examples"}`)}
+                class="font-medium text-wd-blue hover:underline"
+              >
+                {example.section}
+              </a>
+              <span class="text-neutral-400 dark:text-neutral-600"> / {example.id}</span>
+            </p>
             <div class="flex flex-wrap items-center gap-3">
               <h1 class="text-3xl font-bold tracking-tight">{example.title}</h1>
               {badge === "Workday" ? (
