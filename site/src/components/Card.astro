@@ -1,11 +1,12 @@
 ---
 import TypeIcon from "./TypeIcon.astro";
-import { withBase } from "../lib/examples.js";
+import { withBase, sourceLabel } from "../lib/examples.js";
 
 const { example } = Astro.props;
 const detailUrl = withBase(`examples/${example.id}/`);
+const badge = sourceLabel(example);
 const tags = [...new Set([example.type, ...example.components, ...example.products])];
-const searchText = [example.title, example.description, example.id, example.type, ...example.components, ...example.products]
+const searchText = [example.title, example.description, example.id, example.type, badge, ...example.components, ...example.products]
   .join(" ")
   .toLowerCase();
 ---
@@ -15,6 +16,7 @@ const searchText = [example.title, example.description, example.id, example.type
   data-type={example.type}
   data-components={example.components.join("|")}
   data-products={example.products.join("|")}
+  data-source={badge}
   data-search={searchText}
 >
   <div class="flex items-center justify-between">
@@ -37,6 +39,13 @@ const searchText = [example.title, example.description, example.id, example.type
   <h2 class="text-base font-semibold tracking-tight">{example.title}</h2>
   <p class="flex-1 text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">{example.description}</p>
   <div class="flex flex-wrap gap-1.5">
+    <span
+      class={badge === "Workday"
+        ? "rounded-full bg-wd-blue/10 px-2.5 py-0.5 text-xs font-semibold text-wd-blue"
+        : "rounded-full border border-neutral-200 px-2.5 py-0.5 text-xs font-medium text-neutral-500 dark:border-neutral-800 dark:text-neutral-400"}
+    >
+      {badge}
+    </span>
     {tags.map((tag) => (
       <span class="rounded-full bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-neutral-600 dark:bg-neutral-900 dark:text-neutral-400">
         {tag}

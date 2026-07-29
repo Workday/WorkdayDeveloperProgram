@@ -42,7 +42,8 @@ const meta = {
   components: [],
   products: [],
   authors: [],
-  tutorial: ""
+  tutorial: "",
+  source: "community"
 };
 writeFileSync(join(dir, "example.json"), JSON.stringify(meta, null, 2) + "\n");
 
@@ -60,7 +61,7 @@ One short paragraph: what this example shows and who it is for.
 
 ## How to use it
 
-The concrete steps to put this example to work: import into App Builder and deploy to your development tenant, import the orchestration, read and adapt the skill, or whatever fits this artifact.
+The concrete steps to put this example to work: deploy to your development tenant with your usual tooling, import the orchestration, read and adapt the skill, or whatever fits this artifact.
 `
 );
 

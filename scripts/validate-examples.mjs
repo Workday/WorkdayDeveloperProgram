@@ -68,6 +68,10 @@ for (const name of readdirSync(examplesDir).sort()) {
     errors.push(`${name}: "tutorial" should be an https link, or left out`);
   }
 
+  if (meta.source && !["workday", "community"].includes(meta.source)) {
+    errors.push(`${name}: "source" must be "workday" or "community", or left out (community is the default)`);
+  }
+
   examples.push({
     id: name,
     title: meta.title || name,

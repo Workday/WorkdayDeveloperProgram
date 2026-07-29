@@ -4,7 +4,7 @@ import Header from "../components/Header.astro";
 import Card from "../components/Card.astro";
 import Footer from "../components/Footer.astro";
 import FilterGroup from "../components/FilterGroup.astro";
-import { examples, types, componentsInUse, productsInUse, config, withBase } from "../lib/examples.js";
+import { examples, types, componentsInUse, productsInUse, sourcesInUse, config, withBase } from "../lib/examples.js";
 
 const contributeUrl = `${config.repoUrl}/blob/${config.defaultBranch}/CONTRIBUTING.md`;
 ---
@@ -35,6 +35,7 @@ const contributeUrl = `${config.repoUrl}/blob/${config.defaultBranch}/CONTRIBUTI
             <p id="result-count" class="text-sm text-neutral-500 dark:text-neutral-400" aria-live="polite"></p>
             <div class="mt-6 space-y-7">
               <FilterGroup label="Type" name="type" options={types} />
+              <FilterGroup label="Source" name="source" options={sourcesInUse} />
               <FilterGroup label="Technology" name="component" options={componentsInUse} />
               <FilterGroup label="Product" name="product" options={productsInUse} />
             </div>
@@ -98,7 +99,7 @@ const contributeUrl = `${config.repoUrl}/blob/${config.defaultBranch}/CONTRIBUTI
       const emptyBlock = document.getElementById("empty")!;
       const clearButton = document.getElementById("clear-filters")!;
 
-      const state = { query: "", type: new Set<string>(), component: new Set<string>(), product: new Set<string>() };
+      const state = { query: "", type: new Set<string>(), source: new Set<string>(), component: new Set<string>(), product: new Set<string>() };
 
       const params = new URLSearchParams(location.search);
       state.query = (params.get("q") ?? "").toLowerCase();
@@ -112,10 +113,11 @@ const contributeUrl = `${config.repoUrl}/blob/${config.defaultBranch}/CONTRIBUTI
 
       function readCheckboxes() {
         state.type.clear();
+        state.source.clear();
         state.component.clear();
         state.product.clear();
         for (const box of checkboxes) {
-          if (box.checked) state[box.dataset.filter as "type" | "component" | "product"].add(box.value);
+          if (box.checked) state[box.dataset.filter as "type" | "source" | "component" | "product"].add(box.value);
         }
       }
 
@@ -129,6 +131,7 @@ const contributeUrl = `${config.repoUrl}/blob/${config.defaultBranch}/CONTRIBUTI
         for (const card of cards) {
           const matches =
             (state.type.size === 0 || state.type.has(card.dataset.type ?? "")) &&
+            (state.source.size === 0 || state.source.has(card.dataset.source ?? "")) &&
             intersects(state.component, card.dataset.components ?? "") &&
             intersects(state.product, card.dataset.products ?? "") &&
             (!state.query || (card.dataset.search ?? "").includes(state.query));
@@ -137,7 +140,7 @@ const contributeUrl = `${config.repoUrl}/blob/${config.defaultBranch}/CONTRIBUTI
         }
         resultCount.textContent = `Showing ${visible} of ${cards.length} examples`;
         emptyBlock.classList.toggle("hidden", visible > 0);
-        const anyFilter = state.type.size + state.component.size + state.product.size > 0 || state.query !== "";
+        const anyFilter = state.type.size + state.source.size + state.component.size + state.product.size > 0 || state.query !== "";
         clearButton.classList.toggle("hidden", !anyFilter);
       }
 

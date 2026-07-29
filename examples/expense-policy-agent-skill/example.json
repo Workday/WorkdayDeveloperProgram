@@ -3,7 +3,12 @@
   "description": "A markdown skill that teaches an agent to answer expense policy questions and escalate anything it cannot verify.",
   "type": "Agent Skill",
   "components": [],
-  "products": ["Workday Financials"],
-  "authors": ["obinnacodes"],
-  "tutorial": ""
+  "products": [
+    "Workday Financials"
+  ],
+  "authors": [
+    "obinnacodes"
+  ],
+  "tutorial": "",
+  "source": "workday"
 }
