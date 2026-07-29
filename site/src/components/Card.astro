@@ -3,7 +3,7 @@ import TypeIcon from "./TypeIcon.astro";
 import { withBase, sourceLabel } from "../lib/examples.js";
 
 const { example } = Astro.props;
-const detailUrl = withBase(`examples/${example.id}/`);
+const detailUrl = withBase(`${example.path}/`);
 const badge = sourceLabel(example);
 const tags = [...new Set([example.type, ...example.components, ...example.products])];
 const searchText = [example.title, example.description, example.id, example.type, badge, ...example.components, ...example.products]
@@ -13,6 +13,7 @@ const searchText = [example.title, example.description, example.id, example.type
 <a
   href={detailUrl}
   class="example-card group flex flex-col gap-3 rounded-xl border border-neutral-200 bg-white p-5 transition-colors hover:border-neutral-400 dark:border-neutral-800 dark:bg-neutral-950 dark:hover:border-neutral-500"
+  data-section={example.section}
   data-type={example.type}
   data-components={example.components.join("|")}
   data-products={example.products.join("|")}

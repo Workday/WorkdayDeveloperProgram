@@ -4,7 +4,7 @@ import { examples } from "../../lib/examples.js";
 
 export function getStaticPaths() {
   return examples
-    .filter((example) => example.section === "Examples")
+    .filter((example) => example.section === "App catalog")
     .map((example) => ({ params: { id: example.id }, props: { example } }));
 }
 
