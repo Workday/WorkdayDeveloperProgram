@@ -1,10 +1,13 @@
 #!/usr/bin/env node
-// Creates a new example folder with the two files every example needs.
+// Creates a new example folder from examples/_template.
 //
 //   node scripts/new-example.mjs my-example-name
 //   node scripts/new-example.mjs my-example-name --type "Orchestration" --title "My Example"
+//
+// No Node on your machine? scripts/new-example.sh (macOS, Linux) and
+// scripts/new-example.ps1 (Windows) do the same thing.
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -33,37 +36,18 @@ if (existsSync(dir)) {
   bail(`examples/${name} already exists. Pick another name.`);
 }
 
-mkdirSync(dir, { recursive: true });
+cpSync(join(repoRoot, "examples", "_template"), dir, { recursive: true });
 
-const meta = {
-  title,
-  description: "One or two sentences about what this example shows.",
-  type,
-  components: [],
-  products: [],
-  authors: [],
-  tutorial: "",
-  source: "community"
-};
-writeFileSync(join(dir, "example.json"), JSON.stringify(meta, null, 2) + "\n");
+const metaPath = join(dir, "example.json");
+const meta = JSON.parse(readFileSync(metaPath, "utf8"));
+meta.title = title;
+meta.type = type;
+writeFileSync(metaPath, JSON.stringify(meta, null, 2) + "\n");
 
-writeFileSync(
-  join(dir, "README.md"),
-  `# ${title}
-
-## What it is
-
-One short paragraph: what this example shows and who it is for.
-
-## What's inside
-
-- Bullet the contents of this folder so a reader knows what they are looking at.
-
-## How to use it
-
-The concrete steps to put this example to work: deploy to your development tenant with your usual tooling, import the orchestration, read and adapt the skill, or whatever fits this artifact.
-`
-);
+const readmePath = join(dir, "README.md");
+const readmeLines = readFileSync(readmePath, "utf8").split("\n");
+readmeLines[0] = `# ${title}`;
+writeFileSync(readmePath, readmeLines.join("\n"));
 
 console.log(`Created examples/${name} (type: ${type})`);
 console.log("");

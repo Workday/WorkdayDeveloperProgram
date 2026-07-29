@@ -12,13 +12,23 @@ Thanks for helping build the open home for Workday Build examples. Adding an exa
 ## Add an example
 
 1. **Fork** this repository and create a branch.
-2. **Scaffold the folder.** From the repository root:
+2. **Scaffold the folder.** From the repository root, pick whichever command runs on your machine; they produce identical folders:
 
    ```bash
    node scripts/new-example.mjs your-example-name --type "Extend App"
    ```
 
-   This creates `examples/your-example-name/` with a prefilled `example.json` and README skeleton. (You can also copy `examples/_template/` by hand.)
+   No Node on your machine? Use the shell versions instead:
+
+   ```bash
+   ./scripts/new-example.sh your-example-name --type "Extend App"
+   ```
+
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File scripts\new-example.ps1 your-example-name -Type "Extend App"
+   ```
+
+   Each creates `examples/your-example-name/` with a prefilled `example.json` and README skeleton. (You can also copy `examples/_template/` by hand.)
 
 3. **Drop your artifact in.** Whatever it is: Extend app source (exported with Local Disk Sync, the WDCLI, or the ZIP download), orchestration definitions, an agent skill as markdown, diagrams. The folder must be self-contained.
 4. **Fill in the two files.** `example.json` needs a title, a description, and a type; everything else is optional. The README needs three short sections: What it is, What's inside, How to use it.

@@ -35,6 +35,7 @@ examples/                Every example is a self-contained folder: open it, read
   _template/             Copy this (or run the scaffolder) to start a new example
 scripts/
   new-example.mjs        Scaffold a new example folder in one command
+  new-example.sh / .ps1  The same scaffolder for machines without Node
   validate-examples.mjs  CI validation + README index generation
 site/                    Optional Astro gallery (not required to use the examples)
 hub.config.json          Repo URLs and the approved type, component, and product lists
@@ -79,7 +80,7 @@ This table is kept in sync with each example's `example.json` by `scripts/valida
 
 We want your examples, and adding one doesn't take much:
 
-1. Scaffold a folder: `node scripts/new-example.mjs your-example-name`
+1. Scaffold a folder: `node scripts/new-example.mjs your-example-name`. No Node? `./scripts/new-example.sh` (macOS, Linux) and `scripts\new-example.ps1` (Windows) do the same thing.
 2. Drop your artifact in, and fill in the generated `example.json` and README.
 3. Validate: `node scripts/validate-examples.mjs`
 4. Open a pull request. Workday DevRel reviews every submission before merge.
