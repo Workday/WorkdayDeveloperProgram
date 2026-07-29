@@ -20,18 +20,19 @@ Browse working examples, copy them into your own projects, and contribute your o
 
 ## What is this?
 
-Workday Build samples used to live in many places: the App Catalog, the docs, the forum. This repository brings them into one place that you can browse, copy from, and add to.
+Workday Build examples used to live in many places: the App Catalog, the docs, the forum. This repository brings them into one place that you can browse, copy from, and add to.
 
 Every example:
 
-- lives in its own folder under [`examples/`](examples) with everything it needs: Extend app source exported from App Builder, orchestration definitions, agent skills written as markdown, diagrams, whatever the artifact is.
+- lives in its own folder under [`catalog/`](catalog) (Workday-built apps) or [`examples/`](examples) (community examples, open to everyone) with everything it needs: Extend app source, orchestration definitions, agent skills written as markdown, diagrams, whatever the artifact is.
 - ships with two small files: `example.json` (metadata that drives the index below and the optional gallery) and a README that says what it is and how to use it.
 - demonstrates a real Workday capability. Types, components, and products come from the approved lists in [`hub.config.json`](hub.config.json), and CI enforces them.
 
 ## Repository layout
 
 ```
-examples/                Every example is a self-contained folder: open it, read its README
+catalog/                 Workday-built apps, maintained by Workday
+examples/                Community examples, open to external contributions
   _template/             Copy this (or run the scaffolder) to start a new example
 scripts/
   new-example.mjs        Scaffold a new example folder in one command
@@ -53,32 +54,39 @@ hub.config.json          Repo URLs and the approved type, component, and product
 
 ```bash
 git clone https://github.com/Workday/Developer-Relations
-cd Developer-Relations/examples
+cd Developer-Relations
 ```
 
-Open the folder you want and follow its README. What "use it" means depends on the type:
+Open the folder you want under `catalog/` or `examples/` and follow its README. What "use it" means depends on the type:
 
 - **Extend app source**: deploy to your WCP development tenant with your usual tooling (App Builder, the (VScode, Cursor, Claude code) plugins, or the WDCLI), then install and launch.
 - **Orchestrations and integration apps**: import into Orchestration Builder, promote if your tenant needs it, and deploy to your tenant.
 - **Agent skills and reference material**: read, copy, adapt.
 
-## All examples
+## App catalog
 
-This table is kept in sync with each example's `example.json` by `scripts/validate-examples.mjs`.
+Workday-built apps, maintained by Workday. Both tables below are kept in sync with each entry's `example.json` by `scripts/validate-examples.mjs`.
+
+<!-- catalog:start -->
+| Example | Description | Type |
+| --- | --- | --- |
+| [`work-from-anywhere-extend-app`](catalog/work-from-anywhere-extend-app) | Enable employees to request to work from anywhere, for a manager to approve, and see requests on a calendar view. | Extend App |
+<!-- catalog:end -->
+
+## Examples
+
+Community examples, open to everyone. This is the section external contributions land in.
 
 <!-- examples:start -->
-
-| Example                                                                   | Description                                                                                                        | Type          |
-| ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------- |
-| [`expense-policy-agent-skill`](examples/expense-policy-agent-skill)       | A markdown skill that teaches an agent to answer expense policy questions and escalate anything it cannot verify.  | Agent Skill   |
-| [`employee-data-orchestration`](examples/employee-data-orchestration)     | An orchestration that reads worker data from one tenant and creates matching records through the Workday REST API. | Orchestration |
-| [`work-from-anywhere-extend-app`](examples/work-from-anywhere-extend-app) | Enable employees to request to work from anywhere, for a manager to approve, and see requests on a calendar view.  | Extend App    |
-
+| Example | Description | Type |
+| --- | --- | --- |
+| [`expense-policy-agent-skill`](examples/expense-policy-agent-skill) | A markdown skill that teaches an agent to answer expense policy questions and escalate anything it cannot verify. | Agent Skill |
+| [`employee-data-orchestration`](examples/employee-data-orchestration) | An orchestration that reads worker data from one tenant and creates matching records through the Workday REST API. | Orchestration |
 <!-- examples:end -->
 
 ## Contributing
 
-We want your examples, and adding one doesn't take much:
+We want your examples. Community contributions go into `examples/` (the Examples section); the catalog is Workday-maintained, so if you think something belongs there, open an issue instead. Adding an example doesn't take much:
 
 1. Scaffold a folder: `node scripts/new-example.mjs your-example-name`. No Node? `./scripts/new-example.sh` (macOS, Linux) and `scripts\new-example.ps1` (Windows) do the same thing.
 2. Drop your artifact in, and fill in the generated `example.json` and README.

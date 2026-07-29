@@ -1,83 +1,98 @@
 #!/usr/bin/env node
-// Checks every folder in examples/ and keeps the "All examples" table
-// in the root README up to date.
+// Checks every entry in catalog/ and examples/ and keeps the two tables
+// in the root README up to date. Zero dependencies.
 //
-//   node scripts/validate-examples.mjs          validate and refresh the README table
-//   node scripts/validate-examples.mjs --check  validate only, fail if the table is stale (CI)
+//   node scripts/validate-examples.mjs          validate and refresh the README tables
+//   node scripts/validate-examples.mjs --check  validate only, fail if a table is stale (CI)
 
 import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
-const examplesDir = join(repoRoot, "examples");
 const readmePath = join(repoRoot, "README.md");
 const checkOnly = process.argv.includes("--check");
 
 const config = JSON.parse(readFileSync(join(repoRoot, "hub.config.json"), "utf8"));
 
+// catalog/ holds Workday-built apps, examples/ holds community samples.
+const sections = [
+  { dir: "catalog", markers: "catalog", defaultSource: "workday" },
+  { dir: "examples", markers: "examples", defaultSource: "community" }
+];
+
 const errors = [];
-const examples = [];
+const entries = [];
 
-for (const name of readdirSync(examplesDir).sort()) {
-  // _template and dotfiles are not examples
-  if (name.startsWith("_") || name.startsWith(".")) continue;
-  const dir = join(examplesDir, name);
-  if (!statSync(dir).isDirectory()) continue;
+for (const section of sections) {
+  const sectionDir = join(repoRoot, section.dir);
+  if (!existsSync(sectionDir)) continue;
 
-  if (!existsSync(join(dir, "README.md"))) {
-    errors.push(`${name}: missing README.md`);
-  }
+  for (const name of readdirSync(sectionDir).sort()) {
+    // _template and dotfiles are not entries
+    if (name.startsWith("_") || name.startsWith(".")) continue;
+    const dir = join(sectionDir, name);
+    if (!statSync(dir).isDirectory()) continue;
 
-  const metaPath = join(dir, "example.json");
-  if (!existsSync(metaPath)) {
-    errors.push(`${name}: missing example.json`);
-    continue;
-  }
-
-  let meta;
-  try {
-    meta = JSON.parse(readFileSync(metaPath, "utf8"));
-  } catch (err) {
-    errors.push(`${name}/example.json is not valid JSON: ${err.message}`);
-    continue;
-  }
-
-  if (!meta.title) errors.push(`${name}: example.json needs a "title"`);
-  if (!meta.description) errors.push(`${name}: example.json needs a "description"`);
-
-  if (!meta.type) {
-    errors.push(`${name}: example.json needs a "type"`);
-  } else if (!config.types.includes(meta.type)) {
-    errors.push(`${name}: "${meta.type}" is not an approved type. Pick from: ${config.types.join(", ")}`);
-  }
-
-  for (const component of asList(meta.components)) {
-    if (!config.components.includes(component)) {
-      errors.push(`${name}: "${component}" is not an approved component. Pick from: ${config.components.join(", ")}`);
+    if (!existsSync(join(dir, "README.md"))) {
+      errors.push(`${section.dir}/${name}: missing README.md`);
     }
-  }
 
-  for (const product of asList(meta.products)) {
-    if (!config.products.includes(product)) {
-      errors.push(`${name}: "${product}" is not an approved product. Pick from: ${config.products.join(", ")}`);
+    const metaPath = join(dir, "example.json");
+    if (!existsSync(metaPath)) {
+      errors.push(`${section.dir}/${name}: missing example.json`);
+      continue;
     }
-  }
 
-  if (meta.tutorial && !meta.tutorial.startsWith("https://")) {
-    errors.push(`${name}: "tutorial" should be an https link, or left out`);
-  }
+    let meta;
+    try {
+      meta = JSON.parse(readFileSync(metaPath, "utf8"));
+    } catch (err) {
+      errors.push(`${section.dir}/${name}/example.json is not valid JSON: ${err.message}`);
+      continue;
+    }
 
-  if (meta.source && !["workday", "community"].includes(meta.source)) {
-    errors.push(`${name}: "source" must be "workday" or "community", or left out (community is the default)`);
-  }
+    if (!meta.title) errors.push(`${section.dir}/${name}: example.json needs a "title"`);
+    if (!meta.description) errors.push(`${section.dir}/${name}: example.json needs a "description"`);
 
-  examples.push({
-    id: name,
-    title: meta.title || name,
-    description: meta.description || "",
-    type: meta.type || ""
-  });
+    if (!meta.type) {
+      errors.push(`${section.dir}/${name}: example.json needs a "type"`);
+    } else if (!config.types.includes(meta.type)) {
+      errors.push(`${section.dir}/${name}: "${meta.type}" is not an approved type. Pick from: ${config.types.join(", ")}`);
+    }
+
+    for (const component of asList(meta.components)) {
+      if (!config.components.includes(component)) {
+        errors.push(`${section.dir}/${name}: "${component}" is not an approved component. Pick from: ${config.components.join(", ")}`);
+      }
+    }
+
+    for (const product of asList(meta.products)) {
+      if (!config.products.includes(product)) {
+        errors.push(`${section.dir}/${name}: "${product}" is not an approved product. Pick from: ${config.products.join(", ")}`);
+      }
+    }
+
+    if (meta.tutorial && !meta.tutorial.startsWith("https://")) {
+      errors.push(`${section.dir}/${name}: "tutorial" should be an https link, or left out`);
+    }
+
+    if (meta.source && !["workday", "community"].includes(meta.source)) {
+      errors.push(`${section.dir}/${name}: "source" must be "workday" or "community", or left out`);
+    }
+    if (section.dir === "catalog" && meta.source === "community") {
+      errors.push(`catalog/${name}: catalog apps are Workday-maintained, so "source" cannot be "community". Community submissions live in examples/.`);
+    }
+
+    entries.push({
+      id: name,
+      sectionMarkers: section.markers,
+      path: `${section.dir}/${name}`,
+      title: meta.title || name,
+      description: meta.description || "",
+      type: meta.type || ""
+    });
+  }
 }
 
 if (errors.length > 0) {
@@ -87,29 +102,34 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
-examples.sort((a, b) => a.title.localeCompare(b.title));
+entries.sort((a, b) => a.title.localeCompare(b.title));
 
-// Compare the table by content, not formatting, so tools like Prettier
-// can reflow it without the check calling it stale.
 const readme = readFileSync(readmePath, "utf8");
-const expectedRows = examples.map((example) => [
-  `[\`${example.id}\`](examples/${example.id})`,
-  example.description,
-  example.type
-]);
-const inSync = JSON.stringify(tableRows(readme)) === JSON.stringify(expectedRows);
+
+// Compare each table by content, not formatting, so tools like Prettier
+// can reflow them without the check calling them stale.
+let allInSync = true;
+for (const section of sections) {
+  const expected = rowsFor(section.markers);
+  const current = tableRows(readme, section.markers);
+  if (JSON.stringify(current) !== JSON.stringify(expected)) allInSync = false;
+}
 
 if (checkOnly) {
-  if (!inSync) {
-    console.error("README.md example table is out of date. Run: node scripts/validate-examples.mjs");
+  if (!allInSync) {
+    console.error("A README table is out of date. Run: node scripts/validate-examples.mjs");
     process.exit(1);
   }
-  console.log(`OK: ${examples.length} example(s) validated, README table in sync.`);
-} else if (inSync) {
-  console.log(`Validated ${examples.length} example(s), README table already up to date.`);
+  console.log(`OK: ${entries.length} entr${entries.length === 1 ? "y" : "ies"} validated, README tables in sync.`);
+} else if (allInSync) {
+  console.log(`Validated ${entries.length} entr${entries.length === 1 ? "y" : "ies"}, README tables already up to date.`);
 } else {
-  writeFileSync(readmePath, withFreshTable(readme));
-  console.log(`Validated ${examples.length} example(s) and updated README.md.`);
+  let updated = readme;
+  for (const section of sections) {
+    updated = withFreshTable(updated, section.markers);
+  }
+  writeFileSync(readmePath, updated);
+  console.log(`Validated ${entries.length} entr${entries.length === 1 ? "y" : "ies"} and updated README.md.`);
 }
 
 function asList(value) {
@@ -118,8 +138,26 @@ function asList(value) {
   return [];
 }
 
-function tableRows(text) {
-  const [startAt, endAt] = markerPositions(text);
+function rowsFor(markers) {
+  return entries
+    .filter((entry) => entry.sectionMarkers === markers)
+    .map((entry) => [`[\`${entry.id}\`](${entry.path})`, entry.description, entry.type]);
+}
+
+function markerPositions(text, markers) {
+  const start = `<!-- ${markers}:start -->`;
+  const end = `<!-- ${markers}:end -->`;
+  const startAt = text.indexOf(start);
+  const endAt = text.indexOf(end);
+  if (startAt === -1 || endAt === -1) {
+    console.error(`README.md is missing the ${start} / ${end} markers.`);
+    process.exit(1);
+  }
+  return [startAt + start.length, endAt];
+}
+
+function tableRows(text, markers) {
+  const [startAt, endAt] = markerPositions(text, markers);
   const rows = [];
   for (const line of text.slice(startAt, endAt).split("\n")) {
     const trimmed = line.trim();
@@ -132,23 +170,9 @@ function tableRows(text) {
   return rows;
 }
 
-function markerPositions(text) {
-  const start = "<!-- examples:start -->";
-  const end = "<!-- examples:end -->";
-  const startAt = text.indexOf(start);
-  const endAt = text.indexOf(end);
-  if (startAt === -1 || endAt === -1) {
-    console.error(`README.md is missing the ${start} / ${end} markers.`);
-    process.exit(1);
-  }
-  return [startAt + start.length, endAt];
-}
-
-function withFreshTable(text) {
-  const [startAt, endAt] = markerPositions(text);
-  const rows = examples.map(
-    (example) => `| [\`${example.id}\`](examples/${example.id}) | ${example.description} | ${example.type} |`
-  );
+function withFreshTable(text, markers) {
+  const [startAt, endAt] = markerPositions(text, markers);
+  const rows = rowsFor(markers).map((cells) => `| ${cells.join(" | ")} |`);
   const table = ["| Example | Description | Type |", "| --- | --- | --- |", ...rows].join("\n");
   return text.slice(0, startAt) + "\n" + table + "\n" + text.slice(endAt);
 }

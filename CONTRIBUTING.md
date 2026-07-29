@@ -2,6 +2,11 @@
 
 Thanks for helping build the open home for Workday Build examples. Adding an example is deliberately low effort: a folder, two small files, one validation command.
 
+## Two sections
+
+- `examples/` is the community examples section. It is open to everyone, and it is where your PR goes. Everything in this guide is about it.
+- `catalog/` holds Workday-built apps and is maintained by Workday (CODEOWNERS requires a DevRel review on any change there). Think something belongs in the catalog? Open an issue and we will take it from there.
+
 ## Ways to contribute
 
 - **Add a new example.** The main event. See below.
