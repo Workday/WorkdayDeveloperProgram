@@ -1,58 +1,56 @@
-# Creates a new example folder from examples/_template. Same job as
-# new-example.mjs, for machines without Node.
+# Same as new-example.mjs but for Windows machines without Node. Copies
+# examples/_template and fills in the title and type.
 #
 #   powershell -ExecutionPolicy Bypass -File scripts\new-example.ps1 my-example-name
 #   powershell -ExecutionPolicy Bypass -File scripts\new-example.ps1 my-example-name -Type "Orchestration" -Title "My Example"
 
 param(
-  [Parameter(Position = 0)] [string]$Name,
+  [Parameter(Position=0)][string]$Name,
   [string]$Type,
   [string]$Title
 )
 
 $ErrorActionPreference = "Stop"
 
-function Bail($Message) {
-  Write-Host $Message
+function Fail($msg) {
+  Write-Host $msg
   exit 1
 }
 
 $root = Split-Path -Parent $PSScriptRoot
-$config = Get-Content (Join-Path $root "hub.config.json") -Raw | ConvertFrom-Json
+$config = Get-Content "$root\hub.config.json" -Raw | ConvertFrom-Json
 
 if (-not $Name -or $Name.StartsWith("-")) {
-  Bail 'Usage: powershell -ExecutionPolicy Bypass -File scripts\new-example.ps1 <folder-name> [-Type "Extend App"] [-Title "My Example"]'
+  Fail 'Usage: powershell -ExecutionPolicy Bypass -File scripts\new-example.ps1 <folder-name> [-Type "Extend App"] [-Title "My Example"]'
 }
 if ($Name -cnotmatch '^[a-z0-9][a-z0-9-]*$') {
-  Bail "Folder names are kebab-case: lowercase letters, numbers, and hyphens. `"$Name`" is not."
+  Fail "Folder names are kebab-case: lowercase letters, numbers, and hyphens. `"$Name`" is not."
 }
 
 if (-not $Type) { $Type = $config.types[0] }
 if ($config.types -notcontains $Type) {
-  Bail "`"$Type`" is not an approved type. Pick from: $($config.types -join ', ')"
+  Fail "`"$Type`" is not an approved type. Pick from: $($config.types -join ', ')"
 }
 
 if (-not $Title) {
-  $Title = ($Name -split "-" | ForEach-Object { $_.Substring(0, 1).ToUpper() + $_.Substring(1) }) -join " "
+  $Title = ($Name -split '-' | ForEach-Object { $_.Substring(0,1).ToUpper() + $_.Substring(1) }) -join ' '
 }
 
-$dir = Join-Path $root (Join-Path "examples" $Name)
+$dir = "$root\examples\$Name"
 if (Test-Path $dir) {
-  Bail "examples/$Name already exists. Pick another name."
+  Fail "examples/$Name already exists. Pick another name."
 }
 
-Copy-Item (Join-Path $root (Join-Path "examples" "_template")) $dir -Recurse
+Copy-Item "$root\examples\_template" $dir -Recurse
 
-$metaPath = Join-Path $dir "example.json"
-$meta = Get-Content $metaPath -Raw | ConvertFrom-Json
+$meta = Get-Content "$dir\example.json" -Raw | ConvertFrom-Json
 $meta.title = $Title
 $meta.type = $Type
-$meta | ConvertTo-Json -Depth 5 | Set-Content $metaPath -Encoding UTF8
+$meta | ConvertTo-Json -Depth 5 | Set-Content "$dir\example.json" -Encoding UTF8
 
-$readmePath = Join-Path $dir "README.md"
-$lines = @(Get-Content $readmePath)
-$lines[0] = "# $Title"
-$lines | Set-Content $readmePath -Encoding UTF8
+$readme = @(Get-Content "$dir\README.md")
+$readme[0] = "# $Title"
+$readme | Set-Content "$dir\README.md" -Encoding UTF8
 
 Write-Host "Created examples/$Name (type: $Type)"
 Write-Host ""
