@@ -57,7 +57,7 @@ cd Developer-Relations/examples
 
 Open the folder you want and follow its README. What "use it" means depends on the type:
 
-- **Extend app source**: deploy to your WCP development tenant with your usual tooling (App Builder, the IDE plugins, or the WDCLI), then install and launch.
+- **Extend app source**: deploy to your WCP development tenant with your usual tooling (App Builder, the (VScode, Cursor, Claude code) plugins, or the WDCLI), then install and launch.
 - **Orchestrations and integration apps**: import into Orchestration Builder, promote if your tenant needs it, and deploy to your tenant.
 - **Agent skills and reference material**: read, copy, adapt.
 
