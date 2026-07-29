@@ -112,4 +112,4 @@ There is no hosted version while this repository is private. Once it is public, 
 
 ## License
 
-License terms are being finalized. Until a LICENSE file lands in this repository, treat the examples as reference material for building on Workday.
+Copyright 2026 Workday. Licensed under the Apache License, Version 2.0.
