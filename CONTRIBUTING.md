@@ -2,6 +2,11 @@
 
 Thanks for helping build the open home for Workday Build examples. Adding an example is deliberately low effort: a folder, two small files, one validation command.
 
+## Two sections
+
+- `examples/` is the community examples section. It is open to everyone, and it is where your PR goes. Everything in this guide is about it.
+- `catalog/` holds Workday-built apps and is maintained by Workday (CODEOWNERS requires a DevRel review on any change there). Think something belongs in the catalog? Open an issue and we will take it from there.
+
 ## Ways to contribute
 
 - **Add a new example.** The main event. See below.
@@ -12,15 +17,25 @@ Thanks for helping build the open home for Workday Build examples. Adding an exa
 ## Add an example
 
 1. **Fork** this repository and create a branch.
-2. **Scaffold the folder.** From the repository root:
+2. **Scaffold the folder.** From the repository root, pick whichever command runs on your machine; they produce identical folders:
 
    ```bash
    node scripts/new-example.mjs your-example-name --type "Extend App"
    ```
 
-   This creates `examples/your-example-name/` with a prefilled `example.json` and README skeleton. (You can also copy `examples/_template/` by hand.)
+   No Node on your machine? Use the shell versions instead:
 
-3. **Drop your artifact in.** Whatever it is: Extend app source exported from App Builder (via Local Disk Sync or the ZIP download), orchestration definitions, an agent skill as markdown, diagrams. The folder must be self-contained.
+   ```bash
+   ./scripts/new-example.sh your-example-name --type "Extend App"
+   ```
+
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File scripts\new-example.ps1 your-example-name -Type "Extend App"
+   ```
+
+   Each creates `examples/your-example-name/` with a prefilled `example.json` and README skeleton. (You can also copy `examples/_template/` by hand.)
+
+3. **Drop your artifact in.** Whatever it is: Extend app source (exported with Local Disk Sync, the WDCLI, or the ZIP download), orchestration definitions, an agent skill as markdown, diagrams. The folder must be self-contained.
 4. **Fill in the two files.** `example.json` needs a title, a description, and a type; everything else is optional. The README needs three short sections: What it is, What's inside, How to use it.
 5. **Validate.** From the repository root:
 
@@ -56,7 +71,7 @@ Useful references for what an example artifact looks like:
 
 - [Extend app components](https://developer.workday.com/doc/kwv1612374098305.md): what makes up an Extend app (amd, smd, pmd, business objects, and the rest).
 - [Local Disk Sync](https://developer.workday.com/doc/GUID-cbfd55e9-04f9-4480-879a-b63c42729a04-enHYPHENus.md): how to get your app source onto disk for submission.
-- [App Builder](https://developer.workday.com/doc/zxh1651687589440.md): where Extend apps are built.
+- [App Builder](https://developer.workday.com/doc/zxh1651687589440.md): one of the ways Extend apps get built. Your own IDE and the WDCLI work too; the hub does not care which tooling produced the artifact.
 - Official orchestration walkthroughs, for example [Create Workday Home Card Orchestration](https://developer.workday.com/doc/mwd1629844754304.md) and [Get and Create Workday Employee Data](https://developer.workday.com/doc/mxj1630014392721.md).
 
 ## Preview the gallery locally (optional)
@@ -80,3 +95,5 @@ Workday DevRel reviews every pull request before merge. We look for:
 - **It is safe.** No secrets, no real data, nothing tenant-specific.
 
 We aim to respond within a few business days. Discussions on the PR are part of the process, so expect questions and suggestions rather than a silent merge or close.
+
+Merged examples are labeled in the gallery: **Workday** for examples authored by Workday teams, **Community** for everything else. Community examples are held to works, safe, and honest; Workday-authored ones get a stricter pass because people copy them as reference.

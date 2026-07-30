@@ -1,0 +1,4 @@
+# Catalog apps are Workday-maintained. Any PR touching catalog/ needs a
+# review from the DevRel team. Adjust the team slug to the real one, and
+# note this is enforced once branch protection requires code owner reviews.
+/catalog/ @Workday/devrel

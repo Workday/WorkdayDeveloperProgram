@@ -2,8 +2,16 @@
   "title": "Get and Create Employee Data",
   "description": "An orchestration that reads worker data from one tenant and creates matching records through the Workday REST API.",
   "type": "Orchestration",
-  "components": ["Orchestration"],
-  "products": ["Workday Orchestrate", "Workday REST API"],
-  "authors": ["obinnacodes"],
-  "tutorial": "https://developer.workday.com/doc/mxj1630014392721.md"
+  "components": [
+    "Orchestration"
+  ],
+  "products": [
+    "Workday Orchestrate",
+    "Workday REST API"
+  ],
+  "authors": [
+    "obinnacodes"
+  ],
+  "tutorial": "https://developer.workday.com/doc/mxj1630014392721.md",
+  "source": "workday"
 }

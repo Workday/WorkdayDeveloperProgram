@@ -1,9 +1,0 @@
-{
-  "title": "Work From Almost Anywhere",
-  "description": "Enable employees to request to work from anywhere, for a manager to approve, and see requests on a calendar view.",
-  "type": "Extend App",
-  "components": ["Presentation", "Model", "Template"],
-  "products": ["Workday Extend", "Workday HCM"],
-  "authors": ["obinnacodes"],
-  "tutorial": ""
-}

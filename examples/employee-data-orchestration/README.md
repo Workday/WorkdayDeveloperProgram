@@ -13,10 +13,10 @@ Status: this is a sample entry that demonstrates the hub's format. The `orchestr
 
 ## How to use it
 
-1. Open Orchestration Builder in your development tenant.
-2. Import the orchestration definition from `orchestration/`.
-3. Point the orchestration credentials at your tenant's Integration System User.
-4. Run it, then check Orchestration Activity for the execution log.
+1. Import the orchestration definition from `orchestration/` in Orchestration Builder.
+2. Point the orchestration credentials at your tenant's Integration System User.
+3. With Workday Extend, push straight to your development tenant and run it. Without Extend, promote the orchestration to IMPL, then deploy it to your tenant.
+4. Check Orchestration Activity for the execution log.
 
 ## Related documentation
 

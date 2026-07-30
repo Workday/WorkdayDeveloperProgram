@@ -4,26 +4,20 @@
 
 An Extend app that lets employees request to work from anywhere, routes the request to their manager for approval, and shows everyone's arrangements on a calendar view.
 
-Status: this is a sample entry that demonstrates the hub's format. The `app-source/` folder holds a placeholder until the real App Builder export lands.
+Status: this is a sample entry that demonstrates the hub's format. The `app-source/` folder holds a placeholder until the real app source export lands.
 
 ## What's inside
 
-- `app-source/` is where the app source exported from App Builder lives: app metadata (amd), site metadata (smd), pages (pmd), business objects, and security domains.
+- `app-source/` is where the exported app source lives: app metadata (amd), site metadata (smd), pages (pmd), business objects, and security domains.
 - `example.json` drives the card in the gallery and the index table in the repository README.
 
 ## Deploy instructions
 
-### App Builder (recommended)
+Use whatever tooling you normally build with:
 
-1. Open App Builder against your WCP development tenant.
-2. Import this folder with Open a Local Folder, or upload the source as a ZIP to App Hub.
-3. Save and Deploy, then install and launch the app in your tenant.
-
-### IntelliJ plugin (alternative)
-
-1. Install the Workday Extend Plugin for IntelliJ.
-2. Open this folder in IntelliJ.
-3. Log in to Workday Extend and your tenant, then deploy the app to the tenant.
+- **App Builder**: import this folder (or upload the source as a ZIP to App Hub), Save and Deploy, then install and launch in your tenant.
+- **IntelliJ plugin**: open the folder, log in to Workday Extend and your tenant, then deploy to the tenant.
+- **WDCLI**: push the app source to App Hub from your terminal as the developer CLI rolls out.
 
 ## Configuration
 
