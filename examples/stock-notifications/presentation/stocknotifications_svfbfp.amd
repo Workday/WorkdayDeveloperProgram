@@ -1,0 +1,13 @@
+{
+  "appProperties": [],
+  "tasks": [
+    {
+      "id": "stockInfo",
+      "routingPattern": "/stockInfo",
+      "page": {
+        "id": "stockInfo"
+      }
+    }
+  ],
+  "applicationId": "stocknotifications_svfbfp"
+}

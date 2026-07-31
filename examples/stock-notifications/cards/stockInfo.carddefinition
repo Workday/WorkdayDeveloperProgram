@@ -1,0 +1,16 @@
+{
+  "id": "stockInfo",
+  "presentation": {
+    "type": "inlineCard",
+    "header": {
+      "type": "cardHeader",
+      "title": "Workday Stock Price",
+      "subtitle": "current price",
+      "icon": "wd-accent-chart-bar-arrow"
+    },
+    "body": {
+      "type": "simpleCard",
+      "value": "My Simple Card Body"
+    }
+  }
+}

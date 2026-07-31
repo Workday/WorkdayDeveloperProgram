@@ -1,0 +1,19 @@
+{
+  "id": "stocknotifications_svfbfp",
+  "applicationId": "stocknotifications_svfbfp",
+  "siteId": "stocknotifications_svfbfp",
+  "languages": [
+    {
+      "code": "en-US",
+      "description": "English"
+    }
+  ],
+  "siteAuth": {
+    "authTypes": [
+      {
+        "scheme": "SSO",
+        "id": "sso"
+      }
+    ]
+  }
+}
