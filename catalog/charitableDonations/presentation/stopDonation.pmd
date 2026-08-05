@@ -1,0 +1,100 @@
+{
+  "id": "stopDonation",
+  "securityDomains": [
+    "ManageCharities"
+  ],
+  "endPoints": [
+    {
+      "name": "payInput",
+      "baseUrlType": "workday-payroll",
+      "url": "<% 'payrollInputs/' + queryParams.donationId %>",
+      "httpMethod": "GET",
+      "authType": "sso"
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "updatePayInput",
+        "baseUrlType": "workday-payroll",
+        "url": "<% 'payrollInputs/' + queryParams.donationId %>",
+        "httpMethod": "PATCH",
+        "authType": "sso",
+        "exclude": "<% payInput.fieldEditability != 'endDateOnly' %>",
+        "_comment": "If the donation has triggered a deduction, we will update the payInput with a new endDate."
+      },
+      {
+        "name": "deletePayInput",
+        "baseUrlType": "workday-payroll",
+        "url": "<% 'payrollInputs/' + queryParams.donationId %>",
+        "httpMethod": "DELETE",
+        "authType": "sso",
+        "exclude": "<% payInput.fieldEditability == 'endDateOnly' %>",
+        "_comment": "If the donation has never triggered a deduction, we will delete it."
+      }
+    ],
+    "responseErrorDetail": {
+      "errorSummary": "<% error %>",
+      "errors": "<% errors.map(item => { item.error }); %>"
+    }
+  },
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Stop Charitable Donation"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "sorted": false,
+      "children": [
+        {
+          "type": "hidden",
+          "id": "endDate",
+          "value": "<% date:getTodaysDate(null) %>",
+          "valueOutBinding": "updatePayInput.endDate"
+        },
+        {
+          "type": "readOnlyText",
+          "id": "charity",
+          "label": "Charity",
+          "value": "<% payInput.comment.contains('|') ? string:split(payInput.comment, '|')[0] : (payInput.comment ?: 'Unknown') %>"
+        },
+        {
+          "type": "number",
+          "label": "Donation Amount",
+          "id": "amount",
+          "fractionDigits": 2,
+          "format": "#,###.00",
+          "value": "<% payInput.inputDetails[0].value %>",
+          "enabled": "<% false %>"
+        },
+        {
+          "type": "readOnlyText",
+          "id": "donationType",
+          "label": "Donation Type",
+          "value": "<% payInput.ongoing ? 'Recurring' : 'One-time' %>"
+        },
+        {
+          "type": "date",
+          "label": "Donation Date",
+          "id": "startDate",
+          "datePrecision": "DAY",
+          "value": "<% payInput.startDate %>",
+          "enabled": "<% false %>"
+        },
+        {
+          "type": "readOnlyText",
+          "value": "This donation has not caused any deductions yet. Stopping this donation will also delete it.",
+          "visible": "<% payInput.fieldEditability == 'all' %>"
+        },
+        {
+          "type": "checkBox",
+          "id": "confirmStopDonation",
+          "label": "Confirm",
+          "required": "<% true %>"
+        }
+      ]
+    }
+  }
+}

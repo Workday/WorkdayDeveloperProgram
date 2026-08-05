@@ -1,0 +1,161 @@
+{
+  "include": [
+    "pageEvents.script"
+  ],
+  "id": "pageEvents",
+  "endPoints": [
+    {
+      "name": "currentWorker",
+      "baseUrlType": "workday-common",
+      "url": "/workers/me?view=workerProfile",
+      "authType": "sso"
+    },
+    {
+      "name": "holidayService",
+      "baseUrlType": "workday-holiday",
+      "url": "<% '/holidayEvents?fromDate=' +  start + '&toDate=' + end + '&worker=' + worker %>",
+      "authType": "sso",
+      "deferred": true
+    }
+  ],
+  "onLoad": "<%
+    var currYear = date:getTodaysDateFormatted(date:getDateTimeZone('America/Los_Angeles'), 'yyyy-01-01');
+    var today = date:getTodaysDateFormatted(date:getDateTimeZone('America/Los_Angeles'), 'yyyy-MM-dd');
+    var reqMap = {'start': currYear, 'end': today, 'worker' : currentWorker.id};
+    pageVariables.holidays = holidayService.invoke(reqMap).data;
+   %>",
+  "onSubmit": "<%
+    if (passcode.value == 'Workday') {
+      passcode.clearError();
+    }
+    else {
+      passcode.value = '';
+      passcode.setError('Wrong passcode');
+    }
+  %>",
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "type": "outboundVariable",
+        "name": "variable1",
+        "variableScope": "flow",
+        "onSend": "<%
+          self.data.selectedEmployees = pageEvents.getSelectedEmployees();
+          self.data;
+         %>"
+      },
+      {
+        "type": "outboundVariable",
+        "name": "variable2",
+        "variableScope": "flow",
+        "onSend": "<%
+          {
+            'company': companyList.value[0],
+            'selectedEmployees': pageEvents.getSelectedEmployees()
+          };
+        %>"
+      }
+    ]
+  },
+  "presentation": {
+    "standardEditButtonsHidden": false,
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "PMD Scripting - Page Events (onLoad, onSend, onSubmit)"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "fieldSet",
+          "title": "onLoad",
+          "children": [
+            {
+              "type": "richText",
+              "enabled": false,
+              "value": "The <i>onLoad</i> event will populate the dropdown with holidays <i>from</i> January of the current year <i>to</i> the current date."
+            },
+            {
+              "type": "dropdown",
+              "label": "Holidays",
+              "displayKey": "holidayName",
+              "idKey": "date",
+              "values": "<% pageVariables.holidays %>"
+            }
+          ]
+        },
+        {
+          "type": "fieldSet",
+          "title": "onSend",
+          "children": [
+            {
+              "type": "richText",
+              "enabled": false,
+              "value": "Select a Company from the dropdown, then select one or more Employees. When Ok is clicked, the <i>onSend</i> event will collect the Employees names and submit them as outboundVariables."
+            },
+            {
+              "type": "dropdown",
+              "id": "companyList",
+              "label": "Company",
+              "required": true,
+              "instanceList": [
+                {
+                  "id": "Workday",
+                  "descriptor": "Workday"
+                },
+                {
+                  "id": "Google",
+                  "descriptor": "Google"
+                }
+              ],
+              "valueOutBinding": "variable1.company",
+              "onChange": "<% pageEvents.selectCompany(empty self.value ? null : self.value[0]); %>"
+            },
+            {
+              "type": "grid",
+              "id": "employeeGrid",
+              "label": "Employees",
+              "rows": "<% [] %>",
+              "rowVariableName": "employee",
+              "selectionEnabled": true,
+              "maxRowSelection": 10,
+              "columns": [
+                {
+                  "type": "column",
+                  "columnId": "name",
+                  "label": "Name",
+                  "cellTemplate": {
+                    "type": "text",
+                    "id": "name",
+                    "enabled": false,
+                    "value": "<% employee.name %>"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "fieldSet",
+          "title": "onSubmit",
+          "children": [
+            {
+              "type": "richText",
+              "enabled": false,
+              "value": "The <i>onSubmit</i> event will check for the correct password."
+            },
+            {
+              "type": "text",
+              "id": "passcode",
+              "label": "Passcode (hint: Workday)",
+              "helpText": "Workday",
+              "value": "<% pageVariables.passwordHint %>",
+              "required": true
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "id": "podiumChart",
+  "include": [
+    "performanceData.script"
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Podium-style Chart"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "section",
+          "title": "Podium-style Combo Chart",
+          "children": [
+            {
+              "type": "richText",
+              "label": "How to construct a podium-style chart",
+              "value": "A podium-style chart is a chart where smaller numerical values are represented by larger chart marks.\nThink of a podium where 1st place gets a taller platform than 3rd place. You can achieve this effect using a combination\nof Chart 2.0 features, including chart mark labels, hidden tooltips, and hidden axis values."
+            },
+            {
+              "type": "comboChart2",
+              "id": "chart1",
+              "data": "<% performanceData.getPerformanceData() %>",
+              "dataVariableName": "perfData",
+              "legendPosition": "HIDDEN",
+              "measurementDataSets": [
+                {
+                  "name": "Michael's Score",
+                  "value": "<% 5 - perfData.michael %>",
+                  "chartMarkType": "BAR",
+                  "chartMarkLabel": "<% perfData.michael %>",
+                  "hideInTooltip": true
+                },
+                {
+                  "name": "Average",
+                  "value": "<% 5 - perfData.average %>",
+                  "chartMarkType": "LINE",
+                  "hideInTooltip": true
+                }
+              ],
+              "measurementAxisOptions": {
+                "hideAxisValues": true,
+                "axisTitle": "Michael's Competency Score vs. Average",
+                "axisIncrement": 0.25
+              },
+              "categoryDataSet": {
+                "name": "Competency",
+                "value": "<% perfData.competency %>"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

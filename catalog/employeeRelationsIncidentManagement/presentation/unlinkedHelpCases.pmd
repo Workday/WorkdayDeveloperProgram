@@ -1,0 +1,206 @@
+{
+  "id": "unlinkedHelpCases",
+  "include": [
+    "transform.script"
+  ],
+  "endPoints": [
+    {
+      "name": "helpCaseData",
+      "baseUrlType": "wql",
+      "authType": "sso",
+      "url": "data",
+      "wqlQuery": {
+        "parameters": {
+          "startDate": "<% date:format(date:now().minusYears(2),'yyyy-MM-dd HH:mm:ss') %>",
+          "endDate": "<% date:format(date:now(),'yyyy-MM-dd HH:mm:ss') %>"
+        },
+        "queryId": "helpCaseData"
+      }
+    },
+    {
+      "name": "configValuesData",
+      "baseUrlType": "app",
+      "authType": "sso",
+      "url": "configValuesBO"
+    },
+    {
+      "name": "caseConnectionData",
+      "baseUrlType": "wql",
+      "authType": "sso",
+      "url": "data",
+       "wqlQuery": {
+        "parameters": {
+          "appId": "<% site.applicationId %>"
+        },
+        "queryId": "caseConnectionData_All"
+      }
+    }
+  ],
+  "onLoad": "<%
+              pageVariables.excludeList = [];
+              for (var connection : caseConnectionData.data) {
+                pageVariables.excludeList.add(connection.connectionID);
+              }
+              pageVariables.excludeList = list:nonNull(pageVariables.excludeList.distinct());
+
+              //get Workday Help Type Filter from Config Values
+              pageVariables.helpTypeFilter = [];
+              for (var helpTypeRow : list:sort(list:filter(configValuesData.data,'configType','Workday Help Type Filter'),'configOrder',true)) {
+                pageVariables.helpTypeFilter.add(helpTypeRow.configValue)
+              }
+              
+              if (empty(pageVariables.helpTypeFilter)) {
+                pageVariables.caseDataFiltered = list:excludeMultiple(list:nonNull(helpCaseData.data),'id',pageVariables.excludeList);
+              } else {
+                pageVariables.caseDataFiltered = list:excludeMultiple(list:filterMultiple(helpCaseData.data,'type.id',pageVariables.helpTypeFilter),'id',pageVariables.excludeList);
+              }
+              
+              %>",
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Workday Help Cases Without Associated Incidents"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "grid",
+          "label": "Workday Help Cases",
+          "rowVariableName": "caseRow",
+          "rows": "<% pageVariables.caseDataFiltered %>",
+          "columns": [
+            {
+              "type": "column",
+              "columnId": "colCreate",
+              "label": "Create Incident",
+              "cellTemplate": {
+                "type": "button",
+                "label": "Create",
+                "taskReference": {
+                  "type": "taskReference",
+                  "taskId": "protectedCase_New",
+                  "parameterBindings": {
+                    "helpCaseID": "<% caseRow.id %>"
+                  }
+                },
+                "action": "PRIMARY"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "col1",
+              "label": "Case",
+              "sortableAndFilterable": true,
+              "cellTemplate": {
+                "type": "instanceList",
+                "instanceList": [
+                  {
+                    "id": "<% caseRow.id %>",
+                    "descriptor": "<% caseRow.descriptor %>",
+                    "wid": "<% caseRow.id %>"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "col2",
+              "label": "For",
+              "sortableAndFilterable": true,
+              "cellTemplate": {
+                "type": "instanceList",
+                "instanceList": [
+                  {
+                    "id": "<% caseRow.for.id %>",
+                    "descriptor": "<% caseRow.for.descriptor %>",
+                    "wid": "<% caseRow.for.id %>"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "col3",
+              "label": "Type",
+              "sortableAndFilterable": true,
+              "cellTemplate": {
+                "type": "instanceList",
+                "instanceList": [
+                  {
+                    "id": "<% caseRow.type.id %>",
+                    "descriptor": "<% caseRow.type.descriptor %>",
+                    "wid": "<% caseRow.type.id %>"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "col4",
+              "label": "Service Team",
+              "sortableAndFilterable": true,
+              "cellTemplate": {
+                "type": "instanceList",
+                "instanceList": [
+                  {
+                    "id": "<% caseRow.serviceTeam.id %>",
+                    "descriptor": "<% caseRow.serviceTeam.descriptor %>",
+                    "wid": "<% caseRow.serviceTeam.id %>"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "col5",
+              "label": "Status",
+              "sortableAndFilterable": true,
+              "cellTemplate": {
+                "type": "instanceList",
+                "instanceList": [
+                  {
+                    "id": "<% caseRow.caseStatus.id %>",
+                    "descriptor": "<% caseRow.caseStatus.descriptor %>",
+                    "wid": "<% caseRow.caseStatus.id %>"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "col6",
+              "label": "Creation Date",
+              "sortableAndFilterable": true,
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% transform.formatDateString(caseRow.caseCreationDate, userTimeZone) %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "col7",
+              "label": "ID",
+              "sortableAndFilterable": true,
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% caseRow.id %>"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

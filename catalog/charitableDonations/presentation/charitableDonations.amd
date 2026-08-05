@@ -1,0 +1,272 @@
+{
+  "appProperties": [
+    {
+      "key": "appName",
+      "value": "Charitable Donations"
+    },
+    {
+      "key": "deductionCode",
+      "value": "UWAY"
+    }
+  ],
+  "flowDefinitions": [
+    {
+      "id": "createCharityFlow",
+      "flowSteps": [
+        {
+          "id": "createCharity",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "manageCharities",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "createCharity"
+        },
+        {
+          "id": "manageCharities",
+          "endsFlow": true,
+          "taskId": "manageCharities"
+        }
+      ]
+    },
+    {
+      "id": "donateFlow",
+      "flowSteps": [
+        {
+          "id": "donate",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "donateConfirm",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "donate"
+        },
+        {
+          "id": "donateConfirm",
+          "endsFlow": true,
+          "taskId": "donateConfirm"
+        }
+      ]
+    },
+    {
+      "id": "updateCharityImageFlow",
+      "flowSteps": [
+        {
+          "id": "updateCharityImage",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "manageCharities",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "updateCharityImage"
+        },
+        {
+          "id": "updateCharityImageManageCharities",
+          "endsFlow": true,
+          "taskId": "manageCharities"
+        }
+      ]
+    },
+    {
+      "id": "orderSubmitConcludeFlow",
+      "flowSteps": [
+        {
+          "id": "start",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "deleteAttachmentFlowStep",
+              "condition": "<% flowVariables.deleteClicked %>"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "updateCharity"
+        },
+        {
+          "id": "deleteAttachmentFlowStep",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "updateCharityFlowStep",
+              "condition": "<% flowVariables.deleteClicked %>"
+            }
+          ],
+          "taskId": "deleteAttachments"
+        },
+        {
+          "id": "updateCharityFlowStep",
+          "endsFlow": true,
+          "taskId": "updateCharity"
+        }
+      ],
+      "cancelOutOfFlow": true
+    }
+  ],
+  "tasks": [
+    {
+      "id": "createCharity",
+      "routingPattern": "/charities/create",
+      "page": {
+        "id": "createCharity"
+      }
+    },
+    {
+      "id": "donateConfirm",
+      "routingPattern": "/donateConfirm",
+      "page": {
+        "id": "donateConfirm"
+      }
+    },
+    {
+      "id": "donate",
+      "routingPattern": "/donate/{charityId}",
+      "page": {
+        "id": "donate"
+      }
+    },
+    {
+      "id": "donations",
+      "routingPattern": "/donations/{workerId}",
+      "page": {
+        "id": "donations"
+      }
+    },
+    {
+      "id": "error",
+      "routingPattern": "/error",
+      "page": {
+        "id": "error"
+      }
+    },
+    {
+      "id": "home",
+      "routingPattern": "/home",
+      "page": {
+        "id": "home"
+      }
+    },
+    {
+      "id": "manageCharities",
+      "routingPattern": "/charities/manage",
+      "page": {
+        "id": "manageCharities"
+      }
+    },
+    {
+      "id": "manageMyDonations",
+      "routingPattern": "/myDonations",
+      "page": {
+        "id": "manageMyDonations"
+      }
+    },
+    {
+      "id": "stopDonation",
+      "routingPattern": "/donations/{donationId}/stop",
+      "page": {
+        "id": "stopDonation"
+      }
+    },
+    {
+      "id": "viewCharityEvent",
+      "routingPattern": "/charityEvent/{eventId}",
+      "page": {
+        "id": "viewCharityEvent"
+      }
+    },
+    {
+      "id": "updateCharity",
+      "routingPattern": "/charities/{charityId}/update",
+      "page": {
+        "id": "updateCharity"
+      }
+    },
+    {
+      "id": "updateCharityImage",
+      "routingPattern": "/charities/{charityId}/updateImage",
+      "page": {
+        "id": "updateCharityImage"
+      }
+    },
+    {
+      "id": "donateSelect",
+      "routingPattern": "/donate",
+      "page": {
+        "id": "donateSelect"
+      }
+    },
+    {
+      "id": "viewCharity",
+      "routingPattern": "/charities/{charityId}",
+      "page": {
+        "id": "viewCharity"
+      }
+    },
+    {
+      "id": "microConfirm",
+      "routingPattern": "/microConfirm",
+      "page": {
+        "id": "microConfirm"
+      }
+    },
+    {
+      "id": "deleteAttachments",
+      "routingPattern": "/deleteAttachments",
+      "page": {
+        "id": "deleteAttachments"
+      }
+    },
+    {
+      "id": "charitiesListDetail",
+      "routingPattern": "/charitiesListDetail",
+      "page": {
+        "id": "charitiesListDetail"
+      }
+    },
+    {
+      "id": "charityHub",
+      "routingPattern": "/",
+      "page": {
+        "id": "charityHub"
+      }
+    },
+    {
+      "id": "createCharityWizard",
+      "routingPattern": "/createCharityWizard",
+      "page": {
+        "id": "createCharityWizard"
+      }
+    }
+  ],
+  "applicationId": "charitableDonations",
+  "dataProviders": [
+    {
+      "key": "app",
+      "value": "<% apiGatewayEndpoint + '/apps/' + site.applicationId + '/v1/' %>"
+    },
+    {
+      "key": "workday-bp",
+      "value": "<% apiGatewayEndpoint + '/businessProcess/v1/' %>"
+    },
+    {
+      "key": "workday-staffing",
+      "value": "<% apiGatewayEndpoint + '/staffing/v1/' %>"
+    },
+    {
+      "key": "workday-payroll",
+      "value": "<% apiGatewayEndpoint + '/payroll/v2/' %>"
+    },
+    {
+      "key": "workday-wql",
+      "value": "<% apiGatewayEndpoint + '/wql/v1/' %>"
+    }
+  ]
+}

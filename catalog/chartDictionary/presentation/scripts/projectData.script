@@ -1,0 +1,50 @@
+var getTasksRemainingData = function() {
+  var chartData = [
+    {
+      'date': 'Week 1',
+      'tasksRemaining': 175, 
+      'label': 'Phase 1 Start'
+    },
+    {
+      'date': 'Week 2',
+      'tasksRemaining': 162, 
+      'label': 'Phase 1'
+    },
+    {
+      'date': 'Week 3',
+      'tasksRemaining': 141,
+      'label': 'Phase 1'
+    },
+    {
+      'date': 'Week 4',
+      'tasksRemaining': 155, 
+      'label': 'Phase 2 Start'
+    },
+    {
+      'date': 'Week 5',
+      'tasksRemaining': 117, 
+      'label': 'Phase 2'
+    },
+    {
+      'date': 'Week 6',
+      'tasksRemaining': 84,
+      'label': 'Phase 2'
+    },
+    {
+      'date': 'Week 7',
+      'tasksRemaining': 102,
+      'label': 'Phase 3 Start'
+    },
+    {
+      'date': 'Week 8',
+      'tasksRemaining': 68,
+      'label': 'Phase 3'
+    }
+  ]
+  return chartData
+}
+
+
+{
+  "getTasksRemainingData": getTasksRemainingData
+}

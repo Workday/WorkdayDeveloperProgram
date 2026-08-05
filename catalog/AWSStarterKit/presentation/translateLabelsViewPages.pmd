@@ -1,0 +1,99 @@
+{
+  "id": "translateLabelsViewPages",
+  "onLoad": "<% 
+      //REUSE THIS BLOCK FOR TRANSLATIONS
+      pageVariables.labels = {
+          'label1': 'License Number',
+          'label2': 'First Name',
+          'label3': 'Last Name',
+          'label4': 'Date of Birth',
+          'label5': 'Issue Date',
+          'label6': 'Expiry Date',
+          'label7': 'Address',
+          'label8': 'Anything Else to Add?',
+          'value1': 'Please add a comment here'
+      };
+    %>",
+  "presentation": {
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "Translate Labels and AWS"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "section",
+          "id": "labels",
+          "children": [
+        {
+          "action": "LINK",
+          "type": "button",
+          "id": "home",
+          "label": "← Home",
+          "taskReference": {
+            "taskId": "home"
+          }
+         } ,
+            {
+              "type": "readOnlyText",
+              "id": "text1",
+              "label": "<% presentationLabels.licenseNum %>",
+              "value": "Test 1"
+            },
+            {
+              "type": "readOnlyText",
+              "id": "text2",
+              "label": "<% presentationLabels.firstName %>",
+              "value": "Test 2"
+            },
+            {
+              "type": "readOnlyText",
+              "id": "text3",
+              "label": "<% presentationLabels.lastName %>",
+              "value": "Test 3"
+            },
+            {
+              "type": "readOnlyText",
+              "id": "text4",
+              "label": "<% presentationLabels.dob %>",
+              "value": "Test 4"
+            },
+            {
+              "type": "readOnlyText",
+              "id": "text5",
+              "label": "<% presentationLabels.issueDate %>",
+              "value": "Test 5"
+            },
+            {
+              "type": "readOnlyText",
+              "id": "text6",
+              "label": "<% presentationLabels.expiryDate %>",
+              "value": "Test 6"
+            },
+            {
+              "type": "readOnlyText",
+              "id": "text7",
+              "label": "<% presentationLabels.Address %>",
+              "value": "Test 7"
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "id": "footer",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    },
+    "standardEditButtonsHidden": true
+  }
+}

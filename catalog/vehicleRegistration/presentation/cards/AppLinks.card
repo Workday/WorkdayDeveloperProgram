@@ -1,0 +1,33 @@
+{
+  "id": "AppLinks",
+  "parameters": [ "title", "Register", "Locations", "ViewRegistrations"],
+  "header": {
+    "title": "<% title %>",
+    "icon": "wd-accent-megaphone"
+  },
+  "body": {
+    "type": "pillCard",
+    "pills": [
+      {
+        "label": "<% Register %>",
+        "taskReference": {
+          "taskId": "registerVehicleWizard"
+        }
+      },
+      {
+        "label": "<% Locations %>",
+        "taskReference": {
+          "taskId": "viewLocations"
+        }
+      }
+    ]
+  },
+  "footer": [
+    {
+      "label": "<% ViewRegistrations %>",
+      "taskReference": {
+        "taskId": "home"
+      }
+    }
+  ]
+}

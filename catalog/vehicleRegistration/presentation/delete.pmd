@@ -1,0 +1,55 @@
+{
+  "id": "delete",
+  "securityDomains": [
+    "ManageVehicles"
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "deleteVehicle",
+        "baseUrlType": "workday-graph",
+        "authType": "sso",
+        "httpMethod": "POST",
+        "onSend": "<% /*This outbound endpoint submits the request to the BO Delete mutation in the Graph API
+        This expression will log the payload being sent to the endpoint using console.info()
+        the return statement then ensures that the payload will be sent and the endpoint will be triggered*/
+                   console.info('Delete vehicle: ' + json:asJSON(self.data)); return self.data; %>",
+        "graphQuery": {
+          "queryId": "deleteVehicle",
+          "parameters": {
+            "vehicleId": "<% queryParams.vehicleId %>"
+          }
+        }
+      }
+    ],
+    "responseErrorDetail": {
+      "errorSummary": "<% error + '. Once you have successfully fixed the error(s), deploy this app to proceed.' %>",
+      "errors": "<% list:mapAttribute(errors, 'error') %>"
+    }
+  },
+  "presentation": {
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "<% presentationLabels.DeleteRegisteredVehicle %>"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "text",
+          "label": "Delete",
+          "value": "<% presentationLabels.DeleteHelpText %>",
+          "enabled": false
+        },
+        {
+          "type": "text",
+          "label": "Vehicle",
+          "value": "<% queryParams.vehicleId %>",
+          "enabled": false
+        }
+      ]
+    }
+  }
+}

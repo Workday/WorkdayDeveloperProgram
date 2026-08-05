@@ -1,0 +1,127 @@
+{
+  "appProperties": [ ],
+  "flowDefinitions": [
+    {
+      "id": "uploadFlow",
+      "flowSteps": [
+        {
+          "id": "detectTextEndTextFlow",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "detectTextEndAndDetectPIIStartFlow",
+              "condition": "true"
+            }
+          ],
+          "taskId": "detectText"
+        },
+        {
+          "id": "detectTextEndAndDetectPIIStartFlow",
+          "transitions": [
+            {
+              "order": "b",
+              "value": "detectPIIEndFlow",
+              "condition": "true"
+            }
+          ],
+          "taskId": "detectTextEndAndDetectPIIStart"
+        },
+        {
+          "id": "detectPIIEndFlow",
+          "transitions": [
+            {
+              "order": "c",
+              "value": "detectPIIEndFlow",
+              "condition": "true"
+            }
+          ],
+          "taskId": "detectPIIEnd"
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "translateTextToSpanish",
+      "routingPattern": "/",
+      "page": {
+        "id": "translateTextToSpanish"
+      }
+    },
+    {
+      "id": "detectText",
+      "routingPattern": "/detectText",
+      "page": {
+        "id": "detectText"
+      }
+    },
+    {
+      "id": "detectTextEndAndDetectPIIStart",
+      "routingPattern": "/detectTextEndAndDetectPIIStart",
+      "page": {
+        "id": "detectTextEndAndDetectPIIStart"
+      }
+    },
+    {
+      "id": "detectPIIEnd",
+      "routingPattern": "/detectPIIEnd",
+      "page": {
+        "id": "detectPIIEnd"
+      }
+    },
+    {
+      "id": "translateLabelsEditPages",
+      "routingPattern": "/translateLabelsEditPages",
+      "page": {
+        "id": "translateLabelsEditPages"
+      }
+    },
+    {
+      "id": "translateLabelsViewPages",
+      "routingPattern": "/translateLabelsViewPages",
+      "page": {
+        "id": "translateLabelsViewPages"
+      }
+    },
+    {
+      "id": "testAnyAWSAPI",
+      "routingPattern": "/testAnyAWSAPI",
+      "page": {
+        "id": "testAnyAWSAPI"
+      }
+    },
+    {
+      "id": "home",
+      "routingPattern": "/home",
+      "page": {
+        "id": "home"
+      }
+    },
+    {
+      "id": "sentimentAnalysisWithReuse",
+      "routingPattern": "/sentimentAnalysisWithReuse",
+      "page": {
+        "id": "sentimentAnalysisWithReuse"
+      }
+    }
+  ],
+  "applicationId": "AWSStarterKit",
+  "dataProviders": [
+    {
+      "key": "app",
+      "value": "<% apiGatewayEndpoint + '/apps/' + site.applicationId + '/v1/' %>"
+    },
+    {
+      "key": "orchestration",
+      "value": "<% apiGatewayEndpoint + '/orchestrate/v1/apps/' + site.applicationId + '/orchestrations/' %>"
+    },
+    {
+      "key": "workday-common",
+      "value": "<% apiGatewayEndpoint + '/common/v1/' %>"
+    },
+    {
+      "key": "workday-wql",
+      "value": "<% apiGatewayEndpoint + '/wql/v1/' %>"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": 3,
+  "name": "DeleteExcelFromCSV",
+  "label": "Delete Excel From CSV",
+  "securityDomains": [
+    "ManageExcelFiles"
+  ],
+  "routePath": "/excelFilesDelete"
+}

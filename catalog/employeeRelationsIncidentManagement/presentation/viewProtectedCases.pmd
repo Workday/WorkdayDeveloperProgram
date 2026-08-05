@@ -1,0 +1,169 @@
+{
+  "id": "viewProtectedCases",
+    "include": [
+    "transform.script"
+  ],
+  "endPoints": [
+    {
+      "name": "currentUserData",
+      "baseUrlType": "general",
+      "authType": "sso",
+      "url": "common/v1/workers/me"
+    },
+    {
+      "name": "protectedCaseData",
+      "baseUrlType": "wql",
+      "authType": "sso",
+      "url": "data",
+      "wqlQuery": {
+        "parameters": {
+          "appId": "<% site.applicationId %>"
+        },
+        "queryId": "protectedCaseData"
+      }
+    },
+    {
+      "name": "getStatuses",
+      "baseUrlType": "app",
+      "authType": "sso",
+      "url": "protectedCaseStatuses?limit=100"
+    }
+  ],
+  "onLoad": "<%
+            //prepare protected case data based on query params (if any)
+            var openStatusList = getStatuses.data.filter(x=>{ !x.resolved }).map(x=>{x.id});
+            //var openCaseData = list:excludeMultiple(protectedCaseData.data,'status',['Closed', 'Cancelled']);
+            var openCaseData = protectedCaseData.data.filter(x=>{ empty x.status.id || openStatusList.contains(x.status.id) });
+            if (empty(queryParams.caseDataFilter)) {
+              pageVariables.pageLabel = 'Open';
+              pageVariables.protectedCaseData = openCaseData;
+            } else if (queryParams.caseDataFilter == 'MeAssigned') {
+              pageVariables.pageLabel = 'Assigned To Me';
+              pageVariables.protectedCaseData = list:filter(openCaseData,'assignedTo.id',currentUserData.id);
+            } else if (queryParams.caseDataFilter == 'Archive') {
+              pageVariables.pageLabel = 'Archived';
+             var closedStatusList = getStatuses.data.filter(x=>{ x.resolved }).map(x=>{x.id});
+             // pageVariables.protectedCaseData = list:filterMultiple(protectedCaseData.data,'status',['Closed', 'Cancelled']);
+              pageVariables.protectedCaseData = protectedCaseData.data.filter(x=>{ !empty x.status.id && closedStatusList.contains(x.status.id) });
+            }
+            %>",
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "<% 'Protected Cases: ' + pageVariables.pageLabel %>"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "grid",
+          "label": "Protected Cases",
+          "rowVariableName": "caseRow",
+          "indexVariableName": "indexVar",
+          "rows": "<% pageVariables.protectedCaseData %>",
+          "columns": [
+            {
+              "type": "column",
+              "columnId": "col1",
+              "label": "Case Name",
+              "sortableAndFilterable": true,
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% caseRow.caseName %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "col2",
+              "label": "About",
+              "sortableAndFilterable": true,
+              "cellTemplate": {
+                "type": "instanceList",
+                "instanceList": [
+                  {
+                    "id": "<% caseRow.createdAbout.id %>",
+                    "descriptor": "<% caseRow.createdAbout.descriptor %>",
+                    "wid": "<% caseRow.createdAbout.id %>"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "col3",
+              "label": "Created Date",
+              "sortableAndFilterable": true,
+              "cellTemplate": {
+                "type": "date",
+                "value": "<% !empty caseRow.createdDate ?  transform.formatDateString(caseRow.createdDate, userTimeZone) : ''  %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "col4",
+              "label": "Assigned To",
+              "sortableAndFilterable": true,
+              "cellTemplate": {
+                "type": "instanceList",
+                "instanceList": [
+                  {
+                    "id": "<% empty(caseRow.assignedTo.id) ? '' : caseRow.assignedTo.id %>",
+                    "descriptor": "<% empty(caseRow.assignedTo.descriptor) ? '' : caseRow.assignedTo.descriptor %>",
+                    "wid": "<% empty(caseRow.assignedTo.id) ? '' : caseRow.assignedTo.id %>"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "col5",
+              "label": "Status",
+              "sortableAndFilterable": true,
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% caseRow.status.descriptor ?? '' %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "col6",
+              "label": "View",
+              "cellTemplate": {
+                "type": "section",
+                "children": [
+                  {
+                    "type": "button",
+                    "label": "Open Case",
+                    "taskReference": {
+                      "type": "taskReference",
+                      "taskId": "viewProtectedCase",
+                      "parameterBindings": {
+                        "caseID": "<% caseRow.id %>"
+                      }
+                    },
+                    "action": "PRIMARY"
+                  },
+                  {
+                    "type": "hidden",
+                    "value": "<% caseRow.id %>"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

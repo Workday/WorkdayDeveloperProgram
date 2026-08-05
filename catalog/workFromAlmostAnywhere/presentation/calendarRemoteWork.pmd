@@ -1,0 +1,129 @@
+{
+  "id": "calendarRemoteWork",
+  "include": [
+    "dates.script"
+  ],
+  "_endPointComment": "add'l endpoints for this page are declared in the meAndMyRequestsEndpoints pod (details about current user, details of all Remote Requests)!",
+  "endPoints": [
+    {
+      "baseUrlType": "workday-wql",
+      "name": "getBPEvents",
+      "authType": "sso",
+      "url": "data",
+      "failOnStatusCodes": [
+        {
+          "code": "400"
+        },
+        {
+          "code": "403"
+        }
+      ],
+      "wqlQuery": {
+        "parameters": {
+          "applicationId": "<% site.applicationId %>"
+        },
+        "queryId": "getBPEvents"
+      }
+    }
+  ],
+  "onLoad": "<%
+    // The sample calendar is view-only for non-employees.
+    me.workerType.descriptor == 'Employee' ? pageVariables.viewOnly = false : pageVariables.viewOnly = true;
+    // We'll use these variables to control the submit button.
+    pageVariables.maxRemoteEvents = attrstore['Max Remote Days'] ?? 30; //refer to app attribute setting, but default to 30
+    let numEvents = remoteWorkRequests.data != null ? remoteWorkRequests.data.size() : 0;
+    numEvents > pageVariables.maxRemoteEvents ? pageVariables.approvalRequired = true : pageVariables.approvalRequired = false;
+    //get total number of remote days and days left
+    var numRemoteDays = dates.calculateRemainingDays(remoteWorkRequests, userTimeZone);
+    pageVariables.daysLeft = number:max(pageVariables.maxRemoteEvents - numRemoteDays, 0);
+    pageVariables.daysUsed = numRemoteDays;
+    pageVariables.resetDateString = dates.getResetDate(userTimeZone);
+    
+    remoteWorkRequests.data.forEach(e => { e.status = getBPEvents.data.find(bpEvent => {bpEvent.businessProcessTarget.id == e.id}).status ?? 'Approved'});
+    //console.info('augmented work event data is ' + json:asJSON(remoteWorkRequests.data));
+  %>",
+  "presentation": {
+    "title": {
+      "type": "title",
+      "id": "title",
+      "label": "<% 'Remote Work Calendar' %>"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "pod",
+          "podId": "meAndMyRequestsEndpoints"
+        },
+        {
+          "type": "pod",
+          "podId": "warningMessage"
+        },
+        {
+          "type": "multiSelectCalendar",
+          "id": "multiSelectCalendar",
+          "render": "<% true //getRemoteWorkDays.data != null 
+          %>",
+          "calendarStartDate": "<% date:now('America/Los_Angeles') %>",
+          "eventData": {
+            "on": "<% remoteWorkRequests.data ?? [] %>",
+            "as": "request",
+            "template": {
+              "startDate": "<% date:parse(request.startDate) %>",
+              "endDate": "<% date:parse(request.endDate ?? request.startDate) %>",
+              "style": "<%  if (request.status == 'In Progress') { 'SUBMITTED'; } else
+                            if (request.status == 'Successfully Completed' || request.status == 'Approved') { 'APPROVED';} else      
+                            if (request.status == 'Denied') { 'DENIED'; } %>",
+              "title": "<% request.descriptor %>",
+              "editTask": {
+                "task": {
+                  "taskId": "editRequest",
+                  "parameters": {
+                    "requestId": "<% request.id %>"
+                  }
+                },
+                "render": "<% !pageVariables.viewOnly %>"
+              }
+            }
+          },
+          "submitButton": {
+            "render": "<% !pageVariables.viewOnly %>",
+            "label": "<% pageVariables.approvalRequired ? 'Request' : 'Add'  %>",
+            "datesQueryParamName": "selectedDates",
+            "task": {
+              "taskId": "quickAddRemoteWorkRequest",
+              "parameters": {
+                "createdById": "<% me.id %>",
+                "createdByName": "<% me.descriptor %>"
+              }
+            }
+          },
+          "sidebar": {
+            "task": {
+              "taskId": "sidebarInfo",
+              "parameters": {
+                "name": "<% me.descriptor %>",
+                "businessTitle": "<% me.primaryJob.businessTitle %>",
+                "primaryLocation": "<% me.primaryJob.location.descriptor %>",
+                "daysUsed": "<% pageVariables.daysUsed %>",
+                "daysLeft": "<% pageVariables.daysLeft %>",
+                "resetDate": "<% pageVariables.resetDateString %>"
+              }
+            },
+            "position": "left"
+          }
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

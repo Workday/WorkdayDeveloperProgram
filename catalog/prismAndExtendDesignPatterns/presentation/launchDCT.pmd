@@ -1,0 +1,68 @@
+{
+  "id": "launchDCT",
+  "endPoints": [],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "baseUrlType": "orchestrate",
+        "name": "launchOrchestration",
+        "authType": "sso",
+        "httpMethod": "POST",
+        "allowEmptyPayload": "true",
+        "url": "<%  'loadPrismByFileSync/launch'  %>"
+      },
+      {
+        "type": "outboundVariable",
+        "name": "outboundFlowVariable",
+        "variableScope": "flow",
+        "values": [
+          {
+            "outboundPath": "response",
+            "value": "<% launchOrchestration ?? {:} %>"
+          },
+          {
+            "outboundPath" : "success",
+            "value" : "<% launchOrchestration.success ?? false %>"
+          }
+        ]
+      }
+    ],
+    "responseErrorDetail": {
+      "errorSummary": "<%error%>",
+      "errors": "<%list:mapAttribute(errors, 'error')%>"
+    }
+  },
+  "presentation": {
+   "pageType": "edit",
+   "micro": "true",
+    "microFirstPageOnly": "false",
+    "title": {
+      "type": "title",
+      "label": "Launch Data Change Task"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "text",
+          "id": "launchDct",
+          "label": "Click OK to Launch the Data Change Task.",
+          "value":"Please note that this will prevent edits to records while the DCT process is still running.",
+          "enabled": false
+        }
+
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By<br/><b>Workday Extend</b>"
+        }
+      ]
+    }
+  }
+}

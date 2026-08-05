@@ -1,0 +1,276 @@
+{
+  "id": "featureComparisonAndTargetLines",
+  "include": [
+    "pokemonData.script"
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Comparison Line and Target Lines Features"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "section",
+          "title": "Vertical Clustered Bar Chart with Target Lines",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "id": "chart1",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Start Level",
+                  "value": "<% data.level.startLevel %>"
+                },
+                {
+                  "name": "Current Level",
+                  "value": "<% data.level.currentLevel %>"
+                }
+              ],
+              "targetLineDataSet": {
+                "name": "Level to Evolve",
+                "value": "<% data.level.levelToEvolve %>"
+              },
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Horizontal Stacked Bar Chart with Target Lines",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "id": "chart2",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "barOrientation": "HORIZONTAL",
+              "measurementDataSets": [
+                {
+                  "name": "Start Level",
+                  "value": "<% data.level.startLevel %>"
+                },
+                {
+                  "name": "Current Level",
+                  "value": "<% data.level.currentLevel %>"
+                }
+              ],
+              "targetLineDataSet": {
+                "name": "Level to Evolve",
+                "value": "<% data.level.levelToEvolve %>",
+                "chartMarkLabel": "<% data.level.levelToEvolve %>"
+              },
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Vertical Clustered Bar Chart with Comparison Line",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "id": "chart3",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "HP",
+                  "value": "<% data.stats.hp %>"
+                },
+                {
+                  "name": "Attack",
+                  "value": "<% data.stats.attack %>"
+                },
+                {
+                  "name": "Defense",
+                  "value": "<% data.stats.defense %>"
+                },
+                {
+                  "name": "Speed",
+                  "value": "<% data.stats.speed %>"
+                }
+              ],
+              "measurementAxisOptions": {
+                "comparisonLineValue": "<% 123.123 %>",
+                "comparisonLineLabel": "<% 'Comparison Line Label' %>"
+              },
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Horizontal Clustered Bar Chart with Comparison Line",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "id": "chart4",
+              "barOrientation": "HORIZONTAL",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "HP",
+                  "value": "<% data.stats.hp %>"
+                },
+                {
+                  "name": "Attack",
+                  "value": "<% data.stats.attack %>"
+                },
+                {
+                  "name": "Defense",
+                  "value": "<% data.stats.defense %>"
+                },
+                {
+                  "name": "Speed",
+                  "value": "<% data.stats.speed %>"
+                }
+              ],
+              "measurementAxisOptions": {
+                "comparisonLineValue": "<% 123.123 %>",
+                "comparisonLineLabel": "<% 'Comparison Line Label' %>"
+              },
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Percent Area Chart with Comparison Line",
+          "children": [
+            {
+              "type": "percentAreaChart2",
+              "id": "chart5",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "HP",
+                  "value": "<% data.stats.hp %>"
+                },
+                {
+                  "name": "Attack",
+                  "value": "<% data.stats.attack %>"
+                },
+                {
+                  "name": "Defense",
+                  "value": "<% data.stats.defense %>"
+                },
+                {
+                  "name": "Speed",
+                  "value": "<% data.stats.speed %>"
+                }
+              ],
+              "measurementAxisOptions": {
+                "comparisonLineValue": "<% 0.123123 %>",
+                "comparisonLineLabel": "<% 'Comparison Line Label' %>"
+              },
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Combo Chart with Comparison Line",
+          "children": [
+            {
+              "type": "comboChart2",
+              "id": "chart6",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "legendPosition": "BOTTOM",
+              "measurementDataSets": [
+                {
+                  "name": "HP",
+                  "value": "<% data.stats.hp %>",
+                  "chartMarkType": "BAR"
+                },
+                {
+                  "name": "Attack",
+                  "value": "<% data.stats.attack %>",
+                  "chartMarkType": "LINE"
+                },
+                {
+                  "name": "Defense",
+                  "value": "<% data.stats.defense %>",
+                  "chartMarkType": "LINE"
+                },
+                {
+                  "name": "Speed",
+                  "value": "<% data.stats.speed %>",
+                  "chartMarkType": "AREA"
+                }
+              ],
+              "measurementAxisOptions": {
+                "comparisonLineValue": "<% 123.123 %>",
+                "comparisonLineLabel": "<% 'Comparison Line Label' %>"
+              },
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Dual Axis Chart with Comparison Line (applies to both axes)",
+          "children": [
+            {
+              "type": "dualAxisChart2",
+              "id": "chart7",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Attack",
+                  "value": "<% data.stats.attack %>",
+                  "chartMarkType": "BAR",
+                  "axisPosition": "LEFT"
+                },
+                {
+                  "name": "Defense",
+                  "value": "<% data.stats.defense %>",
+                  "chartMarkType": "BAR",
+                  "axisPosition": "LEFT"
+                },
+                {
+                  "name": "Level",
+                  "value": "<% data.level.currentLevel %>",
+                  "chartMarkType": "LINE",
+                  "axisPosition": "RIGHT"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data.pokemon %>"
+              },
+              "comparisonLineValue": 45,
+              "comparisonLineLabel": "Comparison Line"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

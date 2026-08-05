@@ -1,0 +1,151 @@
+{
+  "id": "actionStep",
+  "endPoints": [
+    {
+      "name": "bpEventStep",
+      "baseUrlType": "WORKDAY-BP",
+      "url" : "<% `/eventSteps/{{queryParams.eventStepId}}` %>",
+      "authType": "sso"
+    },
+    {
+      "name": "eventInfo",
+      "baseUrlType": "WORKDAY-BP",
+      "url" : "<% `/events/{{bpEventStep.event.id}}` %>",
+      "authType": "sso"
+    },
+    {
+      "name": "eaDetailsInfo",
+      "baseUrlType": "app",
+      "url": "<% `tuitionReimbursementRequests/{{eventInfo.for.id}}` %>",
+      "authType": "sso"
+    },
+    {
+      "name": "userInfo",
+      "baseUrlType": "WORKDAY-COMMON",
+      "url": "/userInfo",
+      "authType": "sso"
+    },
+    {
+      "name": "me",
+      "baseUrlType": "WORKDAY-COMMON",
+      "url": "/workers/me",
+      "authType": "sso"
+    },
+    {
+      "baseUrlType": "app",
+      "name": "educationAssistanceRequestCourseListInfo",
+      "authType": "sso",
+      "url": "<% `tuitionReimbursementCourses?tuitionReimbursementRequest={{eventInfo.for.id}}` %>",
+      "exclude": false
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "eaObjectPATCH",
+        "baseUrlType": "app",
+        "url": "<% `tuitionReimbursementRequests/{{eventInfo.for.id}}` %>",
+        "httpMethod": "PATCH",
+        "authType": "sso",
+        "onSend": "<% console.info(json:asJSON(self.data)); return self.data; %>"
+      },
+      {
+        "name": "submitStep",
+        "baseUrlType": "WORKDAY-BP",
+        "url": "<% `/eventSteps/{{queryParams.eventStepId}}/submit` %>",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "values": [
+          {
+            "outboundPath": "stepAction.id",
+            "value": "d9e4223e446c11de98360015c5e6daf6"
+          }
+        ]
+      }
+    ]
+  },
+  "presentation": {
+    "title": {
+      "label": "<%presentationLabels.reviewActionPageTitle%>",
+      "type": "title"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "richText",
+          "value": "<hr>",
+          "enabled": false
+        },
+        {
+          "type": "section",
+          "title": "<%presentationLabels.Additional_Manager_Input_Header%>",
+          "horizontal": false,
+          "children": [
+            {
+              "id": "ytdManagerConfirmationDropdown",
+              "type": "dropdown",
+              "label": "<%presentationLabels.YTD_Manager_Confirmation%>",
+              "displayKey": "descriptor",
+              "instanceList": [
+                {
+                  "id": "I confirm that the employee has not exceeded the maximum reimbursement limit for this year",
+                  "descriptor": "<%userInfo.data[0].language == 'fr_CA' ? 'Je confirme que le montant demandé par l’Employé n’excède pas le maximum permis pour l’année' : 'I confirm that the employee has not exceeded the maximum reimbursement limit for this year'%>"
+                },
+                {
+                  "id": "I am aware the employee has exceeded the maximum reimbursement limit and confirm that this condition has been waived by management",
+                  "descriptor": "<%userInfo.data[0].language == 'fr_CA' ? 'Je reconnais que le montant demandé par l’Employé excède le maximum permis et je confirme que l’équipe de gestion a renoncé à cette condition' : 'I am aware the employee has exceeded the maximum reimbursement limit and confirm that this condition has been waived by management'%>"
+                }
+              ],
+              "valueOutBinding": "eaObjectPATCH.ytdManagerConfirmation",
+              "required": true
+            },
+            {
+              "type": "richText",
+              "label": "<%presentationLabels.AR_Manager_Acknowledgement%>",
+              "value": "<%presentationLabels.AR_Manager_Acknowledgement_Value%>",
+              "visible": "<%eaDetailsInfo.advanceReimbursement%>",
+              "enabled": false
+            },
+            {
+              "id": "advanceReimbursementManagerAcknowledgementCheckbox",
+              "type": "checkBox",
+              "label": "<%presentationLabels.Yes_Label%>",
+              "valueOutBinding": "eaObjectPOST.advanceReimbursementManagerAcknowledgement",
+              "visible": "<%eaDetailsInfo.advanceReimbursement%>",
+              "required": "<%eaDetailsInfo.advanceReimbursement%>"
+            },
+            {
+              "id": "tenureDropdown",
+              "type": "dropdown",
+              "label": "<%presentationLabels.Tenure_Label%>",
+              "displayKey": "descriptor",
+              "instanceList": [
+                {
+                  "id": "Employee has been active for six months prior to enrolment",
+                  "descriptor": "<%userInfo.data[0].language == 'fr_CA' ? 'L’Employé était en service actif six mois avant l’inscription' : 'Employee has been active for six months prior to enrolment'%>"
+                },
+                {
+                  "id": "This condition has been waived by management",
+                  "descriptor": "<%userInfo.data[0].language == 'fr_CA' ? 'L’équipe de gestion a renoncé à cette condition' : 'This condition has been waived by management'%>"
+                }
+              ],
+              "valueOutBinding": "eaObjectPATCH.tenure"
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "<%userInfo.data[0].language == 'fr_CA' ? 'Propulsé par Extend - Action de révision' : 'Powered By Extend - Review Action'%>"
+        }
+      ]
+    }
+  }
+}

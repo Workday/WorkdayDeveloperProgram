@@ -1,0 +1,173 @@
+{
+  "id": 1,
+  "name": "TuitionReimbursementRequest",
+  "label": "Tuition Reimbursement Request",
+  "defaultSecurityDomains": [
+    "ManageTuitionReimbursement"
+  ],
+  "defaultCollection": {
+    "name": "tuitionReimbursementRequests",
+    "label": "All Tuition Reimbursement Requests", 
+    "description": "Displays all Tuition Reimbursement requests in the Tuition Reimbursement Extend app"
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "creationDate",
+      "label": "Creation Date",
+      "type": "TEXT", 
+      "description": "Creation date of the tuition reimbursement request"
+    },
+    {
+      "id": 2,
+      "name": "programType",
+      "label": "Program Type",
+      "type": "TEXT", 
+      "description": "Program type of the course"
+    },
+    {
+      "id": 3,
+      "name": "programSubType",
+      "label": "Program Sub Type",
+      "type": "TEXT", 
+      "description": "Program sub type of the course"
+    },
+    {
+      "id": 4,
+      "name": "school",
+      "label": "School",
+      "type": "TEXT", 
+      "description": "School where course is being taken "
+    },
+    {
+      "id": 5,
+      "name": "requestAmount",
+      "label": "Request Amount",
+      "type": "DECIMAL",
+      "decimals": 2, 
+      "description": "Requested amount for reimbursement"
+    },
+    {
+      "id": 21,
+      "name": "requestAmountCurrency",
+      "label": "Request Amount Currency",
+      "type": "TEXT", 
+      "description": "Currency of requested amount"
+    },
+    {
+      "id": 7,
+      "name": "ytdEmployeeConfirmation",
+      "label": "YTD Employee Confirmation",
+      "type": "BOOLEAN", 
+      "description": "Year to Date Employee Confirmation"
+    },
+    {
+      "id": 8,
+      "name": "ytdManagerConfirmation",
+      "label": "YTD Manager Confirmation",
+      "type": "TEXT", 
+      "description": "Year to Date Manager Confirmation"
+    },
+    {
+      "id": 9,
+      "name": "employeeLegalAcknowledgement",
+      "label": "Employee Legal Acknowledgement",
+      "type": "BOOLEAN", 
+      "description": "Has Employee Legal Acknowledgement been completed?"
+    },
+    {
+      "id": 10,
+      "name": "advanceReimbursement",
+      "label": "Advance Reimbursement",
+      "type": "BOOLEAN",
+      "description": "Has there been any advance reimbursement?"
+    },
+    {
+      "id": 11,
+      "name": "advanceReimbursementManagerAcknowledgement",
+      "label": "Advance Reimbursement Manager Acknowledgement",
+      "type": "BOOLEAN", 
+      "description": "Has Advance Reimbursement Manager Acknowledgement been completed?"
+    },
+    {
+      "id": 13,
+      "name": "advanceReimbursementEmployeeAcknowledgement",
+      "label": "Advance Reimbursement Employee Acknowledgement",
+      "type": "BOOLEAN", 
+      "description": "Has Advance Reimbursement Employee Acknowledgement been completed?"
+    },
+    {
+      "id": 14,
+      "name": "tenure",
+      "label": "Tenure",
+      "type": "TEXT", 
+      "description": "Tenure of employee"
+    },
+    {
+      "id": 15,
+      "name": "performance",
+      "label": "Performance",
+      "type": "BOOLEAN", 
+       "description": "Performance of employee"
+    },
+    {
+      "id": 16,
+      "name": "requiredForPromotion",
+      "label": "Required For Promotion",
+      "type": "BOOLEAN", 
+       "description": "Is this course required for promotion?"
+    },
+    {
+      "id": 17,
+      "name": "benefitToCompany",
+      "label": "Benefit to Company",
+      "type": "TEXT", 
+      "description": "What is the benefit to the company?"
+    },
+    {
+      "id": 18,
+      "name": "relatedToCurrentRole",
+      "label": "Related to Current Role",
+      "type": "TEXT", 
+      "description": "Is this related to employee's current role?"
+    },
+    {
+      "id": 19,
+      "name": "status",
+      "label": "Status",
+      "type": "TEXT", 
+      "description": "Status of tuition reimbursement request"
+    },
+    {
+      "id": 20,
+      "name": "worker",
+      "label": "Worker",
+      "type": "SINGLE_INSTANCE",
+      "target": "WORKER",
+      "secureByTarget": true, 
+      "description": "Worker who submitted tuition reimbursement request"
+    },
+    {
+      "id": 22,
+      "name": "legacyReferenceId",
+      "label": "Legacy Reference Id",
+      "type": "TEXT", 
+      "description": "Legacy Reference ID"
+    },
+    {
+      "id": 23,
+      "name": "popReviewed",
+      "label": "POP Reviewed",
+      "type": "BOOLEAN", 
+      "description": "Has the POP been reviewed?"
+    },
+    {
+      "id": 24,
+      "name": "requestCompletionDate",
+      "label": "Request Completion Date",
+      "type": "DATE",
+      "precision": "DAY", 
+      "description": "Completion date of the request"
+    }
+  ]
+}

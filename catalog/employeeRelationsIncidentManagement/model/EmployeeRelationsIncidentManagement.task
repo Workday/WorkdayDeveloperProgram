@@ -1,0 +1,9 @@
+{
+  "id": 1,
+  "name": "EmployeeRelationsIncidentManagement",
+  "label": "Employee Relations Incident Management",
+  "routePath": "/",
+  "securityDomains": [
+    "ManageProtectedCases"
+  ]
+}

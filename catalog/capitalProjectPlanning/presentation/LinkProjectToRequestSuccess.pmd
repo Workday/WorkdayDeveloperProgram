@@ -1,0 +1,22 @@
+{
+  "id": "LinkProjectToRequestSuccess",
+  "endPoints": [],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Project Linked"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false
+    },
+    "footer": {
+      "type": "footer"
+    },
+    "microConclusion": true
+  },
+  "securityDomains": [
+    "CapitalProjectPlanning",
+    "CapitalProjectPlanningAdministrator"
+  ]
+}

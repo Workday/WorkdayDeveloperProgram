@@ -1,0 +1,35 @@
+{
+  "id": 2,
+  "name": "CharityFiles",
+  "label": "Charity Files",
+  "defaultSecurityDomains": [
+      "ManageCharities"
+  ],
+  "defaultCollection": {
+      "name": "charityFiles",
+      "label": "Charity Files"
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "uploadedBy",
+      "label": "File Uploaded By",
+      "type": "SINGLE_INSTANCE",
+      "target": "WORKER"
+    },
+    {
+      "id": 2,
+      "name": "uploadedDate",
+      "label": "File Upload Date",
+      "type": "DATE",
+      "precision": "DAY"
+    },
+    {
+      "id": 3,
+      "name": "charity",
+      "label": "Charity for Attachment",
+      "type": "SINGLE_INSTANCE",
+      "target": "Charity"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+    "id": "myVehicles",
+    "parameters": ["ownerId"],
+    "query": "
+        query getMyVehicles($ownerId: ID!) {
+  myVehicles: vehicleRegistration20241_nkzjqw_Vehicle( dataSource: {vehicleRegistration20241_nkzjqw_vehicles: {}} 
+    where: {owner:{ workdayID: {in: [{id: $ownerId}]}}} ) 
+  { data { color compact descriptor licensePlate location { workdayID { id } descriptor } 
+    longDescription make model owner { businessTitle } registrationDate workdayID { id } year } } }
+    ",
+    "variables": {
+          "ownerId": "<% ownerId %>"
+        }
+}

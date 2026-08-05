@@ -1,0 +1,207 @@
+{
+  "id": "quickAddRemoteWorkRequest",
+"securityDomains": [
+    "RemoteWorkSelfService"
+  ],
+  "onSubmit": "<% dates.validateDates(startDate, endDate, pageVariables.maxRemoteEvents); %>",
+  "include": [
+    "fileTypes.script",
+    "dates.script"
+  ],
+  "endPoints": [ ],
+  "_endPointComment": "the endpoints for this page are declared in the meAndMyRequests pod!",
+  "onLoad": "<%
+    var eventSelectedDates = queryParams.selectedDates.split(',');
+    pageVariables.eventStartDate = eventSelectedDates[0];
+    pageVariables.eventEndDate = eventSelectedDates[eventSelectedDates.size() - 1];
+    pageVariables.maxRemoteEvents = attrstore['Max Remote Days'] ?? 30; //refer to app attribute setting, but default to 30
+    let numEvents = remoteWorkRequests.data != null ? remoteWorkRequests.data.size() : 0;
+    numEvents > pageVariables.maxRemoteEvents ? pageVariables.approvalRequired = true : pageVariables.approvalRequired = false;
+    //get total number of remote days and days left
+    var numRemoteDays = dates.calculateRemainingDays(remoteWorkRequests, userTimeZone);
+    pageVariables.daysLeft = number:max(pageVariables.maxRemoteEvents - numRemoteDays, 0);
+  %>",
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "workFromAnywhereRequest",
+        "baseUrlType": "app",
+        "url": "workFromAnywhereRequests",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "onSend": "<% self.data.put('createdBy',{'id':me.id}); //add createdBy object
+        self.data.name = me.descriptor + ' ' + country.getSelectedEntries()[0].descriptor  + ' ' + startDate.value.format('yyyy-MM-dd') + '-' + endDate.value.format('yyyy-MM-dd');
+        self.data.location = country.getSelectedEntries()[0].descriptor; //add location (country name)
+        console.info('request payload is ' + json:asJSON(self.data));
+        return self.data;
+        %>",
+        "failOnStatusCodes": [
+          {
+            "code": 403
+          },
+          {
+            "code": 400
+          }
+        ]
+      },
+      {
+        "name": "workFromAnywhereRequestEvents",
+        "baseUrlType": "app",
+        "url": "workFromAnywhereRequestEvents",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "onSend": "<%
+                   //Kicks off BP. Pass in ID of the Work Event business object and when it is successfully created will trigger BP. Name element is the name of the BP in lower camel case + 'Events' from the .businessprocess file
+                   console.info(json:asJSON(self.data));
+                   return self.data;
+                   %>",
+        "values": [
+          {
+            "outboundPath": "businessProcessTarget.id",
+            "value": "<% //value must match name of the outbound endpoint that submits the BO, here 'createEvent' and 'id' is the WID of that BO
+                      workFromAnywhereRequest.id %>"
+          }
+        ]
+      },
+      {
+        "name": "eventAttachments",
+        "baseUrlType": "app",
+        "url": "<% //using the '...Collection' endpoint to let us use onMultiPartSend() and to upload multiple files at once
+        'rightToWorkVerificationsCollection' %>",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "exclude": "<% empty(attachmentFileUploader.children) %>",
+        "onMultiPartSend": "<%
+          for (var file : self.data.metadata.rightToWorkVerifications) { //loop through as many files as were uploaded
+            //Put an uploadedBy object with an id field to the JSON part.
+            file.put('uploadedBy',{'id': me.id}); //put the new uploadedBy map in the metadata. This captures the WID of the uploader.
+            //Put uploadedDate field to the JSON part.
+            file.uploadedDate = date:getTodaysDate(date:getDateTimeZone(userTimeZone)); //put the uploadedDate field in the metadata
+            file.put('workRequest',{'id': workFromAnywhereRequest.id}); //link the file with the work event
+            console.info('metadata is ' + json:asJSON(self.data)); //log the metadata being passed in for debugging purposes
+          }
+          self.data;
+    %>"
+      },
+      {
+        "name": "updateAttachmentList",
+        "baseUrlType": "app",
+        "url": "<% //now add the attachments posted on the page (if any) to the multi instance field on the parent BO
+        'workFromAnywhereRequests/' +  workFromAnywhereRequest.id %>",
+        "httpMethod": "PATCH",
+        "exclude": "<% empty(attachmentFileUploader.children) %>",
+        "authType": "sso",
+        "onSend": "<% 
+        console.info('attachments list is ' + json:asJSON(eventAttachments.rightToWorkVerifications));
+        let newList = [];
+        eventAttachments.rightToWorkVerifications.forEach(file => { newList.add({'id':file.id}) }); //make a list of all the posted attachments' IDs
+        let payload = {'rightToWorkVerification': newList}; //initializing payload to log and send
+        console.info('this updateAttachmentList payload is ' + json:asJSON(payload));
+        return payload; //send payload
+        
+        %>",
+        "failOnStatusCodes": [
+          {
+            "code": 403
+          },
+          {
+            "code": 400
+          }
+        ]
+      }
+    ],
+    "responseErrorDetail": {
+      "errorSummary": "<% error %>",
+      "errors": "<% errors.map(item => { item.error }); %>"
+    }
+  },
+  "script": "<% %>",
+  "presentation": {
+    "micro": "true",
+    "title": {
+      "type": "title",
+      "label": "Request Work From Anywhere"
+    },
+    "pageType": "edit",
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "pod",
+          "podId": "meAndMyRequestsEndpoints"
+        },
+        {
+          "type": "pod",
+          "podId": "warningMessage"
+        },
+        {
+          "type": "readOnlyText",
+          "id": "intro",
+          "label": "Submit your Work from Anywhere Request",
+          "value": "Please fill out all required information. Speak to your People Leader or open a People & Purpose request if you have any questions."
+        },
+        {
+          "type": "instanceList",
+          "label": "Country",
+          "id": "country",
+          "idKey": "id",
+          "displayKey": "descriptor",
+          "values": "<% countries.data %>",
+          "required": "<% true %>"
+        },
+        {
+          "type": "checkBox",
+          "id": "rightToWork",
+          "label": "Do you have a legal right to work in the selected country?",
+          "required": "<% true %>",
+          "enabled": "<% true %>",
+          "helpText": "You must have a legal right to work in the country you selected. Workday cannot sponsor work visas.",
+          "valueOutBinding": "workFromAnywhereRequest.rightToWork"
+        },
+        {
+          "type": "date",
+          "id": "startDate",
+          "label": "Requested Start Date",
+          "required": "<% true %>",
+          "valueOutBinding": "workFromAnywhereRequest.startDate",
+          "value": "<% pageVariables.eventStartDate %>",
+          "onChange": "<% dates.validateDates(startDate, endDate, pageVariables.maxRemoteEvents); %>"
+        },
+        {
+          "type": "date",
+          "id": "endDate",
+          "label": "Requested End Date",
+          "required": "<% true %>",
+          "valueOutBinding": "workFromAnywhereRequest.endDate",
+          "value": "<% pageVariables.eventEndDate %>",
+          "onChange": "<% dates.validateDates(startDate, endDate, pageVariables.maxRemoteEvents); %>"
+        },
+        {
+          "type": "fileUploader",
+          "label": "Attach New Right to Work Verifications",
+          "id": "attachmentFileUploader",
+          "maxImageDimension": "1024",
+          "maxFileSize": "5242880",
+          "compact": "<% true %>",
+          "required": "<% false %>",
+          "fileTypes": "*",
+          "valueOutBinding": "<% 'eventAttachments:rightToWorkVerifications' //outbound endpoint name : attachment obect API URL
+          %> ",
+          "metadata": "<%
+              {:} //need at least an empty map in a metadata tag for onMultiPartSend() to have metadata to work with!
+              %>"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "pod",
+          "podId": "footer"
+        }
+      ]
+    }
+  }
+}

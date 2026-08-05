@@ -1,0 +1,9 @@
+{
+  "id": 1,
+  "name": "RequestWorkFromAnywhere",
+  "label": "Request Work From Anywhere",
+  "securityDomains": [
+    "RemoteWorkSelfService"
+  ],
+  "routePath": "/createRequestWizard"
+}

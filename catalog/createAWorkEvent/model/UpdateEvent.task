@@ -1,0 +1,11 @@
+{
+    "id": 2,
+    "name": "UpdateEvent",
+    "label": "Update Event",
+    "secured": true,
+    "businessObject": "WorkEvent",
+    "routePath": "updateEvent/{taskObjectId}",
+    "securityDomains": [
+        "ManageCreateAnEvent"
+    ]
+} 

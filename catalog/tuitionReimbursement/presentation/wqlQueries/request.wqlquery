@@ -1,0 +1,8 @@
+{
+  "id": "request",
+  "parameters": ["appId", "requestId"],
+  "query": "<%
+    `SELECT workdayID as courseId, courseName, courseStartDate, courseEndDate, courseCost, textbookCost, courseCostCurrency, textbookCostCurrency, courseSubtotal, courseSubtotalCurrency
+    FROM {{appId}}_tuitionReimbursementCourses
+    WHERE tuitionReimbursementRequest = {{requestId}}` %>"
+}

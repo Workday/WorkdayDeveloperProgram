@@ -1,0 +1,6 @@
+{
+  "id": 1,
+  "name": "ManageProtectedCases",
+  "label": "Manage: Protected Cases",
+  "enabledForPageSecurity": true
+}

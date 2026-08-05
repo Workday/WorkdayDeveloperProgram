@@ -1,0 +1,9 @@
+{
+  "id": 1,
+  "name": "CreateAWorkEvent",
+  "label": "Create A Work Event",
+  "routePath": "/createEventWizard",
+  "securityDomains": [
+    "ManageCreateAnEvent"
+  ]
+}

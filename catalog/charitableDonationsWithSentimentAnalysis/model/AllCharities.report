@@ -1,0 +1,66 @@
+{
+  "id": 1,
+  "name": "AllCharities",
+  "businessObject": "Charity",
+  "defaultSecurityDomains": [
+    "ManageCharities"
+  ],
+  "sortConfigs": [
+    {
+      "id": 1,
+      "order": "a",
+      "field": "relationshipManager",
+      "direction": "ASCENDING"
+    }
+  ],
+  "columns": [
+    {
+        "id": 1,
+        "name": "CharityName",
+        "order": "a",
+        "field": "name"
+     },
+     {
+        "id": 2,
+        "name": "Description",
+        "order": "b",
+        "field": "description"
+      },
+      {
+        "id": 3,
+        "name": "Relationship Manager",
+        "order": "c",
+        "field": "relationshipManager"
+      },
+      {
+      "id": 4,
+      "name": "Match Donation",
+      "order": "d",
+      "field": "matchDonations"
+      },
+      {
+          "id": 5,
+          "name": "Created By",
+          "order": "e",
+          "field": "createdBy"
+      },
+      {
+          "id": 6,
+          "name": "Old Charity Logo",
+          "order": "f",
+          "field": "logoUploadedBefore2022"
+      },
+      {
+          "id": 7,
+          "name": "Logo Label",
+          "order": "g",
+          "field": "logoLabel"
+      },
+    {
+      "id": 8,
+      "name": "Workday Matched Charity",
+      "order": "h",
+      "field": "workdayMatched"
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "id": "requestCreditCard",
+  "securityDomains": [
+    "ManageCreditCardRequests"
+  ],
+  "endPoints": [
+    {
+      "name": "me",
+      "baseUrlType": "workday-staffing",
+      "url": "workers/me",
+      "authType": "sso"
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "createCreditCardRequest",
+        "baseUrlType": "app",
+        "url": "creditCardRequests",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "onSend": "<% 
+                   self.data.put('cardAssignee',{'id':me.id}); //add cardAssignee object
+                   self.data.cardAssignee.id = me.id; //add cardAssignee value to our payload
+                  return self.data; %>"
+      },
+      {
+        "name": "createCreditCardRequestEvents",
+        "baseUrlType": "app",
+        "url": "requestCreditCardEvents",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "onSend": "<% return self.data;  %>",
+        "values": [
+          {
+            "outboundPath": "businessProcessTarget.id",
+            "value": "<% createCreditCardRequest.id %>"
+          }
+        ]
+      }
+    ],
+    "responseErrorDetail": {
+      "errorSummary": "<% error + '. Once you have successfully fixed the error(s), deploy this app to proceed.' %>",
+      "errors": "<% errors.map(item => { item.error }); %>"
+    }
+  },
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Request Credit Card"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "sorted": false,
+      "children": [
+        {
+          "type": "readOnlyText",
+          "label": "Worker",
+          "value": "<% me.descriptor %>"
+        },
+        {
+          "type": "number",
+          "label": "Requested Credit Limit",
+          "id": "creditLimit",
+          "required": "<% true %>",
+          "minimumValue": 1,
+          "maximumValue": 100000,
+          "format": "#,###",
+          "valueOutBinding": "createCreditCardRequest.creditLimit"
+        },
+        {
+          "type": "textArea",
+          "label": "Business Reason",
+          "id": "businessReason",
+          "required": "<% true %>",
+          "valueOutBinding": "createCreditCardRequest.businessReason"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,181 @@
+{
+  "id": "selectAdditionalRater",
+  "securityDomains": [ ],
+  "microConclusion": true,
+  "endPoints": [
+    {
+      "name": "eventStep",
+      "baseUrlType": "workday-bp",
+      "url": "<% 'eventSteps/' + queryParams.eventStepId %>",
+      "authType": "sso"
+    },
+    {
+      "name": "event",
+      "baseUrlType": "workday-bp",
+      "url": "<% 'events/' + eventStep.event.id %>",
+      "authType": "sso",
+      "exclude": "<% empty(eventStep.event.id) %>"
+    },
+    {
+      "name": "parentEvent",
+      "baseUrlType": "workday-bp",
+      "url": "<% 'events/' + event['for'].id %>",
+      "authType": "sso",
+      "exclude": "<% empty(event['for'].id) %>"
+    },
+    {
+      "name": "getInitialWorkersList",
+      "baseUrlType": "workday-staffing",
+      "url": "workers",
+      "authType": "sso"
+    },
+    {
+      "name": "workerMe",
+      "baseUrlType": "workday-staffing",
+      "url": "workers/me",
+      "authType": "sso"
+    },
+    {
+      "name": "workerSearch",
+      "baseUrlType": "workday-staffing",
+      "url": "<% 'workers?search=' + instanceListQuery %>",
+      "exclude": "<% empty instanceListQuery %>",
+      "authType": "sso",
+      "deferred": "true"
+    },
+    {
+      "name": "getRatingScale",
+      "baseUrlType": "workday-orchestrate",
+      "url": "<% 'ratingScaleForReview/launch?reviewWID=' + parentEvent.id %>",
+      "exclude": "<% empty(parentEvent.id) %>",
+      "authType": "sso"
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "createMultiRater",
+        "baseUrlType": "app",
+        "url": "multiRaterForEmployeeReviews",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "onSend": "<% 
+                  self.data.reviewWID = parentEvent.id ;
+                  self.data.ratingID = getRatingScale.value;
+                  self.data.put('forWorker',{'id': parentEvent.for.id}); 
+                  self.data.put('createdBy',{'id': workerMe.id});
+                  console.info('POST createMultiRater ---> ', json:asJSON(self.data));
+                  return self.data;
+        %>"
+      },
+      {
+        "name": "patchMultiRatingEvent",
+        "baseUrlType": "app",
+        "url": "<% 'multiRatingEvents/' + event.id %>",
+        "httpMethod": "PATCH",
+        "exclude": "<% createMultiRater.responseHeaders.statusCode[0] != 201  %>",
+        "authType": "sso",
+        "values": [
+          {
+            "outboundPath": "businessProcessTarget.id",
+            "value": "<% createMultiRater.id %>"
+          }
+        ]
+      },
+      {
+        "name": "submitMultiRatingEventInitStep",
+        "baseUrlType": "workday-bp",
+        "url": "<% 'eventSteps/' + queryParams.eventStepId + '/submit' %>",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "exclude": "<% patchMultiRatingEvent.responseHeaders.statusCode[0] != 200 %>",
+        "_exclude": "<% !patchMultiRatingEvent.businessProcessTarget %>",
+        "values": [
+          {
+            "outboundPath": "comment",
+            "value": " "
+          }
+        ]
+      }
+    ]
+  },
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Select Additional Reviewers for <% parentEvent.descriptor  %>"
+    },
+    "pageType": "edit",
+    "preferredLabelPosition": "aside",
+    "body": {
+      "horizontal": false,
+      "type": "section",
+      "children": [
+        {
+          "type": "readOnlyText",
+          "id": "employeeReview",
+          "label": "Employee Review",
+          "value": "<% parentEvent.descriptor %>"
+        },
+        {
+          "visible": false,
+          "type": "readOnlyText",
+          "id": "ratingScaleId",
+          "label": "Rating Scale Id",
+          "value": "<% getRatingScale.value %>",
+          "valueOutBinding": "createMultiRater.ratingID"
+        },
+        {
+          "required": true,
+          "type": "instanceList",
+          "id": "reviewer1",
+          "label": "Reviewer 1",
+          "values": "<% (!(empty(getInitialWorkersList.data))) ? getInitialWorkersList.data : [] %>",
+          "idKey": "id",
+          "displayKey": "descriptor",
+          "searchEndPoint": "<% endpoints.workerSearch %>",
+          "searchResultValues": "<% workerSearch.data %>",
+          "valuesOut": [
+            {
+              "value": "<% self.value[0] %>",
+              "valueOutBinding": "createMultiRater.reviewer1.id"
+            }
+          ]
+        },
+        {
+          "required": true,
+          "type": "instanceList",
+          "id": "reviewer2",
+          "label": "Reviewer 2",
+          "values": "<% getInitialWorkersList.data %>",
+          "idKey": "id",
+          "displayKey": "descriptor",
+          "searchEndPoint": "<% endpoints.workerSearch %>",
+          "searchResultValues": "<% workerSearch.data %>",
+          "valuesOut": [
+            {
+              "value": "<% self.value[0] %>",
+              "valueOutBinding": "createMultiRater.reviewer2.id"
+            }
+          ]
+        },
+        {
+          "required": true,
+          "type": "instanceList",
+          "id": "reviewer3",
+          "label": "Reviewer 3",
+          "values": "<% getInitialWorkersList.data %>",
+          "idKey": "id",
+          "displayKey": "descriptor",
+          "searchEndPoint": "<% endpoints.workerSearch %>",
+          "searchResultValues": "<% workerSearch.data %>",
+          "valuesOut": [
+            {
+              "value": "<% self.value[0] %>",
+              "valueOutBinding": "createMultiRater.reviewer3.id"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

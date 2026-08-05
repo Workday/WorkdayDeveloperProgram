@@ -1,0 +1,15 @@
+{
+  "id": "sidebar",
+  "presentation": {
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "text",
+          "label": "Welcome <% queryParams.username %>.",
+          "value": "This is sidebar page."
+        }
+      ]
+    }
+  }
+}

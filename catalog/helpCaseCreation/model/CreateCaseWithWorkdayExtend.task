@@ -1,0 +1,9 @@
+{
+  "id": 1,
+  "name": "CreateCaseWithWorkdayExtend",
+  "label": "Create Case with Workday Extend",
+  "routePath": "/",
+  "securityDomains": [
+    "SelfServiceCreateCaseWithWorkdayExtend"
+  ]
+}

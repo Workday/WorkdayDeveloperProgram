@@ -1,0 +1,37 @@
+{
+    "id": "YourDonations",
+    "parameters": ["dataSet"],
+    "body": {
+    "type": "chartCard",
+    "chart": {
+              "type": "donutChart2",
+              "id": "donutExample",
+              "data": "<% dataSet %>",
+              "dataVariableName": "payInput",
+              "sliceSizeDataSet": {
+                "name": "Donation Amount",
+                "value": "<% payInput.inputDetails[0].value %>"
+              },
+              "sliceColorDataSet": {
+                "name": "Charity",
+                "value": "<% payInput.comment.contains('|') ? string:split(payInput.comment, '|')[0] : (payInput.comment ?: 'Unknown') %>"
+              },
+              "sliceDetailDataSet": {
+                "name": "Donation Type",
+                "value": "<% payInput.ongoing ? 'Recurring' : 'One-time' %>"
+              },
+              "title": "<% 'Donations' %>",
+              "subtitle": "<% '' %>",
+              "showLabelLines": true,
+              "showPercentLabels": true
+            }
+    },
+   "footer": [
+    {
+      "label": "Donate to Charity",
+      "taskReference": {
+        "taskId": "charitiesListDetail"
+      }
+    }
+  ]
+}

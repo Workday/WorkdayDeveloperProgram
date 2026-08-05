@@ -1,0 +1,30 @@
+{
+    "id": "FeedbackOption",
+    "parameters": ["category", "blurb", "color", "icon", "recipient", "payment", "feedbackBadgeId"],
+    "header": {
+    "title": "<% category %>",
+    "icon": "<% icon %>", 
+    "indicator": {
+      "label": "<% 'Feedback' %>",
+      "color": "<% color %>"
+    }
+  },
+  "body": {
+    "type": "simpleCard",
+    "value": "<% blurb %>"
+  },
+  "footer": [
+    {
+      "label": "Give Feedback",
+      "taskReference" : {
+              "taskId" : "recognitionSubmit",
+              "parameterBindings" : {
+                "workerId" : "<% recipient %>",
+                "category" : "<% category %>",
+                "payment" : "<% payment %>",
+                "feedbackBadgeId" : "<% feedbackBadgeId %>"
+              }
+            }
+          }
+  ]
+}

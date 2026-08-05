@@ -1,0 +1,29 @@
+{
+  "id": "microConfirm",
+  "endPoints": [ ],
+  "presentation": {
+    "microConclusion": true,
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "text",
+          "id": "hello",
+          "label": "Hello World!",
+          "value": "Welcome from Workday!"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Extend"
+        }
+      ]
+    }
+  }
+}

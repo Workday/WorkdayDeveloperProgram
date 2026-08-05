@@ -1,0 +1,63 @@
+{
+  "id": "vehiclesByLocation",
+  "parameters": [
+    "id"
+  ],
+  "query": "
+       query vehicleRegistration20241_nkzjqw_Vehicle($dataSource: VehicleRegistration20241_nkzjqw_Vehicle_DataSources!,  $limit: BigInt, $offset: BigInt, $where : VehicleRegistration20241_nkzjqw_Vehicle_Criteria) {
+  vehiclesByLocation: vehicleRegistration20241_nkzjqw_Vehicle(
+    dataSource: $dataSource
+    where: $where
+    limit: $limit
+    offset: $offset
+  ) {
+    data {
+      color
+      compact
+      descriptor
+      licensePlate
+      location {
+        workdayID {
+          id
+        }
+        descriptor
+      }
+      longDescription
+      make
+      model
+      owner {
+        workdayID {
+          id
+        }
+        descriptor
+      }
+      registrationDate
+      workdayID {
+        id
+      }
+      year
+    }
+    total
+  }
+}
+    ",
+  "variables": {
+    "dataSource": {
+      "vehicleRegistration20241_nkzjqw_vehicles": { }
+    },
+    "where": {
+      "location": {
+        "workdayID": {
+          "in": [
+            {
+              "id": "<% id %>",
+              "type": "WID"
+            }
+          ]
+        }
+      }
+    },
+    "limit": 20,
+    "offset": 0
+  }
+}

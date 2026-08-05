@@ -1,0 +1,49 @@
+{
+  "id": 1,
+  "name": "AllDocuments",
+  "label": "All Documents",
+  "businessObject": "Document",
+  "defaultSecurityDomains": [
+    "SelfServiceScanDocuments"
+  ],
+  "sortConfigs": [
+    {
+      "id": 1,
+      "order": "a",
+      "field": "uploadedDate",
+      "direction": "DESCENDING"
+    }
+  ],
+  "columns": [
+    {
+      "id": 1,
+      "name": "Document",
+      "order": "a",
+      "isSelfReferencing": true
+    },
+    {
+      "id": 2,
+      "name": "Uploaded By",
+      "order": "b",
+      "field": "uploadedBy"
+    },
+    {
+      "id": 3,
+      "name": "Uploaded Date",
+      "order": "c",
+      "field": "uploadedDate"
+    },
+    {
+      "id": 4,
+      "name": "Scan Type",
+      "order": "d",
+      "field": "scanType"
+    },
+    {
+      "id": 5,
+      "name": "Scanned",
+      "order": "e",
+      "field": "scanned"
+    }
+  ]
+}

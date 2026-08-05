@@ -1,0 +1,48 @@
+{
+  "id": "requestHub",
+  "presentation": {
+    "body": {
+      "type": "hub",
+      "label": "Work From Almost Anywhere Program",
+      "initialTask": {
+        "taskId": "home"
+      },
+      "navigationTasks": [
+        {
+          "type": "item",
+          "icon": "wd-icon-timeline-milestone",
+          "label": "About",
+          "task": {
+            "taskId": "home"
+          }
+        },
+        {
+          "type": "item",
+          "icon": "wd-icon-time-off-balance",
+          "label": "Manage Requests",
+          "task": {
+            "taskId": "manageRequests"
+          }
+        }
+        
+      ],
+      "additionalLinks": {
+        "title": "New Requests",
+        "links": [
+          {
+            "type": "task",
+            "label": "Request to Work Remote",
+            "task": {
+              "taskId": "createRequestWizard"
+            }
+          },
+          {
+            "type": "external",
+            "label": "Developer Forum",
+            "url": "https://forum.developer.workday.com/"
+          }
+        ]
+      }
+    }
+  }
+}

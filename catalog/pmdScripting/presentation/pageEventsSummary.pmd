@@ -1,0 +1,33 @@
+{
+  "id": "pageEventsSummary",
+  "endPoints": [ ],
+  "presentation": {
+    "pageType": "edit",
+    "standardEditButtonsHidden": true,
+    "title": {
+      "type": "title",
+      "label": "PMD Scripting - Page Events Summary"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "label": "Summary",
+      "children": [
+        {
+          "type": "readOnlyText",
+          "label": "variable1",
+          "value": "<% flowVariables.variable1 %>"
+        },
+        {
+          "type": "readOnlyText",
+          "label": "variable2",
+          "value": "<% flowVariables.variable2 %>"
+        },
+        {
+          "type": "pod",
+          "podId": "doneButton"
+        }
+      ]
+    }
+  }
+}

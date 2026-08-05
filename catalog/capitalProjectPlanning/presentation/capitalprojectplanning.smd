@@ -1,0 +1,26 @@
+{
+  "id": "capitalProjectPlanning",
+  "languages": [
+    {
+      "code": "en-US",
+      "description": "English"
+    }
+  ],
+  "siteAuth": {
+    "authTypes": [
+      {
+        "scheme": "SSO",
+        "id": "sso"
+      },
+      {
+        "scheme": "ISU",
+        "id": "isu",
+        "username": "ISU_CapitalProjectPlanning"
+      }
+    ]
+  },
+  "siteId": "capitalProjectPlanning",
+  "cdnEnabled": true,
+  "siteProperties": [ ],
+  "applicationId": "capitalProjectPlanning"
+}

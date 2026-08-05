@@ -1,0 +1,6 @@
+{
+  "id": 1,
+  "name": "AwsOnboardingApp",
+  "label": "AWS Onboarding App",
+  "enabledForPageSecurity": true
+}

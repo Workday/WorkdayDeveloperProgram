@@ -1,0 +1,21 @@
+{
+  "id": "employeeRecognition",
+  "languages": [
+    {
+      "code": "en-US",
+      "description": "English"
+    }
+  ],
+  "siteAuth": {
+    "authTypes": [
+      {
+        "scheme": "SSO",
+        "id": "sso"
+      }
+    ]
+  },
+  "siteId": "employeeRecognition",
+  "cdnEnabled": true,
+  "siteProperties": [ ],
+  "applicationId": "employeeRecognition"
+}

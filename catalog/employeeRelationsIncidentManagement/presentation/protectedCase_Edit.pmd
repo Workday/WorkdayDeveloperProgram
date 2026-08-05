@@ -1,0 +1,974 @@
+{
+  "id": "protectedCase_Edit",
+  "include": [
+    "transform.script"
+  ],
+  "endPoints": [
+    {
+      "name": "protectedCaseData",
+      "baseUrlType": "app",
+      "authType": "sso",
+      "url": "<% 'protectedCaseBO/' + queryParams.caseID %>",
+      "deferred": true
+    },
+    {
+      "name": "configValuesData",
+      "baseUrlType": "app",
+      "authType": "sso",
+      "url": "configValuesBO"
+    },
+    {
+      "name": "currentUserData",
+      "baseUrlType": "general",
+      "authType": "sso",
+      "url": "common/v1/workers/me"
+    },
+    {
+      "name": "workerSearch",
+      "baseUrlType": "general",
+      "url": "<% 'common/v1/workers?search=' + instanceListQuery %>",
+      "exclude": "<% empty instanceListQuery %>",
+      "authType": "sso",
+      "deferred": true
+    },
+    {
+      "name": "helpCaseData",
+      "baseUrlType": "wql",
+      "authType": "sso",
+      "url": "data",
+      "wqlQuery": {
+        "parameters": {
+          "startDate": "<% date:format(date:now().minusYears(2),'yyyy-MM-dd HH:mm:ss') %>",
+          "endDate": "<% date:format(date:now(),'yyyy-MM-dd HH:mm:ss') %>"
+        },
+        "queryId": "helpCaseData"
+      }
+    },
+    {
+      "deferred": true,
+      "name": "caseConnectionData",
+      "baseUrlType": "wql",
+      "authType": "sso",
+      "url": "data",
+      "wqlQuery": {
+        "parameters": {
+          "appId": "<% site.applicationId %>",
+          "caseID" : "<%  queryParams.caseID %>"
+        },
+        "queryId": "caseConnectionData"
+      }
+    },
+    {
+      "deferred": true,
+      "name": "templateFieldData",
+      "baseUrlType": "wql",
+      "authType": "sso",
+      "url": "data",
+      "wqlQuery": {
+        "parameters": {
+          "appId": "<% site.applicationId %>",
+          "templateID" : "<% templateID %>"
+        },
+        "queryId": "templateFieldData"
+      }
+    },
+    {
+      "name": "linkedCaseData",
+      "baseUrlType": "general",
+      "authType": "sso",
+      "url": "<% 'helpCase/v3/cases/' + caseID %>",
+      "deferred": true
+    },
+    {
+      "deferred": true,
+      "name": "getWorkerContact",
+      "baseUrlType": "wql",
+      "authType": "sso",
+      "url": "data",
+      "wqlQuery": {
+        "parameters": {
+          "Worker": "<% WORKER %>"
+        },
+        "queryId": "getWorkerContact"
+      }
+    },
+    {
+      "name": "getStatuses",
+      "baseUrlType": "app",
+      "authType": "sso",
+      "url": "protectedCaseStatuses?limit=100"
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "postCase",
+        "url": "protectedCaseBO",
+        "httpMethod": "POST",
+        "baseUrlType": "app",
+        "exclude": "<% (pageVariables.action=='Edit') %>",
+        "onSend": "<%
+                 /* self.data.createdDate = date:getTodaysDate(null);
+                  self.data.lastUpdatedDate = date:getTodaysDate(null); */
+                  self.data.lastUpdateType = 'Create Case';
+                  //self.data.statusMaster = 'Active';
+                  self.data;
+                  %>",
+          "values": [
+         {
+           "outboundPath": "createdDate",
+           "value": "<% transform.getTimestamp(userTimeZone) %>"
+         },
+         {
+           "outboundPath": "lastUpdatedDate",
+           "value": "<% transform.getTimestamp(userTimeZone) %>"
+         }
+       ],
+        "failOnStatusCodes": [
+          {
+            "code": 400
+          }
+        ]
+      },
+      {
+        "name": "putCase",
+        "url": "<% 'protectedCaseBO/' + protectedCaseID.value %>",
+        "httpMethod": "PUT",
+        "allowPutForUnchangedData": true,
+        "baseUrlType": "app",
+        "exclude": "<% (pageVariables.action!='Edit') %>",
+        "onSend": "<%
+                  self.data.createdDate = pageVariables.protectedCaseData.createdDate;
+                 // self.data.lastUpdatedDate = date:getTodaysDate(null);
+                  self.data.lastUpdateType = 'Edit Case';
+                  self.data;
+                  %>",
+        "values": [
+         {
+           "outboundPath": "lastUpdatedDate",
+           "value": "<% transform.getTimestamp(userTimeZone) %>"
+         }
+       ],
+        "failOnStatusCodes": [
+          {
+            "code": 400
+          }
+        ]
+      },
+      {
+        "name": "postConnection",
+        "url": "protectedCaseConnectionsBO",
+        "baseUrlType": "app",
+        "exclude": "<% ! empty connectionId.value %>",
+        "onSend": "<%
+                if (pageVariables.action=='Add') {
+                  self.data.case = json:create(json:attribute('id', postCase.id));
+                } else {
+                  self.data.case = json:create(json:attribute('id', queryParams.caseID));
+                }
+                self.data
+                %>",
+        "failOnStatusCodes": [
+          {
+            "code": 400
+          }
+        ]
+      },
+      {
+        "name": "putConnection",
+        "url": "<% 'protectedCaseConnectionsBO/' + connectionId.value %>",
+        "httpMethod": "PUT",
+        "baseUrlType": "app",
+        "exclude": "<% empty connectionId.value %>",
+        "onSend": "<%
+                self.data.case = json:create(json:attribute('id', queryParams.caseID));
+                self.data;
+                %>",
+        "failOnStatusCodes": [
+          {
+            "code": 400
+          }
+        ]
+      },
+      {
+        "name": "deleteConnection",
+        "url": "<% 'protectedCaseConnectionsBO/' + connectionId.value %>",
+        "exclude": "<% empty connectionId.value %>",
+        "httpMethod": "DELETE",
+        "baseUrlType": "app",
+        "failOnStatusCodes": [
+          {
+            "code": 400
+          }
+        ]
+      },
+      {
+        "type": "outboundVariable",
+        "variableScope": "flow",
+        "name": "flowVars",
+        "values": [
+          {
+            "outboundPath": "caseID",
+            "value": "<% (pageVariables.action=='Add') ? postCase.id : queryParams.caseID %>"
+          }
+        ]
+      }
+    ]
+  },
+  "onLoad": "<%
+            // determine if page action is add/edit/copy (different routes in)
+             if ((queryParams.action!='Edit')) {
+               pageVariables.action = 'Add';
+               pageVariables.protectedCaseData = [];
+               pageVariables.caseConnectionData = [];
+               pageVariables.caseTemplate = empty(flowVariables.addCaseVariable.caseTemplate) ? 'No Template Selected' : flowVariables.addCaseVariable.caseTemplate;
+               pageVariables.caseTemplateID = empty(flowVariables.addCaseVariable.caseTemplateID) ? 'No Template Selected' : flowVariables.addCaseVariable.caseTemplateID;
+               pageVariables.status = empty(list:filter(getStatuses.data,'initial',true)) ? [] : [list:filter(getStatuses.data,'initial',true)[0].id];
+               //create from help case?
+               if (!empty(flowVariables.addCaseVariable.helpCaseID)) {
+                var apiCreateFromCase = linkedCaseData.invoke({'caseID': flowVariables.addCaseVariable.helpCaseID});
+                pageVariables.protectedCaseData.add({'caseName': apiCreateFromCase.title, 'caseDescription': apiCreateFromCase.detailedMessage});
+                pageVariables.protectedCaseData = pageVariables.protectedCaseData[0];
+                pageVariables.caseConnectionData.add({'connectionID': flowVariables.addCaseVariable.helpCaseID, 'linkContact': apiCreateFromCase.caseLink, 'connectionType': 'Linked Case - Workday Help'});
+               }
+             } else {
+               pageVariables.action = queryParams.action;
+               pageVariables.protectedCaseData = protectedCaseData.invoke();
+               pageVariables.caseConnectionData = caseConnectionData.invoke().data;
+               pageVariables.caseTemplate = empty(pageVariables.protectedCaseData.caseTemplate.descriptor) ? 'No Template Selected' : pageVariables.protectedCaseData.caseTemplate.descriptor;
+               pageVariables.caseTemplateID = empty(pageVariables.protectedCaseData.caseTemplate.id) ? 'No Template Selected' : pageVariables.protectedCaseData.caseTemplate.id;
+               pageVariables.status = empty(pageVariables.protectedCaseData.status) ? [] : [pageVariables.protectedCaseData.status.id];
+             }
+              
+              // if assign to me button clicked - update assigned to instancelist
+              pageVariables.booAssignToMe = empty(queryParams.assignToMe) ? false : queryParams.assignToMe;
+              
+              //invoke template fields api if template associated to case
+              if (pageVariables.caseTemplate!='No Template Selected') {
+                pageVariables.templateFieldData = templateFieldData.invoke({'templateID': pageVariables.caseTemplateID}).data;
+              } else {
+                pageVariables.templateFieldData = [];
+              }
+
+              //get Workday Help Type Filter from Config Values
+              pageVariables.helpTypeFilter = [];
+              for (var helpTypeRow : list:sort(list:filter(configValuesData.data,'configType','Workday Help Type Filter'),'configOrder',true)) {
+                pageVariables.helpTypeFilter.add(helpTypeRow.configValue)
+              }
+
+              //filter workday help cases for in scope for app
+              if (empty(pageVariables.helpTypeFilter)) {
+                pageVariables.caseDataFiltered = helpCaseData.data;
+              } else {
+                pageVariables.caseDataFiltered = list:filterMultiple(helpCaseData.data,'type.id',pageVariables.helpTypeFilter);
+              }
+
+              //set values from 'create from Case'
+              %>",
+  "script": "<%
+            var getCaseField = function(caseField) {
+              if (empty(pageVariables.protectedCaseData.get(caseField))) {
+                return null;
+              } else {
+                return pageVariables.protectedCaseData.get(caseField);
+              }
+            }
+
+            var determineStatusMaster = function() {
+              //list:filter(getStatuses.data, 'id', statusInstance.value[0]);
+              if (list:filter(getStatuses.data, 'id', statusInstance.value[0])[0].resolved) {
+                return 'Inactive';
+              } else {
+                return 'Active';
+              }
+            }
+
+            %>",
+  "presentation": {
+    "pageType": "edit",
+    "standardEditButtonsHidden": true,
+    "title": {
+      "type": "title",
+      "label": "<% pageVariables.action + ' Protected Case' %>"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "section",
+          "children": [
+            {
+              "type": "section",
+              "horizontal": true,
+              "children": [
+                {
+                  "type": "section",
+                  "children": [
+                    {
+                      "type": "text",
+                      "label": "Case Name",
+                      "required": true,
+                      "value": "<% empty(pageVariables.protectedCaseData.caseName) ? null : pageVariables.protectedCaseData.caseName %>",
+                      "valuesOut": [
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "postCase.caseName"
+                        },
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "putCase.caseName"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "textArea",
+                      "label": "Case Description",
+                      "required": true,
+                      "value": "<% empty(pageVariables.protectedCaseData.caseDescription) ? null : pageVariables.protectedCaseData.caseDescription %>",
+                      "valuesOut": [
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "postCase.caseDescription"
+                        },
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "putCase.caseDescription"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "readOnlyText",
+                      "label": "Case Template",
+                      "value": "<% pageVariables.caseTemplate %>"
+                    },
+                    {
+                      "type": "hidden",
+                      "label": "Case Template ID",
+                      "render": "<% (pageVariables.caseTemplate!='No Template Selected') %>",
+                      "value": "<% pageVariables.caseTemplateID %>",
+                      "valuesOut": [
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "postCase.caseTemplate.id"
+                        },
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "putCase.caseTemplate.id"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "children": [
+                    {
+                      "type": "instanceList",
+                      "id": "statusInstance",
+                      "label": "Status",
+                      "values": "<% list:sort(getStatuses.data,'statusOrder',true) %>",
+                      "selectedValues": "<% pageVariables.status %>",
+                      "onChange": "<% statusMasterText.setValue(determineStatusMaster()) %>",
+                      "required": true,
+                      "valuesOut": [
+                        {
+                          "value": "<% empty self.value ? '' : self.value[0] %>",
+                          "valueOutBinding": "postCase.status.id"
+                        },
+                        {
+                          "value": "<% empty self.value ? '' : self.value[0] %>",
+                          "valueOutBinding": "putCase.status.id"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "readOnlyText",
+                      "label": "Active / Inactive",
+                      "id": "statusMasterText",
+                      "value": "<% determineStatusMaster() %>",
+                      "valuesOut": [
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "postCase.statusMaster"
+                        },
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "putCase.statusMaster"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "instanceList",
+                      "id": "caseTags",
+                      "label": "Tags",
+                      "values": "<% list:sort(list:filter(configValuesData.data,'configType','Case Tag'),'configOrder',true) %>",
+                      "selectedValues": "<% empty(pageVariables.protectedCaseData.tags) ? [] : list:mapAttribute(pageVariables.protectedCaseData.tags, 'id') %>",
+                      "idKey": "id",
+                      "displayKey": "configValue",
+                      "multiSelect": true,
+                      "valuesOut": [
+                        {
+                          "value": "<% caseTags.getSelectedEntries() %>",
+                          "valueOutBinding": "postCase.tags"
+                        },
+                        {
+                          "value": "<% caseTags.getSelectedEntries() %>",
+                          "valueOutBinding": "putCase.tags"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "instanceList",
+                      "label": "Created About",
+                      "values": "<% [] %>",
+                      "required": true,
+                      "selectedValuesAndDescriptors": "<% empty(pageVariables.protectedCaseData.createdAbout) ? [] : [pageVariables.protectedCaseData.createdAbout] %>",
+                      "searchEndPoint": "<% endpoints.workerSearch %>",
+                      "searchResultValues": "<% workerSearch.data %>",
+                      "valuesOut": [
+                        {
+                          "value": "<% self.value[0] %>",
+                          "valueOutBinding": "postCase.createdAbout.id"
+                        },
+                        {
+                          "value": "<% self.value[0] %>",
+                          "valueOutBinding": "putCase.createdAbout.id"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "instanceList",
+                      "id": "assignedTo",
+                      "label": "Assigned To",
+                      "values": "<% [] %>",
+                      "selectedValuesAndDescriptors": "<%
+                              if (pageVariables.booAssignToMe) {
+                                return [currentUserData];
+                              } else {
+                                return empty(pageVariables.protectedCaseData.assignedTo) ? [] : [pageVariables.protectedCaseData.assignedTo];
+                              }
+                              %>",
+                      "searchEndPoint": "<% endpoints.workerSearch %>",
+                      "searchResultValues": "<% workerSearch.data %>",
+                      "valuesOut": [
+                        {
+                          "value": "<% self.value[0] %>",
+                          "valueOutBinding": "postCase.assignedTo.id"
+                        },
+                        {
+                          "value": "<% self.value[0] %>",
+                          "valueOutBinding": "putCase.assignedTo.id"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "hidden",
+                      "value": "<% currentUserData.id %>",
+                      "valuesOut": [
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "postCase.lastUpdatedBy.id"
+                        },
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "putCase.lastUpdatedBy.id"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "hidden",
+                      "value": "<% (pageVariables.action=='Add') ? currentUserData.id : pageVariables.protectedCaseData.createdBy.id %>",
+                      "valuesOut": [
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "postCase.createdBy.id"
+                        },
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "putCase.createdBy.id"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "hidden",
+                      "id": "protectedCaseID",
+                      "value": "<% empty(pageVariables.protectedCaseData.id) ? null : pageVariables.protectedCaseData.id %>"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "render": "<% !empty(pageVariables.templateFieldData) %>",
+                  "children": [
+                    {
+                      "type": "loop",
+                      "label": "Loop",
+                      "on": "<% pageVariables.templateFieldData %>",
+                      "as": "templateField",
+                      "children": [
+                        {
+                          "type": "text",
+                          "label": "<% templateField.fieldLabel %>",
+                          "render": "<% ((templateField.fieldEnabled)&&(templateField.fieldType=='text')) %>",
+                          "required": "<% templateField.fieldRequired %>",
+                          "value": "<% getCaseField(templateField.fieldBindingID) %>",
+                          "valuesOut": [
+                            {
+                              "value": "<% self.value %>",
+                              "valueOutBinding": "<% 'postCase.' + templateField.fieldBindingID %>"
+                            },
+                            {
+                              "value": "<% self.value %>",
+                              "valueOutBinding": "<% 'putCase.' + templateField.fieldBindingID %>"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "textArea",
+                          "label": "<% templateField.fieldLabel %>",
+                          "render": "<% ((templateField.fieldEnabled)&&(templateField.fieldType=='textArea')) %>",
+                          "required": "<% templateField.fieldRequired %>",
+                          "value": "<% getCaseField(templateField.fieldBindingID) %>",
+                          "valuesOut": [
+                            {
+                              "value": "<% self.value %>",
+                              "valueOutBinding": "<% 'postCase.' + templateField.fieldBindingID %>"
+                            },
+                            {
+                              "value": "<% self.value %>",
+                              "valueOutBinding": "<% 'putCase.' + templateField.fieldBindingID %>"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "date",
+                          "label": "<% templateField.fieldLabel %>",
+                          "render": "<% ((templateField.fieldEnabled)&&(templateField.fieldType=='date')) %>",
+                          "required": "<% templateField.fieldRequired %>",
+                          "value": "<% getCaseField(templateField.fieldBindingID) %>",
+                          "valuesOut": [
+                            {
+                              "value": "<% self.value %>",
+                              "valueOutBinding": "<% 'postCase.' + templateField.fieldBindingID %>"
+                            },
+                            {
+                              "value": "<% self.value %>",
+                              "valueOutBinding": "<% 'putCase.' + templateField.fieldBindingID %>"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "checkBox",
+                          "label": "<% templateField.fieldLabel %>",
+                          "render": "<% ((templateField.fieldEnabled)&&(templateField.fieldType=='checkBox')) %>",
+                          "required": "<% templateField.fieldRequired %>",
+                          "value": "<% getCaseField(templateField.fieldBindingID) %>",
+                          "valuesOut": [
+                            {
+                              "value": "<% self.value %>",
+                              "valueOutBinding": "<% 'postCase.' + templateField.fieldBindingID %>"
+                            },
+                            {
+                              "value": "<% self.value %>",
+                              "valueOutBinding": "<% 'putCase.' + templateField.fieldBindingID %>"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "instanceList",
+                          "label": "<% templateField.fieldLabel %>",
+                          "render": "<% ((templateField.fieldEnabled)&&(templateField.fieldType=='instanceList')) %>",
+                          "required": "<% templateField.fieldRequired %>",
+                          "values": "<% list:createMapList(transform.convertCSVtoList(templateField.fieldValues),'id') %>",
+                          "selectedValues": "<% empty(getCaseField(templateField.fieldBindingID)) ? [] : transform.convertCSVtoList(getCaseField(templateField.fieldBindingID)) %>",
+                          "displayKey": "id",
+                          "valuesOut": [
+                            {
+                              "value": "<% transform.convertListtoCSV(self.value) %>",
+                              "valueOutBinding": "<% 'postCase.' + templateField.fieldBindingID %>"
+                            },
+                            {
+                              "value": "<% transform.convertListtoCSV(self.value) %>",
+                              "valueOutBinding": "<% 'putCase.' + templateField.fieldBindingID %>"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "fieldSet",
+              "title": "People Involved",
+              "children": [
+                {
+                  "type": "grid",
+                  "id": "peopleInvolvedGrid",
+                  "deleteEndPoint": "deleteConnection",
+                  "rowVariableName": "involvedGrid",
+                  "doNotRemove": false,
+                  "rows": "<% list:filterMultiple(pageVariables.caseConnectionData,'connectionType',['People Involved - Worker Select','People Involved - Free Text']) %>",
+                  "columns": [
+                    {
+                      "type": "column",
+                      "columnId": "col1",
+                      "label": "Selection Type",
+                      "cellTemplate": {
+                        "type": "instanceList",
+                        "id": "selectionType",
+                        "required": true,
+                        "selectedValues": "<% empty(involvedGrid.connectionType) ? [] : [involvedGrid.connectionType.toString().remove('People Involved - ')] %>",
+                        "instanceList": [
+                          {
+                            "id": "Worker Select",
+                            "descriptor": "Worker Select"
+                          },
+                          {
+                            "id": "Free Text",
+                            "descriptor": "Free Text"
+                          }
+                        ],
+                        "onChange": "<%
+                              if (empty(selectionType.value[0])) {
+                                personWorkerList.setVisible(false);
+                                personFreeText.setVisible(false);
+                                contactPhone.enabled = true;
+                                contactEmail.enabled = true;
+                              } else {
+                                personWorkerList.setVisible(selectionType.value[0]=='Worker Select');
+                                personFreeText.setVisible(selectionType.value[0]=='Free Text');
+                                contactPhone.enabled = (selectionType.value[0]!='Worker Select');
+                                contactEmail.enabled = (selectionType.value[0]!='Worker Select');
+                              }
+                              personFreeText.setValue(null);
+                              %>",
+                        "valuesOut": [
+                          {
+                            "value": "<% 'People Involved - ' + self.value[0] %>",
+                            "valueOutBinding": "postConnection.connectionType"
+                          },
+                          {
+                            "value": "<% 'People Involved - ' + self.value[0] %>",
+                            "valueOutBinding": "putConnection.connectionType"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "column",
+                      "columnId": "col2",
+                      "label": "Person Involved",
+                      "cellTemplate": {
+                        "type": "fieldSet",
+                        "children": [
+                          {
+                            "type": "instanceList",
+                            "id": "personWorkerList",
+                            "required": true,
+                            "values": "<% [] %>",
+                            "selectedValuesAndDescriptors": "<% empty(involvedGrid.worker) ? [] : [involvedGrid.worker] %>",
+                            "visible": "<% empty(selectionType.value) ? false : (selectionType.value[0]=='Worker Select') %>",
+                            "onChange": "<%
+                                    if(!empty self.value[0]) {
+                                        var rsp = getWorkerContact.invoke({'WORKER' : self.value[0]});
+                                        contactPhone.value = rsp.data[0].worker.phone_PrimaryWork;
+                                        contactEmail.value = rsp.data[0].worker.email_PrimaryWork;
+                                    }
+                              %>",
+                            "searchEndPoint": "<% endpoints.workerSearch %>",
+                            "searchResultValues": "<% workerSearch.data %>",
+                            "valuesOut": [
+                              {
+                                "value": "<% self.value[0] %>",
+                                "valueOutBinding": "postConnection.connectionID"
+                              },
+                              {
+                                "value": "<% self.selectedEntries[0].descriptor %>",
+                                "valueOutBinding": "postConnection.connectionValue"
+                              },
+                              {
+                                "value": "<% self.value[0] %>",
+                                "valueOutBinding": "putConnection.connectionID"
+                              },
+                              {
+                                "value": "<% self.selectedEntries[0].descriptor %>",
+                                "valueOutBinding": "putConnection.connectionValue"
+                              },
+                              {
+                                "value": "<% self.value[0] %>",
+                                "valueOutBinding": "postConnection.worker.id"
+                              },
+                              {
+                                "value": "<% self.value[0]  %>",
+                                "valueOutBinding": "putConnection.worker.id"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "text",
+                            "id": "personFreeText",
+                            "value": "<% empty(involvedGrid.connectionValue) ? null : involvedGrid.connectionValue %>",
+                            "required": true,
+                            "visible": "<% empty(selectionType.value) ? false : (selectionType.value[0]=='Free Text') ? true : false %>",
+                            "valuesOut": [
+                              {
+                                "value": "<% self.value %>",
+                                "valueOutBinding": "postConnection.connectionValue"
+                              },
+                              {
+                                "value": "<% 'Non-Worker' %>",
+                                "valueOutBinding": "postConnection.connectionID"
+                              },
+                              {
+                                "value": "<% self.value %>",
+                                "valueOutBinding": "putConnection.connectionValue"
+                              },
+                              {
+                                "value": "<% 'Non-Worker' %>",
+                                "valueOutBinding": "putConnection.connectionID"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "column",
+                      "columnId": "col3",
+                      "label": "Involvement",
+                      "cellTemplate": {
+                        "type": "text",
+                        "value": "<% empty(involvedGrid.connectionComment) ? null : involvedGrid.connectionComment %>",
+                        "required": true,
+                        "valuesOut": [
+                          {
+                            "value": "<% self.value %>",
+                            "valueOutBinding": "postConnection.connectionComment"
+                          },
+                          {
+                            "value": "<% self.value %>",
+                            "valueOutBinding": "putConnection.connectionComment"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "column",
+                      "columnId": "col4",
+                      "label": "Contact Phone",
+                      "cellTemplate": {
+                        "type": "text",
+                        "id": "contactPhone",
+                        "value": "<%  !empty involvedGrid.worker.id ? (involvedGrid.worker.phone_PrimaryWork ?? '' )  : (empty(involvedGrid.contactPhone) ? null : involvedGrid.contactPhone) %>",
+                        "enabled": "<% empty involvedGrid.worker.id %>",
+                        "_required": true,
+                        "valuesOut": [
+                          {
+                            "value": "<% self.value %>",
+                            "valueOutBinding": "postConnection.contactPhone"
+                          },
+                          {
+                            "value": "<% self.value %>",
+                            "valueOutBinding": "putConnection.contactPhone"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "column",
+                      "columnId": "col5",
+                      "label": "Contact Email",
+                      "cellTemplate": {
+                        "type": "text",
+                        "id": "contactEmail",
+                        "enabled": "<% empty involvedGrid.worker.id %>",
+                        "value": "<% !empty involvedGrid.worker.id ? (involvedGrid.worker.email_PrimaryWork ?? '')  : (empty(involvedGrid.contactEmail) ? null : involvedGrid.contactEmail) %>",
+                        "_required": true,
+                        "valuesOut": [
+                          {
+                            "value": "<% self.value %>",
+                            "valueOutBinding": "postConnection.contactEmail"
+                          },
+                          {
+                            "value": "<% self.value %>",
+                            "valueOutBinding": "putConnection.contactEmail"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "column",
+                      "columnId": "colhidden",
+                      "cellTemplate": {
+                        "type": "section",
+                        "children": [
+                          {
+                            "type": "hidden",
+                            "id": "connectionId",
+                            "value": "<% involvedGrid.workdayID %>",
+                            "valuesOut": [
+                              {
+                                "value": "<% self.value %>",
+                                "valueOutBinding": "putConnection.id"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "fieldSet",
+              "title": "Linked Cases",
+              "children": [
+                {
+                  "type": "grid",
+                  "id": "linkedCasesGrid",
+                  "deleteEndPoint": "deleteConnection",
+                  "rowVariableName": "linkedGrid",
+                  "rows": "<% list:filterMultiple(pageVariables.caseConnectionData,'connectionType',['Linked Case - Workday Help']) %>",
+                  "columns": [
+                    {
+                      "type": "column",
+                      "columnId": "col1",
+                      "label": "Workday Help Case",
+                      "cellTemplate": {
+                        "type": "instanceList",
+                        "label": "Linked Cases",
+                        "id": "linkedCase",
+                        "values": "<% pageVariables.caseDataFiltered %>",
+                        "selectedValues": "<% empty(linkedGrid.connectionID) ? [] : [linkedGrid.connectionID] %>",
+                        "onChange": "<%
+                            var apiLinkedCaseData = linkedCaseData.invoke({'caseID': linkedCase.value[0]});
+                            caseHyperlink.setValue(apiLinkedCaseData.caseLink);
+                            %>",
+                        "valuesOut": [
+                          {
+                            "value": "<% self.value[0] %>",
+                            "valueOutBinding": "postConnection.connectionID"
+                          },
+                          {
+                            "value": "<% self.selectedEntries[0].descriptor %>",
+                            "valueOutBinding": "postConnection.connectionValue"
+                          },
+                          {
+                            "value": "<% self.value[0] %>",
+                            "valueOutBinding": "putConnection.connectionID"
+                          },
+                          {
+                            "value": "<% self.selectedEntries[0].descriptor %>",
+                            "valueOutBinding": "putConnection.connectionValue"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "column",
+                      "columnId": "col2",
+                      "label": "Connection Reason",
+                      "cellTemplate": {
+                        "type": "text",
+                        "value": "<% empty(linkedGrid.connectionComment) ? null : linkedGrid.connectionComment %>",
+                        "required": true,
+                        "valuesOut": [
+                          {
+                            "value": "<% self.value %>",
+                            "valueOutBinding": "postConnection.connectionComment"
+                          },
+                          {
+                            "value": "<% self.value %>",
+                            "valueOutBinding": "putConnection.connectionComment"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "column",
+                      "columnId": "col3",
+                      "label": "Case Hyperlink",
+                      "cellTemplate": {
+                        "type": "readOnlyText",
+                        "id": "caseHyperlink",
+                        "value": "<% empty(linkedGrid.linkContact) ? null : linkedGrid.linkContact %>",
+                        "valuesOut": [
+                          {
+                            "value": "<% self.value %>",
+                            "valueOutBinding": "postConnection.linkContact"
+                          },
+                          {
+                            "value": "<% self.value %>",
+                            "valueOutBinding": "putConnection.linkContact"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "column",
+                      "columnId": "colhidden",
+                      "cellTemplate": {
+                        "type": "section",
+                        "children": [
+                          {
+                            "type": "hidden",
+                            "value": "<% 'Linked Case - Workday Help' %>",
+                            "valuesOut": [
+                              {
+                                "value": "<% self.value %>",
+                                "valueOutBinding": "postConnection.connectionType"
+                              },
+                              {
+                                "value": "<% self.value %>",
+                                "valueOutBinding": "putConnection.connectionType"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "hidden",
+                            "id": "connectionId",
+                            "value": "<% linkedGrid.workdayID %>",
+                            "valuesOut": [
+                              {
+                                "value": "<% self.value %>",
+                                "valueOutBinding": "putConnection.id"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "editButtonBar",
+          "editButtons": [
+            {
+              "type": "editButton",
+              "label": "Save",
+              "id": "1",
+              "buttonType": "PRIMARY"
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

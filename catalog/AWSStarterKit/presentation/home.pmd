@@ -1,0 +1,67 @@
+{
+  "id": "home",
+  "endPoints": [],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "AWS Samples"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "button",
+          "id": "detectText",
+          "label": "Detect Text and PII",
+          "taskReference": {
+            "taskId": "detectText"
+          }
+        },
+        {
+          "type": "button",
+          "id": "any",
+          "label": "Test Any AWS API",
+          "taskReference": {
+            "taskId": "testAnyAWSAPI"
+          }
+        },
+        {
+          "type": "button",
+          "id": "edit",
+          "label": "Translate Labels Edit Page",
+          "taskReference": {
+            "taskId": "translateLabelsEditPages"
+          }
+        },
+        {
+          "type": "button",
+          "id": "view",
+          "label": "Translate Labels View Page",
+          "taskReference": {
+            "taskId": "translateLabelsViewPages"
+          }
+        },
+        {
+          "type": "button",
+          "id": "translateToSpanish",
+          "label": "Translate To Spanish",
+          "taskReference": {
+            "taskId": "translateTextToSpanish"
+          }
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    },
+    "pageType": "VIEW"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "id": 1,
+  "name": "BulkWorkersList",
+  "label": "Bulk Workers List",
+  "defaultSecurityDomains": [
+    "BulkWorkersDomain"
+  ],
+  "defaultCollection": {
+    "name": "bulkWorkersLists",
+    "label": "Bulk Workers Lists", 
+    "description": "Displays lists of workers in bulk"
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "workerStarter",
+      "label": "Starting Worker",
+      "type": "SINGLE_INSTANCE",
+      "target": "WORKER",
+      "secureByTarget": true, 
+      "description": "Displays the starting worker"
+    },
+    {
+      "id": 2,
+      "name": "workerHandoff",
+      "label": "Handoff Worker",
+      "type": "SINGLE_INSTANCE",
+      "target": "WORKER", 
+      "description": "Displays the handoff worker"
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "id": "ReviewBadges",
+  "endPoints": [
+    {
+      "name": "getBadges",
+      "baseUrlType": "app",
+      "url": "/badges?limit=100",
+      "authType": "sso",
+      "httpMethod": "GET"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Badge Administration"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "grid",
+          "label": "Issued Badges with Photos",
+          "id": "simpleGridWorker",
+          "rows": "<% getBadges.data.filter(it => !empty(it.photo)) %>",
+          "rowVariableName": "thisRow",
+          "columns": [
+            {
+              "type": "column",
+              "columnId": "col2",
+              "label": "Badge Photo",
+              "cellTemplate": {
+                "type": "image",
+                "sizingHint": "THUMBNAIL",
+                "endPoint": {
+                  "baseUrlType": "app",
+                  "authType": "sso",
+                  "url": "<% '/badgePhotos/' + thisRow.photo.id %>"
+                }
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "col1",
+              "label": "Badge",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% thisRow.id %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "photoFile",
+              "label": "Photo Filename",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% thisRow.photo.descriptor %>"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend & AWS"
+        }
+      ]
+    }
+  }
+}

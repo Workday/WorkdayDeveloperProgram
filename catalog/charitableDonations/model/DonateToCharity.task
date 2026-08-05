@@ -1,0 +1,11 @@
+{
+  "id": 4,
+  "name": "DonateToCharity",
+  "label": "Donate to Charity",
+  "secured": true,
+  "businessObject": "Charity",
+  "routePath": "/donate/{taskObjectId}",
+  "securityDomains": [
+    "ManageCharities"
+  ]
+}

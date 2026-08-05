@@ -1,0 +1,9 @@
+{
+  "id": 1,
+  "name": "CapitalPlanning",
+  "label": "Capital Project Planning Requests",
+  "securityDomains": [
+    "CapitalProjectPlanningAdministrator"
+  ],
+  "routePath": "/CapitalPlanningRequestsIndexAll"
+}

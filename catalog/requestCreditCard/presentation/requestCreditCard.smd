@@ -1,0 +1,47 @@
+{
+  "id": "requestCreditCard",
+  "languages": [
+    {
+      "code": "en-US",
+      "description": "English"
+    }
+  ],
+  "siteAuth": {
+    "authTypes": [
+      {
+        "scheme": "SSO",
+        "id": "sso"
+      }
+    ]
+  },
+  "siteId": "requestCreditCard",
+  "errorPageConfigurations": [
+    {
+      "statusCode": "401",
+      "page": {
+        "id": "errorPage"
+      }
+    },
+    {
+      "statusCode": "404",
+      "page": {
+        "id": "errorPage"
+      }
+    },
+    {
+      "statusCode": "500",
+      "page": {
+        "id": "errorPage"
+      }
+    },
+    {
+      "statusCode": "503",
+      "page": {
+        "id": "errorPage"
+      }
+    }
+  ],
+  "cdnEnabled": true,
+  "siteProperties": [ ],
+  "applicationId": "requestCreditCard"
+}

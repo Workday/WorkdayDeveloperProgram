@@ -1,0 +1,26 @@
+{
+  "id": "employeeRelationsIncidentManagement",
+  "languages": [
+    {
+      "code": "en-US",
+      "description": "English"
+    }
+  ],
+  "siteAuth": {
+    "authTypes": [
+      {
+        "scheme": "SSO",
+        "id": "sso"
+      },
+      {
+        "scheme": "ISU",
+        "id": "isu",
+        "username": "ISU INTO4I employee relations"
+      }
+    ]
+  },
+  "siteId": "employeeRelationsIncidentManagement",
+  "cdnEnabled": true,
+  "siteProperties": [ ],
+  "applicationId": "employeeRelationsIncidentManagement"
+}

@@ -1,0 +1,189 @@
+//bootstrap data payload used by the bootstrap orchestration triggered on the Initialize Application action on Application Config Edit
+const getReferenceData = function () {
+    var refData = {
+        'dataType': 'referenceData',
+        'data': [{
+                "code": "planCycleOpen",
+                "type": "planCycle",
+                "name": "Open"
+            }, {
+                "code": "planCycleClosed",
+                "type": "planCycle",
+                "name": "Closed"
+            }, {
+                "code": "ON_SAVE",
+                "type": "planningTaskTrigger",
+                "name": "On Save"
+            }, {
+                "code": "ON_SUBMIT",
+                "type": "planningTaskTrigger",
+                "name": "On Submit"
+            }, {
+                "code": "ON_APPROVE",
+                "type": "planningTaskTrigger",
+                "name": "On Approve"
+            }, {
+                "code": "ON_SCHEDULE",
+                "type": "planningTaskTrigger",
+                "name": "On Schedule"
+            }, {
+                "code": "submitWID",
+                "type": "submitActionEvent",
+                "name": "d9e4223e446c11de98360015c5e6daf6"
+            }
+        ]
+    };
+    return refData;
+}
+
+const getFundingTypes = function () {
+    var fundingTypes = {
+        'dataType': 'fundingTypes',
+        "data": [{
+                "capital": true,
+                "fundingTypeName": "Capital Funds"
+            }, {
+                "capital": false,
+                "fundingTypeName": "Non Capital Funds"
+            }
+        ]
+    };
+    return fundingTypes;
+};
+
+const getApprovalStatuses = function () {
+    var approvalStatuses = {
+        'dataType': 'approvalStatuses',
+        "data": [{
+                "status": "Approved",
+                "statusCode": "Status_Approved"
+            }, {
+                "status": "Denied",
+                "statusCode": "Status_Denied"
+            }, {
+                "status": "Draft",
+                "statusCode": "Status_Draft"
+            }, {
+                "status": "Requested Approval",
+                "statusCode": "Status_RequestedApproval"
+            }
+        ]
+    };
+    return approvalStatuses;
+};
+
+const getStrategicPillarCategories = function () {
+    var strategicPillarCategories = {
+        'dataType': 'strategicPillarCategories',
+        "data": [{
+                "categoryDefinition": '<p dir="LTR" style="text-align:left"><b>Regulatory: </b>Have a documented regulation requirement from a regulating body, that indicates this is required to maintain operations.</p>',
+                "active": true,
+                "strategicPillarCategoryName": "Regulatory Requirement",
+                "displayOrder": 1
+            }, {
+                "categoryDefinition": '<p dir="LTR" style="text-align:left"><b>High Risk: </b>The lead time for capital acquisition will result in one or more of the following: Safety be compromised with no suitable alternative plan available Company will be out of compliance with a professionally regulated standard of care or Company will be out of compliance with contractual obligations</p>',
+                "active": true,
+                "strategicPillarCategoryName": "High Risk",
+                "displayOrder": 2
+            }, {
+                "categoryDefinition": '<p dir="LTR" style="text-align:left"><b>Operational Improvement:</b> Optimizing internal processes and workflows to enhance efficiency and reduce waste. Aims to improve patient outcomes, reduce costs, and optimize resource utilization through continuous analysis and refinement of healthcare delivery.</p>',
+                "active": true,
+                "strategicPillarCategoryName": "Operational Improvement",
+                "displayOrder": 3
+            }
+        ]
+    };
+    return strategicPillarCategories;
+};
+
+const getServicesCategories = function () {
+    var servicesCategories = {
+        'dataType': 'servicesCategories',
+        "data": [{
+                "categoryDefinition": '<p style="text-align:left"><b>Software Costs:</b> Cost of software <i>including</i> licenses</p>',
+                "displayOrder": "1",
+                "serviceCategoryName": "Software/Application Costs"
+            }, {
+                "categoryDefinition": '<p style="text-align:left"><b>Hardware Costs: </b>Servers, storage, compute power, interfaces, Platform as a Service (PaaS)</p>',
+                "displayOrder": "2",
+                "serviceCategoryName": "Hardware Costs"
+            }, {
+                "categoryDefinition": '<p><b>Facilities: </b>Requires new premises, repurposing of existing premises and/or ongoing facilities maintenance</p>',
+                "displayOrder": "3",
+                "serviceCategoryName": "Facilities"
+            }
+
+        ]
+    };
+    return servicesCategories;
+};
+
+const getServices = function () {
+    var services = {
+        'dataType': 'services',
+        "data": [{
+                "active": true,
+                "displayOrder": 1,
+                "serviceName": "Implementation"
+            }, {
+                "active": true,
+                "displayOrder": 1,
+                "serviceName": "Server(s)"
+            }, {
+                "active": true,
+                "displayOrder": 1,
+                "serviceName": "Utilities and Energy Management"
+            }
+        ]
+
+    };
+    return services;
+};
+
+const getPlanCycles = function () {
+    var planCycles = {
+        'dataType': 'planCycles',
+        "data": [{
+                "endDate": "2026-12-31",
+                "name": "FY2026",
+                "startDate": "2026-01-01"
+            }
+        ]
+    };
+    return planCycles;
+};
+
+const getAdaptiveSync = function () {
+    var adaptiveSync = {
+        'dataType': 'adaptiveSync',
+        "data": [{
+                "clientId": "",
+                "userSync": false,
+                "adaptiveRunTaskId": "",
+                "adaptiveInstance": "",
+                "adaptiveTaskId": ""
+            }
+        ]
+    };
+    return adaptiveSync;
+};
+
+{
+    "getReferenceData": getReferenceData,
+    "getFundingTypes": getFundingTypes,
+    "getApprovalStatuses": getApprovalStatuses,
+    "getStrategicPillarCategories": getStrategicPillarCategories,
+    "getServicesCategories": getServicesCategories,
+    "getServices": getServices,
+    "getPlanCycles": getPlanCycles,
+    "allBootstrapData": [
+        getReferenceData(),
+        getFundingTypes(),
+        getApprovalStatuses(),
+        getStrategicPillarCategories(),
+        getServicesCategories(),
+        getServices(),
+        getPlanCycles(),
+        getAdaptiveSync()
+    ]
+}

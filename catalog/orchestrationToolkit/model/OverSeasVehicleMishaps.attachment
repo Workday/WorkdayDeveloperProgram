@@ -1,0 +1,21 @@
+{
+  "id": 1,
+  "name": "OverSeasVehicleMishaps",
+  "label": "Over Seas Vehicle Mishaps",
+  "defaultSecurityDomains": [
+    "ManagePaymentsAndErrors"
+  ],
+  "defaultCollection": {
+    "name": "overSeasVehicleMishapses",
+    "label": "Over Seas Vehicle Mishapses"
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "driver",
+      "type": "SINGLE_INSTANCE",
+      "target": "WORKER",
+      "label": "Driver"
+    }
+  ]
+}

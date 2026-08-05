@@ -1,0 +1,12 @@
+var getWithDefault = function(obj, propName, default) { 
+        if ((! empty obj) && obj.containsKey(propName)) {
+            return obj[propName];
+        } else {
+            return default;
+        }
+     }
+
+/* Export the getWithDefault function. */
+{
+    "getWithDefault": getWithDefault
+}

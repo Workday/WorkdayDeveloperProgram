@@ -1,0 +1,128 @@
+{
+  "id": "projectUserFeedback",
+  "include": [
+    "userSurveyData.script"
+  ],
+  "endPoints": [ ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "User Feedback"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "section",
+          "children": [
+            {
+              "type": "cardContainer",
+              "layout": "GRID",
+              "cards": [
+                {
+                  "type": "card",
+                  "cardId": "donut",
+                  "parameters": "<% {
+                        'headerTitle': 'Customer Survey Results: Feature X',
+                        'donutTitle': 'Feature X',
+                        'countFieldName': 'featureX',
+                        'chartData': userSurveyData.getSurveyResults()
+                    }%>"
+                },
+                {
+                  "type": "card",
+                  "cardId": "donut",
+                  "parameters": "<% {
+                        'headerTitle': 'Customer Survey Results: Feature Y',
+                        'donutTitle': 'Feature Y',                        
+                        'countFieldName': 'featureY',
+                        'chartData': userSurveyData.getSurveyResults()
+                    }%>"
+                },
+                {
+                  "type": "card",
+                  "cardId": "donut",
+                  "parameters": "<% {
+                        'headerTitle': 'Customer Survey Results: Feature Z',
+                        'donutTitle': 'Feature Z',                        
+                        'countFieldName': 'featureZ',
+                        'chartData': userSurveyData.getSurveyResults()
+                    }%>"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "horizontal": "true",
+          "children": [
+            {
+              "type": "section",
+              "title": "Feature Prioritization (Podium Chart)",
+              "children": [
+                {
+                  "type": "clusteredBarChart2",
+                  "data": "<% userSurveyData.getFeaturePriorities() %>",
+                  "dataVariableName": "data",
+                  "measurementDataSets": [
+                    {
+                      "name": "Priority (1-highest, 5-lowest)",
+                      "value": "<% 5 - data.avgRanking %>",
+                      "hideInTooltip": true,
+                      "chartMarkLabel": "<% data.avgRanking %>"
+                    }
+                  ],
+                  "measurementAxisOptions": {
+                    "hideAxisValues": true
+                  },
+                  "categoryDataSet": {
+                    "name": "Feature",
+                    "value": "<% data.feature %>"
+                  },
+                  "secondaryCategory": {
+                    "name": "Type",
+                    "value": "<% data.featureType %>"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "section",
+              "title": "Usage Metrics",
+              "children": [
+                {
+                  "type": "lineChart2",
+                  "data": "<% userSurveyData.getUsageMetrics() %>",
+                  "dataVariableName": "data",
+                  "measurementDataSets": [
+                    {
+                      "name": "Feature A Usage",
+                      "value": "<% data.usageFeatureA %>"
+                    },
+                    {
+                      "name": "Feature B Usage",
+                      "value": "<% data.usageFeatureB %>"
+                    },
+                    {
+                      "name": "Feature C Usage",
+                      "value": "<% data.usageFeatureC %>"
+                    }
+                  ],
+                  "measurementAxisOptions": {
+                    "axisTitle": "Avg Usage per Day"
+                  },
+                  "categoryDataSet": {
+                    "name": "Time",
+                    "value": "<% data.time %>"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

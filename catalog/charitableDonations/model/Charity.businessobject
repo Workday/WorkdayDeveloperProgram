@@ -1,0 +1,89 @@
+{
+  "id": 1,
+  "name": "Charity",
+  "label": "Charity",
+  "defaultSecurityDomains": [
+    "ManageCharities"
+  ],
+  "defaultCollection": {
+    "name": "charities",
+    "label": "All Charities",
+    "description": "Displays all charities within the Charitable Donations Extend app"
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "name",
+      "type": "TEXT",
+      "label": "Name",
+      "useForDisplay": true,
+      "isReferenceId": true, 
+      "description": "Name of charity"
+    },
+    {
+      "id": 2,
+      "name": "description",
+      "type": "TEXT",
+      "label": "Description",
+      "description": "Description of charity"
+    },
+    {
+      "id": 3,
+      "name": "matchDonations",
+      "type": "BOOLEAN",
+      "label": "Match Donations", 
+      "description": "Will donations to the charity be matched by the company?"
+    },
+    {
+      "id": 4,
+      "name": "relationshipManager",
+      "type": "SINGLE_INSTANCE",
+      "label": "Relationship Manager",
+      "target": "WORKER", 
+      "description": "Manages relationship between the charity and company"
+    },
+    {
+      "id": 5,
+      "name": "logo",
+      "type": "SINGLE_INSTANCE",
+      "label": "Logo",
+      "target": "CharityLogo", 
+      "description": "Logo of each charity"
+    },
+    {
+      "id": 6,
+      "name": "createdBy",
+      "type": "SINGLE_INSTANCE",
+      "label": "Created By",
+      "target": "WORKER",
+      "secureByTarget": true,
+      "description": "Creator of the charity in Workday"
+    }
+  ],
+  "derivedFields": [
+    {
+      "id": 1,
+      "name": "logoUploadedBefore2022",
+      "type": "BOOLEAN",
+      "label": "Logo Before 2022",
+      "expression": "logo.uploadedDate.toYear().toNumber() < 2022", 
+      "description": "Logo for each charity"
+    },
+    {
+      "id": 2,
+      "name": "logoLabel",
+      "type": "TEXT",
+      "label": "Logo Label",
+      "expression": "logoUploadedBefore2022 ? 'Old Image' : 'New Image'", 
+      "description": "Label for the logo of each charity"
+    },
+    {
+      "id": 3,
+      "name": "workdayMatched",
+      "type": "BOOLEAN",
+      "label": "Workday Matched Charity",
+      "expression": "matchDonations && (description == 'Workday Charity')", 
+      "description": "Workday will match donations made to the charity"
+    }
+  ]
+}

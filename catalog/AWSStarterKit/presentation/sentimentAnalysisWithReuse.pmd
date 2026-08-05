@@ -1,0 +1,75 @@
+{
+  "id": "sentimentAnalysisWithReuse",
+  "endPoints": [
+    {
+      "httpMethod": "POST",
+      "name": "callAnyAWS",
+      "url": "callAnyAWS/launch",
+      "authType": "sso",
+      "baseUrlType": "orchestration",
+      "deferred": true,
+      "onSend": "<%
+      //COPY THIS WHOLE ENDPOINT AND CUSTOMIZE TO YOUR API CALL
+        self.data = {
+        'request': {
+          'Text': sentiment.value,
+          'LanguageCode':'en'
+          },
+        'awsAPI': 'Comprehend',
+        'awsMethod': 'detect_sentiment'
+        };
+        console.info(self.data);
+        return self.data;
+        %>",
+      "failOnStatusCodes": [
+        "400",
+        "403"
+      ]
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Sentiment Analysis with reuseable orchestration"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "textArea",
+          "id": "sentiment",
+          "label": "Sentiment Input",
+          "value": ""
+        },
+        {
+          "type": "pageActionButton",
+          "id": "getSentiment",
+          "label": "Get Sentiment",
+          "onClick": "<% 
+          //INVOKE API ON DEMAND
+          output.value = callAnyAWS.invoke() 
+          %>"
+        },
+        {
+          "type": "textArea",
+          "id": "output",
+          "label": "Sentiment Analysis",
+          "value": ""
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    },
+    "pageType": "EDIT",
+    "standardEditButtonsHidden": true
+  }
+}

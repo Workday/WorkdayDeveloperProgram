@@ -1,0 +1,9 @@
+{
+  "id": 1,
+  "name": "CharityHome",
+  "label": "Charity Home",
+  "routePath": "/",
+  "securityDomains": [
+    "ManageCharities"
+  ]
+}

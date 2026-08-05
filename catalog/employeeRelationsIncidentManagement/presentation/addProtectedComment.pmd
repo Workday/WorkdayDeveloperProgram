@@ -1,0 +1,149 @@
+{
+  "id": "addProtectedComment",
+  "include": [
+    "transform.script"
+  ],
+  "endPoints": [
+    {
+      "name": "currentUserData",
+      "baseUrlType": "general",
+      "authType": "sso",
+      "url": "common/v1/workers/me"
+    },
+    {
+      "name": "caseConnectionData",
+      "baseUrlType": "wql",
+      "authType": "sso",
+      "url": "data",
+      "wqlQuery": {
+        "parameters": {
+          "appId": "<% site.applicationId %>",
+          "caseID": "<% queryParams.caseID %>"
+        },
+        "queryId": "caseConnectionData"
+      }
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "createProtectedCaseEntry",
+        "url": "protectedCaseEntryBO",
+        "httpMethod": "POST",
+        "baseUrlType": "app",
+        "values": [
+          {
+            "outboundPath": "case.id",
+            "value": "<% queryParams.caseID %>"
+          },
+          {
+            "outboundPath": "entryComment",
+            "value": "<% entryMessageBox.value %>"
+          },
+          {
+            "outboundPath": "personTagging.id",
+            "value": "<% empty(personTagging.value[0]) ? null : personTagging.value[0] %>"
+          },
+          {
+            "outboundPath": "createdDate",
+            "value": "<% transform.getTimestamp(userTimeZone) %>"
+          },
+          {
+            "outboundPath": "createdBy.id",
+            "value": "<% currentUserData.id %>"
+          },
+          {
+            "outboundPath": "lastUpdatedDate",
+            "value": "<% transform.getTimestamp(userTimeZone) %>"
+          },
+          {
+            "outboundPath": "lastUpdatedBy.id",
+            "value": "<% currentUserData.id %>"
+          }
+        ],
+        "failOnStatusCodes": [
+          {
+            "code": 400
+          }
+        ]
+      },
+      {
+        "name": "createProtectedAttachments",
+        "baseUrlType": "app",
+        "url": "<% 'protectedAttachmentsCollection' %>",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "exclude": "<% empty(attachmentUploader.children) %>",
+        "onMultiPartSend": "<%
+            for (var file : self.data.metadata.protectedAttachments) { 
+              file.put('createdBy',{'id': currentUserData.id});
+              file.createdDate = date:getTodaysDate(date:getDateTimeZone(userTimeZone));
+              file.put('case',{'id': queryParams.caseID});
+              //file.attachmentComment = attachmentComment.value;
+              if(!empty createProtectedCaseEntry.id )
+              file.put('caseEntry',{'id': createProtectedCaseEntry.id});
+            }
+            self.data;
+            %>"
+      },
+      {
+        "type": "outboundVariable",
+        "variableScope": "flow",
+        "name": "flowVars",
+        "values": [
+          {
+            "outboundPath": "caseID",
+            "value": "<% queryParams.caseID %>"
+          }
+        ]
+      }
+    ]
+  },
+  "presentation": {
+    "pageType": "edit",
+    "micro": true,
+    "microFirstPageOnly": true,
+    "title": {
+      "type": "title",
+      "label": "Add Protected Comment"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "textArea",
+          "label": "Comment",
+          "id": "entryMessageBox",
+          "required": true
+        },
+        {
+          "type": "instanceList",
+          "label": "Person Tagging",
+          "id": "personTagging",
+          "values": "<% caseConnectionData.data %>",
+          "idKey": "workdayID",
+          "displayKey": "connectionValue"
+        },
+        {
+          "type": "fileUploader",
+          "id": "attachmentUploader",
+          "label": "Upload",
+          "fileTypes": "*",
+          "valueOutBinding": "createProtectedAttachments:protectedAttachments",
+          "metadata": "<% {:} %>"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

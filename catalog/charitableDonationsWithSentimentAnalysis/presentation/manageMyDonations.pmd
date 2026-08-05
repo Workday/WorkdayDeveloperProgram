@@ -1,0 +1,152 @@
+{
+  "id": "manageMyDonations",
+  "securityDomains": [
+    "ManageCharities"
+  ],
+  "endPoints": [
+    {
+      "baseUrlType": "workday-staffing",
+      "name": "me",
+      "authType": "sso",
+      "url": "workers/me"
+    },
+    {
+      "name": "payInputs",
+      "baseUrlType": "workday-payroll",
+      "url": "<% 'payrollInputs?worker=' + me.id + '&payComponent=Deduction_Code=' + site.appProperties.deductionCode %>",
+      "httpMethod": "GET",
+      "authType": "sso"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "My Charitable Donations"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "sorted": false,
+      "children": [
+        {
+          "type": "cardContainer",
+          "layout": "MASONRY",
+          "cards": [
+            {
+              "type": "card",
+              "cardId": "YourDonations",
+              "parameters": "<%{
+                        'dataSet': (!empty payInputs.data ? payInputs.data.sort(input => { input.startDate }).reverse() : [])
+                      }%>"
+            }
+          ]
+        },
+        {
+          "type": "grid",
+          "id": "payInputsGrid",
+          "label": "Charitable Donations",
+          "rows": "<% (!empty payInputs.data ? payInputs.data.sort(input => { input.startDate }).reverse() : []) %>",
+          "rowVariableName": "payInput",
+          "columns": [
+            {
+              "sortableAndFilterable": "<% true %>",
+              "type": "column",
+              "label": "Charity",
+              "columnId": "columnCharity",
+              "cellTemplate": {
+                "type": "instanceList",
+                "instanceList": [
+                  {
+                    "id": "<% payInput.id %>",
+                    "descriptor": "<% payInput.comment.contains('|') ? string:split(payInput.comment, '|')[0] : (payInput.comment ?: 'Unknown') %>",
+                    "wid": "<% payInput.id %>"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "column",
+              "label": "Amount",
+              "columnId": "columnAmount",
+              "cellTemplate": {
+                "type": "number",
+                "id": "amount",
+                "fractionDigits": 2,
+                "format": "#,###.00",
+                "value": "<% payInput.inputDetails[0].value %>"
+              }
+            },
+            {
+              "type": "column",
+              "label": "Type",
+              "columnId": "columnDonationType",
+              "cellTemplate": {
+                "type": "readOnlyText",
+                "id": "donationType",
+                "value": "<% payInput.ongoing ? 'Recurring' : 'One-time' %>"
+              },
+              "sortableAndFilterable": "<% true %>"
+            },
+            {
+              "type": "column",
+              "label": "Donation Date",
+              "columnId": "columnDonationDate",
+              "cellTemplate": {
+                "type": "date",
+                "id": "startDate",
+                "datePrecision": "DAY",
+                "value": "<% payInput.startDate %>"
+              },
+              "sortableAndFilterable": "<% true %>"
+            },
+            {
+              "sortableAndFilterable": "<% true %>",
+              "type": "column",
+              "label": "End Date",
+              "columnId": "columnEndDate",
+              "cellTemplate": {
+                "type": "date",
+                "id": "endDate",
+                "datePrecision": "DAY",
+                "value": "<% payInput.endDate %>"
+              }
+            },
+            {
+              "type": "column",
+              "label": "Status",
+              "columnId": "columnStatus",
+              "cellTemplate": {
+                "type": "readOnlyText",
+                "id": "status",
+                "value": "<% payInput.fieldEditability == 'none' ? 'Completed' : 'Active' %>"
+              },
+              "sortableAndFilterable": "<% true %>"
+            },
+            {
+              "type": "column",
+              "columnId": "columnActions",
+              "cellTemplate": {
+                "type": "section",
+                "horizontal": true,
+                "children": [
+                  {
+                    "type": "button",
+                    "action": "SECONDARY",
+                    "label": "Stop",
+                    "taskReference": {
+                      "taskId": "stopDonation",
+                      "parameterBindings": {
+                        "donationId": "<% payInput.id %>"
+                      }
+                    },
+                    "visible": "<%  payInput.fieldEditability != 'none' %>"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

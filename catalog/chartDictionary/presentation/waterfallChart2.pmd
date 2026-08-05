@@ -1,0 +1,110 @@
+{
+  "id": "waterfallChart2",
+  "include": [
+    "projectData.script"
+  ],
+  "endPoints": [],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Waterfall Charts"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "section",
+          "title": "Simple Waterfall Chart",
+          "children": [
+            {
+              "type": "waterfallChart2",
+              "id": "chart1",
+              "data": "<% projectData.getTasksRemainingData() %>",
+              "dataVariableName": "data",
+              "measurementDataSet": {
+                "name": "Tasks Remaining",
+                "value": "<% data.tasksRemaining %>"
+              },
+              "categoryDataSet": {
+                "name": "Timeline",
+                "value": "<% data.date %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Waterfall Chart - show start and end marks",
+          "children": [
+            {
+              "type": "waterfallChart2",
+              "id": "chart2",
+              "data": "<% projectData.getTasksRemainingData() %>",
+              "dataVariableName": "data",
+              "accentFirstMark": true,
+              "appendEndMark": true,
+              "measurementDataSet": {
+                "name": "Tasks Remaining",
+                "value": "<% data.tasksRemaining %>"
+              },
+              "categoryDataSet": {
+                "name": "Timeline",
+                "value": "<% data.date %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Waterfall Chart - with chart mark labels and legend to the left",
+          "children": [
+            {
+              "type": "waterfallChart2",
+              "id": "chart3",
+              "data": "<% projectData.getTasksRemainingData() %>",
+              "dataVariableName": "data",
+              "legendPosition": "LEFT",
+              "measurementDataSet": {
+                "name": "Tasks Remaining",
+                "value": "<% data.tasksRemaining %>",
+                "chartMarkLabel": "<% data.label %>"
+              },
+              "categoryDataSet": {
+                "name": "Timeline",
+                "value": "<% data.date %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Waterfall Chart - animate, accessibility mode, and various axis options",
+          "children": [
+            {
+              "type": "waterfallChart2",
+              "id": "chart4",
+              "data": "<% projectData.getTasksRemainingData() %>",
+              "dataVariableName": "data",
+              "animateOnLoad": true,
+              "accessibilityMode": true,
+              "measurementDataSet": {
+                "name": "Tasks Remaining",
+                "value": "<% data.tasksRemaining %>"
+              },
+              "measurementAxisOptions": {
+                "hideAxisTitle": true,
+                "axisMaximum": 200,
+                "axisIncrement": 50
+              },
+              "categoryDataSet": {
+                "name": "Timeline",
+                "value": "<% data.date %>"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

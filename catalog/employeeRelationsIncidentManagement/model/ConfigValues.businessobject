@@ -1,0 +1,34 @@
+{
+  "id": 4,
+  "name": "ConfigValues",
+  "label": "Config Values",
+  "defaultSecurityDomains": [
+    "ManageProtectedCases"
+  ],
+  "defaultCollection": {
+    "name": "configValuesBO",
+    "label": "Config Values"
+  },
+  "fields": [
+    {
+      "type": "TEXT",
+      "label": "Type",
+      "name": "configType",
+      "id": 1
+    },
+    {
+      "id": 2,
+      "name": "configValue",
+      "label": "Value",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": true
+    },
+    {
+      "id": 3,
+      "name": "configOrder",
+      "label": "Order",
+      "type": "TEXT"
+    }
+  ]
+}

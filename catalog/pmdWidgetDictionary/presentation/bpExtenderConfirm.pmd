@@ -1,0 +1,66 @@
+{
+  "id": "bpExtenderConfirm",
+  "endPoints": [ ],
+  "onLoad": "<% 
+
+    if(!empty flowVariables.postAttachment.image) {
+      pageVariables.image = flowVariables.postAttachment.image;
+      pageVariables.contentType = flowVariables.postAttachment.fileContentType;
+      flowVariables.postAttachment.remove('image');
+      flowVariables.postAttachment.remove('fileContentType');
+    }
+  %>",
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Successfully Revised Wellness Claim"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "text",
+          "label": "Claim Update Request (Extend Model)",
+          "value": "<% empty flowVariables.updateClaim ? 'Request Excluded' : flowVariables.updateClaim.toJson() %>"
+        },
+        {
+          "type": "text",
+          "label": "Submit BP Step (Bunessing Process API)",
+          "value": "<% empty flowVariables.submitStep ? 'Request Excluded'  : flowVariables.submitStep.toJson()  %>"
+        },
+        {
+            "type" : "instanceList",
+            "label" : "Submit BP Action",
+            "widKey" : "id",
+            "values" : "<%
+              let submitAction =  flowVariables.submitStep.stepAction.id ?? '';
+             [{'id' : 'd9e4223e446c11de98360015c5e6daf6', 'descriptor' : 'SUBMIT' }, {'id' : 'd9e41a8c446c11de98360015c5e6daf6', 'descriptor' : 'SAVE' }].filter(action=>{action.id == submitAction});
+                  
+               %>"
+        },
+        {
+          "type": "text",
+          "label": "File Uploader Request (Attachment Model Meta)",
+          "value": "<% empty flowVariables.postAttachment? 'Request Excluded'  :flowVariables.postAttachment.toJson() %>"
+        },
+        {
+          "type": "image",
+          "label": "File Uploader Image (Attachment Model)",
+          "imageUri": "<% 'data:' + pageVariables.contentType + ';base64, ' +  pageVariables.image %>",
+          "render": "<% !empty  pageVariables.image %>"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

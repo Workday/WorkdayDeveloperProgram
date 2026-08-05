@@ -1,0 +1,34 @@
+{
+  "id": 2,
+  "name": "Registrant",
+  "label": "Registrant",
+  "defaultSecurityDomains": [
+    "RegisterForEvents",
+    "ManageCreateAnEvent"
+  ],
+  "defaultCollection": {
+    "name": "registrants",
+    "label": "Registrants", 
+    "description": "Displays all registrants within the Create a Work Event Extend app"
+  },
+  "fields": [
+    {
+      "label": "Worker",
+      "secureByTarget": false,
+      "target": "WORKER",
+      "useForDisplay": true,
+      "type": "SINGLE_INSTANCE",
+      "name": "worker",
+      "id": 1, 
+      "description": "Displays a worker registered for an event"
+    },
+    {
+      "label": "Event",
+      "target": "WorkEvent",
+      "type": "SINGLE_INSTANCE",
+      "name": "event",
+      "description": "Displays a work event",
+      "id": 2
+    }
+  ]
+}

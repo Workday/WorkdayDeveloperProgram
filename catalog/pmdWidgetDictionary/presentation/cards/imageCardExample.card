@@ -1,0 +1,25 @@
+{
+"id": "imageCardExample",
+"parameters": ["title", "subtitle"],
+"header": {
+  "title": "<% title %>",
+  "subtitle": "<% subtitle %>"
+},
+
+"body": {
+  "type": "imageCard",
+  "endPoint": {
+    "name": "imageEndPointName",
+    "url": "https://api.workday.com/common/v1/workerRawPhotoData/0db6a6fc8d4344fdb1b90870b4bcda80"
+  }
+},
+
+"footer": [
+  {
+    "label": "Back to Home",
+    "taskReference": {
+      "taskId": "home"
+    }
+  }
+]
+}

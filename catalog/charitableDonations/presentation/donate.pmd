@@ -1,0 +1,142 @@
+{
+  "id": "donate",
+  "securityDomains": [
+    "ManageCharities"
+  ],
+  "endPoints": [
+    {
+      "name": "worker",
+      "baseUrlType": "workday-staffing",
+      "url": "workers/me",
+      "authType": "sso"
+    },
+    {
+      "name": "charities",
+      "baseUrlType": "app",
+      "url": "charities",
+      "authType": "sso",
+      "isCollection": true
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "payInput",
+        "baseUrlType": "workday-payroll",
+        "url": "payrollInputs",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "onSend": "<%
+          var selectedCharityId = charity.getValue()[0];
+          var selectedCharityName = charities.data.find(charity => { charity.id == selectedCharityId }).descriptor;
+          var selectedDonationFrequency = donationFrequency.getValue()[0];
+
+          if (selectedDonationFrequency == 'oneTime') {
+            self.data.endDate = self.data.startDate;
+            self.data.ongoing = false;
+          }
+          else if (selectedDonationFrequency == 'recurring') {
+            self.data.ongoing = true;
+          }
+          else {
+            donationFrequency.setError('Unknown Donation Frequency provided.');
+          }
+
+          self.data.worker = {:};
+          self.data.worker.id = worker.id;
+
+          self.data.comment = selectedCharityName + '|' + selectedCharityId;
+
+          self.data;
+        %>"
+      }
+    ],
+    "responseErrorDetail": {
+      "errorSummary": "<% error %>",
+      "errors": "<% errors.map(item => { item.error }); %>"
+    }
+  },
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Donate to Charity"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "sorted": false,
+      "children": [
+        {
+          "type": "instanceList",
+          "label": "Charity",
+          "id": "charity",
+          "multiSelect": "false",
+          "values": "<% charities.data %>",
+          "selectedValues": "<% queryParams.charityId ? [queryParams.charityId] : [] %>",
+          "required": "<% true %>"
+        },
+        {
+          "type": "number",
+          "label": "Donation Amount",
+          "id": "amount",
+          "required": "true",
+          "minimumValue": "1",
+          "maximumValue": "10000",
+          "fractionDigits": 2,
+          "format": "#,###.00",
+          "value": "100",
+          "valuesOut": [
+            {
+              "valueOutBinding": "payInput.inputDetails[0].value",
+              "value": "<% self.value %>"
+            },
+            {
+              "valueOutBinding": "payInput.payComponent.id",
+              "value": "<% 'Deduction_Code=' + site.appProperties.deductionCode %>"
+            },
+            {
+              "valueOutBinding": "payInput.inputDetails[0].type.id",
+              "value": "<% 'Deduction_Code=' + site.appProperties.deductionCode %>"
+            }
+          ]
+        },
+        {
+          "type": "radioGroup",
+          "label": "Donation Frequency",
+          "id": "donationFrequency",
+          "hideDisplayOption": "<% true %>",
+          "required": "<% true %>",
+          "instanceList": [
+            {
+              "id": "oneTime",
+              "descriptor": "One-time"
+            },
+            {
+              "id": "recurring",
+              "descriptor": "Recurring"
+            }
+          ]
+        },
+        {
+          "type": "readOnlyText",
+          "id": "donationMessage",
+          "value": "One-time donations are deducted on your first pay that occurs on or after the donation date."
+        },
+        {
+          "type": "readOnlyText",
+          "id": "recurringMessage",
+          "value": "Recurring donations are deducted every pay on or after the donation date until they are stopped."
+        },
+        {
+          "type": "date",
+          "label": "Donation Date",
+          "id": "startDate",
+          "datePrecision": "DAY",
+          "required": "<% true %>",
+          "value": "<% date:getTodaysDate(null) %>",
+          "valueOutBinding": "payInput.startDate"
+        }
+      ]
+    }
+  }
+}

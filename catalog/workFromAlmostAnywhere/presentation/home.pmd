@@ -1,0 +1,71 @@
+{
+  "id": "home",
+"securityDomains": [
+    "RemoteWorkSelfService"
+  ],
+  "include": [
+    "dates.script"
+  ],
+  "endPoints": [ ],
+  "_endPointComment": "the endpoints for this page are declared in the meAndMyRequestsEndpoints pod!",
+  "onLoad": "<%
+    var numEvents = remoteWorkRequests.data != null ? remoteWorkRequests.data.size() : 0;
+    pageVariables.maxRemoteEvents = attrstore['Max Remote Days'] ?? 30; //refer to app attribute setting, but default to 30
+    //get total number of remote days and days left
+    var numRemoteDays = dates.calculateRemainingDays(remoteWorkRequests, userTimeZone);
+    pageVariables.daysLeft = number:max(pageVariables.maxRemoteEvents - numRemoteDays, 0);
+    pageVariables.daysUsed = numRemoteDays;
+  %>",
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Work From Almost Anywhere"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "pod",
+          "podId": "meAndMyRequestsEndpoints"
+        },
+        {
+          "type": "image",
+          "imageUri": "https://upload.wikimedia.org/wikipedia/commons/8/80/Workday_logo.svg",
+          "sizingHint": "THUMBNAIL",
+          "defaultPhoto": false,
+          "userPhoto": false
+        },
+        {
+          "type": "richText",
+          "id": "intro",
+          "value": "<p style=\"text-align:left\"><span style=\"font-size:16px; color:black;\">Use this hub to request permission to work from around the globe.</span></p>"
+        },
+        {
+          "type": "pod",
+          "podId": "warningMessage"
+        },
+        {
+          "type": "section",
+          "title": "<% 'Remote Work Days Left to Use: ' +  pageVariables.daysLeft %>",
+          "children": [
+            {
+              "type": "cardContainer",
+              "layout": "MASONRY",
+              "cards": [
+                {
+                  "type": "card",
+                  "cardId": "AppLinks"
+                },
+                {
+                  "type": "card",
+                  "cardId": "daysChart",
+                  "parameters": "<%{ 'dataSet': remoteWorkRequests.data, 'daysUsed': pageVariables.daysUsed,'daysLeft':pageVariables.daysLeft, 'timeZone':userTimeZone }%>"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "id": "imageCardExample",
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "imageCard"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "section",
+          "columnWidthRatios": [
+            0.3,
+            0.3,
+            0.3
+          ],
+          "horizontal": true,
+          "children": [
+            {
+              "type": "cardContainer",
+              "cards": [
+                {
+                  "type": "card",
+                  "cardId": "imageCardExample",
+                  "parameters":"<%{
+                  'title': 'Discover New Career Opportunities',
+                  'subtitle': 'Grow your skillset and experience.'
+                }%>"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "pod",
+          "podId": "footer"
+        }
+      ]
+    }
+  }
+}

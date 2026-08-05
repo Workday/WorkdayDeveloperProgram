@@ -1,0 +1,9 @@
+{
+    "id": 2,
+    "routePath": "/charities/{taskObjectId}/update",
+    "businessObject": "Charity",
+    "securityDomains": ["ManageCharities"],
+    "secured": true,
+    "label": "Edit Charity",
+    "name": "EditCharity"
+ }

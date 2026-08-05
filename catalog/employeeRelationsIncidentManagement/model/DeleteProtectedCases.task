@@ -1,0 +1,9 @@
+{
+  "id": 2,
+  "name": "DeleteProtectedCases",
+  "label": "Delete Protected Cases",
+  "routePath": "/deleteProtectedCases",
+  "securityDomains": [
+    "DeleteProtectedCases"
+  ]
+}

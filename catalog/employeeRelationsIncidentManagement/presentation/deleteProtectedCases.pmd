@@ -1,0 +1,95 @@
+{
+  "id": "deleteProtectedCases",
+  "securityDomains": [
+    "DeleteProtectedCases"
+  ],
+  "endPoints": [
+    {
+      "name": "getReports",
+      "baseUrlType": "wql",
+      "authType": "sso",
+      "url": "data",
+      "wqlQuery": {
+        "parameters": {
+          "protectedCaseObjectWID": "<% attrstore.protectedCaseObjectWID %>"
+        },
+        "queryId": "getReports"
+      }
+    },
+    {
+      "name": "getCases",
+      "baseUrlType": "raas",
+      "authType": "sso",
+      "url": "<% REPORT_OWNER + '/' + REPORT_NAME %>",
+      "deferred": true
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "deleteCases",
+        "baseUrlType": "orchestration",
+        "httpMethod": "POST",
+        "url": "<% site.applicationId + '/orchestrations/deleteCases/launch' %>",
+        "authType": "sso",
+        "onSend": "<% pageVariables.deleteList %>"
+      },
+      {
+        "type": "outboundVariable",
+        "name": "outFlow",
+        "variableScope": "flow",
+        "values": [
+          {
+            "outboundPath": "result",
+            "value": "<% pageVariables.deleteList %>"
+          }
+        ]
+      }
+    ],
+    "responseErrorDetail": {
+      "errorSummary": "<%error%>",
+      "errors": "<%list:mapAttribute(errors, 'error')%>"
+    }
+  },
+  "onSubmit": "<%
+                var obj = getReports.data.find(x=>{ x.customReport.id == customReport.value[0]});
+                var reportName = obj.reportName.replace(' ', '_');
+                var reportOwner = obj.reportOwner.username ?? '';
+
+                var rsp = getCases.invoke({'REPORT_OWNER' : reportOwner, 'REPORT_NAME' : reportName});
+                pageVariables.deleteList = {'data' : rsp.Report_Entry.map(x=>{ {'id' : x.workdayID}})};
+
+                %>",
+  "presentation": {
+    "pageType": "edit",
+    "micro": true,
+    "title": {
+      "type": "title",
+      "label": "Delete Protected Cases"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "instanceList",
+          "id": "customReport",
+          "label": "Protected Case Custom Report",
+          "values": "<% getReports.data.map(x=>{x.customReport}) %>",
+          "selectedValues": "<% [] %>",
+          "required": true
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

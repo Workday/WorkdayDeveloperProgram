@@ -1,0 +1,6 @@
+{
+  "id": 1,
+  "name": "ManageEmployeeRecognition",
+  "label": "Manage: Employee Recognition",
+  "enabledForPageSecurity": true
+}

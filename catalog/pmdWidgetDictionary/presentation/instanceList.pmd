@@ -1,0 +1,64 @@
+{
+  "id": "instanceList",
+  "endPoints": [
+    {
+      "name": "countries",
+      "baseUrlType": "wdayRef",
+      "url": "/country/vers/latest/items?pageLimit=10",
+      "authType": "sso",
+      "bestEffort": "true"
+    }
+  ],
+  "presentation": {
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "instance & instanceList"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "readOnlyText",
+          "value": "Each item in the instanceList is an instance tag, whether or not you specify \"type\": \"instance\""
+        },
+        {
+          "type": "pod",
+          "podId": "header"
+        },
+        {
+          "type": "instanceList",
+          "label": "instanceList",
+          "idKey": "ISO_3166_1_Numeric_3_Code",
+          "displayKey": "name",
+          "values": "<% countries.items %>"
+        },
+        {
+          "multiSelect": "true",
+          "type": "instanceList",
+          "label": "instanceList with multi-select",
+          "idKey": "ISO_3166_1_Numeric_3_Code",
+          "displayKey": "name",
+          "values": "<% countries.items %>"
+        },
+        {
+          "type": "checkBoxList",
+          "label": "checkBoxList (select only 2)",
+          "maxSelectable": 2,
+          "idKey": "ISO_3166_1_Numeric_3_Code",
+          "displayKey": "name",
+          "values": "<% countries.items %>"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "pod",
+          "podId": "footer"
+        }
+      ]
+    }
+  }
+}

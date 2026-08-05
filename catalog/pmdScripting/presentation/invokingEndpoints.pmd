@@ -1,0 +1,117 @@
+{
+  "id": "invokingEndpoints",
+  "include": [
+    "invokingEndpoints.script"
+  ],
+  "endPoints": [
+    {
+      "name": "workers",
+      "baseUrlType": "workday-common",
+      "url": "/workers",
+      "authType": "sso",
+      "bestEffort": true
+    },
+    {
+      "name": "workerSearch",
+      "baseUrlType": "workday-common",
+      "url": "<% '/workers?search=' + instanceListQuery %>",
+      "exclude": "<% empty instanceListQuery %>",
+      "authType": "sso",
+      "deferred": true
+    },
+    {
+      "name": "getWorkerbyId",
+      "baseUrlType": "workday-common",
+      "url": "<% '/workers/' + id %>",
+      "authType": "sso",
+      "deferred": true
+    }
+  ],
+  "presentation": {
+    "pageType": "edit",
+    "standardEditButtonsHidden": true,
+    "title": {
+      "type": "title",
+      "label": "PMD Scripting - Invoking Endpoints"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "fieldSet",
+          "title": "Instructions",
+          "children": [
+            {
+              "type": "richText",
+              "enabled": false,
+              "value": "Select a Worker to invoke the <b>/common/v1/workers?search=[worker name]</b> endPoint using PMD Scripting."
+            },
+            {
+              "type": "instanceList",
+              "id": "instanceListWorkerSearch",
+              "label": "Worker",
+              "values": "<% workers.data %>",
+              "multiSelect": false,
+              "searchEndPoint": "<% endpoints.workerSearch %>",
+              "searchResultValues": "<% workerSearch.data %>",
+              "onChange": "<% invokingEndpoints.populate(self.value); %>"
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "id": "workerDetail",
+          "visible": false,
+          "columnWidthRatios": [
+            0.3,
+            0.7
+          ],
+          "horizontal": true,
+          "children": [
+            {
+              "type": "section",
+              "children": [
+                {
+                  "type": "readOnlyText",
+                  "id": "descriptor",
+                  "label": "Full Name"
+                },
+                {
+                  "type": "readOnlyText",
+                  "id": "businessTitle",
+                  "label": "Title"
+                },
+                {
+                  "type": "readOnlyText",
+                  "id": "primaryWorkEmail",
+                  "label": "Email"
+                }
+              ]
+            },
+            {
+              "type": "section",
+              "children": [
+                {
+                  "type": "readOnlyText",
+                  "id": "dateOfBirth",
+                  "label": "Date of Birth"
+                },
+                {
+                  "type": "readOnlyText",
+                  "id": "isManager",
+                  "label": "Is Manager?",
+                  "enabled": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "pod",
+          "podId": "doneButton"
+        }
+      ]
+    }
+  }
+}

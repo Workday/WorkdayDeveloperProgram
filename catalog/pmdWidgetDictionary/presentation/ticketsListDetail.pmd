@@ -1,0 +1,46 @@
+{
+  "id": "ticketsListDetail",
+  "include": [
+    "tickets.script"
+  ],
+  "endPoints": [ ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Workday Extend"
+    },
+    "body": {
+      "type": "listDetailHub",
+      "label": "Project Tickets",
+      "items": "<% tickets.getAllTickets() %>",
+      "itemVariableName": "ticket",
+      "icon": "wd-accent-checkmarked-page",
+      "navigationTemplate": {
+        "icon": "wd-icon-checkboxes",
+        "label": "Ticket - <% ticket.name %>",
+        "task": {
+          "taskId": "ticketView",
+          "parameters": {
+            "ticketId": "<% ticket.id %>"
+          }
+        }
+      },
+      "additionalLinks": {
+        "title": "Additionals Links",
+        "links": [
+          {
+            "label": "Project Home",
+            "task": {
+              "taskId": "projectHub"
+            }
+          },
+          {
+            "type": "external",
+            "label": "Developer Forum",
+            "url": "https://forum.developer.workday.com/"
+          }
+        ]
+      }
+    }
+  }
+}

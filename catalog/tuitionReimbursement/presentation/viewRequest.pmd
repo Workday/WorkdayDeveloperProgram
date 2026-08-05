@@ -1,0 +1,456 @@
+{
+  "id": "viewRequest",
+  "include": [
+    "fileTypes.script",
+    "wql.script"
+  ],
+  "endPoints": [
+    {
+      "name": "me",
+      "baseUrlType": "WORKDAY-COMMON",
+      "url": "/workers/me",
+      "authType": "sso"
+    },
+    {
+      "name": "userInfo",
+      "baseUrlType": "WORKDAY-COMMON",
+      "url": "/userInfo",
+      "authType": "sso"
+    },
+    {
+      "baseUrlType": "WORKDAY-WQL",
+      "name": "workerCountry",
+      "authType": "sso",
+      "url": "/data",
+      "_comment": "Used for visibility depending on country",
+      "wqlQuery": {
+        "parameters": {
+          "location": "<% me.location.id %>"
+        },
+        "queryId": "workerCountry"
+      }
+    },
+    {
+      "baseUrlType": "app",
+      "name": "eaDetailsInfo",
+      "authType": "sso",
+      "url": "<% `tuitionReimbursementRequests/{{queryParams.id}}` %>",
+      "exclude": false
+    },
+    {
+      "baseUrlType": "app",
+      "name": "educationAssistanceRequestCourseListInfo",
+      "authType": "sso",
+      "url": "<% `tuitionReimbursementCourses?tuitionReimbursementRequest={{queryParams.id}}` %>",
+      "exclude": false
+    },
+    {
+      "name": "getAttachments",
+      "url": "<% `verifications?tuitionReimbursementRequest={{queryParams.id}}` %>",
+      "authType": "sso",
+      "baseUrlType": "app"
+    }
+  ],
+  "script": "<%
+
+    var getProgramTypeTranslation = function(programType) {
+
+        if (userInfo.data[0].language == 'fr_CA') {
+            if (programType == 'Degree - Associate') {
+                return 'Diplôme – grade d’associé';
+            }
+            else if (programType == 'Degree - Bachelor') {
+                return 'Diplôme – baccalauréat';
+            }
+            else if (programType == 'Degree - Master') {
+                return 'Diplôme – maîtrise';
+            }
+            else if (programType == 'Degree - Doctorate') {
+                return 'Diplôme – doctorat';
+            }
+            else if (programType == 'Certificate') {
+                return 'Certificat';
+            }
+            else if (programType == 'Professional Designation') {
+                return 'Titre professionnel';
+            }
+            else if (programType == 'Individual Course(s)') {
+                return 'Cours individuel';
+            }
+            else if (programType == 'Other') {
+                return 'Autre';
+            }
+        }
+        else {
+                return programType;
+        }
+    }
+
+  %>",
+  "presentation": {
+    "title": {
+      "label": "<% presentationLabels.detailsPageTitle %>",
+      "type": "title"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "_comments": "Program/Course and Currency Information Block",
+          "type": "section",
+          "horizontal": true,
+          "title": "<%presentationLabels.programInformationTitle%>",
+          "children": [
+            {
+              "type": "section",
+              "horizontal": false,
+              "children": [
+                {
+                  "type": "fieldSet",
+                  "children": [
+                    {
+                      "type": "text",
+                      "label": "<%presentationLabels.ProgramTypeLabel%>",
+                      "value": "<% getProgramTypeTranslation(eaDetailsInfo.programType) %>",
+                      "enabled": false
+                    },
+                    {
+                      "id": "programSubType",
+                      "render": true,
+                      "enabled": false,
+                      "type": "text",
+                      "label": "<%presentationLabels.programSubTypeLabel%>",
+                      "helpText": "<%presentationLabels.programSubTypeLabel%>",
+                      "value": "<% eaDetailsInfo.programSubType %>",
+                      "guide": {
+                        "type": "guide",
+                        "id": "guideProgramSubType",
+                        "title": "<%presentationLabels.programSubTypeGuideTitle%>",
+                        "text": "<%presentationLabels.programSubTypeGuideText%>",
+                        "_comment_linkText": "Template Link",
+                        "_comment_linkUrl": "https://www.template.com/"
+                      }
+                    },
+                    {
+                      "id": "eaSchool",
+                      "enabled": false,
+                      "render": true,
+                      "type": "text",
+                      "label": "<%presentationLabels.schoolLabel%>",
+                      "value": "<% eaDetailsInfo.school %>"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "fieldSet",
+              "_horizontal": false,
+              "children": [
+                {
+                  "id": "eaRequestedAmountValue",
+                  "render": true,
+                  "enabled": false,
+                  "type": "currency",
+                  "label": "<%presentationLabels.totalAmountRequested%>",
+                  "helpText": "<%presentationLabels.totalAmountRequestedHelpText%>",
+                  "useDefaultCurrencyFormat": "true",
+                  "currencyCode": "CAD",
+                  "showCurrencySymbol": true,
+                  "guide": {
+                    "type": "guide",
+                    "id": "guideRequestedAmountValue",
+                    "title": "<%presentationLabels.totalAmountRequestedGuideTitle%>",
+                    "text": "<%presentationLabels.totalAmountRequestedGuideText%>"
+                  },
+                  "required": true,
+                  "value": "<% (empty eaDetailsInfo.requestAmount) ? '0.00' : eaDetailsInfo.requestAmount %>"
+                },
+                {
+                  "id": "requestedAmountCurrencyDropdown",
+                  "render": true,
+                  "enabled": false,
+                  "type": "dropdown",
+                  "label": "<%presentationLabels.requestedAmountCurrencyDropdownLabel%>",
+                  "instanceList": [
+                    {
+                      "id": "CAD",
+                      "descriptor": "CAD"
+                    },
+                    {
+                      "id": "USD",
+                      "descriptor": "USD"
+                    }
+                  ],
+                  "selectedValues": "<%list:toList(eaDetailsInfo.requestAmountCurrency == 'USD' ? 'USD' : 'CAD')%>"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "grid",
+          "id": "addCourseGrid",
+          "render": true,
+          "enabled": "false",
+          "label": "<%presentationLabels.Course_List_Grid_Name%>",
+          "rows": "<% educationAssistanceRequestCourseListInfo.data %>",
+          "rowVariableName": "row",
+          "columns": [
+            {
+              "type": "column",
+              "columnId": "2",
+              "label": "<%presentationLabels.Course_Name_Header%>",
+              "cellTemplate": {
+                "type": "text",
+                "id": "courseName",
+                "value": "<% row.courseName %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "3",
+              "label": "<%presentationLabels.Course_Start_Date_Header%>",
+              "cellTemplate": {
+                "type": "text",
+                "id": "courseStartDate",
+                "value": "<% row.courseStartDate %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "4",
+              "label": "<%presentationLabels.Course_End_Date_Header%>",
+              "cellTemplate": {
+                "type": "text",
+                "id": "courseEndDate",
+                "value": "<% row.courseEndDate %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "courseCost",
+              "label": "<%presentationLabels.Course_Cost_Header%>",
+              "subtotal": true,
+              "cellTemplate": {
+                "type": "currency",
+                "value": "<% row.courseCost %>",
+                "currencyCode": "CAD",
+                "useDefaultCurrencyFormat": "true",
+                "showCurrencySymbol": true,
+                "id": "courseCost"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "textbookCost",
+              "label": "<%presentationLabels.Textbook_Cost_Header%>",
+              "subtotal": true,
+              "cellTemplate": {
+                "type": "currency",
+                "value": "<% row.textbookCost %>",
+                "currencyCode": "CAD",
+                "useDefaultCurrencyFormat": "true",
+                "showCurrencySymbol": true,
+                "id": "textbookCost"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "courseSubtotalCost",
+              "label": "<%presentationLabels.Subtotal_Cost_Header%>",
+              "subtotal": true,
+              "cellTemplate": {
+                "type": "currency",
+                "value": "<% row.courseSubtotal %>",
+                "currencyCode": "CAD",
+                "useDefaultCurrencyFormat": "true",
+                "showCurrencySymbol": true,
+                "id": "courseSubtotalCost"
+              }
+            },
+            {
+              "cellTemplate": {
+                "type": "readOnlyText",
+                "value": "<%row.courseSubtotalCurrency%>"
+              },
+              "columnId": "courseSubtotalCurrency",
+              "label": "<%presentationLabels.currencyHeader%>",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "_comments": "Year to Date Allowable Education Assistance Block",
+          "type": "section",
+          "title": "<%presentationLabels.YTDAllowableEducationAssistanceAmountTitle%>",
+          "horizontal": false,
+          "render": true,
+          "children": [
+            {
+              "type": "richText",
+              "visible": "<% workerCountry.data[0].country.descriptor == 'United States of America'%>",
+              "value": "As per the US Internal Revenue Services (IRS) regulations, the Company is allowed to grant an annual maximum non-taxable  statutory education refund of $5250.00 and any monies refunded above the annual statutory limit may be subject to tax.<br/>It is the Employee and Manager's responsibility to keep track of annual reimbursement amounts; see annual maximum amounts in the <a href=\"www.google.com\">Tuition Reimbursement Policy</a>.",
+              "enabled": false
+            },
+            {
+              "type": "richText",
+              "visible": "<%! (workerCountry.data[0].country.descriptor == 'United States of America')%>",
+              "value": "<%presentationLabels.YTDAllowableEducationAssistanceAmountValue%>",
+              "enabled": false
+            },
+            {
+              "id": "ytdEmployeeConfirmationCheckbox",
+              "type": "checkBox",
+              "label": "<%presentationLabels.detailsYTDAllowableLabel%>",
+              "value": "<%eaDetailsInfo.ytdEmployeeConfirmation%>",
+              "trueLabel": "<%presentationLabels.Yes%>",
+              "falseLabel": "<%presentationLabels.No%>",
+              "required": true,
+              "enabled": false
+            }
+          ]
+        },
+        {
+          "_comments": "Legal Agreement Information Block",
+          "type": "section",
+          "title": "<%presentationLabels.legalAgreementTitle%>",
+          "horizontal": false,
+          "render": true,
+          "children": [
+            {
+              "type": "richText",
+              "value": "<%presentationLabels.legalAgreementValue%>",
+              "enabled": false
+            },
+            {
+              "id": "employeeLegalAcknowledgementCheckbox",
+              "type": "checkBox",
+              "label": "<%presentationLabels.legalAgreementLabel%>",
+              "value": "<%eaDetailsInfo.employeeLegalAcknowledgement%>",
+              "trueLabel": "<%presentationLabels.Yes%>",
+              "falseLabel": "<%presentationLabels.No%>",
+              "required": true,
+              "enabled": false
+            }
+          ]
+        },
+        {
+          "_comments": "Advanced Reimbursement Information Block - Only visible if the Worker's Country is Canada",
+          "type": "section",
+          "title": "<%presentationLabels.Advance_Reimbursement_Title%>",
+          "horizontal": false,
+          "render": true,
+          "children": [
+            {
+              "type": "richText",
+              "visible": "<%eaDetailsInfo.advanceReimbursement%>",
+              "value": "<%presentationLabels.advanceReimbursementInformationValue%>",
+              "enabled": false
+            },
+            {
+              "id": "advanceReimbursementCheckbox",
+              "type": "checkBox",
+              "label": "<%presentationLabels.Advanced_Reimbursement_Header_2%>",
+              "value": "<%eaDetailsInfo.advanceReimbursement%>",
+              "visible": "<%eaDetailsInfo.advanceReimbursement%>",
+              "trueLabel": "<%presentationLabels.Yes%>",
+              "falseLabel": "<%presentationLabels.No%>",
+              "enabled": false
+            },
+            {
+              "_comments": "Advanced Reimbursement Acknowledgement Information Block - Not Visible if advanceReimbursementCheckbox not checked",
+              "type": "section",
+              "horizontal": true,
+              "children": [
+                {
+                  "type": "richText",
+                  "visible": "<%eaDetailsInfo.advanceReimbursement%>",
+                  "value": "<%presentationLabels.advanceReimbursementEmployeeAcknowledgementCheckboxLabel%>",
+                  "enabled": false
+                },
+                {
+                  "id": "advanceReimbursementEmployeeAcknowledgementCheckbox",
+                  "type": "checkBox",
+                  "value": "<%eaDetailsInfo.advanceReimbursementEmployeeAcknowledgement%>",
+                  "visible": "<%eaDetailsInfo.advanceReimbursement%>",
+                  "label": "<%presentationLabels.AR_Employee_Acknowledgement%>",
+                  "enabled": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "_comments": "Spacer for Grid Seperation - Layout",
+          "type": "richText",
+          "value": "<hr>",
+          "enabled": false
+        },
+        {
+          "type": "fieldSet",
+          "title": "Course Completion Attachments",
+          "render": "<% !(empty getAttachments.data) %>",
+          "children": [
+            {
+              "type": "fileUploader",
+              "id": "multiFileUploader",
+              "valueOutBinding": "postAttachments:filedata:",
+              "enabled": "false",
+              "fileTypes": "jpg,pdf",
+              "singular": false,
+              "children": [
+                {
+                  "type": "loop",
+                  "on": "<% getAttachments.data %>",
+                  "as": "file",
+                  "children": [
+                    {
+                      "type": "fileUploaderRow",
+                      "render": "<% !(empty file.fileName) %>",
+                      "attachment": {
+                        "type": "attachmentList",
+                        "attachmentURL": "<% `{{apiGatewayEndpoint}}/apps/{{site.applicationId}}/v1/verifications/{{file.id}}` %>",
+                        "attachmentAuth": "sso",
+                        "attachmentName": "<% file.fileName %>",
+                        "attachmentUriTemplate": "[Target]",
+                        "instanceList": [
+                          {
+                            "action": "attachment",
+                            "descriptor": "<% file.fileName%>"
+                          }
+                        ]
+                      },
+                      "fileName": "<% file.fileName%>",
+                      "fileType": "<% fileTypes.getMimeTypeIDbyContentType(file.contentType.id) %>"
+                    }
+                  ]
+                }
+              ],
+              "fileUploaderRowTemplate": [ ]
+            }
+          ]
+        },
+        {
+          "type": "button",
+          "label": "<%presentationLabels.Return_To_Dashboard%>",
+          "action": "PRIMARY",
+          "taskReference": {
+            "taskId": "home"
+          }
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "<%userInfo.data[0].language == 'fr_CA' ? 'Propulsé par Extend' : 'Powered By Extend'%>"
+        }
+      ]
+    }
+  }
+}

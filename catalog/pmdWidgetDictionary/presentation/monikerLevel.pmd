@@ -1,0 +1,69 @@
+{
+  "id": "monikerLevel",
+  "endPoints": [
+    {
+      "baseUrlType": "workday-staffing",
+      "name": "supervisoryOrganizations",
+      "authType": "sso",
+      "url": "/supervisoryOrganizations"
+    },
+    {
+      "name": "orgChart",
+      "baseUrlType": "workday-staffing",
+      "authType": "sso",
+      "url": "<% '/supervisoryOrganizations/' + organizationSubordinatesList.promptSelections[0]
+            + '/orgChart' %>",
+      "deferred": "true"
+    },
+    {
+      "name": "orgChartSingleton",
+      "baseUrlType": "workday-staffing",
+      "authType": "sso",
+      "url": "<% '/supervisoryOrganizations/' + organizationSubordinatesList.promptSelections[0]
+            + '/orgChart/' + organizationSubordinatesList.promptSelections[1]%>",
+      "deferred": "true"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Workday Extend"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "instanceList",
+          "label": "Select subordinate orgs",
+          "multiSelect": "true",
+          "id": "organizationSubordinatesList",
+          "values": "<% supervisoryOrganizations.data %>",
+          "monikerLevels": [
+            {
+              "type": "monikerLevel",
+              "levelValues": "<% orgChart.data %>",
+              "endPoint": "<% endpoints.orgChart %>"
+            },
+            {
+              "type": "monikerLevel",
+              "levelValues": "<% orgChartSingleton.subordinates %>",
+              "endPoint": "<% endpoints.orgChartSingleton %>"
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    },
+    "pageType": "EDIT"
+  }
+}

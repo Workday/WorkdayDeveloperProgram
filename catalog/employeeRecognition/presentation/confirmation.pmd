@@ -1,0 +1,49 @@
+{
+  "id" : "confirmation",
+  "securityDomains" : [ "ManageEmployeeRecognition" ],
+  "outboundData" : {
+    "outboundEndPoints" : [ {
+      "name" : "transitionOutboundVars",
+      "type" : "outboundVariable",
+      "variableScope" : "flow",
+      "values" : [ {
+        "outboundPath" : "out",
+        "value" : "true"
+      } ]
+    } ]
+  },
+  "presentation" : {
+    "headerSize" : "HIDDEN",
+    "micro" : "true",
+    "standardEditButtonsHidden" : "<% true %>",
+    "body" : {
+      "type" : "section",
+      "horizontal" : false,
+      "children" : [ {
+        "type" : "text",
+        "id" : "successtext",
+        "value" : "Your feedback has been recorded and a gift card has been requested.",
+        "enabled" : "false",
+        "render" : "<% flowVariables.withGiftcard %>"
+      }, {
+        "type" : "text",
+        "id" : "noGiftCardText",
+        "value" : "Your feedback has been recorded.",
+        "enabled" : "false",
+        "render" : "<% !flowVariables.withGiftcard %>"
+      }, {
+        "action" : "SECONDARY",
+        "id" : "popupButton",
+        "type" : "button",
+        "taskReference" : {
+          "type" : "taskReference",
+          "taskId" : "home",
+          "parameterBindings" : {
+            "workerId" : "<% flowVariables.workerId %>"
+          }
+        },
+        "label" : "Close"
+      } ]
+    }
+  }
+}

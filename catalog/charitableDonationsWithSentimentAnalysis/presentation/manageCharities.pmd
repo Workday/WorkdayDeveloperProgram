@@ -1,0 +1,146 @@
+{
+  "id": "manageCharities",
+  "securityDomains": [
+    "ManageCharities"
+  ],
+  "endPoints": [
+    {
+      "name": "charities",
+      "baseUrlType": "app",
+      "url": "charities",
+      "authType": "sso",
+      "isCollection": "true",
+      "_comment": "isCollection is only safe to use with a small data set"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Manage Charities"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "sorted": false,
+      "children": [
+        {
+          "type": "section",
+          "horizontal": true,
+          "children": [
+            {
+              "type": "cardContainer",
+              "layout": "MASONRY",
+              "cards": [
+                {
+                  "type": "card",
+                  "cardId": "AppLinks",
+                   "parameters": "<% {'title': 'Key Tasks'} %>"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "charitiesGrid",
+          "label": "Charities",
+          "type": "grid",
+          "rows": "<% charities.data %>",
+          "rowVariableName": "charity",
+          "columns": [
+            {
+              "cellTemplate": {
+                "type": "button",
+                "action": "LINK",
+                "label": "<% charity.name %>",
+                "visible": true,
+                "taskReference": {
+                  "taskId": "viewCharity",
+                  "parameterBindings": {
+                    "charityId": "<% /* this charityId is a parameter we are passing to the view page once the user clicks to it.
+                     taskId points to the target page, and on that page, the valid queryParam name in the inbond endpoint for the Charity BO instance to v is populated here (charity.id):*/
+                                charity.id %>"
+                  }
+                }
+              },
+              "label": "Charity",
+              "type": "column",
+              "columnId": "name",
+              "sortableAndFilterable": true
+            },
+            {
+              "cellTemplate": {
+                "type": "richText",
+                "value": "<% charity.description %>"
+              },
+              "label": "Description",
+              "columnId": "description",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "checkBox",
+                "trueLabel": "✅",
+                "falseLabel": "❌",
+                "value": "<% charity.matchDonations %>"
+              },
+              "label": "Match Donations",
+              "columnId": "matchDonations",
+              "type": "column",
+              "sortableAndFilterable": "<% true %>"
+            },
+            {
+              "cellTemplate": {
+                "type": "instanceList",
+                "instanceList": [
+                  {
+                    "id": "<% charity.relationshipManager.id %>",
+                    "descriptor": "<% charity.relationshipManager.descriptor %>",
+                    "wid": "<% charity.relationshipManager.id %>"
+                  }
+                ],
+                "selectedValues": "<% [charity.relationshipManager.id] %>",
+                "enabled": "<% false %>"
+              },
+              "label": "Relationship Manager",
+              "columnId": "relationshipManager",
+              "type": "column",
+              "sortableAndFilterable": "<% true %>"
+            },
+            {
+              "cellTemplate": {
+                "type": "section",
+                "children": [
+                  {
+                    "type": "button",
+                    "action": "AUXILIARY",
+                    "label": "Update",
+                    "taskReference": {
+                      "taskId": "updateCharity",
+                      "parameterBindings": {
+                        "charityId": "<% charity.id %>"
+                      }
+                    }
+                  },
+                  {
+                    "type": "button",
+                    "action": "AUXILIARY",
+                    "label": "Update Logo",
+                    "taskReference": {
+                      "taskId": "updateCharityImage",
+                      "parameterBindings": {
+                        "charityId": "<% charity.id %>"
+                      }
+                    }
+                  }
+                ]
+              },
+              "columnId": "actions",
+              "label": "Actions",
+              "type": "column"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

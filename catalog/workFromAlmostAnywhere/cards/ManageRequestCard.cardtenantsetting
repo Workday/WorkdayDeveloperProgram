@@ -1,0 +1,9 @@
+{
+  "id": 2,
+  "name": "ManageRequestsCard",
+  "label": "Manage Request Card",
+  "securityDomains": [
+    "ManageWorkFromAnywhere"
+  ],
+  "routePath": "/manageRequestsCard"
+}

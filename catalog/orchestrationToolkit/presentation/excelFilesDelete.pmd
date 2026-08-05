@@ -1,0 +1,82 @@
+{
+  "_pagePurpose1": "When testing the excelFileCreate process, it may be desirable to clean up test files.",
+  "_pagePurpose2": "This page will facilitate object and file deletion.",
+  "id": "excelFilesDelete",
+  "endPoints": [
+    {
+      "name": "getExcelFiles",
+      "baseUrlType": "workday-app",
+      "url": "excelFiles?limit=100"
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "deleteFile",
+        "httpMethod": "DELETE",
+        "baseUrlType": "workday-app",
+        "url": "<% `excelFiles/{{fileWid.value}}` %>"
+      }
+    ]
+  },
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Delete Generated Excel Files"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "text",
+          "id": "overview",
+          "label": "Why?",
+          "enabled": false,
+          "value": "Deleting the objects keeps things clean."
+        },
+        {
+          "doNotAdd": true,
+          "type": "grid",
+          "id": "fileGrid",
+          "label": "Files",
+          "rows": "<% getExcelFiles.data ?? [] %>",
+          "deleteEndPoint": "deleteFile",
+          "rowVariableName": "row",
+          "columns": [
+            {
+              "type": "column",
+              "label": "File Name",
+              "cellTemplate": {
+                "type": "readOnlyText",
+                "id": "fileName",
+                "value": "<% row.fileName %>"
+              },
+              "columnId": "nameCol"
+            },
+            {
+              "type": "column",
+              "label": "WID",
+              "cellTemplate": {
+                "type": "readOnlyText",
+                "id": "fileWid",
+                "value": "<% row.id %>"
+              },
+              "columnId": "fileWidCol"
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

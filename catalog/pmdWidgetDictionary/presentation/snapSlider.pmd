@@ -1,0 +1,54 @@
+{
+  "id": "snapSlider",
+  "endPoints": [],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "snapSlider"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "snapSlider",
+          "label": "This app is helping me learn about new widgets!",
+          "id": "snapSlider",
+          "instanceList": [
+            {
+              "id": "1",
+              "descriptor": "Strongly Disagree"
+            },
+            {
+              "id": "2",
+              "descriptor": "Disagree"
+            },
+            {
+              "id": "3",
+              "descriptor": "Neutral"
+            },
+            {
+              "id": "4",
+              "descriptor": "Agree"
+            },
+            {
+              "id": "5",
+              "descriptor": "Strongly Agree"
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    },
+    "pageType": "EDIT"
+  }
+}

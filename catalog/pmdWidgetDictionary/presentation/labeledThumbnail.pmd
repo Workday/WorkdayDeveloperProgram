@@ -1,0 +1,40 @@
+{
+  "id": "labeledThumbnail",
+  "endPoints": [],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "labeledThumbnail"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+         {
+          "type": "pod",
+          "podId": "header"
+        },
+        {
+          "type": "labeledThumbnail",
+          "id": "abc",
+          "render": true,
+          "title": "My labeledThumbnail",
+          "subtitle": "This is the subtitle text for my labeledThumbnail. ",
+          "imageEndPoint": {
+            "authType": "noauth",
+            "url": "<% 'https://boomi.com/wp-content/uploads/workday-logo-1.png' %>"
+          }
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

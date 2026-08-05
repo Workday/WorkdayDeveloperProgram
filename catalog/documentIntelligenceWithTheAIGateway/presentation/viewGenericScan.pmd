@@ -1,0 +1,58 @@
+{
+  "id": "viewGenericScan",
+  "endPoints": [ ],
+  "securityDomains": [
+    "SelfServiceScanDocuments"
+  ],
+  "onLoad": "<%
+    pageVariables.parsedResult = flowVariables.orchestrationResponse.scannedDocument.text;
+    pageVariables.parsedResultAsArray = flowVariables.orchestrationResponse.scannedDocument.text.toString().split('\\n');
+  %>",
+  "presentation": {
+    "pageType": "confirm",
+    "title": {
+      "type": "title",
+      "label": "View Generic Document Scan Result"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "grid",
+          "rows": "<% pageVariables.parsedResultAsArray %>",
+          "rowVariableName": "line",
+          "label": "Results",
+          "doNotAdd": true,
+          "doNotRemove": true,
+          "columns": [
+            {
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% line %>",
+                "enabled": "false"
+              },
+              "columnId": "lineValue",
+              "label": "Text",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "rawResponse",
+          "label": "Raw Response",
+          "value": "<% pageVariables.parsedResult %>"
+        },
+        {
+          "type": "button",
+          "action": "AUXILIARY",
+          "label": "Scan Another Document",
+          "taskReference": {
+            "taskId": "scanDocument"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "getWorkerContact",
+  "parameters": ["Worker"],
+  "query": "<%
+    `SELECT worker{workdayID as id, phone_PrimaryWork, email_PrimaryWork } 
+    FROM workersForHCMReporting (dataSourceFilter=allActiveWorkers)
+    where worker={{Worker}}` 
+  %>"
+}
+
+      

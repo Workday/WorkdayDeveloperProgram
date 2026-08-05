@@ -1,0 +1,55 @@
+{
+  "id": "pageLayout",
+  "endPoints": [ ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Page Layout"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "fieldSet",
+          "children": [
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Sections",
+              "taskReference": {
+                "taskId": "sections"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Micro Pop-up",
+              "taskReference": {
+                "taskId": "micro"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Tabs",
+              "taskReference": {
+                "taskId": "tabs"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

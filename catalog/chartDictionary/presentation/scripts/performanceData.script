@@ -1,0 +1,73 @@
+var getPerformanceData = function() {
+  var chartData = [
+    {
+      'competency': 'Competency A',
+      'score': 2.1,
+      'average': 1.9,
+      'dwight': 4.2,
+      'jim': 2.5,
+      'michael': 3.6,
+      'target': 2.0
+    },
+    {
+      'competency': 'Competency B',
+      'score': 2.1,
+      'average': 2.2,
+      'dwight': 4.8,
+      'jim': 3.0,
+      'michael': 3.1,
+      'target': 2.5
+    },
+    {
+      'competency': 'Competency C',
+      'score': 1.2,
+      'average': 1.9,
+      'dwight': 3.6,
+      'jim': 3.4,
+      'michael': 2.4,
+      'target': 2.5
+    },
+    {
+      'competency': 'Competency D',
+      'score': 1.7,
+      'average': 1.9,
+      'dwight': 2.3,
+      'jim': 1.2,
+      'michael': 4.0,
+      'target': 2.0
+    },
+    {
+      'competency': 'Competency E',
+      'score': 1.4,
+      'average': 1.3,
+      'dwight': 3.0,
+      'jim': 2.8,
+      'michael': 3.9,
+      'target': 2.5
+    },
+    {
+      'competency': 'Competency F',
+      'score': 1.1,
+      'average': 1.2,
+      'dwight': 4.2,
+      'jim': 3.2,
+      'michael': 2.8,
+      'target': 3.0
+    },
+    {
+      'competency': 'Competency G',
+      'score': 2.1,
+      'average': 2.0,
+      'dwight': 3.9,
+      'jim': 2.9,
+      'michael': 1.9,
+      'target': 1.5
+    }
+  ]
+  return chartData
+}
+
+
+{
+  "getPerformanceData": getPerformanceData
+}

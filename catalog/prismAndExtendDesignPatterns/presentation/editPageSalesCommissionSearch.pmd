@@ -1,0 +1,57 @@
+{
+  "id": "editPageSalesCommissionSearch",
+  "endPoints": [],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "type": "outboundVariable",
+        "variableScope": "flow",
+        "name": "outboundFlowVariable",
+        "values": [
+          {
+            "outboundPath": "numberOfRows",
+            "value": "<%   return rowsToReturn.value; %>"
+          }
+        ]
+      }
+    ]
+  },
+  "presentation": {
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "Pending Commission Data - Reduce Result Size"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type":"readOnlyText",
+          "label":"General Information",
+          "value":"This page highlights that you can empower your end users to reduce the result set size displayed in an edit grid. However, it does mean that the user is potentially bouncing back and forth between pages to obtain an optimal result size. It can be argued that it is untenable because they can not guarantee which rows specifically are returned. The next task will display a way to address this. The last remaining problem with a large edit grid pattern that doesn't scale well is that there is no easy way to control or limit the number of rows edited. If too many are edited, the page could still time out and fail midway through processing the updated transactions. This is the most problematic aspec of working with large edit grids. As a rule of thumb, there should less than 20 API invocations invoked from edit pages."
+        },
+        {
+          "type": "number",
+          "id": "rowsToReturn",
+          "label": "Number of Instances",
+          "fractionDigits": 0,
+          "maximumValue": "10000",
+          "value": "<% return 100; %>"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By<br/><b>Workday Extend</b>"
+        }
+      ]
+    },
+    "micro": true,
+    "microFirstPageOnly": true
+  }
+}

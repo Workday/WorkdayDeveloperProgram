@@ -1,0 +1,36 @@
+{
+  "id": 1,
+  "name": "Verification",
+  "label": "Verification of Course Completion",
+  "defaultSecurityDomains": [
+    "ManageTuitionReimbursement"
+  ],
+  "defaultCollection": {
+    "name": "verifications",
+    "label": "All Verifications of Course Completions"
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "uploadedBy",
+      "label": "Uploaded By",
+      "type": "SINGLE_INSTANCE",
+      "target": "WORKER",
+      "secureByTarget": true
+    },
+    {
+      "id": 2,
+      "name": "uploadedDate",
+      "type": "DATE",
+      "label": "Uploaded Date",
+      "precision": "SECOND"
+    },
+    {
+      "id": 3,
+      "name": "tuitionReimbursementRequest",
+      "label": "Tuition Reimbursement Request",
+      "type": "SINGLE_INSTANCE",
+      "target": "TuitionReimbursementRequest"
+    }
+  ]
+}

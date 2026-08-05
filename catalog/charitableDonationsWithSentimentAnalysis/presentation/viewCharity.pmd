@@ -1,0 +1,172 @@
+{
+  "id": "viewCharity",
+  "include": [
+    "fileTypes.script"
+  ],
+  "securityDomains": [
+    "ManageCharities"
+  ],
+  "endPoints": [
+    {
+      "name": "charity",
+      "baseUrlType": "app",
+      "url": "<% 'charities/' + queryParams.charityId %>",
+      "authType": "sso"
+    },
+    {
+      "name": "getAttachments",
+      "baseUrlType": "app",
+      "url": "<% 'charityFiles?charity=' + queryParams.charityId  //'instance filter' checks for files that have a 'charity' matching the current charity
+              %>",
+      "authType": "sso"
+    } 
+  ],
+  "presentation": {
+    "micro": true,
+    "title": {
+      "type": "title",
+      "label": "View Charity"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": true,
+      "children": [
+        {
+          "type": "section",
+          "horizontal": false,
+          "sorted": false,
+          "children": [
+            {
+              "type": "richText",
+              "value": "<% '<h1>' + charity.descriptor + '</h1>' %>"
+            },
+            {
+              "type": "section",
+              "render": "<% (!(empty(charity.logo))) %>",
+              "children": [
+                {
+                  "type": "cardContainer",
+                  "layout": "grid",
+                  "cards": [
+                    {
+                      "type": "card",
+                      "cardId": "CharityLogo",
+                      "parameters": "<% {
+            'title': '',
+            'subtitle': 'Charity Logo',
+            'imageURL': 'https://api.workday.com/apps/'+site.applicationId+'/v1/charityLogos/'+charity.logo.id
+          }%>"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "richText",
+              "label": "Description",
+              "value": "<% charity.description %>"
+            },
+            {
+              "type": "richText",
+              "label": "charity logo",
+              "value": "<% charity.logo %>"
+            },
+            {
+              "type": "checkBox",
+              "label": "Company Match",
+              "trueLabel": "Yes",
+              "falseLabel": "No",
+              "value": "<% charity.matchDonations %>"
+            },
+            {
+              "type": "instanceList",
+              "label": "Relationship Manager",
+              "instanceList": [
+                {
+                  "id": "<% charity.relationshipManager.id %>",
+                  "descriptor": "<% charity.relationshipManager.descriptor %>",
+                  "wid": "<% charity.relationshipManager.id %>"
+                }
+              ]
+            },
+            {
+              "type": "button",
+              "action": "PRIMARY",
+              "label": "Donate",
+              "taskReference": {
+                "taskId": "donate",
+                "parameterBindings": {
+                  "charityId": "<% charity.id %>"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "id": "rightside",
+          "children": [
+            {
+              "type": "section",
+              "horizontal": false,
+              "render": "<% !empty(getAttachments.data)  %>",
+              "sorted": false,
+              "children": [
+                {
+                  "type": "fileUploader",
+                  "label": "Previously attached files for Charity:",
+                  "id": "multiFileUploader",
+                  "valueOutBinding": "postAttachments:filedata:",
+                  "enabled": "false",
+                  "fileTypes": "txt,jpg,jpeg,png,ppt,pptx,pdf,doc,docx,xlsx,xls",
+                  "singular": false,
+                  "children": [
+                    {
+                      "type": "loop",
+                      "on": "<% getAttachments.data %>",
+                      "as": "file",
+                      "children": [
+                        {
+                          "type": "fileUploaderRow",
+                          "render": "<% !(empty file.fileName) %>",
+                          "attachment": {
+                            "type": "attachmentList",
+                            "attachmentURL": "https://api.workday.com/apps/<%site.applicationId%>/v1/charityFiles/<%file.id%>?charity=<%queryParams.charityId%>",
+                            "attachmentAuth": "sso",
+                            "attachmentName": "<% file.fileName %>",
+                            "attachmentUriTemplate": "[Target]",
+                            "instanceList": [
+                              {
+                                "action": "attachment",
+                                "descriptor": "<% file.fileName%>",
+                                "mimeType": "<% fileType:getFileType(file.fileName) %>"
+                              }
+                            ]
+                          },
+                          "fileName": "<% file.fileName%>",
+                          "fileType": "<% fileTypes.getMimeTypeIDbyContentType(file.contentType.id) %>"
+                        }
+                      ]
+                    }
+                  ],
+                  "fileUploaderRowTemplate": [ ]
+                }
+              ]
+            },
+            {
+              "type": "cardContainer",
+              "layout": "MASONRY",
+              "cards": [
+                {
+                  "type": "card",
+                  "cardId": "AppLinks",
+                  "parameters": "<% {'title': 'Next Steps'} %>"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

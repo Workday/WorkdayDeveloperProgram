@@ -1,0 +1,89 @@
+{
+  "_pagePurpose1": "Many of the Orchestrations (though not ALL) can be launched from this page. Do not navigate here directly.",
+  "_pagePurpose2": "Instead, the home page has an Orchestration selector that will route to this page. Start there.",
+  "id": "triggerOrchestration",
+  "endPoints": [
+    {
+      "name": "triggerOrch",
+      "baseUrlType": "workday-orchestration",
+      "url": "<% `{{queryParams.orchID}}/launch` %>",
+      "deferred": true,
+      "httpMethod": "POST",
+      "authType": "sso",
+      "onSend": "<%
+        //Logic to toggle sending an invalid payload to the orchestration
+        let payload = {:};
+        if(triggerError.value){
+          payload = {'valuxe':'Invalid payload', 'statusCode':403};
+        } else {
+          payload = {'value':'Successful Orchestration.', 'statusCode':201};
+        }
+
+        return payload;
+      %>"
+    }
+  ],
+  "presentation": {
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "Workday Orchestration Error Handling Approaches - in Context of PMD"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "readOnlyText",
+          "id": "hello",
+          "label": "Information",
+          "value": "<% queryParams.info %>"
+        },
+        {
+          "type": "checkBox",
+          "label": "Trigger Error via PageActionButton?",
+          "value": false,
+          "id": "triggerError"
+        },
+        {
+          "type": "pageActionButton",
+          "id": "myActionButton",
+          "label": "Trigger Orch",
+          "onClick": "<%
+                        const response = triggerOrch.invoke();
+                        output.value = '';
+                        output.clearError();
+                        
+                        if(response.successful ?? false){
+                          output.value = response.response;
+                        } else if(response.responseHeaders.contentlength[0] == '0'){
+                          // async orchestrations only return headers. The content length is always 0.
+                          output.value = 'Aync orchestration submitted. (The error checkbox on this page has no effect with Async orchestrations)';
+                        } else {
+                          // Using the null coalescing operator, we can default the pathing to grab the response value. 
+                          // For the orchestration default plain/text content type output for errors, it will always map to a '.value' path.
+                          const errMsg = response.response ?? response.value;
+                          output.setError(errMsg.toString()); 
+                        }
+                      %>"
+        },
+        {
+          "type": "text",
+          "enabled": "false",
+          "label": "Output",
+          "id": "output"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

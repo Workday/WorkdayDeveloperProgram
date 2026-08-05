@@ -1,0 +1,76 @@
+{
+  "id": "home",
+  "securityDomains": [
+    "RegisterForEvents"
+  ],
+  "endPoints": [ ],
+  "presentation": {
+    "headerSize": "VPS_DEFAULT",
+    "title": {
+      "type": "title",
+      "label": "Work Event Registration Home"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "image",
+          "imageUri": "https://upload.wikimedia.org/wikipedia/commons/8/80/Workday_logo.svg",
+          "sizingHint": "THUMBNAIL",
+          "defaultPhoto": false,
+          "userPhoto": false
+        },
+        {
+          "type": "richText",
+          "label": "",
+          "id": "richTextId4",
+          "value": "<p style=\"text-align:left\"><span style=\"font-size:16px; color:black;\">View Work Events or use the <b>Create an Event</b> button <br/>to add a new Work Event.</span></p>"
+        },
+        {
+          "type": "richText",
+          "id": "blurb",
+          "label": "Why it Matters",
+          "value": "<ul><li>It can boost productivity and creativity. When people are happy and relaxed, they are more likely to be productive and creative. Studies have shown that laughter can actually increase productivity by up to 12%.</li>
+<li>It can help to reduce stress and improve morale. A stressful work environment can lead to burnout, absenteeism, and turnover. Fun events can help to reduce stress and improve morale, which can lead to a more productive and positive work environment.</li>
+<li>It can help to build relationships and teamwork. Fun events give people a chance to get to know each other outside of work, which can help to build relationships and teamwork. This can be especially important in workplaces where people are siloed or don't have a lot of opportunities to interact with each other.</li>
+<li>It can help to attract and retain top talent. In today's competitive job market, companies are looking for ways to attract and retain top talent. Fun events can show potential employees that a company is a fun and supportive place to work, which can make them more likely to want to join the team.</li></ul>
+
+<b>Here are some ideas for fun work events that you can organize:</b>
+<ul>
+<li><b>Casual Fridays.</b> Allow employees to dress down on Fridays. This can help to create a more relaxed and fun atmosphere in the workplace.</li>
+<li><b>Happy hours.</b> Host a happy hour after work for employees to socialize and let loose.</li>
+<li><b>Team-building events.</b> Organize team-building events that allow employees to work together and have fun. This could include anything from playing games to going on a scavenger hunt.</li>
+<li><b>Trivia nights.</b> Host a trivia night to test employees' knowledge on a variety of topics. This is a great way to get people talking and laughing.</li>
+<li><b>Potluck lunches.</b> Have employees bring in their favorite dishes for a potluck lunch. This is a great way to get to know your coworkers better and try new foods.</li></ul>
+<br>No matter what kind of fun event you organize, make sure that it is something that your employees will enjoy. The goal is to create a fun and relaxed atmosphere that will help to boost productivity, morale, and relationships."
+        },
+        {
+          "type": "section",
+          "title": "Ready to Get Started?",
+          "children": [
+            {
+              "type": "cardContainer",
+              "layout": "MASONRY",
+              "cards": [
+                {
+                  "type": "card",
+                  "cardId": "AppLinks"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": false,
+          "value": "Powered By<br/><b>Workday Extend 🎟️</b>"
+        }
+      ]
+    }
+  }
+}

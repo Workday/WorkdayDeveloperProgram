@@ -1,0 +1,78 @@
+{
+  "id": 10,
+  "name": "RequestedService",
+  "label": "Requested Service",
+  "defaultSecurityDomains": [
+    "CapitalProjectPlanning",
+    "CapitalProjectPlanningAdministrator"
+  ],
+  "defaultCollection": {
+    "name": "requestedServices",
+    "label": "Requested Services"
+  },
+  "fields": [
+    {
+      "enableReportingFromTarget": false,
+      "secureByTarget": false,
+      "target": "Services",
+      "isPurgeable": false,
+      "useForDisplay": true,
+      "type": "SINGLE_INSTANCE",
+      "name": "service",
+      "id": 1
+    },
+    {
+      "enableReportingFromTarget": false,
+      "secureByTarget": true,
+      "target": "CapitalProjectRequest",
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "type": "SINGLE_INSTANCE",
+      "name": "capitalProjectRequest",
+      "id": 2
+    },
+    {
+      "enableIndex": false,
+      "isPurgeable": false,
+      "type": "BOOLEAN",
+      "name": "isRequired",
+      "id": 3
+    },
+    {
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "isReferenceId": false,
+      "type": "TEXT",
+      "name": "comment",
+      "id": 4
+    },
+    {
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "isReferenceId": false,
+      "type": "TEXT",
+      "name": "explanation",
+      "id": 5
+    },
+    {
+      "enableIndex": false,
+      "isPurgeable": false,
+      "label": "Order",
+      "type": "INTEGER",
+      "name": "displayOrder",
+      "id": 6
+    },
+    {
+      "id": 9,
+      "name": "approved",
+      "type": "BOOLEAN",
+      "description": "",
+      "isPurgeable": false,
+      "enableIndex": false
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "id": 2,
+  "name": "WorkFromAnywhereRequest",
+  "label": "Work From Anywhere Request",
+  "defaultSecurityDomains": [
+    "ManageWorkFromAnywhere",
+    "RemoteWorkSelfService"
+  ],
+  "defaultCollection": {
+    "name": "workFromAnywhereRequests",
+    "label": "Work From Anywhere Request",
+    "description": "Displays all work from almost anywhere requests from the Work From Almost Anywhere Extend app"
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "location",
+      "label": "Location",
+      "description": "Location requested",
+      "type": "TEXT"
+    },
+    {
+      "id": 2,
+      "name": "startDate",
+      "label": "Start Date",
+      "type": "DATE",
+      "description": "Start date of request",
+      "precision": "DAY"
+    },
+    {
+      "id": 3,
+      "name": "endDate",
+      "label": "End Date",
+      "description": "End date of request",
+      "type": "DATE",
+      "precision": "DAY"
+    },
+    {
+      "id": 4,
+      "name": "rightToWork",
+      "label": "Right to Work",
+      "description": "Does the requestor confirm they have the right to work in this location?",
+      "type": "BOOLEAN"
+    },
+    {
+      "useForDisplay": false,
+      "secureByTarget": true,
+      "target": "WORKER",
+      "type": "SINGLE_INSTANCE",
+      "label": "Created By",
+      "description": "Who submitted the request?",
+      "name": "createdBy",
+      "id": 5
+    },
+    {
+      "target": "RightToWorkVerification",
+      "label": "Right to Work Verification",
+      "type": "MULTI_INSTANCE",
+      "name": "rightToWorkVerification",
+      "description": "Model Attachment Object containing proof of right to work in the requested location",
+      "id": 6
+    },
+    {
+      "id": 7,
+      "name": "name",
+      "type": "TEXT",
+      "description": "Name of request",
+      "isReferenceId": true,
+      "useForDisplay": true
+    }
+  ]
+}

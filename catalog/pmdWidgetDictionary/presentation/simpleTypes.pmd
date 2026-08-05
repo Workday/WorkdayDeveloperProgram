@@ -1,0 +1,137 @@
+{
+  "id": "simpleTypes",
+  "presentation": {
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "simpleTypes"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "sorted": false,
+      "children": [
+        {
+          "type": "pod",
+          "podId": "header"
+        },
+        { "type": "readOnlyText",
+          "label": "readOnlyText",
+          "value": "This is read only text.",
+          "enabled": true
+        }, 
+        {
+          "type": "text",
+          "label": "text",
+          "value": "Use for a few words.",
+          "enabled": true
+        },
+        {
+          "type": "textArea",
+          "label": "textArea",
+          "value": "Use when you want to implement text longer than a few words. Really long even.",
+          "enabled": true
+        },
+        {
+          "type": "richText",
+          "label": "richText",
+          "value": "Use when you want<br>to get <h1 style='color:green;'>really fancy</h1> with <i>italics</i>, <b>bolding</b>, <u>underline</u> <span style='color: red; font-size: 8px;'>(all kinds of crazy stuff)</span>.",
+          "enabled": false
+        },
+        {
+          "type": "richText",
+          "label": "or to allow richText input",
+          "value": "in a <b>fancy</b> manner",
+          "enabled": true
+        },
+        {
+          "type": "number",
+          "label": "number",
+          "value": "42",
+          "enabled": false
+        },
+        {
+          "type": "currency",
+          "label": "currency",
+          "currencyCode": "USD",
+          "value": "1097.02",
+          "minimumValue": "0.50",
+          "maximumValue": "1100.50",
+          "enabled": true,
+          "showCurrencySymbol": true,
+          "_comment": "Currency symbol will never be shown on edit widgets."
+        },
+        {
+          "type": "currency",
+          "label": "currency with custom number of digits",
+          "totalDigits": "7",
+          "fractionDigits": "3",
+          "value": "1097.002",
+          "minimumValue": "0.50",
+          "maximumValue": "1100.50",
+          "enabled": true
+        },
+        {
+          "type": "checkBox",
+          "label": "checkBox",
+          "value": "true"
+        },
+        {
+          "type": "radioGroup",
+          "label": "radioGroup",
+          "instanceList": [
+            {
+              "id": "1",
+              "descriptor": "Yes"
+            },
+            {
+              "id": "2",
+              "descriptor": "No"
+            }
+          ]
+        },
+        {
+          "type": "time",
+          "label": "time",
+          "value": "01:23 AM",
+          "enabled": true
+        },
+        {
+          "type": "date",
+          "label": "date",
+          "id": "dateField",
+          "value": "<% date:getTodaysDate(date:getDateTimeZone(userTimeZone)) %>",
+          "enabled": true
+        },
+        {
+          "type": "date",
+          "label": "day after date selected above (dynamically set)",
+          "value": "<% date:format(date:add(dateField.value,'DAY',1),'yyyy-MM-dd') %>",
+          "enabled": false
+        },
+        {
+          "type": "date",
+          "label": "setting hardcoded date",
+          "_comment": "Time is not necessary in the value here but there's no ill-effect.",
+          "value": "1986-10-02 20:55:33.057",
+          "enabled": false
+        },
+        {
+          "type": "text",
+          "label": "formatted date (in Istanbul, 3 days ago, funny format)",
+          "value": "<% date:format(date:add(date:parseDateString(date:getTodaysDate(date:getDateTimeZone('Europe/Istanbul'))),'DAY',-3),'d MMM y G') %>",
+          "enabled": false
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "pod",
+          "podId": "footer"
+        }
+      ]
+    }
+  }
+}

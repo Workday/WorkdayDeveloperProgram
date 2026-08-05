@@ -1,0 +1,124 @@
+{
+  "id": "featureEmptyState",
+  "include": [
+    "pokemonData.script"
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Empty State Placeholder"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "section",
+          "title": "A Valid Chart",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "id": "chart1",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "HP",
+                  "value": "<% data.stats.hp %>"
+                },
+                {
+                  "name": "Attack",
+                  "value": "<% data.stats.attack %>"
+                },
+                {
+                  "name": "Defense",
+                  "value": "<% data.stats.defense %>"
+                },
+                {
+                  "name": "Speed",
+                  "value": "<% data.stats.speed %>"
+                }
+              ],
+              "measurementAxisOptions": {
+                "comparisonLineValue": "<% 123.123 %>",
+                "comparisonLineLabel": "<% 'Comparison Line Label' %>"
+              },
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "An Invalid Chart - Renders with Empty State Placeholder",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "id": "chart2",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Start Level",
+                  "value": "<% null %>"
+                },
+                {
+                  "name": "Current Level",
+                  "value": "<% null %>"
+                }
+              ],
+              "targetLineDataSet": {
+                "name": "Level to Evolve",
+                "value": "<% null %>"
+              },
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Another Valid Chart",
+          "children": [
+            {
+              "type": "stackedBarChart2",
+              "id": "chart3",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "HP",
+                  "value": "<% data.stats.hp %>"
+                },
+                {
+                  "name": "Attack",
+                  "value": "<% data.stats.attack %>"
+                },
+                {
+                  "name": "Defense",
+                  "value": "<% data.stats.defense %>"
+                },
+                {
+                  "name": "Speed",
+                  "value": "<% data.stats.speed %>"
+                }
+              ],
+              "measurementAxisOptions": {
+                "comparisonLineValue": "<% 123.123 %>",
+                "comparisonLineLabel": "<% 'Comparison Line Label' %>"
+              },
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

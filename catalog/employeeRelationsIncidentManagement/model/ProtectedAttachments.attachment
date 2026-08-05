@@ -1,0 +1,61 @@
+{
+  "id": 1,
+  "name": "ProtectedAttachments",
+  "label": "Protected Attachments",
+  "defaultSecurityDomains": [
+    "ManageProtectedCases"
+  ],
+  "defaultCollection": {
+    "name": "protectedAttachments",
+    "label": "Protected Attachments"
+  },
+  "fields": [
+    {
+      "target": "ProtectedCases",
+      "id": 1,
+      "name": "case",
+      "label": "Case",
+      "type": "SINGLE_INSTANCE"
+    },
+    {
+      "isPurgeable": false,
+      "label": "Created By",
+      "type": "SINGLE_INSTANCE",
+      "name": "createdBy",
+      "id": 2,
+      "target": "WORKER"
+    },
+    {
+      "precision": "DAY",
+      "label": "Created Date",
+      "type": "DATE",
+      "name": "createdDate",
+      "id": 3
+    },
+    {
+      "type": "TEXT",
+      "label": "Attachment Comment",
+      "name": "attachmentComment",
+      "id": 4
+    },
+    {
+      "target": "ProtectedCaseEntries",
+      "id": 5,
+      "name": "caseEntry",
+      "label": "Case Entry",
+      "type": "SINGLE_INSTANCE"
+    },
+    {
+      "id": 6,
+      "name": "hideComment",
+      "label": "Hide Comment",
+      "type": "BOOLEAN"
+    },
+    {
+      "id": 7,
+      "name": "hideCommentReason",
+      "label": "Hide Comment Reason",
+      "type": "TEXT"
+    }
+  ]
+}

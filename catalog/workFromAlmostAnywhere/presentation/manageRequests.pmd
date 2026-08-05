@@ -1,0 +1,190 @@
+{
+  "id": "manageRequests",
+  "securityDomains": [
+    "ManageWorkFromAnywhere"
+  ],
+  "include": [
+    "dates.script"
+  ],
+  "endPoints": [
+    {
+      "name": "remoteWorkRequests",
+      "baseUrlType": "workday-wql",
+      "url": "data",
+      "authType": "sso",
+      "wqlQuery": {
+        "parameters": {
+          "applicationId": "<% site.applicationId %>"
+        },
+        "queryId": "remoteWorkRequests"
+      }
+    }
+  ],
+  "onLoad": "<% 
+  pageVariables.maxRemoteEvents = attrstore['Max Remote Days'] ?? 30; //refer to app attribute setting, but default to 30
+    let numEvents = remoteWorkRequests.data != null ? remoteWorkRequests.data.size() : 0;
+    numEvents > pageVariables.maxRemoteEvents ? pageVariables.approvalRequired = true : pageVariables.approvalRequired = false;
+    //get total number of remote days and days left
+    var numRemoteDays = dates.calculateRemainingDays(remoteWorkRequests, userTimeZone);
+    pageVariables.daysLeft = number:max(pageVariables.maxRemoteEvents - numRemoteDays, 0);
+    pageVariables.daysUsed = numRemoteDays;
+  %>",
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Manage Remote Work Requests"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "sorted": false,
+      "children": [
+        {
+          "type": "section",
+          "title": "<% 'Remote Work Days Left to Use: ' +  pageVariables.daysLeft %>",
+          "children": [
+            {
+              "type": "pod",
+              "podId": "warningMessage"
+            },
+            {
+              "type": "cardContainer",
+              "layout": "MASONRY",
+              "cards": [
+                {
+                  "type": "card",
+                  "cardId": "AppLinks"
+                },
+                {
+                  "type": "card",
+                  "cardId": "daysChart",
+                  "parameters": "<%{ 'dataSet': remoteWorkRequests.data, 'daysUsed': pageVariables.daysUsed,'daysLeft':pageVariables.daysLeft, 'timeZone':userTimeZone }%>"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "requestsGrid",
+          "label": "Events",
+          "type": "grid",
+          "rows": "<% remoteWorkRequests.data %>",
+          "rowVariableName": "request",
+          "columns": [
+            {
+              "cellTemplate": {
+                "type": "button",
+                "label": "<% request.name %>",
+                "action": "LINK",
+                "value": "<% request.id %>",
+                "taskReference": {
+                  "taskId": "viewRequest",
+                  "parameterBindings": {
+                    "requestId": "<% /* this workEventId is a parameter we are passing to the update page once the user clicks to it.
+                     taskId points to the target page, and on that page, the valid queryParam name in the inbond endpoint for the Event BO instance to update is populated here (request.id):*/
+                                request.id %>"
+                  }
+                }
+              },
+              "label": "Name of Request",
+              "type": "column",
+              "columnId": "name",
+              "sortableAndFilterable": true
+            },
+            {
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% request.location %>"
+              },
+              "label": "Location",
+              "columnId": "Proposed Location",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "date",
+                "datePrecision": "DAY",
+                "dateFormat": "yyyy-MM-dd",
+                "value": "<% request.startDate %>"
+              },
+              "label": "Start Date of Request",
+              "sortableAndFilterable": true,
+              "columnId": "StartDateOfEvent",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "date",
+                "datePrecision": "DAY",
+                "dateFormat": "yyyy-MM-dd",
+                "value": "<% request.endDate %>"
+              },
+              "label": "End Date of Request",
+              "sortableAndFilterable": true,
+              "columnId": "EndDateOfEvent",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "number",
+                "value": "<% (date:parse(request.startDate)).between(date:parse(request.endDate), 'DAY') + 1 %>"
+              },
+              "label": "Trip Length (Days)",
+              "columnId": "TripLength",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "readOnlyText",
+                "visible": "<% request.rightToWork %>",
+                "value": "✅"
+              },
+              "label": "Right to Work There?",
+              "columnId": "rightToWork",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "instanceList",
+                "instanceList": [
+                  {
+                    "id": "<% request.createdBy %>",
+                    "descriptor": "<% //here we use a ternary or Elvis expression to tell the page to check
+                                   // whether the descriptor is non-null. If it is null, display an empty string. Else, it will display the expression before the operator.
+                                   request.createdBy.descriptor ?: '' %>"
+                  }
+                ]
+              },
+              "label": "Created By",
+              "columnId": "CreatedBy",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "section",
+                "children": [
+                  {
+                    "type": "button",
+                    "action": "AUXILIARY",
+                    "label": "Update",
+                    "taskReference": {
+                      "taskId": "editRequest",
+                      "parameterBindings": {
+                        "requestId": "<% /* this requestId is a parameter we are passing to the update page once the user clicks to it.
+                     taskId points to the target page, and on that page, the valid queryParam name in the inbond endpoint for the Event BO instance to update is populated here (request.id):*/
+                                    request.id %>"
+                      }
+                    }
+                  }
+                ]
+              },
+              "columnId": "actions",
+              "type": "column",
+              "label": "Actions"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

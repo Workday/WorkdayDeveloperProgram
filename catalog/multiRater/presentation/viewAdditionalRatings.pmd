@@ -1,0 +1,152 @@
+{
+  "id": "viewAdditionalRatings",
+  "endPoints": [
+    {
+      "name": "getMultiRater",
+      "baseUrlType": "app",
+      "url": "<% `{{apiGatewayEndpoint}}/apps/{{site.applicationId}}/v1/multiRaterForEmployeeReviews/{{queryParams.instanceId}}` %>",
+      "authType": "sso",
+      "httpMethod": "GET"
+    },
+    {
+      "name": "getManagerRating",
+      "baseUrlType": "workday-orchestrate",
+      "url": "<% 'getManagerRating/launch?reviewWID=' 
+      + getMultiRater.reviewWID + 
+      '&ratingScaleWID='
+      + getMultiRater.ratingID %>",
+      "httpMethod": "GET",
+      "authType": "sso"
+    },
+    {
+      "name": "getManagerComment",
+      "baseUrlType": "workday-orchestrate",
+      "url": "<% 'getManagerComment/launch?reviewWID=' 
+      + getMultiRater.reviewWID %>",
+      "httpMethod": "GET",
+      "authType": "sso"
+    },
+    {
+      "name": "getReviewerRating1",
+      "baseUrlType": "workday-orchestrate",
+      "url": "<% 'getRatingLabelAndValue/launch?ratingScaleWID=' + getMultiRater.ratingID 
+      + '&ratingID=' + getMultiRater.reviewerRating1 %>",
+      "httpMethod": "GET",
+      "authType": "sso"
+    },
+    {
+      "name": "getReviewerRating2",
+      "baseUrlType": "workday-orchestrate",
+      "url": "<% 'getRatingLabelAndValue/launch?ratingScaleWID=' + getMultiRater.ratingID 
+      + '&ratingID=' + getMultiRater.reviewerRating2 %>",
+      "httpMethod": "GET",
+      "authType": "sso"
+    },
+    {
+      "name": "getReviewerRating3",
+      "baseUrlType": "workday-orchestrate",
+      "url": "<% 'getRatingLabelAndValue/launch?ratingScaleWID=' + getMultiRater.ratingID 
+      + '&ratingID=' + getMultiRater.reviewerRating3 %>",
+      "httpMethod": "GET",
+      "authType": "sso"
+    }
+  ],
+  "presentation": {
+    "pageType": "VIEW",
+    "title": {
+      "type": "title",
+      "label": "<% `View Multiple Ratings {{getMultiRater.Id}}`  %>"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "section",
+          "id": "additionalReviews",
+          "label": "Additional Reviewer Responses",
+          "children": [
+            {
+              "horizontal": true,
+              "type": "section",
+              "children": [
+                {
+                  "type": "readOnlyText",
+                  "id": "Rater1Name",
+                  "label": "Multiple Rater Name",
+                  "value": "<% getMultiRater.reviewer1.descriptor %>"
+                },
+                {
+                  "type": "readOnlyText",
+                  "id": "ReviewerRating1",
+                  "label": "Rating",
+                  "value": "<% getReviewerRating1.returnRatingLabel %>"
+                },
+                {
+                  "type": "richText",
+                  "enabled": false,
+                  "id": "reviewerComment1",
+                  "label": "Comment",
+                  "value": "<% getMultiRater.reviewerComment1 %>"
+                }
+              ],
+              "id": "reviewer1"
+            },
+            {
+              "horizontal": true,
+              "type": "section",
+              "children": [
+                {
+                  "type": "readOnlyText",
+                  "id": "Rater2Name",
+                  "label": "Multiple Rater Name",
+                  "value": "<% getMultiRater.reviewer2.descriptor %>"
+                },
+                {
+                  "type": "readOnlyText",
+                  "id": "ReviewerRating2",
+                  "label": "Rating",
+                  "value": "<% getReviewerRating2.returnRatingLabel %>"
+                },
+                {
+                  "type": "richText",
+                  "enabled": false,
+                  "id": "reviewerComment2",
+                  "label": "Comment",
+                  "value": "<% getMultiRater.reviewerComment2 %>"
+                }
+              ],
+              "id": "reviewer2"
+            },
+            {
+              "horizontal": true,
+              "type": "section",
+              "children": [
+                {
+                  "type": "readOnlyText",
+                  "id": "Rater3Name",
+                  "label": "Multiple Rater Name",
+                  "value": "<% getMultiRater.reviewer3.descriptor %>"
+                },
+                {
+                  "type": "readOnlyText",
+                  "id": "ReviewerRating3",
+                  "label": "Rating",
+                  "value": "<% getReviewerRating3.returnRatingLabel %>"
+                },
+                {
+                  "type": "richText",
+                  "enabled": false,
+                  "id": "reviewerComment3",
+                  "label": "Comment",
+                  "value": "<% getMultiRater.reviewerComment3 %>"
+                }
+              ],
+              "id": "reviewer3"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

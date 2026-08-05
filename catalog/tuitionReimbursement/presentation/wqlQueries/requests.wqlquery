@@ -1,0 +1,10 @@
+{
+  "id": "requests",
+  "parameters": ["appId", "workerID"],
+  "query": "<%
+    `SELECT workdayID as requestId, businessProcesses{status,workdayID as id, businessProcessStepAwaitingAction} , programType, requestAmount, requestAmountCurrency, school, creationDate 
+    FROM {{appId}}_tuitionReimbursementRequests
+    WHERE worker ={{workerID}} 
+    ORDER BY creationDate DESC` 
+    %>"
+}

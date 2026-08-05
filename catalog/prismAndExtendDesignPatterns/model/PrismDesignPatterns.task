@@ -1,0 +1,9 @@
+{
+  "id": 1,
+  "name": "PrismDesignPatterns",
+  "label": "Prism Design Patterns",
+  "securityDomains": [
+    "DataCorrection"
+  ],
+  "routePath": "/"
+}

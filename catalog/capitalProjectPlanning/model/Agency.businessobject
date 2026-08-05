@@ -1,0 +1,27 @@
+{
+  "id": 6,
+  "name": "Agency",
+  "label": "Agency",
+  "defaultSecurityDomains": [
+    "CapitalProjectPlanning",
+    "CapitalProjectPlanningAdministrator",
+    "CapitalProjectPlanningCommon"
+  ],
+  "defaultCollection": {
+    "description": "Regulatory Agency for Capital Planning Request",
+    "name": "agencies",
+    "label": "Agencies"
+  },
+  "fields": [
+    {
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": true,
+      "isReferenceId": false,
+      "type": "TEXT",
+      "name": "agencyName",
+      "id": 1
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "id": 3,
+  "name": "CommissionCorrection",
+  "label": "Commission Correction",
+  "defaultSecurityDomains": [
+    "DataCorrection"
+  ],
+  "defaultCollection": {
+    "name": "commissionCorrections",
+    "label": "Commission Corrections"
+  },
+  "fields": [
+    {
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "isReferenceId": false,
+      "type": "TEXT",
+      "name": "transactionId",
+      "id": 1
+    },
+    {
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "isReferenceId": false,
+      "type": "TEXT",
+      "name": "agentId",
+      "id": 2
+    },
+    {
+      "decimals": 2,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "type": "DECIMAL",
+      "name": "amount",
+      "id": 3
+    },
+    {
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "isReferenceId": false,
+      "type": "TEXT",
+      "name": "type",
+      "id": 4
+    },
+    {
+      "precision": "DAY",
+      "enableIndex": false,
+      "isPurgeable": false,
+      "type": "DATE",
+      "name": "transactionDate",
+      "id": 5
+    },
+    {
+      "id": 6,
+      "name": "inProgress",
+      "type": "BOOLEAN",
+      "isPurgeable": false,
+      "enableIndex": false
+    }
+  ]
+}

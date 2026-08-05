@@ -1,0 +1,6 @@
+{
+  "id": 1,
+  "name": "ManageCreateAnEvent",
+  "label": "Manage: Create an Event",
+  "enabledForPageSecurity": true
+}

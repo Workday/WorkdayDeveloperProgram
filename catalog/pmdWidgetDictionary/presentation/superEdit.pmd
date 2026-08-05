@@ -1,0 +1,40 @@
+{
+  "id": "superEdit",
+  "endPoints": [],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "superEdit"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "readOnlyText",
+          "label": "Use the superEdit widget",
+          "value": "Click the pencil icon below to add the date on the page"
+        },
+        {
+          "type": "superEdit",
+          "children": [
+            {
+              "type": "date"
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    },
+    "pageType": "EDIT"
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "id": "dateCalculations",
+  "include": [
+    "dateCalculations.script"
+  ],
+  "endPoints": [
+    {
+      "name": "currentWorker",
+      "baseUrlType": "workday-common",
+      "url": "/workers/me?view=workerProfile",
+      "authType": "sso"
+    },
+    {
+      "name": "holidayService",
+      "baseUrlType": "workday-holiday",
+      "url": "<% '/holidayEvents?fromDate=' +  start + '&toDate=' + end + '&worker=' + worker %>",
+      "authType": "sso",
+      "deferred": true
+    }
+  ],
+  "presentation": {
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "PMD Scripting - Date Calculations"
+    },
+    "standardEditButtonsHidden": true,
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "fieldSet",
+          "title": "Instructions",
+          "children": [
+            {
+              "type": "richText",
+              "value": "Select a start date and a day increment value to see an end date that calculates <i>Business Days</i> using the <b>/holiday/v1Alpha/holidayEvents</b> API.",
+              "enabled": false
+            },
+            {
+              "type": "fieldSet",
+              "title": "Calculate by Business Days",
+              "horizontal": true,
+              "children": [
+                {
+                  "type": "date",
+                  "id": "startDateW",
+                  "label": "Start Date",
+                  "datePrecision": "DAY",
+                  "value": "<% dateCalculations.getTodaysDate() %>",
+                  "onChange": "<% dateCalculations.calculateByBusinessDays(); %>"
+                },
+                {
+                  "type": "readOnlyText",
+                  "id": "endDateW",
+                  "label": "End Date"
+                },
+                {
+                  "type": "dropdown",
+                  "id": "incrementW",
+                  "label": "Business Days",
+                  "values": "<% dateCalculations.getIncrements() %>",
+                  "onChange": "<% dateCalculations.calculateByBusinessDays();  %>"
+                },
+                {
+                  "type": "readOnlyText",
+                  "id": "businessDaysW",
+                  "label": "Total Days"
+                }
+              ]
+            },
+            {
+              "type": "fieldSet",
+              "title": "Calculate by Date",
+              "horizontal": true,
+              "children": [
+                {
+                  "type": "date",
+                  "id": "startDateD",
+                  "label": "Start Date",
+                  "datePrecision": "DAY",
+                  "value": "<% dateCalculations.getTodaysDate() %>",
+                  "onChange": "<% dateCalculations.calculateByDate();  %>"
+                },
+                {
+                  "type": "date",
+                  "id": "endDateD",
+                  "label": "End Date",
+                  "datePrecision": "DAY",
+                  "value": "<% dateCalculations.getTodaysDate() %>",
+                  "onChange": "<% dateCalculations.calculateByDate();  %>"
+                },
+                {
+                  "type": "readOnlyText",
+                  "id": "businessDaysD",
+                  "label": "Business Days"
+                },
+                {
+                  "type": "readOnlyText",
+                  "id": "totalDaysD",
+                  "label": "Total Days"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "pod",
+          "podId": "doneButton"
+        }
+      ]
+    }
+  }
+}

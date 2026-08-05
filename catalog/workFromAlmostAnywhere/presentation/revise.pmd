@@ -1,0 +1,278 @@
+{
+  "id": "revise",
+"securityDomains": [
+    "RemoteWorkSelfService"
+  ],
+   "include": [
+    "fileTypes.script"
+  ],
+  "endPoints": [
+    {
+      "name": "me",
+      "baseUrlType": "workday-staffing",
+      "url": "workers/me",
+      "authType": "sso"
+    },
+    {
+      "baseUrlType": "location",
+      "name": "countries",
+      "authType": "sso",
+      "url": "countries",
+      "isCollection": "true"
+    },
+    {
+      "name": "bpEventStep",
+      "baseUrlType": "workday-bp",
+      "url": "<% //note the query param is mentioned in the pageRoute of the revise step              
+      //in the .businessprocess file --> /revise/{eventStepId}. Use this syntax to grab the eventStepId path parameter              
+      console.info('eventStepId of revise step is ' + queryParams.eventStepId);
+      'eventSteps/' + queryParams.eventStepId %>",
+      "authType": "sso"
+    },
+    {
+      "name": "eventInfo",
+      "baseUrlType": "workday-bp",
+      "url": "<% //this endpoint is calling the Workday Business Processes REST API for information about a specific BP Event for our Model BP              
+      //use the event.id value from the bpEventStep response to get info about the Model BP Overall Event (overall process)              
+      //bpEventStep.event would give us information about the entire BP Event (aka the overall process)              
+      //not to be confused with the 'work event' Model BO we are acting on through our Model BP.              
+      //and the bpEventStep.event.id grabs the ID of the BP's target BO, in this case our Model BO for a work event              
+      'events/' + bpEventStep.event.id %>",
+      "authType": "sso"
+    },
+    {
+      "name": "request",
+      "baseUrlType": "app",
+      "url": "<% //this endpoint calls our app's Model BO endpoint for work events, and uses the ID of the work event retrieved above              
+      //The ID of the Model BO in question is found in eventInfo['for'].id so calling this endpoint returns all the current Model BO data for that instance              
+      'workFromAnywhereRequests/' + eventInfo['for'].id %>",
+      "authType": "sso"
+    },
+    {
+      "name": "getAttachments",
+      "baseUrlType": "app",
+      "url": "<% 'rightToWorkVerifications?workRequest=' + eventInfo['for'].id %>",
+      "authType": "sso"
+    },
+    {
+      "name": "getEventComments",
+      "url": "<% 'events/' + bpEventStep.event.id + '/comments' %>",
+      "authType": "sso",
+      "baseUrlType": "workday-bp",
+      "failOnStatusCodes": [
+        {
+          "code": "400"
+        },
+        {
+          "code": "403"
+        }
+      ]
+    }
+  ],
+  "onLoad": "<% 
+  pageVariables.initialCountry = countries.data.find(x => {x.descriptor == request.location});
+  console.info('initial country is ' + pageVariables.initialCountry);
+  %>",
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "updateRequest",
+        "baseUrlType": "app",
+        "url": "<% 'workFromAnywhereRequests/' + request.id %>",
+        "authType": "sso",
+        "httpMethod": "PATCH",
+        "onSend": "<% //it is always preferable to add to your payload using onSend as opposed to a values[] array within the outboundEndpoint. Use the following syntax.
+                   //self.data is the payload as it exists coming into this onSend request from any valueOutBindings
+                   self.data.location = country.getSelectedEntries()[0].descriptor; //add location (country name)
+                   self.data.put('createdBy',{'id': request.createdBy.id}); //add createdBy object
+                   console.info('updateRequest payload is ' + json:asJSON(self.data)); return self.data; %>"
+      },
+      {
+        "name": "updateRequestAttachment",
+        "baseUrlType": "app",
+        "url": "rightToWorkVerificationsCollection",
+        "authType": "sso",
+        "httpMethod": "POST",
+        "multiPartFileLast": true,
+        "onMultiPartSend": "<%
+          for (var file : self.data.metadata.rightToWorkVerifications) { //loop through as many files as were uploaded
+            //Put an uploadedBy object with an id field to the JSON part.
+            file.put('uploadedBy',{'id': me.id}); //put the new uploadedBy map in the metadata. This captures the WID of the uploader.
+            //Put uploadedDate field to the JSON part.
+            file.uploadedDate = date:getTodaysDate(date:getDateTimeZone(userTimeZone)); //put the uploadedDate field in the metadata
+            file.put('workRequest',{'id': request.id}); //link the file with the charity
+            console.info('metadata is ' + json:asJSON(self.data)); //log the metadata being passed in for debugging purposes
+          }
+          self.data;
+    %>",
+        "exclude": "<% //This exclude statement checks whether a file was uploaded successfully!
+                    empty attachmentFileUploader.children %>"
+      },
+      {
+        "name": "updateAttachmentList",
+        "baseUrlType": "app",
+        "url": "<% //now add the attachments posted on the page (if any) to the multi instance field on the parent BO
+        'workFromAnywhereRequests/' +  updateRequest.id %>",
+        "httpMethod": "PATCH",
+        "exclude": "<% empty(attachmentFileUploader.children) %>",
+        "authType": "sso",
+        "onSend": "<% 
+        console.info('attachments list is ' + json:asJSON(request.rightToWorkVerification));
+        let currentVerifications = request.rightToWorkVerification ?? []; //get current list of attachments, id + descriptor
+        console.info('new attachments data is ' + json:asJSON(updateRequestAttachment));
+        updateRequestAttachment.rightToWorkVerifications.forEach(file => { currentVerifications.add({'id':file.id}) }); //make a list of all the posted attachments' IDs
+        let payload = {'rightToWorkVerification': currentVerifications}; //initializing payload to log and send
+        console.info('this updateAttachmentList payload is ' + json:asJSON(payload));
+        return payload; //send payload
+        
+        %>",
+        "failOnStatusCodes": [
+          {
+            "code": 403
+          },
+          {
+            "code": 400
+          }
+        ]
+      },
+      {
+        "name": "submitStep",
+        "baseUrlType": "workday-bp",
+        "url": "eventSteps/<% queryParams.eventStepId %>/submit",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "onSend": "<% console.info(json:asJSON(self.data)); return self.data; %>",
+        "values": [
+          {
+            "outboundPath": "stepAction.id",
+            "value": "<% //this action page is ultimately just a PMD; when the information is submitted we need to
+                      //advance the BP by calling the BP event with this exact value, which corresponds to the 'submit' step action ID
+                      //this WID corrresponds to the step action ID of 'submitted'
+                      'd9e4223e446c11de98360015c5e6daf6' %>"
+          }
+        ]
+      }
+    ],
+    "responseErrorDetail": {
+      "errorSummary": "<% error %>",
+      "errors": "<% errors.map(item => { item.error }); %>"
+    }
+  },
+  "presentation": {
+    "micro": "true",
+    "title": {
+      "type": "title",
+      "label": "Revise Remote Work Request"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": true,
+      "children": [
+        {
+          "type": "section",
+          "id": "leftside",
+          "children": [
+            {
+              "type": "text",
+              "id": "sendBackComment",
+              "label": "<% 'Send Back Reason from ' + (!empty(getEventComments.data) ? getEventComments.data[0].person.descriptor : '[none]') + ':'%>",
+              "value": "<% !empty(getEventComments.data) ? getEventComments.data[0].comment : '' %>",
+              "enabled": false
+            },
+            {
+              "type": "text",
+              "id": "name",
+              "label": "Request Name",
+              "required": "<% true %>",
+              "value": "<% request.name %>",
+              "valueOutBinding": "updateRequest.name"
+            },
+            {
+              "type": "instanceList",
+              "label": "Country",
+              "id": "country",
+              "idKey": "id",
+              "displayKey": "descriptor",
+              "values": "<% countries.data %>",
+              "selectedValues": "<% list:toList(pageVariables.initialCountry.id) //grab id of matching country, cast to List
+               %>",
+              "required": "<% true %>"
+            },
+            {
+              "type": "date",
+              "id": "startdate",
+              "required": "<% true %>",
+              "dateFormat": "yyyy-MM-dd",
+              "label": "Start Date of Event",
+              "value": "<% request.startDate %>",
+              "valueOutBinding": "updateRequest.startDate"
+            },
+            {
+              "type": "date",
+              "id": "enddate",
+              "required": "<% true %>",
+              "dateFormat": "yyyy-MM-dd",
+              "label": "End Date of Event",
+              "value": "<% request.endDate %>",
+              "valueOutBinding": "updateRequest.endDate"
+            },
+            {
+              "type": "checkBox",
+              "id": "rightToWork",
+              "label": "Do you have a legal right to work in the selected country?",
+              "required": "<% true %>",
+              "enabled": "<% true %>",
+              "value": "<% request.rightToWork %>",
+              "helpText": "You must have a legal right to work in the country you selected. Workday cannot sponsor work visas.",
+              "valueOutBinding": "updateRequest.rightToWork"
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "id": "rightside",
+          "children": [
+            {
+              "type": "section",
+              "horizontal": false,
+              "sorted": false,
+              "children": [
+                {
+                  "type": "fileUploader",
+                  "label": "Attach New Right to Work Verifications",
+                  "id": "attachmentFileUploader",
+                  "maxImageDimension": "1024",
+                  "maxFileSize": "5242880",
+                  "compact": "<% true %>",
+                  "required": "<% false %>",
+                  "fileTypes": "*",
+                  "valueOutBinding": "<% 'updateRequestAttachment:rightToWorkVerifications' //outbound endpoint name : attachment obect API URL
+          %> ",
+                  "metadata": "<%
+              {:} //need at least an empty map in a metadata tag for onMultiPartSend() to have metadata to work with!
+              %>"
+                }
+              ]
+            },
+            {
+              "type": "pod",
+              "podId": "previouslyAttachedFiles",
+              "_podComment": "loads a fileUploader that returns all relevant attached files for the request"
+            }
+          ]
+        },
+        {
+          "type": "editButtonBar",
+          "editButtons": [
+            {
+              "type": "editButton",
+              "label": "Revise Request",
+              "id": "updateRequestButton",
+              "buttonType": "PRIMARY"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

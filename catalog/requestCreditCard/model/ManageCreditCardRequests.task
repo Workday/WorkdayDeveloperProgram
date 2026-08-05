@@ -1,0 +1,9 @@
+{
+    "id": 2,
+    "name": "ManageCreditCardRequests",
+    "label": "Manage Credit Card Requests",
+    "routePath": "/",
+    "securityDomains": [
+        "ManageCreditCardRequests"
+    ]
+} 

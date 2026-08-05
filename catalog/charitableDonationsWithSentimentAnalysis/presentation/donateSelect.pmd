@@ -1,0 +1,124 @@
+{
+  "id": "donateSelect",
+  "securityDomains": [
+    "ManageCharities"
+  ],
+  "endPoints": [
+    {
+      "baseUrlType": "app",
+      "name": "charities",
+      "authType": "sso",
+      "url": "charities",
+      "isCollection": "true"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Donate to Charity"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "sorted": false,
+      "children": [
+        {
+          "type": "section",
+          "horizontal": true,
+          "children": [
+            {
+              "type": "section",
+              "horizontal": false,
+              "sorted": false,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "noCharitiesMessage",
+                  "value": "There are no Charities available for donation at this time.",
+                  "visible": "<% empty(charities.data) %>"
+                },
+                {
+                  "type": "section",
+                  "horizontal": true,
+                  "sorted": false,
+                  "children": [
+                    {
+                      "id": "charitiesLoop",
+                      "type": "loop",
+                      "on": "<% charities.data %>",
+                      "as": "charity",
+                      "children": [
+                        {
+                          "type": "section",
+                          "horizontal": false,
+                          "sorted": false,
+                          "children": [
+                            {
+                              "type": "richText",
+                              "value": "<% '<h1>' + charity.descriptor + '</h1>' %>"
+                            },
+                            {
+                              "type": "image",
+                              "sizingHint": "INLINE",
+                              "endPoint": {
+                                "url": "charityImages/<% charity.image.id %>",
+                                "baseUrlType": "app",
+                                "authType": "sso"
+                              },
+                              "render": "<% (!(empty(charity.image))) %>"
+                            },
+                            {
+                              "type": "richText",
+                              "label": "Description",
+                              "value": "<% charity.description %>"
+                            },
+                            {
+                              "type": "checkBox",
+                              "label": "Company Match",
+                              "trueLabel": "Yes",
+                              "falseLabel": "No",
+                              "value": "<% charity.matchDonations %>"
+                            },
+                            {
+                              "type": "section",
+                              "horizontal": true,
+                              "sorted": false,
+                              "children": [
+                                {
+                                  "type": "button",
+                                  "action": "PRIMARY",
+                                  "label": "Donate",
+                                  "taskReference": {
+                                    "taskId": "donate",
+                                    "parameterBindings": {
+                                      "charityId": "<% charity.id %>"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "button",
+                                  "action": "AUXILIARY",
+                                  "label": "View Details",
+                                  "taskReference": {
+                                    "taskId": "viewCharity",
+                                    "parameterBindings": {
+                                      "charityId": "<% charity.id %>"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

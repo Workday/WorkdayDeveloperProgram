@@ -1,0 +1,8 @@
+{
+  "id": "getRequestId",
+  "parameters": ["appId", "eventId"],
+  "query": "<% 
+    `SELECT businessProcessTarget
+    FROM {{appId}}_tuitionReimbursementApprovalEvents
+    WHERE workdayID= '{{eventId}}'`%>"
+}

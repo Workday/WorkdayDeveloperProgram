@@ -1,0 +1,28 @@
+{
+  "mappings": [
+    {
+      "location": {
+        "endPointName": "distinctLocations"
+      },
+      "mockId": "locations"
+    },
+    {
+      "location": {
+        "endPointName": "me"
+      },
+      "mockId": "me"
+    },
+    {
+      "location": {
+        "endPointName": "getVehicles"
+      },
+      "mockId": "vehicles"
+    },
+    {
+      "location": {
+        "endPointName": "myVehicles"
+      },
+      "mockId": "myVehicles"
+    }
+  ]
+}

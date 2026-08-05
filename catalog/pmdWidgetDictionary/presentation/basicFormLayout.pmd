@@ -1,0 +1,52 @@
+{
+  "id": "basicFormLayout",
+  "presentation": {
+    "body": {
+      "type": "basicFormLayout",
+      "sections": [
+        {
+          "type": "layoutSection",
+          "children": [
+            {
+              "type": "richText",
+              "label": "rich text",
+              "id": "text",
+              "value": "this is a test"
+            }
+          ]
+        },
+        {
+          "type": "layoutSection",
+          "children": [
+            {
+              "type": "dropdown",
+              "selectedValues": "<% ['Special Leave'] %>",
+              "label": "What type of leave are you applying for?",
+              "id": "dropdownList",
+              "instanceList": [
+                {
+                  "id": "Special Leave",
+                  "descriptor": "Special Leave"
+                },
+                {
+                  "id": "Special Leave - Domestic",
+                  "descriptor": "Special Leave - Domestic"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "layoutSection",
+          "children": [
+            {
+              "type": "date",
+              "label":"date label",
+              "value": "<% date:getTodaysDate(date:getDateTimeZone('Asia/Bangkok')) %>"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

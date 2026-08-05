@@ -1,0 +1,32 @@
+{
+  "id": 4,
+  "name": "LunchAccountJournal",
+  "label": "Lunch Account Journal",
+  "defaultSecurityDomains": [
+    "LunchAccountManagement"
+  ],
+  "defaultCollection": {
+    "name": "lunchAccountJournals",
+    "label": "Lunch Account Journals", 
+    "description": "Displays Lunch Account journals which has all the lunch account information"
+  },
+  "fields": [
+    {
+      "type": "TEXT",
+      "label": "Account Id",
+      "name": "accountID",
+      "id": 1,
+      "isReferenceId": true,
+      "useForDisplay": true, 
+      "description": "Displays account ID of each lunch account"
+    },
+    {
+      "id": 2,
+      "name": "lunchBalance",
+      "label": "LunchBalance",
+      "type": "DECIMAL",
+      "decimals": 2, 
+      "description": "Displays lunch balance of each lunch account"
+    }
+  ]
+}

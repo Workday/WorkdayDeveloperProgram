@@ -1,0 +1,25 @@
+{
+  "id": "filesAndDocuments",
+  "parameters": [],
+  "header": {
+    "title": "<% 'Files and Documents' %>",
+    "icon": "wd-accent-financial-paper"
+  },
+  "body": {
+    "type": "pillCard",
+    "pills": [
+      {
+        "label": "attachmentList",
+        "taskReference": {
+          "taskId": "attachmentList"
+        }
+      },
+      {
+        "label": "fileUploader",
+        "taskReference": {
+          "taskId": "fileUploaderRow"
+        }
+      }
+    ]
+  }
+}

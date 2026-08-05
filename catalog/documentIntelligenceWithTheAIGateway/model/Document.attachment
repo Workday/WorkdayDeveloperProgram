@@ -1,0 +1,40 @@
+{
+  "id": 1,
+  "name": "Document",
+  "label": "Document",
+  "defaultSecurityDomains": [
+    "SelfServiceScanDocuments"
+  ],
+  "defaultCollection": {
+    "name": "documents",
+    "label": "Documents"
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "uploadedBy",
+      "type": "SINGLE_INSTANCE",
+      "label": "Uploaded By",
+      "target": "WORKER"
+    },
+    {
+      "id": 2,
+      "name": "uploadedDate",
+      "type": "DATE",
+      "label": "Uploaded Date",
+      "precision": "SECOND"
+    },
+    {
+      "id": 3,
+      "name": "scanned",
+      "type": "BOOLEAN",
+      "label": "Scanned"
+    },
+    {
+      "id": 4,
+      "name": "scanType",
+      "type": "TEXT",
+      "label": "Scan Type"
+    }
+  ]
+}

@@ -1,0 +1,801 @@
+{
+  "id": "CapitalPlanningRequestView",
+  "endPoints": [
+    {
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+string:pathEncode('SELECT workdayID, status FROM '+site.applicationId+'_approvalStatuses WHERE status Not IN (\"Approved\",\"Denied\") ORDER BY status asc') %>",
+      "name": "statusGET"
+    },
+    {
+      "name": "workersGET",
+      "baseUrlType": "COMMON",
+      "url": "/workers"
+    },
+    {
+      "deferred": true,
+      "exclude": "<% empty instanceListQuery %>",
+      "name": "workerSearchGET",
+      "baseUrlType": "COMMON",
+      "url": "<% '/workers?search=' + instanceListQuery %>"
+    },
+    {
+      "name": "costCentersGET",
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+ string:pathEncode('SELECT workdayID, name,inactive from costCenters WHERE inactive=false') %>"
+    },
+    {
+      "name": "companiesGET",
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+ string:pathEncode('SELECT workdayID, name,inactive from companies WHERE inactive=false') %>"
+    },
+    {
+      "name": "agenciesGET",
+      "baseUrlType": "BUSINESS-OBJECT",
+      "url": "/agencies"
+    },
+    {
+      "name": "suppliersGET",
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+ string:pathEncode(\"select supplierStatus,workdayID,supplierName from suppliers where supplierStatus = 'dc755d56446c11de98360015c5e6daf6' \") %>"
+    },
+    {
+      "deferred": true,
+      "exclude": "<% empty instanceListQuery %>",
+      "name": "costCenterSearchGET",
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+ string:pathEncode('SELECT workdayID, name,inactive from costCenters WHERE inactive=false AND name CONTAINS \"'+instanceListQuery+'\"') %>"
+    },
+    {
+      "deferred": true,
+      "exclude": "<% empty instanceListQuery %>",
+      "name": "companiesSearchGET",
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+ string:pathEncode('SELECT workdayID, name,inactive from companies WHERE inactive=false AND name CONTAINS \"'+instanceListQuery+'\" ') %>"
+    },
+    {
+      "baseUrlType": "ORCHESTRATE",
+      "url": "<% '/GetCapitalProjectRequest/launch?requestWID='+queryParams.requestWID %>",
+      "name": "requestGET",
+      "onSend": "<%
+                            {
+                            \"headerWID\": queryParams.headerWID,
+                            \"edit\" : false
+                            }
+                           %>",
+      "responseErrorDetail": {},
+      "failOnStatusCodes": [
+        {
+          "code": "400"
+        },
+        {
+          "code": "401"
+        },
+        {
+          "code": "403"
+        },
+        {
+          "code": "404"
+        },
+        {
+          "code": "500"
+        },
+        {
+          "code": "501"
+        },
+        {
+          "code": "503"
+        },
+        {
+          "code": "504"
+        }
+      ]
+    },
+    {
+      "name": "attachmentsGET",
+      "baseUrlType": "BUSINESS-OBJECT",
+      "url": "<% '/capitalRequestAttachments?request='+requestGET.requestWID %>"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "View Capital Project Planning Request"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "horizontal": true,
+          "type": "section",
+          "id": "sectionHeading",
+          "children": [
+            {
+              "type": "hidden",
+              "id": "requestWIDWidget",
+              "value": "<% requestGET.requestWID %>"
+            },
+            {
+              "type": "hidden",
+              "id": "headerWIDWidget",
+              "value": "<% requestGET.headerWID %>"
+            },
+            {
+              "type": "fieldSet",
+              "id": "fldEditableWidgets",
+              "children": [
+                {
+                  "required": true,
+                  "type": "text",
+                  "id": "titleWidget",
+                  "label": "Title",
+                  "value": "<% requestGET.requestHeader.requestTitle %>"
+                },
+                {
+                  "type": "textArea",
+                  "id": "summaryWidget",
+                  "label": "Summary",
+                  "value": "<% requestGET.requestHeader.summary %>"
+                }
+              ]
+            },
+            {
+              "type": "fieldSet",
+              "id": "fldOtherFields",
+              "children": [
+                {
+                  "type": "readOnlyText",
+                  "id": "requestIDWidget",
+                  "label": "Request ID",
+                  "value": "<% requestGET.request.requestID %>"
+                },
+                {
+                  "enabled": false,
+                  "required": true,
+                  "type": "text",
+                  "id": "statusWidget",
+                  "label": "Status",
+                  "value": "<% requestGET.requestHeader.approvalStatus.status %>"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "pageType": "CONFIRM",
+    "tabs": [
+      {
+        "type": "section",
+        "label": "Overview",
+        "id": "sectionOverview",
+        "children": [
+          {
+            "horizontal": true,
+            "type": "fieldSet",
+            "id": "fldRequestorDetails",
+            "label": "Requestor Details",
+            "title": "Requestor Details",
+            "children": [
+              {
+                "type": "section",
+                "children": [
+                  {
+                    "required": true,
+                    "type": "text",
+                    "id": "requestedByWidget",
+                    "label": "Requested By",
+                    "value": "<% requestGET.request.requestedBy.descriptor %>"
+                  },
+                  {
+                    "required": true,
+                    "type": "text",
+                    "id": "costCenterWidget",
+                    "label": "Cost Center",
+                    "value": "<% requestGET.request.costCenter.name %>"
+                  },
+                  {
+                    "required": true,
+                    "type": "text",
+                    "id": "companyWidget",
+                    "label": "Company",
+                    "value": "<% requestGET.request.company.name %>"
+                  }
+                ]
+              },
+              {
+                "type": "section",
+                "children": [
+                  {
+                    "type": "readOnlyText",
+                    "id": "requestDateWidget",
+                    "label": "Request Date",
+                    "value": "<% requestGET.requestHeader.requestDate %>"
+                  },
+                  {
+                    "required": true,
+                    "type": "text",
+                    "id": "sponsorWidget",
+                    "label": "Sponsor",
+                    "value": "<% requestGET.requestHeader.sponsor.descriptor %>"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "horizontal": true,
+            "type": "fieldSet",
+            "label": "Overview",
+            "title": "Overview",
+            "children": [
+              {
+                "displayAsSwitch": true,
+                "value": "<% requestGET.request.newProcedures %>",
+                "type": "checkBox",
+                "id": "newServicesWidget",
+                "label": "Allows new services or products?",
+                "falseLabel": "No",
+                "trueLabel": "Yes"
+              },
+              {
+                "displayAsSwitch": true,
+                "value": "<% requestGET.request.newRevenueOrCostSaving %>",
+                "type": "checkBox",
+                "id": "newRevenueWidget",
+                "label": "Provides new revenue or cost savings?",
+                "falseLabel": "No",
+                "trueLabel": "Yes"
+              },
+              {
+                "visible": "<% requestGET.request.newRevenueOrCostSaving||requestGET.request.newProcedures %>",
+                "type": "fieldSet",
+                "id": "detailsOfCostRevenueFields",
+                "children": [
+                  {
+                    "type": "richText",
+                    "id": "detailsOfCostSavingsWidget",
+                    "label": "Details of new service, product or revenue/cost savings",
+                    "value": "<% requestGET.request.costSavingDetail %>"
+                  }
+                ]
+              },
+              {
+                "type": "number",
+                "id": "usefulLifeWidget",
+                "label": "Estimated Useful Life (Years)",
+                "value": "<% requestGET.request.estimatedUsefulLifeInYears %>",
+                "minimumValue": "0"
+              },
+              {
+                "type": "richText",
+                "id": "purposeWidget",
+                "label": "Purpose",
+                "value": "<% requestGET.request.purpose %>"
+              }
+            ]
+          },
+          {
+            "type": "fieldSet",
+            "label": "Timing",
+            "title": "Timing",
+            "children": [
+              {
+                "type": "date",
+                "id": "startDateWidget",
+                "label": "When will this project start?",
+                "value": "<% requestGET.request.projectStart %>",
+                "onChange": "<%
+                            if(startDateWidget.value!=null){
+                            \tvar today=date:getTodaysDate(date:getDateTimeZone(userTimeZone));
+                            \tvar startDate=startDateWidget.value; 
+                            
+                            \tif(startDate<=today){
+                            \t\tstartDateWidget.setWarning(\"The project can't start in the past.\");
+                            \t} else {
+                            \t\tstartDateWidget.clearWarning();
+                            \t}
+                            } else {
+                            \t\tstartDateWidget.clearWarning();
+                            }
+                           %>"
+              },
+              {
+                "type": "date",
+                "id": "endDateWidget",
+                "label": "When will this project finish?",
+                "value": "<% requestGET.request.projectEnd %>",
+                "onChange": "<%
+                            if(endDateWidget.value!=null){
+                            \tvar startDate=startDateWidget.value; 
+                            \tvar endDate=endDateWidget.value; 
+                            \tif(endDate<=startDate){
+                            \t\tendDateWidget.setError(\"The project should end after the start date.\");
+                            \t} else {
+                            \t\tendDateWidget.clearError();
+                            \t}
+                            } else {
+                            \t\tendDateWidget.clearError();
+                            }
+                           %>"
+              },
+              {
+                "type": "date",
+                "id": "serviceDateWidget",
+                "label": "When will the result of this project go into service?",
+                "value": "<% requestGET.request.inServiceDate %>",
+                "onChange": "<%
+                            if(serviceDateWidget.value!=null){
+                            \tvar startDate=startDateWidget.value; 
+                            \tvar serviceDate=serviceDateWidget.value; 
+                            \tif(serviceDate<=startDate){
+                            \t\tserviceDateWidget.setError(\"The in-service date should be after the start date.\");
+                            \t} else {
+                            \t\tserviceDateWidget.clearError();
+                            \t}
+                            } else {
+                            \t\tserviceDateWidget.clearError();
+                            }
+                           %>"
+              },
+              {
+                "type": "text",
+                "id": "timingWidget",
+                "label": "Why is it important to pursue at this time? Is there an urgent need?",
+                "value": "<% requestGET.request.timingJustification %>"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "label": "Alignment",
+        "children": [
+          {
+            "type": "fieldSet",
+            "label": "Alignment/Categorization",
+            "title": "Alignment/Categorization",
+            "children": [
+              {
+                "type": "readOnlyText",
+                "value": "Which strategic pillar/initiative does this concept align to? How does it align?"
+              },
+              {
+                "type": "text",
+                "id": "agenciesWidget",
+                "label": "Regulatory Agency (if applicable)",
+                "value": "<% ! empty requestGET.request.agency ? requestGET.request.agency.descriptor : null %>"
+              }
+            ]
+          },
+          {
+            "doNotAdd": true,
+            "doNotRemove": true,
+            "type": "panelList",
+            "id": "pnlStratCat",
+            "panelName": "stratCat",
+            "panels": "<% requestGET.strategicAlignments %>",
+            "children": [
+              {
+                "type": "hidden",
+                "id": "stratAlignmentWIDWidget",
+                "value": "<% stratCat.StratAlignmentID %>"
+              },
+              {
+                "type": "hidden",
+                "id": "stratCatWIDWidget",
+                "value": "<% stratCat.StratCatID %>"
+              },
+              {
+                "horizontal": true,
+                "type": "section",
+                "children": [
+                  {
+                    "type": "fieldSet",
+                    "children": [
+                      {
+                        "displayAsSwitch": true,
+                        "value": "<% stratCat.isAligned %>",
+                        "type": "checkBox",
+                        "id": "stratCatCheckWidget",
+                        "label": "<% stratCat.StratCatName %>",
+                        "falseLabel": "No",
+                        "trueLabel": "Yes"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "fieldSet",
+                    "children": [
+                      {
+                        "type": "text",
+                        "id": "stratCatExplainWidget",
+                        "label": "Explanation",
+                        "value": "<% stratCat.explanation %>"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "fieldSet",
+                    "children": [
+                      {
+                        "enabled": false,
+                        "type": "richText",
+                        "value": "<% stratCat.catDef %>"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "label": "Services",
+        "children": [
+          {
+            "doNotAdd": true,
+            "doNotRemove": true,
+            "type": "panelList",
+            "id": "pnlServices",
+            "panelName": "servCat",
+            "panels": "<% requestGET.services %>",
+            "children": [
+              {
+                "type": "fieldSet",
+                "label": "<% servCat.serviceCategoryName %>",
+                "title": "<% servCat.serviceCategoryName %>",
+                "children": [
+                  {
+                    "horizontal": true,
+                    "type": "fieldSet",
+                    "children": [
+                      {
+                        "type": "fieldSet",
+                        "children": [
+                          {
+                            "enabled": false,
+                            "type": "richText",
+                            "value": "<% servCat.catDef %>"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "fieldSet",
+                        "children": [
+                          {
+                            "type": "readOnlyText",
+                            "label": "Approving Cost Center",
+                            "value": "<% servCat.approvingCostCenter %>"
+                          }
+                        ]
+                      },
+                      {
+                        "visible": false,
+                        "type": "fieldSet",
+                        "children": [
+                          {
+                            "type": "readOnlyText",
+                            "label": "Approving Organization",
+                            "value": "<% servCat.approvingOrg %>"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "id": "fldMainServiceArea"
+              },
+              {
+                "type": "loop",
+                "as": "reqService",
+                "on": "<% servCat.services %>",
+                "index": "idx",
+                "children": [
+                  {
+                    "horizontal": true,
+                    "type": "fieldSet",
+                    "children": [
+                      {
+                        "type": "hidden",
+                        "value": "<% reqService.requestedServiceWID %>"
+                      },
+                      {
+                        "type": "fieldSet",
+                        "children": [
+                          {
+                            "displayAsSwitch": true,
+                            "value": "<% reqService.isRequired %>",
+                            "type": "checkBox",
+                            "id": "serviceIsRequiredWidget",
+                            "label": "<% reqService.serviceName %>",
+                            "falseLabel": "No",
+                            "trueLabel": "Yes"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "fieldSet",
+                        "children": [
+                          {
+                            "type": "text",
+                            "id": "serviceExplanation",
+                            "label": "Explanation",
+                            "value": "<% reqService.explanation %>"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "fieldSet",
+                        "children": [
+                          {
+                            "type": "text",
+                            "id": "serviceCommentWidget",
+                            "label": "Comment",
+                            "value": "<% reqService.comment %>"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "label": "Funding",
+        "children": [
+          {
+            "type": "loop",
+            "id": "loopFunds",
+            "as": "fund",
+            "on": "<% requestGET.funds %>",
+            "children": [
+              {
+                "type": "fieldSet",
+                "label": "<% fund.name %>",
+                "title": "<% fund.name %>",
+                "children": [
+                  {
+                    "type": "hidden",
+                    "id": "fundWIDWidget",
+                    "value": "<% fund.workdayID %>"
+                  },
+                  {
+                    "configurable": false,
+                    "doNotAdd": true,
+                    "doNotRemove": true,
+                    "doNotRemoveRow": true,
+                    "type": "grid",
+                    "id": "grdFunding",
+                    "rows": "<% fund.requestedFunds %>",
+                    "rowVariableName": "reqFund",
+                    "columns": [
+                      {
+                        "type": "column",
+                        "id": "gfundQuantity",
+                        "label": "Quantity",
+                        "cellTemplate": {
+                          "type": "number",
+                          "value": "<% reqFund.quantity %>",
+                          "onChange": "<%
+                                      var quantity = self.value ? self.value : 0;
+                                      var unitPrice = gUnitPriceInner.value ? gUnitPriceInner.value : 0;
+                                      gTotalCostInner.value = quantity * unitPrice;
+                                     %>",
+                          "id": "gQuantityInner"
+                        },
+                        "columnId": "gfundQuantity"
+                      },
+                      {
+                        "required": true,
+                        "type": "column",
+                        "id": "gfundDesc",
+                        "label": "Description",
+                        "cellTemplate": {
+                          "type": "text",
+                          "value": "<% reqFund.itemDescription %>",
+                          "id": "gItemDescInner"
+                        },
+                        "columnId": "gfundDesc"
+                      },
+                      {
+                        "type": "column",
+                        "id": "gfundUnitPrice",
+                        "label": "Unit Price",
+                        "cellTemplate": {
+                          "type": "currency",
+                          "value": "<% reqFund.unitPrice.value %>",
+                          "fractionDigits": "2",
+                          "currencyCode": "USD",
+                          "id": "gUnitPriceInner",
+                          "onChange": "<%
+                                      var quantity = gQuantityInner.value ? gQuantityInner.value : 0;
+                                      var unitPrice = self.value ? self.value : 0;
+                                      gTotalCostInner.value = quantity * unitPrice;
+                                     %>"
+                        },
+                        "columnId": "gfundUnitPrice"
+                      },
+                      {
+                        "type": "column",
+                        "id": "gfundTotalCost",
+                        "label": "Total Cost",
+                        "cellTemplate": {
+                          "enabled": false,
+                          "type": "number",
+                          "value": "<% reqFund.totalCost %>",
+                          "fractionDigits": "2",
+                          "id": "gTotalCostInner"
+                        },
+                        "columnId": "gfundTotalCost"
+                      },
+                      {
+                        "type": "column",
+                        "id": "gfundNew",
+                        "label": "Is New",
+                        "cellTemplate": {
+                          "value": "<% reqFund.isNew %>",
+                          "type": "checkBox",
+                          "falseLabel": "No",
+                          "trueLabel": "Yes"
+                        },
+                        "columnId": "gfundNew"
+                      },
+                      {
+                        "type": "column",
+                        "id": "gfundService",
+                        "label": "Service",
+                        "cellTemplate": {
+                          "type": "text",
+                          "value": "<% ! empty reqFund.service ? reqFund.service.descriptor : null %>"
+                        },
+                        "columnId": "gfundService"
+                      },
+                      {
+                        "type": "column",
+                        "id": "gfundSupplier",
+                        "label": "Supplier",
+                        "cellTemplate": {
+                          "type": "text",
+                          "value": "<% ! empty reqFund.supplier ? reqFund.supplier.descriptor : null %>"
+                        },
+                        "columnId": "gfundSupplier"
+                      },
+                      {
+                        "type": "column",
+                        "id": "gfundInServiceDate",
+                        "label": "In Service Date",
+                        "cellTemplate": {
+                          "type": "date",
+                          "value": "<% reqFund.inServiceDate %>"
+                        },
+                        "columnId": "gfundInServiceDate"
+                      },
+                      {
+                        "type": "column",
+                        "id": "gfundDateOfPurchase",
+                        "label": "Date of Purchase",
+                        "cellTemplate": {
+                          "type": "date",
+                          "value": "<% reqFund.dateOfPurchase %>"
+                        },
+                        "columnId": "gfundDateOfPurchase"
+                      }
+                    ],
+                    "maxRowSelection": "0"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "id": "fundingSection"
+      },
+      {
+        "type": "section",
+        "label": "Additional Info",
+        "children": [
+          {
+            "type": "fieldSet",
+            "label": "Additional Info",
+            "title": "Additional Info",
+            "children": [
+              {
+                "type": "panelList",
+                "id": "pnlAddInfo",
+                "panelName": "addInfo",
+                "panels": "<% requestGET.additionalData %>",
+                "children": [
+                  {
+                    "type": "hidden",
+                    "id": "addInfoWIDWidget",
+                    "value": "<% addInfo.workdayID %>"
+                  },
+                  {
+                    "required": true,
+                    "type": "text",
+                    "label": "Label",
+                    "value": "<% addInfo.label %>",
+                    "id": "addInfoLabelWidget"
+                  },
+                  {
+                    "required": true,
+                    "type": "richText",
+                    "label": "Data",
+                    "value": "<% addInfo.data %>",
+                    "id": "addInfoDataWidget"
+                  }
+                ],
+                "deleteEndPoint": "additionalDataDELETE"
+              }
+            ]
+          },
+          {
+            "type": "fieldSet",
+            "label": "Attachments",
+            "title": "Attachments",
+            "children": [
+              {
+                "enabled": false,
+                "type": "fileUploader",
+                "fileTypes": "pdf,doc,docx,xls,xlsx,jpeg,gif,png,pptx",
+                "metadata": "<% {:} %>",
+                "valueOutBinding": "attachmentPOST:capitalRequestAttachments",
+                "id": "fileUploaderWidget",
+                "children": [
+                  {
+                    "type": "loop",
+                    "on": "<% attachmentsGET.data %>",
+                    "as": "attachment",
+                    "children": [
+                      {
+                        "enabled": false,
+                        "render": "<% !(empty attachment.fileName) %>",
+                        "type": "fileUploaderRow",
+                        "attachment": {
+                          "type": "attachmentList",
+                          "attachmentAuth": "sso",
+                          "attachmentName": "<% attachment.fileName %>",
+"attachmentURL": "<% 'https://api.workday.com/apps/' + site.applicationId + '/v1/capitalRequestAttachments/' + attachment.id %>",                          
+                          "attachmentUriTemplate": "[Target]",
+                          "instanceList": [
+                            {
+                              "action": "attachment",
+                              "descriptor": "<% attachment.fileName%>"
+                            }
+                          ]
+                        },
+                        "fileName": "<% attachment.fileName %>",
+                        "fileType": "<% fileType:getFileType(attachment.fileName) %>"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "footer": {
+      "type": "footer"
+    }
+  },
+  "outboundData": {
+    "responseErrorDetail": {
+      "errorSummary": "<% error %>",
+      "errors": "<% errors.map(item => {item.error}); %>"
+    }
+  },
+  "onLoad": "<%  %>",
+  "securityDomains": [
+    "CapitalProjectPlanning",
+    "CapitalProjectPlanningAdministrator"
+  ]
+}

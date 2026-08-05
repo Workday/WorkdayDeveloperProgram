@@ -1,0 +1,278 @@
+{
+  "id": "featureAxisOptions",
+  "include": [
+    "pokemonData.script"
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Axis Options"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "section",
+          "title": "Clustered Bar Chart without Axis Options (default behavior)",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "id": "chart1",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "HP",
+                  "value": "<% data.stats.hp %>"
+                },
+                {
+                  "name": "Attack",
+                  "value": "<% data.stats.attack %>"
+                },
+                {
+                  "name": "Defense",
+                  "value": "<% data.stats.defense %>"
+                },
+                {
+                  "name": "Speed",
+                  "value": "<% data.stats.speed %>"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Clustered Bar Chart with Measurement Axis Options: axisTitle, axisMinimum, axisMaximum, axisIncrement",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "id": "chart2",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "HP",
+                  "value": "<% data.stats.hp %>"
+                },
+                {
+                  "name": "Attack",
+                  "value": "<% data.stats.attack %>"
+                },
+                {
+                  "name": "Defense",
+                  "value": "<% data.stats.defense %>"
+                },
+                {
+                  "name": "Speed",
+                  "value": "<% data.stats.speed %>"
+                }
+              ],
+              "measurementAxisOptions": {
+                "axisTitle": "Stats",
+                "axisMinimum": 50,
+                "axisMaximum": 150,
+                "axisIncrement": 25
+              },
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Clustered Bar Chart with Measurement Axis Options: hideAxisValues",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "id": "chart3",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "HP",
+                  "value": "<% data.stats.hp %>"
+                },
+                {
+                  "name": "Attack",
+                  "value": "<% data.stats.attack %>"
+                },
+                {
+                  "name": "Defense",
+                  "value": "<% data.stats.defense %>"
+                },
+                {
+                  "name": "Speed",
+                  "value": "<% data.stats.speed %>"
+                }
+              ],
+              "measurementAxisOptions": {
+                "hideAxisValues": true
+              },
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Clustered Bar Chart with Measurement Axis Options: hideAxisTitle",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "id": "chart4",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "HP",
+                  "value": "<% data.stats.hp %>"
+                },
+                {
+                  "name": "Attack",
+                  "value": "<% data.stats.attack %>"
+                },
+                {
+                  "name": "Defense",
+                  "value": "<% data.stats.defense %>"
+                },
+                {
+                  "name": "Speed",
+                  "value": "<% data.stats.speed %>"
+                }
+              ],
+              "measurementAxisOptions": {
+                "hideAxisTitle": true
+              },
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Clustered Bar Chart with Category Axis Options: axisTitle, axisValueOrientation",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "id": "chart5",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "HP",
+                  "value": "<% data.stats.hp %>"
+                },
+                {
+                  "name": "Attack",
+                  "value": "<% data.stats.attack %>"
+                },
+                {
+                  "name": "Defense",
+                  "value": "<% data.stats.defense %>"
+                },
+                {
+                  "name": "Speed",
+                  "value": "<% data.stats.speed %>"
+                }
+              ],
+              "categoryAxisOptions": {
+                "axisTitle": "Who's that pokemon?",
+                "axisValueOrientation": "VERTICAL"
+              },
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Clustered Bar Chart with Category Axis Options: hideAxisTitle",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "id": "chart6",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "HP",
+                  "value": "<% data.stats.hp %>"
+                },
+                {
+                  "name": "Attack",
+                  "value": "<% data.stats.attack %>"
+                },
+                {
+                  "name": "Defense",
+                  "value": "<% data.stats.defense %>"
+                },
+                {
+                  "name": "Speed",
+                  "value": "<% data.stats.speed %>"
+                }
+              ],
+              "categoryAxisOptions": {
+                "hideAxisTitle": true
+              },
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Clustered Bar Chart with Category Axis Options: hideAxisValues",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "id": "chart7",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "HP",
+                  "value": "<% data.stats.hp %>"
+                },
+                {
+                  "name": "Attack",
+                  "value": "<% data.stats.attack %>"
+                },
+                {
+                  "name": "Defense",
+                  "value": "<% data.stats.defense %>"
+                },
+                {
+                  "name": "Speed",
+                  "value": "<% data.stats.speed %>"
+                }
+              ],
+              "categoryAxisOptions": {
+                "hideAxisValues": true
+              },
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

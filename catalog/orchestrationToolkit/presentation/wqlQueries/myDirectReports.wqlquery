@@ -1,0 +1,8 @@
+{
+  "id": "myDirectReports",
+  "parameters": [],
+  "query": "
+    SELECT worker FROM myDirectReports
+  ",
+  "limit": "100"
+}

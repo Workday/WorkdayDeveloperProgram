@@ -1,0 +1,21 @@
+/*
+ * Resolves a parameter, prioritizing a query parameter, then a flow variable, and defaulting to a fallback value.
+ *
+ * To use this script module in your PMD:
+ * 1. Add the script module to the include section: "include": ["parameterResolver.script"]
+ * 2. Resolve the parameter using: parameterResolver.resolveParameter(queryParams, flowVariables)
+ *
+ * Parameters:
+ *   queryParams (map): The queryParams predefined app variable.
+ *   flowVariables (map): The flowVariables predefined app variable.
+ *
+ * Return Value: (number) The resolved parameter value (either from queryParams, flowVariables, or the default 100).
+ */
+const resolveParameter = function(queryParamValue, flowVariableValue) {
+
+  return queryParamValue ?? flowVariableValue ?? 100;
+};
+
+{
+  "resolveParameter": resolveParameter
+}

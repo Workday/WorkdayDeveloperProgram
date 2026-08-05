@@ -1,0 +1,88 @@
+var getCurrentTime = function() {
+  return date:getTodaysDate(date:getDateTimeZone('US/Pacific'));
+};
+
+{
+  "getCurrentTime": getCurrentTime
+}
+
+var getChartData = function() {
+  return
+    [
+{
+      "recruiter": "Cindy",
+      "region": "RegionA",
+      "yearsEmployed": "4",
+      "hiredRecruits": "70",
+      "recruits": {
+        "finance": 105,
+        "sales": 63,
+        "support": 92
+      },
+      "quota": 100
+    },
+{
+      "recruiter": "Wesley",
+      "region": "RegionB",
+      "yearsEmployed": "6",
+      "hiredRecruits": "127",
+      "recruits": {
+        "finance": 82,
+        "sales": 16,
+        "support": 38
+      },
+      "quota": 75
+    },
+{
+      "recruiter": "Carlos",
+      "region": "RegionB",
+      "yearsEmployed": "2",
+      "hiredRecruits": "80",
+      "recruits": {
+        "finance": 116,
+        "sales": 83,
+        "support": 106
+      },
+      "quota": 150
+    },
+{
+      "recruiter": "Hana",
+      "region": "RegionA",
+      "yearsEmployed": "12",
+      "hiredRecruits": "90",
+      "recruits": {
+        "finance": 48,
+        "sales": 29,
+        "support": 30
+      },
+      "quota": 120
+    },
+{
+      "recruiter": "Omar",
+      "region": "RegionA",
+      "yearsEmployed": "5",
+      "hiredRecruits": "48",
+      "recruits": {
+        "finance": 79,
+        "sales": 132,
+        "support": 102
+      },
+      "quota": 95
+    },
+{
+      "recruiter": "Betty",
+      "region": "RegionB",
+      "yearsEmployed": "3",
+      "hiredRecruits": "150",
+      "recruits": {
+        "finance": 95,
+        "sales": 89,
+        "support": 187
+      },
+      "quota": 170
+    }
+    ]
+};
+{
+  "getChartData": getChartData
+}

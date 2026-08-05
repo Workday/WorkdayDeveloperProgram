@@ -1,0 +1,8 @@
+{
+  "id": "myReportsEntries",
+  "parameters": ["applicationId"],
+  "query": "
+    SELECT teamMember, actualEntry, workdayID FROM <% applicationId + '_myTeamDatas' %>
+  ",
+  "limit": "100"
+}

@@ -1,0 +1,37 @@
+{
+  "id": "CalendarLinks",
+  "parameters": [
+  ],
+  "header": {
+    "title": "What's Next?",
+    "icon": "wd-accent-calendar",
+    "indicator": {
+      "color": "blue"
+    }
+  },
+  "body": {
+    "type": "pillCard",
+    "pills": [
+      {
+        "label": "Calendar View",
+        "taskReference": {
+          "taskId": "calendarRemoteWork"
+        }
+      },
+      {
+        "label": "Create a New Request",
+        "taskReference": {
+          "taskId": "createRequestWizard"
+        }
+      }
+    ]
+  },
+  "footer": [
+    {
+      "label": "Return Home",
+      "taskReference": {
+        "taskId": "requestHub"
+      }
+    }
+  ]
+}

@@ -1,0 +1,235 @@
+{
+  "id": "home",
+  "securityDomains": [
+    "ManageVehicles"
+  ],
+  "endPoints": [
+    {
+      "name": "me",
+      "baseUrlType": "workday-graph",
+      "graphQuery": {
+        "queryId": "me"
+      },
+      "httpMethod": "POST",
+      "authType": "sso",
+      "failOnStatusCodes": [
+        {
+          "code": 400
+        }
+      ]
+    },
+    {
+      "name": "myVehicles",
+      "baseUrlType": "workday-graph",
+      "httpMethod": "POST",
+      "authType": "SSO",
+      "graphQuery": {
+        "queryId": "myVehicles",
+        "parameters": {
+            "ownerId": "<% me.data.worker.data[0].workdayID.id %>"
+          }
+      },
+      "failOnStatusCodes": [
+        {
+          "code": 400
+        }
+      ]
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "<% presentationLabels.VehicleRegistration %>"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "section",
+          "title": "<% presentationLabels.ParkingPolicy %>",
+          "children": [
+            {
+              "type": "richText",
+              "value": "<% presentationLabels.ParkingPolicyText %>",
+              "enabled": false
+            },
+            {
+              "type": "grid",
+              "gridType": "LIST",
+              "multiViewStylingEnabled": true,
+              "id": "Histories",
+              "rows": "<% console.info(myVehicles.data.myVehicles.data); myVehicles.data.myVehicles.data %>",
+              "rowVariableName": "history",
+              "enabled": false,
+              "doNotAdd": true,
+              "doNotRemove": true,
+              "label": "<% presentationLabels.MyRegisteredVehicles %>",
+              "columns": [
+                {
+                  "type": "column",
+                  "id": "columnLicensePlate",
+                  "columnId": "columnLicensePlate",
+                  "label": "<% presentationLabels.LicensePlateNumber %>",
+                  "cellTemplate": {
+                    "type": "button",
+                    "label": "<% history.licensePlate %>",
+                    "action": "LINK",
+                    "taskReference": {
+                      "taskId": "viewRegistration",
+                      "parameterBindings": {
+                        "vehicleId": "<% /* this vehicleId is a parameter we are passing to the update page once the user clicks to it.
+                     taskId points to the target page, and on that page, the valid queryParam name in the inbond endpoint for the Vehicle BO instance to update is populated here */
+                                history.workdayID.id %>"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "column",
+                  "id": "columnYear",
+                  "columnId": "columnYear",
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% history.year %>"
+                  },
+                  "label": "<% presentationLabels.Year %>"
+                },
+                {
+                  "type": "column",
+                  "id": "columnMake",
+                  "columnId": "columnMake",
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% history.make %>"
+                  },
+                  "label": "<% presentationLabels.Make %>"
+                },
+                {
+                  "type": "column",
+                  "id": "columnModel",
+                  "columnId": "columnModel",
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% history.model %>"
+                  },
+                  "label": "<% presentationLabels.Model %>"
+                },
+                {
+                  "type": "column",
+                  "id": "columnColor",
+                  "columnId": "columnColor",
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% history.color %>"
+                  },
+                  "label": "<% presentationLabels.Color %>"
+                },
+                {
+                  "type": "column",
+                  "id": "columnRegistrationDate",
+                  "columnId": "columnRegistrationDate",
+                  "cellTemplate": {
+                    "type": "date",
+                    "datePrecision": "DAY",
+                    "dateFormat": "yyyy-MM-dd",
+                    "value": "<% history.registrationDate %>"
+                  },
+                  "label": "<% presentationLabels.DateOfRegistration %>",
+                  "sortableAndFilterable": true
+                },
+                {
+                  "type": "column",
+                  "id": "columnCompact",
+                  "columnId": "columnCompact",
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% history.compact %>"
+                  },
+                  "label": "<% presentationLabels.IsCompact %>"
+                },
+                {
+                  "type": "column",
+                  "id": "columnId",
+                  "columnId": "columnId",
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% history.workdayID.id %>"
+                  },
+                  "label": "<% presentationLabels.VehicleID %>"
+                },
+                {
+                  "type": "column",
+                  "id": "columnLocation",
+                  "columnId": "columnLocation",
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% history.location.descriptor %>"
+                  },
+                  "label": "<% presentationLabels.Location %>"
+                },
+                {
+                  "cellTemplate": {
+                    "type": "section",
+                    "children": [
+                      {
+                        "type": "button",
+                        "action": "AUXILIARY",
+                        "label": "<% presentationLabels.UpdateRegistration %>",
+                        "taskReference": {
+                          "taskId": "register",
+                          "parameterBindings": {
+                            "vehicleId": "<% /* this vehicleId is a parameter we are passing to the update page once the user clicks to it.
+                     taskId points to the target page, and on that page, the valid queryParam name in the inbound endpoint for the Vehicle BO instance to update is populated here (history.id):*/
+                                          console.info(history.workdayID); history.workdayID.id %>"
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "columnId": "actions",
+                  "type": "column"
+                }
+              ]
+            },
+            {
+              "type": "section",
+              "horizontal": true,
+              "columnWidthRatios": [
+                0.3,
+                0.7
+              ],
+              "children": [
+                {
+                  "type": "section",
+                  "children": [
+                    {
+                      "type": "cardContainer",
+                      "layout": "MASONRY",
+                      "cards": [
+                        {
+                          "type": "card",
+                          "cardId": "AppLinks",
+                          "parameters": "<% {'title': presentationLabels.KeyTasks, 'Register': presentationLabels.RegisterVehicle, 'Locations': presentationLabels.ViewLocations, 'ViewRegistrations': presentationLabels.ViewRegistrations} %>"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": false,
+          "value": "<% presentationLabels.PoweredByWorkdayExtend + '🚗'%>"
+        }
+      ]
+    }
+  }
+}

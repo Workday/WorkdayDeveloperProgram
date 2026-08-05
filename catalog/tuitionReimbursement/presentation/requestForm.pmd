@@ -1,0 +1,650 @@
+{
+  "id": "requestForm",
+  "include": [
+    "wql.script"
+  ],
+  "onSubmit": "<% 
+                            eaValidationHidden.clearError();
+                            if (addCourseGrid.rows.size() == 0) {
+                              //addCourseGrid.setError('Please add at least one Course in the Course List Grid.'); <<<< this does not work and throws script error
+                              eaValidationHidden.setError('Please add at least one Course in the Course List Grid.');
+                            }
+                           %>",
+  "endPoints": [
+    {
+      "name": "me",
+      "baseUrlType": "WORKDAY-COMMON",
+      "url": "/workers/me",
+      "authType": "sso"
+    },
+    {
+      "name": "userInfo",
+      "baseUrlType": "WORKDAY-COMMON",
+      "url": "/userInfo",
+      "authType": "sso"
+    },
+    {
+      "baseUrlType": "WORKDAY-WQL",
+      "name": "workerCountry",
+      "authType": "sso",
+      "url": "/data",
+      "_comment": "Used for visibility depending on country",
+      "wqlQuery": {
+        "parameters": {
+          "location": "<% me.location.id %>"
+        },
+        "queryId": "workerCountry"
+      }
+    },
+    {
+      "baseUrlType": "WORKDAY-WQL",
+      "name": "workerEmployeeTypeBeta",
+      "authType": "sso",
+      "url": "/data",
+      "wqlQuery": {
+        "parameters": {
+          "workerID": "<% me.id %>"
+        },
+        "queryId": "workerEmployeeType"
+      }
+    }
+  ],
+  "script": "<% 
+
+    var calculateRequestAmount = function() {
+     eaRequestedAmountValue.value = addCourseGrid.getSubtotal('courseCost') + addCourseGrid.getSubtotal('textbookCost');
+    }
+
+   %>",
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "eaObjectPOST",
+        "baseUrlType": "app",
+        "url": "tuitionReimbursementRequests",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "values": [
+          {
+            "outboundPath": "worker.id",
+            "value": "<% me.id %>"
+          },
+          {
+            "outboundPath": "status",
+            "value": "Pending"
+          },
+          {
+            "outboundPath": "requestAmountCurrency",
+            "value": "<% requestedAmountCurrencyDropdown.value[0] %>"
+          },
+          {
+            "outboundPath": "advanceReimbursementEmployeeAcknowledgement",
+            "value": "<% advanceReimbursementCheckbox.value ? advanceReimbursementEmployeeAcknowledgementCheckbox.value : false %>"
+          },
+          {
+            "outboundPath": "creationDate",
+            "value": "<% date:getTodaysDateFormatted(date:getDateTimeZone('America/Toronto'), 'yyyy-MM-dd hh:mm:ss') %>"
+          },
+          {
+            "outboundPath": "requestCompletionDate",
+            "value": "<%  addCourseGrid.rows.map(x => {date:format(x.getChildrenMap().courseEndDate.value, 'yyyy-MM-dd')}).sort().reverse()[0]  %>"
+          }
+        ],
+        "onSend": "<% 
+                   //Uncomment the below line only for debugging purposes
+                   //console.info(json:asJSON(self.data));
+                   return self.data;  %>"
+      },
+      {
+        "name": "coursesObjectPOST",
+        "exclude": false,
+        "baseUrlType": "app",
+        "url": "tuitionReimbursementCourses",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "values": [
+          {
+            "outboundPath": "tuitionReimbursementRequest.id",
+            "value": "<%  eaObjectPOST.id  %>"
+          },
+          {
+            "outboundPath": "school",
+            "value": "<% eaSchool.value %>"
+          },
+          {
+            "outboundPath": "courseSubtotal",
+            "value": "<%  courseCost.value + textbookCost.value  %>"
+          },
+          {
+            "outboundPath": "courseSubtotalCurrency",
+            "value": "<%  requestedAmountCurrencyDropdown.value[0]  %>"
+          },
+          {
+            "outboundPath": "courseCostCurrency",
+            "value": "<%  requestedAmountCurrencyDropdown.value[0]  %>"
+          },
+          {
+            "outboundPath": "textbookCostCurrency",
+            "value": "<%  requestedAmountCurrencyDropdown.value[0]  %>"
+          }
+        ],
+        "onSend": "<% 
+                   //Uncomment the below line only for debugging purposes
+                   //console.info(json:asJSON(self.data));
+                   return self.data;  %>"
+      },
+      {
+        "name": "outboundFlowVariablesRequestInfo",
+        "type": "outboundVariable",
+        "variableScope": "flow",
+        "values": [
+          {
+            "outboundPath": "flowRequestId",
+            "value": "<% eaObjectPOST.id %>"
+          },
+          {
+            "outboundPath": "flowProgramType",
+            "value": "<% programTypeDropdown.value[0] %>"
+          },
+          {
+            "outboundPath": "flowProgramSubType",
+            "value": "<% programSubType.value %>"
+          },
+          {
+            "outboundPath": "flowSchool",
+            "value": "<% eaSchool.value %>"
+          },
+          {
+            "outboundPath": "flowStatus",
+            "value": "Pending"
+          },
+          {
+            "outboundPath": "flowRequestedAmountValue",
+            "value": "<% eaRequestedAmountValue.value %>"
+          },
+          {
+            "outboundPath": "flowRequestedAmountCurrency",
+            "value": "<% requestedAmountCurrencyDropdown.value[0] %>"
+          },
+          {
+            "outboundPath": "flowytdEmployeeConfirmation",
+            "value": "<% ytdEmployeeConfirmationCheckbox.value %>"
+          },
+          {
+            "outboundPath": "flowEmployeeLegalAcknowledgement",
+            "value": "<% employeeLegalAcknowledgementCheckbox.value %>"
+          },
+          {
+            "outboundPath": "flowAdvancedReimbursement",
+            "value": "<% advanceReimbursementCheckbox.value %>"
+          },
+          {
+            "outboundPath": "flowAdvanceReimbursementEmployeeAcknowledgement",
+            "value": "<% advanceReimbursementCheckbox.value ? advanceReimbursementEmployeeAcknowledgementCheckbox.value : false %>"
+          }
+        ]
+      }
+    ],
+    "responseErrorDetail": {
+      "errorSummary": "<%  error  %>",
+      "errors": "<%  errors.map(item => { item.error });  %>"
+    }
+  },
+  "presentation": {
+    "title": {
+      "label": "<%  presentationLabels.requestPageTitle  %>",
+      "type": "title"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "section",
+          "horizontal": true,
+          "children": [
+            {
+              "type": "richText",
+              "value": "<% presentationLabels.educationAssistanceEligibilityWarningValue %>",
+              "_visible": "<%  (workerEmployeeTypeBeta.data[0].employeeType_PrimaryPosition[0].id != '43e0be45707e429082a9936c2e7179e9' && workerCountry.data[0].country.id != 'fa7b4f891d1446858bc693997ae9ea53') %>",
+              "visible": false,
+              "enabled": false
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "horizontal": false,
+          "_render": "<% workerEmployeeTypeBeta.data[0].employeeType_PrimaryPosition[0].id == '43e0be45707e429082a9936c2e7179e9' || workerCountry.data[0].country.id == 'fa7b4f891d1446858bc693997ae9ea53' || me.id == '534eedb07b6701448ae9e4639901e48a' %>",
+          "children": [
+            {
+              "_comments": "Program/Course and Currency Information Block",
+              "type": "section",
+              "horizontal": true,
+              "title": "<% presentationLabels.programInformationTitle %>",
+              "children": [
+                {
+                  "type": "section",
+                  "horizontal": false,
+                  "children": [
+                    {
+                      "type": "fieldSet",
+                      "children": [
+                        {
+                          "id": "programTypeDropdown",
+                          "type": "instanceList",
+                          "label": "<% presentationLabels.ProgramTypeLabel %>",
+                          "multiSelect": "false",
+                          "instanceList": [
+                            {
+                              "id": "Degree - Associate",
+                              "_descriptor": "<% presentationLabels.programTypeDropdownDegreeAssociate %>",
+                              "descriptor": "<% userInfo.data[0].language == 'fr_CA' ? 'Diplôme – grade d’associé' : 'Degree - Associate' %>"
+                            },
+                            {
+                              "id": "Degree - Bachelor",
+                              "_descriptor": "<% presentationLabels.programTypeDropdownDegreeBachelor %>",
+                              "descriptor": "<% userInfo.data[0].language == 'fr_CA' ? 'Diplôme – baccalauréat' : 'Degree - Bachelor' %>"
+                            },
+                            {
+                              "id": "Degree - Master",
+                              "_descriptor": "<% presentationLabels.programTypeDropdownDegreeMaster %>",
+                              "descriptor": "<% userInfo.data[0].language == 'fr_CA' ? 'Diplôme – maîtrise' : 'Degree - Master' %>"
+                            },
+                            {
+                              "id": "Degree - Doctorate",
+                              "_descriptor": "<% presentationLabels.programTypeDropdownDegreeDoctorate %>",
+                              "descriptor": "<% userInfo.data[0].language == 'fr_CA' ? 'Diplôme – doctorat' : 'Degree - Doctorate' %>"
+                            },
+                            {
+                              "id": "Certificate",
+                              "_descriptor": "<% presentationLabels.programTypeDropdownCertificate %>",
+                              "descriptor": "<% userInfo.data[0].language == 'fr_CA' ? 'Certificat' : 'Certificate' %>"
+                            },
+                            {
+                              "id": "Professional Designation",
+                              "_descriptor": "<% presentationLabels.programTypeDropdownProfessionalDesignation %>",
+                              "descriptor": "<% userInfo.data[0].language == 'fr_CA' ? 'Titre professionnel' : 'Professional Designation' %>"
+                            },
+                            {
+                              "id": "Individual Course(s)",
+                              "_descriptor": "<% presentationLabels.programTypeDropdownIndividualCourse(s) %>",
+                              "descriptor": "<% userInfo.data[0].language == 'fr_CA' ? 'Cours individuel' : 'Individual Course(s)' %>"
+                            },
+                            {
+                              "id": "Other",
+                              "_descriptor": "<% presentationLabels.programTypeDropdownOther %>",
+                              "descriptor": "<% userInfo.data[0].language == 'fr_CA' ? 'Autre' : 'Other' %>"
+                            }
+                          ],
+                          "valueOutBinding": "eaObjectPOST.programType",
+                          "required": true,
+                          "onChange": "<%  if( !(empty self.value[0])) {
+                                          if (self.value[0] != 'Individual Course(s)') {
+                                            programSubType.visible = true;
+                                          }
+                                          else {
+                                            programSubType.visible = false;
+                                          }
+                                        }  %>"
+                        },
+                        {
+                          "id": "programSubType",
+                          "type": "text",
+                          "label": "<% presentationLabels.programSubTypeLabel %>",
+                          "helpText": "<% presentationLabels.programSubTypeLabel %>",
+                          "valueOutBinding": "eaObjectPOST.programSubType",
+                          "visible": "<%  false  %>",
+                          "guide": {
+                            "type": "guide",
+                            "id": "guideProgramSubType",
+                            "title": "<% presentationLabels.programSubTypeGuideTitle %>",
+                            "text": "<% presentationLabels.programSubTypeGuideText %>",
+                            "_comment_linkText": "Template Link",
+                            "_comment_linkUrl": "https://www.template.com/"
+                          }
+                        },
+                        {
+                          "id": "eaSchool",
+                          "type": "text",
+                          "label": "<% presentationLabels.schoolLabel %>",
+                          "valueOutBinding": "eaObjectPOST.school"
+                        },
+                        {
+                          "id": "eaValidationHidden",
+                          "type": "hidden"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "fieldSet",
+                  "_horizontal": false,
+                  "children": [
+                    {
+                      "id": "eaRequestedAmountValue",
+                      "type": "currency",
+                      "label": "<% presentationLabels.totalAmountRequested %>",
+                      "value": "0",
+                      "enabled": false,
+                      "valuesOut": [
+                        {
+                          "value": "<%  requestedAmountCurrencyDropdown.value[0]  %>",
+                          "valueOutBinding": "eaObjectPOST.requestAmountCurrency"
+                        },
+                        {
+                          "value": "<%  self.value  %>",
+                          "valueOutBinding": "eaObjectPOST.requestAmount"
+                        }
+                      ],
+                      "helpText": "<% presentationLabels.totalAmountRequestedHelpText %>",
+                      "useDefaultCurrencyFormat": "true",
+                      "currencyCode": "CAD",
+                      "showCurrencySymbol": true,
+                      "required": false
+                    },
+                    {
+                      "id": "requestedAmountCurrencyDropdown",
+                      "type": "dropdown",
+                      "label": "<% presentationLabels.requestedAmountCurrencyDropdownLabel %>",
+                      "instanceList": [
+                        {
+                          "id": "CAD",
+                          "descriptor": "CAD"
+                        },
+                        {
+                          "id": "USD",
+                          "descriptor": "USD"
+                        }
+                      ],
+                      "selectedValues": "<% list:toList(userInfo.data[0].currency == 'USD' ? 'USD' : 'CAD') %>"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "id": "addCourseGrid",
+              "enabled": "true",
+              "label": "Add Courses",
+              "rows": "<%  []  %>",
+              "rowVariableName": "row",
+              "columns": [
+                {
+                  "type": "column",
+                  "columnId": "2",
+                  "label": "Course Name",
+                  "cellTemplate": {
+                    "type": "text",
+                    "id": "courseName",
+                    "value": "<%  row.courseName  %>",
+                    "_valueOutBinding": "coursesObjectPOST.courseName",
+                    "valuesOut": [
+                      {
+                        "value": "<%  self.value  %>",
+                        "valueOutBinding": "coursesObjectPOST.courseName"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "cellTemplate": {
+                    "type": "section",
+                    "children": [
+                      {
+                        "type": "date",
+                        "id": "courseStartDate",
+                        "value": "<% row.courseStartDate %>",
+                        "valueOutBinding": "coursesObjectPOST.courseStartDate",
+                        "required": true,
+                        "onChange": "<% 
+                            self.clearError();
+                            if(courseStartDate.value >= dateAdd.value)
+                            {
+                              self.setError('Course Start Date must be no later than 3 months from today.');
+                            }
+                           %>"
+                      },
+                      {
+                        "type": "date",
+                        "id": "dateToday",
+                        "label": "Date Today",
+                        "visible": false,
+                        "value": "<% date:getTodaysDate(date:getDateTimeZone(userTimeZone)) %>"
+                      },
+                      {
+                        "type": "date",
+                        "id": "dateAdd",
+                        "label": "Date Add",
+                        "visible": false,
+                        "value": "<%  date:format(date:add(dateToday.value, 'MONTH', 3), 'yyyy-MM-dd') %>"
+                      }
+                    ]
+                  },
+                  "columnId": "v3",
+                  "label": "Course Start Date",
+                  "type": "column"
+                },
+                {
+                  "render": false,
+                  "type": "column",
+                  "columnId": "3old",
+                  "label": "Course Start Date",
+                  "cellTemplate": {
+                    "type": "date",
+                    "id": "courseStartDate1",
+                    "value": "<%  row.courseStartDate  %>",
+                    "valuesOut": [
+                      {
+                        "value": "<%  self.value  %>",
+                        "valueOutBinding": "coursesObjectPOST.courseStartDate"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "column",
+                  "columnId": "courseEndDate",
+                  "label": "Course End Date",
+                  "cellTemplate": {
+                    "type": "date",
+                    "id": "courseEndDate",
+                    "required": true,
+                    "value": "<%  row.courseEndDate  %>",
+                    "valuesOut": [
+                      {
+                        "value": "<%  self.value  %>",
+                        "valueOutBinding": "coursesObjectPOST.courseEndDate"
+                      }
+                    ],
+                    "onChange": "<% 
+                            self.clearError();
+                            if (
+                              courseEndDate.value <= courseStartDate.value
+                            ) {
+                              self.setError('Course End Date must be on or later than the Course Start Date.');
+                            }
+                           %>"
+                  }
+                },
+                {
+                  "type": "column",
+                  "columnId": "courseCost",
+                  "label": "Course Cost",
+                  "subtotal": true,
+                  "cellTemplate": {
+                    "type": "currency",
+                    "value": "0",
+                    "currencyCode": "CAD",
+                    "useDefaultCurrencyFormat": "true",
+                    "showCurrencySymbol": true,
+                    "id": "courseCost",
+                    "valuesOut": [
+                      {
+                        "value": "<%  (empty self.value) ? 0 : self.value  %>",
+                        "valueOutBinding": "coursesObjectPOST.courseCost"
+                      }
+                    ],
+                    "onChange": "<%  calculateRequestAmount();
+                                    subtotalCost.value = textbookCost.value + courseCost.value;  %>"
+                  }
+                },
+                {
+                  "type": "column",
+                  "columnId": "textbookCost",
+                  "label": "Textbook and Materials Cost",
+                  "subtotal": true,
+                  "cellTemplate": {
+                    "type": "currency",
+                    "value": "0",
+                    "currencyCode": "CAD",
+                    "useDefaultCurrencyFormat": "true",
+                    "showCurrencySymbol": true,
+                    "id": "textbookCost",
+                    "valuesOut": [
+                      {
+                        "value": "<%  (empty self.value) ? '0' : self.value  %>",
+                        "valueOutBinding": "coursesObjectPOST.textbookCost"
+                      }
+                    ],
+                    "onChange": "<%  calculateRequestAmount();
+                                    subtotalCost.value = textbookCost.value + courseCost.value;   %>"
+                  }
+                },
+                {
+                  "type": "column",
+                  "columnId": "subtotalCost",
+                  "render": true,
+                  "label": "Subtotal Cost",
+                  "subtotal": true,
+                  "cellTemplate": {
+                    "type": "currency",
+                    "enabled": false,
+                    "currencyCode": "CAD",
+                    "useDefaultCurrencyFormat": "true",
+                    "showCurrencySymbol": true,
+                    "id": "subtotalCost"
+                  }
+                }
+              ]
+            },
+            {
+              "_comments": "Year to Date Allowable Education Assistnace Block",
+              "type": "section",
+              "title": "<% presentationLabels.YTDAllowableEducationAssistanceAmountTitle %>",
+              "horizontal": false,
+              "children": [
+                {
+                  "type": "richText",
+                  "visible": "<%  workerCountry.data[0].country.descriptor == 'United States of America' %>",
+                  "value": "As per the US Internal Revenue Services (IRS) regulations, the Company is allowed to grant an annual maximum non-taxable  statutory education refund of $5250.00 and any monies refunded above the annual statutory limit may be subject to tax.<br/>It is the Employee and Manager's responsibility to keep track of annual reimbursement amounts; see annual maximum amounts in the <a href=\"www.google.com\">Education Assistance Policy</a>.",
+                  "enabled": false
+                },
+                {
+                  "type": "richText",
+                  "visible": "<% ! (workerCountry.data[0].country.descriptor == 'United States of America') %>",
+                  "value": "<% presentationLabels.YTDAllowableEducationAssistanceAmountValue %>",
+                  "enabled": false
+                },
+                {
+                  "id": "ytdEmployeeConfirmationCheckbox",
+                  "type": "checkBox",
+                  "label": "I have reviewed my YTD allowable education assistance amount with my manager and business sponsor",
+                  "valueOutBinding": "eaObjectPOST.ytdEmployeeConfirmation",
+                  "required": true
+                }
+              ]
+            },
+            {
+              "_comments": "Legal Agreement Information Block",
+              "type": "section",
+              "title": "<% presentationLabels.legalAgreementTitle %>",
+              "horizontal": false,
+              "children": [
+                {
+                  "type": "richText",
+                  "value": "<% presentationLabels.legalAgreementValue %>",
+                  "enabled": false
+                },
+                {
+                  "id": "employeeLegalAcknowledgementCheckbox",
+                  "type": "checkBox",
+                  "label": "<% presentationLabels.legalAgreementLabel %>",
+                  "valueOutBinding": "eaObjectPOST.employeeLegalAcknowledgement",
+                  "required": true
+                }
+              ]
+            },
+            {
+              "_comments": "Advanced Reimbursement Information Block - Only visible if the Worker's Country is Canada",
+              "type": "section",
+              "title": "<% workerCountry.data[0].country.descriptor == 'Canada' ? (userInfo.data[0].language == 'fr_CA' ? 'Avance' : 'Advance Reimbursement') : '' %>",
+              "horizontal": false,
+              "children": [
+                {
+                  "type": "richText",
+                  "visible": "<% workerCountry.data[0].country.descriptor == 'Canada' ? true : false %>",
+                  "value": "<% presentationLabels.advanceReimbursementInformationValue %>",
+                  "enabled": false
+                },
+                {
+                  "id": "advanceReimbursementCheckbox",
+                  "type": "checkBox",
+                  "visible": "<% workerCountry.data[0].country.descriptor == 'Canada' ? true : false %>",
+                  "label": "<% presentationLabels.advanceReimbursementCheckboxLabel %>",
+                  "value": false,
+                  "valueOutBinding": "eaObjectPOST.advanceReimbursement"
+                },
+                {
+                  "_comments": "Advanced Reimbursement Acknowledgement Information Block - Not Visible if advanceReimbursementCheckbox not checked",
+                  "type": "section",
+                  "horizontal": true,
+                  "children": [
+                    {
+                      "type": "richText",
+                      "visible": "<% advanceReimbursementCheckbox.value %>",
+                      "value": "<% presentationLabels.advanceReimbursementEmployeeAcknowledgementCheckboxLabel %>",
+                      "enabled": false
+                    },
+                    {
+                      "id": "advanceReimbursementEmployeeAcknowledgementCheckbox",
+                      "type": "checkBox",
+                      "visible": "<% advanceReimbursementCheckbox.value %>",
+                      "label": "<% presentationLabels.AR_Employee_Acknowledgement %>",
+                      "required": "<% advanceReimbursementCheckbox.value %>",
+                      "value": false
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "editButtonBar",
+              "editButtons": [
+                {
+                  "_comment": "Override the text of the OK button to 'Submit' and visible to Regular Employees ONLY.",
+                  "type": "editButton",
+                  "label": "<% presentationLabels.editButtonLabel %>",
+                  "buttonType": "PRIMARY",
+                  "_visible": "<% workerEmployeeTypeBeta.data[0].employeeType_PrimaryPosition[0].id == '43e0be45707e429082a9936c2e7179e9' || workerCountry.data[0].country.id == 'fa7b4f891d1446858bc693997ae9ea53' || me.id == '534eedb07b6701448ae9e4639901e48a' || me.id == '3aa5550b7fe348b98d7b5741afc65534' %>"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "<% userInfo.data[0].language == 'fr_CA' ? 'Propulsé par Extend - Demande' : 'Powered By Extend - Request' %>"
+        }
+      ]
+    }
+  }
+}

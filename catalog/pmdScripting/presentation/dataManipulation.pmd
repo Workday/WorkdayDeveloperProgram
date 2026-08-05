@@ -1,0 +1,118 @@
+{
+  "id": "dataManipulation",
+  "include": [
+    "dataManipulation.script"
+  ],
+  "endPoints": [
+    {
+      "name": "workers",
+      "baseUrlType": "workday-common",
+      "url": "/workers",
+      "authType": "sso"
+    }
+  ],
+  "presentation": {
+    "pageType": "edit",
+    "standardEditButtonsHidden": true,
+    "title": {
+      "type": "title",
+      "label": "PMD Scripting - Data Manipulation"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "fieldSet",
+          "title": "Instructions",
+          "children": [
+            {
+              "type": "readOnlyText",
+              "value": "Select a method from the dropdown below to see different ways to do perform data manipulation with PMD Scripting."
+            },
+            {
+              "type": "dropdown",
+              "id": "dataList",
+              "onChange": "<% dataManipulation.changeGridSource(self.value); %>",
+              "instanceList": [
+                {
+                  "id": "1",
+                  "descriptor": "Concatenation"
+                },
+                {
+                  "id": "2",
+                  "descriptor": "Conditional Filtering"
+                },
+                {
+                  "id": "3",
+                  "descriptor": "Distinct Values"
+                },
+                {
+                  "id": "4",
+                  "descriptor": "Custom Sorting"
+                },
+                {
+                  "id": "5",
+                  "descriptor": "Comma Separated Values"
+                },
+                {
+                  "id": "6",
+                  "descriptor": "Flatten Data"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "richText",
+          "id": "title",
+          "enabled": false
+        },
+        {
+          "id": "subtitle",
+          "type": "richText",
+          "enabled": false
+        },
+        {
+          "type": "richText",
+          "id": "details",
+          "enabled": false
+        },
+        {
+          "type": "grid",
+          "id": "dataGrid",
+          "gridType": "LIST",
+          "rows": "<% dataManipulation.emptyList() %>",
+          "rowVariableName": "row",
+          "doNotAdd": "true",
+          "doNotRemoveRow": "true",
+          "enabled": false,
+          "columns": [
+            {
+              "type": "column",
+              "columnId": "column1",
+              "label": "Column 1",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% row.column1 %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "column2",
+              "label": "Column 2",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% row.column2 %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "pod",
+          "podId": "doneButton"
+        }
+      ]
+    }
+  }
+}

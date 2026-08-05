@@ -1,0 +1,48 @@
+{
+  "id": "imagesOverview",
+  "endPoints": [ ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Images"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "fieldSet",
+          "title": "Images",
+          "children": [
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Images",
+              "taskReference": {
+                "taskId": "images"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Icons (labeledImage)",
+              "taskReference": {
+                "taskId": "labeledImage"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

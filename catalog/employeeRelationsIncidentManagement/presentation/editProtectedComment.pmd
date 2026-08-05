@@ -1,0 +1,289 @@
+{
+  "id": "editProtectedComment",
+  "include": [
+    "fileTypes.script",
+    "transform.script"
+  ],
+  "endPoints": [
+    {
+      "name": "currentUserData",
+      "baseUrlType": "general",
+      "authType": "sso",
+      "url": "common/v1/workers/me"
+    },
+    {
+      "name": "protectedCaseData",
+      "baseUrlType": "app",
+      "authType": "sso",
+      "url": "<% 'protectedCaseEntryBO/' + queryParams.commentID %>"
+    },
+    {
+      "name": "caseConnectionData",
+      "baseUrlType": "wql",
+      "authType": "sso",
+      "url": "data",
+      "wqlQuery": {
+        "parameters": {
+          "appId": "<% site.applicationId %>",
+          "caseID": "<% protectedCaseData.case.id %>"
+        },
+        "queryId": "caseConnectionData"
+      }
+    },
+    {
+      "name": "protectedAttachments",
+      "baseUrlType": "wql",
+      "authType": "sso",
+      "url": "data",
+      "wqlQuery": {
+        "parameters": {
+          "appId": "<% site.applicationId %>",
+          "commentID": "<% queryParams.commentID %>"
+        },
+        "queryId": "protectedAttachments"
+      }
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "putComment",
+        "url": "<% 'protectedCaseEntryBO/' + queryParams.commentID %>",
+        "httpMethod": "PUT",
+        "baseUrlType": "app",
+        "values": [
+         {
+           "outboundPath": "lastUpdatedDate",
+           "value": "<% transform.getTimestamp(userTimeZone) %>"
+         }
+       ],
+        "failOnStatusCodes": [
+          {
+            "code": 400
+          }
+        ]
+      },
+      {
+        "name": "patchProtectedAttachment",
+        "baseUrlType": "app",
+        "url": "<% 'protectedAttachments/' + attachmentID.value %>",
+        "httpMethod": "PATCH",
+        "authType": "sso"
+      },
+      {
+        "type": "outboundVariable",
+        "variableScope": "flow",
+        "name": "flowVars",
+        "values": [
+          {
+            "outboundPath": "caseID",
+            "value": "<% protectedCaseData.case.id %>"
+          }
+        ]
+      }
+    ]
+  },
+  "script": "<%
+            var updateGridHideValues = function () {
+              var gridCounter = 0;
+              while (gridCounter < attachmentGrid.rows.size()) {
+                attachmentGrid.rows[gridCounter].childrenMap.colHidden.childrenMap.hideComment.setValue(hideCheckBox.value);
+                attachmentGrid.rows[gridCounter].childrenMap.colHidden.childrenMap.hideCommentReason.setValue(hideReasonTextBox.value);
+                gridCounter = gridCounter + 1;
+              }
+            }
+            %>",
+
+  "presentation": {
+    "pageType": "edit",
+    "micro": true,
+    "microFirstPageOnly": true,
+    "title": {
+      "type": "title",
+      "label": "Edit Protected Comment"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "textArea",
+          "label": "Protected Comment",
+          "value": "<% protectedCaseData.entryComment %>",
+          "valueOutBinding": "putComment.entryComment"
+        },
+        {
+          "type": "instanceList",
+          "label": "Person Tagging",
+          "id": "personTagging",
+          "values": "<% caseConnectionData.data %>",
+          "selectedValues": "<% empty(protectedCaseData.personTagging) ? [] : [protectedCaseData.personTagging.id] %>",
+          "idKey": "workdayID",
+          "displayKey": "connectionValue",
+          "valuesOut": [
+            {
+              "value": "<% self.value[0] %>",
+              "valueOutBinding": "putComment.personTagging.id"
+            }
+          ]
+        },
+        {
+          "type": "grid",
+          "id": "attachmentGrid",
+          "label": "Attachments",
+          "enabled": false,
+          "doNotAdd": true,
+          "doNotRemove": true,
+          "rows": "<% protectedAttachments.data %>",
+          "rowVariableName": "attachmentRow",
+          "columns": [
+            {
+              "type": "column",
+              "columnId": "col1",
+              "label": "Attachment",
+              "sortableAndFilterable": true,
+              "cellTemplate": {
+                "type": "fileUploader",
+                "id": "multiFileUploader",
+                "enabled": "false",
+                "singular": false,
+                "children": [
+                  {
+                    "type": "fileUploaderRow",
+                    "render": "<% !(empty attachmentRow.fileName) %>",
+                    "attachment": {
+                      "type": "attachmentList",
+                      "attachmentURL": "<% `{{apiGatewayEndpoint}}/apps/{{site.applicationId}}/v1/protectedAttachments/{{attachmentRow.id}}` %>",
+                      "attachmentAuth": "sso",
+                      "attachmentName": "<% attachmentRow.fileName %>",
+                      "attachmentUriTemplate": "[Target]",
+                      "instanceList": [
+                        {
+                          "action": "attachment",
+                          "descriptor": "<% attachmentRow.fileName %>"
+                        }
+                      ]
+                    },
+                    "fileName": "<% attachmentRow.fileName %>",
+                    "fileType": "<% fileTypes.getMimeTypeIDbyContentType(attachmentRow.mimeType.id) %>"
+                  }
+                ],
+                "fileUploaderRowTemplate": []
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "colHidden",
+              "cellTemplate": {
+                "type": "section",
+                "children": [
+                  {
+                    "type": "hidden",
+                    "id": "hideComment",
+                    "value": "<% attachmentRow.hideComment %>",
+                    "valueOutBinding": "patchProtectedAttachment.hideComment"
+                  },
+                  {
+                    "type": "hidden",
+                    "id": "hideCommentReason",
+                    "value": "<% attachmentRow.hideCommentReason %>",
+                    "valueOutBinding": "patchProtectedAttachment.hideCommentReason"
+                  },
+                  {
+                    "type": "hidden",
+                    "id": "attachmentID",
+                    "value": "<% attachmentRow.id %>"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "checkBox",
+          "id": "hideCheckBox",
+          "label": "Hide Comment & Attachments",
+          "value": "<% empty(protectedCaseData.hideComment) ? false : protectedCaseData.hideComment %>",
+          "onChange": "<% updateGridHideValues() %>",
+          "valueOutBinding": "putComment.hideComment"
+        },
+        {
+          "type": "text",
+          "id": "hideReasonTextBox",
+          "label": "Hide Reason",
+          "value": "<% empty(protectedCaseData.hideCommentReason) ? '' : protectedCaseData.hideCommentReason %>",
+          "onChange": "<% updateGridHideValues() %>",
+          "valueOutBinding": "putComment.hideCommentReason"
+        },
+        {
+          "type": "section",
+          "horizontal": true,
+          "children": [
+            {
+              "type": "section",
+              "children": [
+                {
+                  "type": "readOnlyText",
+                  "label": "Created By",
+                  "value": "<% protectedCaseData.createdBy.descriptor %>"
+                },
+                {
+                  "type": "readOnlyText",
+                  "label": "Created Date",
+                  "value": "<%  !empty protectedCaseData.createdDate ? transform.formatDateString(protectedCaseData.createdDate, userTimeZone) : '' %>"
+                },
+                {
+                  "type": "hidden",
+                  "value": "<% protectedCaseData.createdDate %>",
+                  "valueOutBinding": "putComment.createdDate"
+                }
+              ]
+            },
+            {
+              "type": "section",
+              "children": [
+                {
+                  "type": "readOnlyText",
+                  "label": "Last Updated By",
+                  "value": "<% empty(protectedCaseData.lastUpdatedBy) ? protectedCaseData.createdBy.descriptor : protectedCaseData.lastUpdatedBy.descriptor %>"
+                },
+                {
+                  "type": "readOnlyText",
+                  "label": "Last Updated Date",
+                  "value": "<%
+                     transform.formatDateString((empty(protectedCaseData.lastUpdatedDate) ? protectedCaseData.createdDate : protectedCaseData.lastUpdatedDate), userTimeZone);                    
+                   %>"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "hidden",
+          "value": "<% protectedCaseData.createdBy.id %>",
+          "valueOutBinding": "putComment.createdBy.id"
+        },
+        {
+          "type": "hidden",
+          "value": "<% currentUserData.id %>",
+          "valueOutBinding": "putComment.lastUpdatedBy.id"
+        },
+        {
+          "type": "hidden",
+          "value": "<% protectedCaseData.case.id %>",
+          "valueOutBinding": "putComment.case.id"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

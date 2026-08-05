@@ -1,0 +1,9 @@
+{
+  "id": "protectedCaseData",
+  "parameters": ["appId"],
+  "query": "<%
+    `SELECT workdayID as id, status, caseName, createdAbout, createdDate, assignedTo
+    FROM {{appId}}_protectedCaseBO`
+  %>",
+  "limit": "1000"
+}

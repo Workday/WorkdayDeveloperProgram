@@ -1,0 +1,46 @@
+{
+  "id": "AppLinks",
+  "parameters": ["title"
+  ],
+  "header": {
+    "title": "<% title %>",
+    "icon": "wd-accent-megaphone"
+  },
+  "body": {
+    "type": "pillCard",
+    "pills": [
+      {
+        "label": "Create Charity",
+        "taskReference": {
+          "taskId": "createCharityWizard"
+        }
+      },
+      {
+        "label": "Make a Donation",
+        "taskReference": {
+          "taskId": "charitiesListDetail"
+        }
+      },
+      {
+        "label": "My Donations",
+        "taskReference": {
+          "taskId": "manageMyDonations"
+        }
+      },
+      {
+        "label": "Manage Charities",
+        "taskReference": {
+          "taskId": "manageCharities"
+        }
+      }
+    ]
+  },
+  "footer": [
+    {
+      "label": "All Charities",
+      "taskReference": {
+        "taskId": "charitiesListDetail"
+      }
+    }
+  ]
+}

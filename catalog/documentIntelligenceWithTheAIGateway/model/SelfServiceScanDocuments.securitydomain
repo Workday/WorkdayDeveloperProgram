@@ -1,0 +1,6 @@
+{
+  "id": 1,
+  "name": "SelfServiceScanDocuments",
+  "label": "Self Service: Scan Documents",
+  "enabledForPageSecurity": true
+}

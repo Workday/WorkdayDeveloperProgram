@@ -1,0 +1,14 @@
+{
+  "id": "customFieldData",
+  "parameters": ["appId", "rowWID"],
+  "query": "<%
+    `SELECT caseTemplate, fieldNumber, fieldLabel, fieldType, fieldEnabled, fieldBindingID, fieldValues, workdayID, fieldRequired
+    FROM {{appId}}_caseTemplateCustomFieldsBO
+    WHERE caseTemplate = '{{rowWID}}'`
+  %>"
+}
+
+
+
+
+

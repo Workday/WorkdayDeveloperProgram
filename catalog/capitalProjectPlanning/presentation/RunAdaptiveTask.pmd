@@ -1,0 +1,31 @@
+{
+  "id": "RunAdaptiveTask",
+  "endPoints": [],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Run Adaptive Task?"
+    },
+    "body": {
+      "type": "section"
+    },
+    "footer": {
+      "type": "footer"
+    },
+    "micro": true,
+    "pageType": "EDIT"
+  },
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "httpMethod": "GET",
+        "name": "runAdaptiveTaskGET",
+        "baseUrlType": "ORCHESTRATE",
+        "url": "/RunAdaptiveTask/launch"
+      }
+    ]
+  },
+  "securityDomains": [
+    "CapitalProjectPlanningAdministrator"
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "id": 6,
+  "name": "CaseTemplateCustomFields",
+  "label": "Case Template Custom Fields",
+  "defaultSecurityDomains": [
+    "ManageProtectedCases"
+  ],
+  "defaultCollection": {
+    "name": "caseTemplateCustomFieldsBO",
+    "label": "Case Template Custom Fields"
+  },
+  "fields": [
+    {
+      "secureByTarget": false,
+      "target": "CaseTemplates",
+      "id": 1,
+      "name": "caseTemplate",
+      "label": "Case Template",
+      "type": "SINGLE_INSTANCE",
+      "useForDisplay": false
+    },
+    {
+      "type": "TEXT",
+      "label": "Field Number",
+      "name": "fieldNumber",
+      "id": 2
+    },
+    {
+      "id": 3,
+      "name": "fieldLabel",
+      "label": "Field Label",
+      "type": "TEXT"
+    },
+    {
+      "id": 4,
+      "name": "fieldType",
+      "label": "FieldType",
+      "type": "TEXT"
+    },
+    {
+      "id": 5,
+      "name": "fieldEnabled",
+      "label": "Field Enabled",
+      "type": "BOOLEAN"
+    },
+    {
+      "id": 6,
+      "name": "fieldBindingID",
+      "label": "Field Binding ID",
+      "type": "TEXT"
+    },
+    {
+      "id": 7,
+      "name": "fieldValues",
+      "label": "Field Values",
+      "type": "TEXT"
+    },
+    {
+      "id": 8,
+      "name": "fieldRequired",
+      "label": "Field Required",
+      "type": "BOOLEAN"
+    }
+  ]
+}

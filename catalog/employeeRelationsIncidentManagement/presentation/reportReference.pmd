@@ -1,0 +1,108 @@
+{
+  "id": "reportReference",
+  "endPoints": [ ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Employee Relations Incident Management - Report Reference"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "fieldSet",
+          "title": "Extend Business Object Reports",
+          "children": [
+            {
+              "type": "externalLink",
+              "label": "Protected Cases",
+              "descriptor": "Protected Cases - ERIM",
+              "url": "https://wcpdev.wd101.myworkday.com/workdayproserv_wcpdev3/d/inst/1422$3230/rel-task/3001$14.htmld"
+            },
+            {
+              "type": "externalLink",
+              "label": "Active Cases",
+              "descriptor": "Active Cases - ERIM",
+              "url": "https://wcpdev.wd101.myworkday.com/workdayproserv_wcpdev3/d/inst/1422$3234/rel-task/3001$14.htmld"
+            },
+            {
+              "type": "externalLink",
+              "label": "Resolved Cases",
+              "descriptor": "Resolved Cases - ERIM",
+              "url": "https://wcpdev.wd101.myworkday.com/workdayproserv_wcpdev3/d/inst/1422$3235/rel-task/3001$14.htmld"
+            },
+            {
+              "type": "externalLink",
+              "label": "Protected Case Entries",
+              "descriptor": "Protected Case Entries - ERIM",
+              "url": "https://wcpdev.wd101.myworkday.com/workdayproserv_wcpdev3/d/inst/1422$3229/rel-task/3001$14.htmld"
+            },
+            {
+              "type": "externalLink",
+              "label": "Protected Attachments",
+              "descriptor": "Protected Attachments - ERIM",
+              "url": "https://wcpdev.wd101.myworkday.com/workdayproserv_wcpdev3/d/inst/1422$3232/rel-task/3001$14.htmld"
+            },
+            {
+              "type": "externalLink",
+              "label": "Protected Case Connections",
+              "descriptor": "Protected Case Connections - ERIM",
+              "url": "https://wcpdev.wd101.myworkday.com/workdayproserv_wcpdev3/d/inst/1422$3228/rel-task/3001$14.htmld"
+            },
+            {
+              "type": "externalLink",
+              "label": "Protected Case Statuses",
+              "descriptor": "Protected Case Statuses - ERIM",
+              "url": "https://wcpdev.wd101.myworkday.com/workdayproserv_wcpdev3/d/inst/1422$3231/rel-task/3001$14.htmld"
+            },
+            {
+              "type": "externalLink",
+              "label": "Config Values",
+              "descriptor": "Config Values - ERIM",
+              "url": "https://wcpdev.wd101.myworkday.com/workdayproserv_wcpdev3/d/inst/1422$3227/rel-task/3001$14.htmld"
+            },
+            {
+              "type": "externalLink",
+              "label": "Case Templates",
+              "descriptor": "Case Templates - ERIM",
+              "url": "https://wcpdev.wd101.myworkday.com/workdayproserv_wcpdev3/d/inst/1422$3226/rel-task/3001$14.htmld"
+            },
+            {
+              "type": "externalLink",
+              "label": "Case Template Custom Fields",
+              "descriptor": "Case Template Custom Fields - ERIM",
+              "url": "https://wcpdev.wd101.myworkday.com/workdayproserv_wcpdev3/d/inst/1422$3225/rel-task/3001$14.htmld"
+            }
+          ]
+        },
+        {
+          "type": "fieldSet",
+          "title": "Example Purge Reports",
+          "children": [
+            {
+              "type": "externalLink",
+              "label": "Purge Case Example",
+              "descriptor": "Employee Relations Incident Management - Purge Case Example",
+              "url": "https://wcpdev.wd101.myworkday.com/workdayproserv_wcpdev3/d/task/1422$3236.htmld"
+            },
+            {
+              "type": "text",
+              "value": "Please note that a report configured like the above can be used to purge data from an Extend object with at least one field marked with 'Enable For Purge'. The user would then use the 'Purge Person Data' task to purge a selection of fields available for purge using the report to define row scope."
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

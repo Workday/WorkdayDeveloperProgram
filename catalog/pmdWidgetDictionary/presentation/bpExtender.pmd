@@ -1,0 +1,306 @@
+{
+  "id": "bpExtender",
+  "endPoints": [
+    {
+      "baseUrlType": "orchestration",
+      "url": "bpExtenderHelper/launch?action=commentHistory",
+      "name": "commentHistoryApi",
+      "authType": "sso"
+    },
+    {
+      "baseUrlType": "orchestration",
+      "url": "bpExtenderHelper/launch?action=processHistory",
+      "name": "processHistoryApi",
+      "authType": "sso"
+    },
+    {
+      "baseUrlType": "orchestration",
+      "url": "bpExtenderHelper/launch?action=claim",
+      "name": "claimApi",
+      "authType": "sso"
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "postAttachment",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "url": "<% `bpExtenderHelperFileUploader/launch` %>",
+        "baseUrlType": "orchestration",
+        "multiPartFileLast": true,
+        "exclude": "<% multiFileUploader.children.size() < 1 %>"
+      },
+      {
+        "name": "updateClaim",
+        "baseUrlType": "orchestration",
+        "url": "<% `bpExtenderHelper/launch?action=echo` %>",
+        "httpMethod": "POST",
+        "authType": "sso"
+      },
+      {
+        "name": "submitStep",
+        "baseUrlType": "orchestration",
+        "url": "<% `bpExtenderHelper/launch?action=echo` %>",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "values": [
+          {
+            "outboundPath": "stepAction.id",
+            "value": " <%   !empty saveButtonId.value ? 'd9e41a8c446c11de98360015c5e6daf6'  : 'd9e4223e446c11de98360015c5e6daf6'   %>"                 
+          }
+        ]
+      },
+      {
+        "type": "outboundVariable",
+        "name": "outboundFlowVariable",
+        "variableScope": "flow",
+        "values": [
+          {
+            "outboundPath": "updateClaim",
+            "value": "<% updateClaim ?? {:}%>"
+          },
+          {
+            "outboundPath": "submitStep",
+            "value": "<% submitStep ?? {:} %>"
+          },
+          {
+            "outboundPath": "postAttachment",
+            "value": "<% postAttachment ?? {:}%>"
+          }
+        ]
+      }
+    ]
+  },
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Revise Wellness Claim"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "richText",
+          "value": "This page uses the <b>Business Process Extender</b> <i>(bpExtender)</i> widget to integrate workflow functionality directly into this revision page. The bpExtender ensures that all process-related elements—such as the <b>Comment</b> box, <b>Attachment</b> area, and <b>Action Buttons</b>—conform to the standard Workday look and feel. To revise your wellness claim, please use the <b>Attachment</b> widget to upload the corrected documentation. If you need to explain the changes, use the <b>Comment</b> box to provide details. Once the revisions are complete, select the appropriate, standard Workday action button (e.g., <b>Resubmit</b>, or <b>Save</b>)",
+          "enabled": false
+        },
+        {
+          "type": "date",
+          "label": "Date of Purchase",
+          "id": "dateOfReceipt",
+          "required": "true",
+          "value": "<% claimApi.dateOfReceipt %>",
+          "valueOutBinding": "updateClaim.dateOfPurchase",
+          "datePrecision": "DAY"
+        },
+        {
+          "type": "dropdown",
+          "label": "Category of fitness expense",
+          "id": "category",
+          "required": "true",
+          "instanceList": [
+            {
+              "id": "Fitness_and_Exercise",
+              "descriptor": "Fitness and Exercise"
+            },
+            {
+              "id": "Physical_and_Mental_Health_Support",
+              "descriptor": "Physical and Mental Health Support"
+            },
+            {
+              "id": "Nutrition_and_Healthy_Eating",
+              "descriptor": "Nutrition and Healthy Eating"
+            },
+            {
+              "id": "Stress_Reduction_and_Mindfulness",
+              "descriptor": "Stress Reduction and Mindfulness"
+            },
+            {
+              "id": "Equipment_and_Gear",
+              "descriptor": "Equipment and Gear"
+            }
+          ],
+          "selectedValues": "<% !empty claimApi.category ? [claimApi.category] : []  %>",
+          "valueOutBinding": "updateClaim.category"
+        },
+        {
+          "type": "currency",
+          "label": "Amount for Reimbursement",
+          "id": "claimAmount",
+          "value": "<% claimApi.claimAmount %>",
+          "required": "true",
+          "valueOutBinding": "updateClaim.claimAmount",
+          "currencyCode": "USD"
+        },
+        {
+          "type": "hidden",
+          "value": "cid:filedata",
+          "valueOutBinding": "postAttachment::data:file"
+        },
+        {
+          "type": "attachmentList",
+          "label": "Proof of Purchase",
+          "instanceList": [
+            {
+              "descriptor": "fitness65.png",
+              "action": "attachment",
+              "mimeType": "image/png"
+            }
+          ],
+          "attachmentUriTemplate": "[Target]",
+          "attachmentURL": "<%`{{apiGatewayEndpoint}}/orchestrate/v1/apps/{{site.applicationId}}/orchestrations/bpExtenderHelper/launch?action=attachment` %>",
+          "attachmentName": "fitness65.png",
+          "attachmentAuth": "sso"
+        },
+        {
+          "type": "hidden",
+          "value": "<% claimApi.id %>",
+          "valueOutBinding": "postAttachment::data:claim.id"
+        },
+        {
+          "type": "hidden",
+          "value": "<% claimApi.id %>",
+          "valueOutBinding": "updateClaim.id"
+        }
+      ]
+    },
+    "extender": {
+      "type": "bpExtender",
+      "bpButtons": [
+        {
+          "id": "submitButtonId",
+          "type": "bpButton",
+          "buttonType": "PRIMARY",
+          "label": "Resubmit"
+        },
+        {
+          "id": "saveButtonId",
+          "type": "bpButton",
+          "buttonType": "AUXILIARY",
+          "label": "Save"
+        }
+      ],
+      "attachment": {
+        "type": "fileUploader",
+        "id": "multiFileUploader",
+        "label": "Replace Proof of Purchase (jpg/png)",
+        "fileTypes": "jpg,png",
+        "compact": "false",
+        "singular": true,
+        "valueOutBinding": "postAttachment:filedata:",
+        "validations": [
+          {
+            "errorMessage": "Upload either a JPG or PNG file."
+          }
+        ]
+      },
+      "comment": {
+        "type": "textArea",
+        "id": "comment",
+        "label": "Comment",
+        "valueOutBinding": "submitStep.comment"
+      },
+      "image": {
+        "type": "image",
+        "id": "samplePhoto",
+        "imageUri": "https://imageHost/samplePhoto.jpg"
+      },
+      "commentHistory": {
+        "type": "bpTemplatedList",
+        "on": "<% commentHistoryApi.data ?? [] %>",
+        "as": "commentData",
+        "template": {
+          "type": "commentHistory",
+          "author": {
+            "type": "instanceList",
+            "label": "Process",
+            "instanceList": [
+              {
+                "id": "1",
+                "descriptor": "<% commentData.person.descriptor %>"
+              }
+            ]
+          },
+          "text": {
+            "type": "text",
+            "label": "comment",
+            "value": "<% commentData.comment %>"
+          },
+          "date": {
+            "type": "date",
+            "datePrecision": "SECOND",
+            "dateFormat": "yyyy-MM-dd'T'HH:mm:ss",
+            "displayTimeZone": "<% userTimeZone %>",
+            "value": "<% commentData.commentDate %>"
+          }
+        }
+      },
+      "processHistory": {
+        "type": "bpTemplatedList",
+        "on": "<% processHistoryApi.data ?? [] %>",
+        "as": "processData",
+        "template": {
+          "type": "processHistory",
+          "actionEvent": {
+            "type": "instanceList",
+            "label": "Process",
+            "instanceList": [
+              {
+                "id": "1",
+                "descriptor": "Some Process"
+              }
+            ]
+          },
+          "workflowStep": {
+            "type": "instanceList",
+            "label": "Step",
+            "instanceList": [
+              {
+                "id": "1",
+                "descriptor": "<% processData.descriptor %>"
+              }
+            ]
+          },
+          "status": {
+            "type": "text",
+            "label": "Status",
+            "value": "<% processData.status.descriptor %>"
+          },
+          "completedDate": {
+            "type": "date",
+            "datePrecision": "SECOND",
+            "dateFormat": "yyyy-MM-dd'T'HH:mm:ss",
+            "displayTimeZone": "<% userTimeZone  %>",
+            "value": "<% processData.completedDate %>"
+          },
+          "user": {
+            "type": "instanceList",
+            "label": "Step",
+            "instanceList": [
+              {
+                "id": "1",
+                "descriptor": "<% processData.completedByPerson.descriptor %>"
+              }
+            ]
+          },
+          "delegationMessage": {
+            "type": "text",
+            "label": "Person Label",
+            "value": "<% processData.event.descriptor %>"
+          }
+        }
+      }
+    },
+    "_footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

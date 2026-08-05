@@ -1,0 +1,17 @@
+{
+  "podId": "doneButton",
+  "seed": {
+    "template": {
+      "type": "editButtonBar",
+      "editButtons": [
+        {
+          "type": "editButton",
+          "label": "Done",
+          "id": "1",
+          "buttonType": "PRIMARY",
+          "ignoreRequiredFields": "true"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,297 @@
+{
+  "id": "projectTeam",
+  "include": [
+    "teamData.script"
+  ],
+  "endPoints": [ ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Meet the Team"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "section",
+          "title": "Team Skills and Certifications",
+          "children": [
+            {
+              "type": "bubbleChart2",
+              "data": "<% teamData.getTeamSkillsData() %>",
+              "dataVariableName": "data",
+              "animateOnLoad": true,
+              "measurementDataSet": {
+                "name": "Average Rating (1 - 10)",
+                "value": "<% data.avgRating %>"
+              },
+              "bubbleSizeDataSet": {
+                "name": "Members Certified",
+                "value": "<% data.numMembers %>"
+              },
+              "chartMarkLabel": "<% 'Avg Rating: ' + data.avgRating %>",
+              "bubbleColorDataSet": {
+                "name": "Skill Category",
+                "value": "<% data.skillType %>"
+              },
+              "categoryDataSet": {
+                "name": "Skill",
+                "value": "<% data.skill %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "horizontal": "true",
+          "children": [
+            {
+              "type": "section",
+              "title": "Bug Bash Leaderboard",
+              "children": [
+                {
+                  "type": "clusteredBarChart2",
+                  "barOrientation": "HORIZONTAL",
+                  "animateOnLoad": true,
+                  "data": "<% teamData.getTicketLeaderboardData() %>",
+                  "dataVariableName": "data",
+                  "measurementDataSets": [
+                    {
+                      "name": "Bugs Squashed",
+                      "value": "<% data.numTicketsComplete %>"
+                    },
+                    {
+                      "name": "Fixes Reviewed",
+                      "value": "<% data.numTicketsReviewed %>"
+                    }
+                  ],
+                  "categoryDataSet": {
+                    "name": "Name",
+                    "value": "<% data.name %>"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "section",
+              "title": "Bowling Leaderboard",
+              "children": [
+                {
+                  "type": "clusteredBarChart2",
+                  "barOrientation": "VERTICAL",
+                  "accessibilityMode": true,
+                  "animateOnLoad": true,
+                  "data": "<% teamData.getBowlingLeaderboardData() %>",
+                  "dataVariableName": "data",
+                  "measurementDataSets": [
+                    {
+                      "name": "Game 1 Score",
+                      "value": "<% data.game1 %>"
+                    },
+                    {
+                      "name": "Game 2 Score",
+                      "value": "<% data.game2 %>"
+                    },
+                    {
+                      "name": "Game 3 Score",
+                      "value": "<% data.game3 %>"
+                    }
+                  ],
+                  "measurementAxisOptions": {
+                    "comparisonLineValue": 128,
+                    "comparisonLineLabel": "Team Average",
+                    "axisTitle": "Game Scores"
+                  },
+                  "categoryDataSet": {
+                    "name": "Name",
+                    "value": "<% data.name %>"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "horizontal": "true",
+          "children": [
+            {
+              "type": "section",
+              "horizontal": false,
+              "title": "Effort Supporting Each Business Unit as Percent Area",
+              "children": [
+                {
+                  "type": "percentAreaChart2",
+                  "id": "dualAxisChartExample1",
+                  "title": "Time/Week Supporting BU Requests",
+                  "data": "<% teamData.getTimeSupportEachBusinessUnit() %>",
+                  "dataVariableName": "data",
+                  "hideChartControls": true,
+                  "legendPosition": "BOTTOM",
+                  "measurementDataSets": [
+                    {
+                      "name": "Finance",
+                      "value": "<% data.finance %>",
+                      "chartMarkType": "BAR",
+                      "axisPosition": "LEFT",
+                      "chartMarkLabel": "Finance",
+                      "numberFormatCode": "#,###.0",
+                      "signType": "MINUS"
+                    },
+                    {
+                      "name": "IT",
+                      "value": "<% data.it%>",
+                      "chartMarkType": "BAR",
+                      "axisPosition": "LEFT",
+                      "chartMarkLabel": "IT",
+                      "hideInTooltip": true
+                    },
+                    {
+                      "name": "Sales",
+                      "value": "<% data.sales %>",
+                      "chartMarkType": "BAR",
+                      "chartMarkLabel": "Sales",
+                      "axisPosition": "LEFT"
+                    },
+                    {
+                      "name": "Human Resources",
+                      "value": "<% data.humanResources %>",
+                      "chartMarkType": "LINE",
+                      "chartMarkLabel": "HR",
+                      "axisPosition": "RIGHT"
+                    }
+                  ],
+                  "categoryDataSet": {
+                    "name": "Worker",
+                    "value": "<% data.worker ?? 'dummy' %>",
+                    "hideInTooltip": true
+                  },
+                  "leftAxisOptions": {
+                    "axisTitle": "Percent"
+                  },
+                  "categoryAxisOptions": {
+                    "axisValueOrientation": "VERTICAL",
+                    "axisTitle": "Worker"
+                  },
+                  "measurementAxisOptions": {
+                    "axisMinimum": "0",
+                    "axisMaximum": "1",
+                    "axisTitle": "% of Time",
+                    "comparisonLineLabel": "someWord"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "section",
+              "horizontal": false,
+              "title": "Movie Watched by Genre Last Quarter",
+              "children": [
+                {
+                  "type": "overlaidAreaChart2",
+                  "id": "overlaidAreaChart2",
+                  "title": "Time Off Per Month",
+                  "data": "<% teamData.moviesWatchedByWorker() %>",
+                  "dataVariableName": "data",
+                  "hideChartControls": true,
+                  "legendPosition": "BOTTOM",
+                  "measurementDataSets": [
+                    {
+                      "name": "Adventure",
+                      "value": "<% data.adventure %>",
+                      "chartMarkType": "BAR",
+                      "axisPosition": "LEFT",
+                      "chartMarkLabel": "Adventure"
+                    },
+                    {
+                      "name": "Fantasy",
+                      "value": "<% data.fantasy %>",
+                      "chartMarkType": "BAR",
+                      "axisPosition": "LEFT",
+                      "chartMarkLabel": "Fantasy"
+                    },
+                    {
+                      "name": "Romantic Comedy",
+                      "value": "<% data.romCom %>",
+                      "chartMarkType": "BAR",
+                      "chartMarkLabel": "Romantic Comedy",
+                      "axisPosition": "LEFT"
+                    },
+                    {
+                      "name": "Drama",
+                      "value": "<% data.drama %>",
+                      "chartMarkType": "LINE",
+                      "chartMarkLabel": "Drama",
+                      "axisPosition": "RIGHT"
+                    },
+                    {
+                      "name": "Western",
+                      "value": "<% data.western %>",
+                      "chartMarkType": "LINE",
+                      "chartMarkLabel": "Western",
+                      "axisPosition": "RIGHT"
+                    }
+                  ],
+                  "categoryDataSet": {
+                    "name": "Worker",
+                    "value": "<% data.worker ?? 'dummy' %>",
+                    "hideInTooltip": true
+                  },
+                  "leftAxisOptions": {
+                    "axisTitle": "Percent"
+                  },
+                  "categoryAxisOptions": {
+                    "axisValueOrientation": "VERTICAL",
+                    "axisTitle": "Worker"
+                  },
+                  "measurementAxisOptions": {
+                    "axisMinimum": "0",
+                    "axisMaximum": "12",
+                    "axisTitle": "Movies Watched"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "horizontal": false,
+          "title": "Recruiting Stats By Region",
+          "children": [
+            {
+              "type": "scatterChart2",
+              "id": "scatterChart2",
+              "data": "<% teamData.workersByRegion() %>",
+              "dataVariableName": "data",
+              "verticalAxisPositions": {
+                "name": "Hired Candidates",
+                "value": "<% data.hiredCandidates.hired %>"
+              },
+              "horizontalAxisPositions": {
+                "name": "Quota",
+                "value": "<% data.quota %>"
+              },
+              "bubbleSizeDataSet": {
+                "name": "Total Applicants",
+                "value": "<% data.applicants %>"
+              },
+              "bubbleColorDataSet": {
+                "name": "Region",
+                "value": "<% data.region %>"
+              },
+              "verticalAxisOptions": {
+                "axisTitle": "Hired Candidates",
+                "axisMinimum": "<% 0 %>"
+              },
+              "horizontalAxisOptions": {
+                "axisTitle": "Quota"
+              },
+              "showRegressionLine": false
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

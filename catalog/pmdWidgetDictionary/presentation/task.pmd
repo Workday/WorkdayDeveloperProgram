@@ -1,0 +1,85 @@
+{
+  "id": "task",
+  "endPoints": [ ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "My Extend Task"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type" : "richText",
+          "value" : "Use the <b>Request Absence</b> button to navigate to the absence task. Please note that if you have already started entering data in the fields below, clicking this button will prompt you to discard your current changes and exit this page. Once the absence task is submitted, you will be automatically returned to the last visited view page.",
+          "enabled" : false
+        },
+        {
+          "type": "fieldSet",
+          "horizontal": true,
+          "children": [
+            {
+              "type": "fieldSet",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "input1",
+                  "label": "Input field 1",
+                  "value": ""
+                },
+                {
+                  "type": "text",
+                  "id": "input2",
+                  "label": "Input field 2",
+                  "value": ""
+                }
+              ]
+            },
+            {
+              "type": "fieldSet",
+              "children": [
+                {
+                  "type": "button",
+                  "label": "Request Absence",
+                  "action": "AUXILIARY",
+                  "workdayTaskReference": {
+                    "wid": "c4936fdad7d110001d9c005c57510000"
+                  }
+                }
+
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  },
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "type": "outboundVariable",
+        "values": [
+          {
+            "outboundPath": "input1",
+            "value": "<%  input1.value %>"
+          },
+          {
+            "outboundPath": "input2",
+            "value": "<% input2.value %>"
+          }
+        ]
+      }
+    ]
+  }
+}

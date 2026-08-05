@@ -1,0 +1,110 @@
+{
+  "appProperties": [ ],
+  "flowDefinitions": [
+    {
+      "id": "createDocFlow",
+      "flowSteps": [
+        {
+          "id": "requestStart",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "viewResumeScan",
+              "condition": "<% flowVariables.scanType == 'resume' %>"
+            },
+            {
+              "order": "b",
+              "value": "viewReceiptScan",
+              "condition": "<% flowVariables.scanType == 'receipt' %>"
+            },
+            {
+              "order": "c",
+              "value": "viewGenericScan",
+              "condition": "<% flowVariables.scanType == 'doc' %>"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "scanDocument"
+        },
+        {
+          "id": "viewGenericScan",
+          "endsFlow": true,
+          "taskId": "viewGenericScan"
+        },
+        {
+          "id": "viewReceiptScan",
+          "endsFlow": true,
+          "taskId": "viewReceiptScan"
+        },
+        {
+          "id": "viewResumeScan",
+          "endsFlow": true,
+          "taskId": "viewResumeScan"
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "scanDocument",
+      "routingPattern": "/invoices/create",
+      "page": {
+        "id": "scanDocument"
+      }
+    },
+    {
+      "id": "error",
+      "routingPattern": "/error",
+      "page": {
+        "id": "error"
+      }
+    },
+    {
+      "id": "root",
+      "routingPattern": "/",
+      "page": {
+        "id": "scanDocument"
+      }
+    },
+    {
+      "id": "viewGenericScan",
+      "routingPattern": "/viewGenericScan",
+      "page": {
+        "id": "viewGenericScan"
+      }
+    },
+    {
+      "id": "viewReceiptScan",
+      "routingPattern": "/viewReceiptScan",
+      "page": {
+        "id": "viewReceiptScan"
+      }
+    },
+    {
+      "id": "viewResumeScan",
+      "routingPattern": "/viewResumeScan",
+      "page": {
+        "id": "viewResumeScan"
+      }
+    }
+  ],
+  "applicationId": "documentIntelligenceWithTheAiGateway",
+  "dataProviders": [
+    {
+      "key": "workday-app",
+      "value": "<% apiGatewayEndpoint + '/apps/' + site.applicationId + '/v1/' %>"
+    },
+    {
+      "key": "workday-orchestrate",
+      "value": "<% apiGatewayEndpoint + '/orchestrate/v1/apps/'%>"
+    },
+    {
+      "key": "workday-staffing",
+      "value": "<% apiGatewayEndpoint + '/staffing/v6/' %>"
+    },
+    {
+      "key": "workday-wql",
+      "value": "<% apiGatewayEndpoint + '/wql/v1/' %>"
+    }
+  ]
+}

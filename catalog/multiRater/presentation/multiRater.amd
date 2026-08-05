@@ -1,0 +1,128 @@
+{
+  "appProperties": [ ],
+  "flowDefinitions": [
+    {
+      "id": "taskFlow",
+      "flowSteps": [
+        {
+          "id": "selectAdditionalRater",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "confirm",
+              "condition": "true"
+            }
+          ],
+          "taskId": "selectAdditionalRater"
+        },
+        {
+          "id": "rateWorker",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "confirm",
+              "condition": "true"
+            }
+          ],
+          "taskId": "rateWorker"
+        },
+        {
+          "id": "reviewAndSubmitRating",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "confirm",
+              "condition": "true"
+            }
+          ],
+          "taskId": "reviewAndSubmitRating"
+        },
+        {
+          "id": "confirm",
+          "taskId": "microConclusion"
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "home",
+      "routingPattern": "/",
+      "page": {
+        "id": "home"
+      }
+    },
+    {
+      "id": "microConclusion",
+      "routingPattern": "/microConclusion",
+      "page": {
+        "id": "microConclusion"
+      }
+    },
+    {
+      "id": "selectAdditionalRater",
+      "routingPattern": "selectAdditionalRater/{eventStepId}",
+      "page": {
+        "id": "selectAdditionalRater"
+      }
+    },
+    {
+      "id": "multiRatingProcessDetail",
+      "routingPattern": "/multiRatingProcessDetail/{eventId}",
+      "page": {
+        "id": "multiRatingProcessDetail"
+      }
+    },
+    {
+      "id": "rateWorker",
+      "routingPattern": "rateWorker/{eventStepId}",
+      "page": {
+        "id": "rateWorker"
+      }
+    },
+    {
+      "id": "reviewAndSubmitRating",
+      "routingPattern": "reviewAndSubmitRating/{eventStepId}",
+      "page": {
+        "id": "reviewAndSubmitRating"
+      }
+    },
+    {
+      "id": "editMultiRaterForEmployeeReview",
+      "routingPattern": "/editMultiRaterForEmployeeReview",
+      "page": {
+        "id": "editMultiRaterForEmployeeReview"
+      }
+    },
+    {
+      "id": "viewAdditionalRatings",
+      "routingPattern": "/viewAdditionalRatings",
+      "page": {
+        "id": "viewAdditionalRatings"
+      }
+    }
+  ],
+  "applicationId": "multiRater",
+  "dataProviders": [
+    {
+      "key": "app",
+      "value": "<% `{{apiGatewayEndpoint}}/apps/{{site.applicationId}}/v1/` %>"
+    },
+    {
+      "key": "workday-orchestrate",
+      "value": "<% `{{apiGatewayEndpoint}}/orchestrate/v1/apps/{{site.applicationId}}/orchestrations/` %>"
+    },
+    {
+      "key": "workday-bp",
+      "value": "<% `{{apiGatewayEndpoint}}/businessProcess/v1/` %>"
+    },
+    {
+      "key": "workday-staffing",
+      "value": "<% `{{apiGatewayEndpoint}}/staffing/v6/` %>"
+    },
+    {
+      "key": "workday-wql",
+      "value": "<% `{{apiGatewayEndpoint}}/wql/v1/` %>"
+    }
+  ]
+}

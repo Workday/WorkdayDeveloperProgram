@@ -1,0 +1,171 @@
+{
+  "id": 1,
+  "name": "ProtectedCases",
+  "label": "Protected Cases",
+  "defaultSecurityDomains": [
+    "ManageProtectedCases"
+  ],
+  "defaultCollection": {
+    "name": "protectedCaseBO",
+    "label": "Protected Case"
+  },
+  "fields": [
+    {
+      "id": 2,
+      "name": "caseName",
+      "label": "Case Name",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": true
+    },
+    {
+      "id": 3,
+      "name": "createdAbout",
+      "label": "Created About",
+      "type": "SINGLE_INSTANCE",
+      "target": "WORKER",
+      "isPurgeable": false
+    },
+    {
+      "id": 4,
+      "name": "createdDate",
+      "label": "Date Created",
+      "type": "DATE",
+      "precision": "MILLISECOND",
+      "enableIndex": true
+    },
+    {
+      "id": 5,
+      "name": "createdBy",
+      "label": "Created By",
+      "type": "SINGLE_INSTANCE",
+      "target": "WORKER"
+    },
+    {
+      "id": 6,
+      "name": "assignedTo",
+      "label": "Assigned To",
+      "type": "SINGLE_INSTANCE",
+      "target": "WORKER"
+    },
+    {
+      "id": 8,
+      "name": "caseDescription",
+      "label": "Case Description",
+      "type": "TEXT"
+    },
+    {
+      "id": 9,
+      "name": "oldStatus",
+      "label": "OLD Status",
+      "type": "TEXT"
+    },
+    {
+      "id": 10,
+      "name": "lastUpdatedBy",
+      "label": "Last Updated By",
+      "type": "SINGLE_INSTANCE",
+      "target": "WORKER"
+    },
+    {
+      "id": 11,
+      "name": "lastUpdatedDate",
+      "label": "Last Updated Date",
+      "type": "DATE",
+      "precision": "MILLISECOND"
+    },
+    {
+      "id": 12,
+      "name": "lastUpdateType",
+      "label": "Last Update Type",
+      "type": "TEXT"
+    },
+    {
+      "id": 13,
+      "name": "tags",
+      "label": "Tags",
+      "type": "MULTI_INSTANCE",
+      "target": "ConfigValues"
+    },
+    {
+      "id": 14,
+      "name": "caseTemplate",
+      "label": "Case Template",
+      "type": "SINGLE_INSTANCE",
+      "target": "CaseTemplates"
+    },
+    {
+      "id": 15,
+      "name": "customField01",
+      "label": "Custom Field 01",
+      "type": "TEXT"
+    },
+    {
+      "id": 16,
+      "name": "customField02",
+      "label": "Custom Field 02",
+      "type": "TEXT"
+    },
+    {
+      "id": 17,
+      "name": "customField03",
+      "label": "Custom Field 03",
+      "type": "TEXT"
+    },
+    {
+      "id": 18,
+      "name": "customField04",
+      "label": "Custom Field 04",
+      "type": "TEXT"
+    },
+    {
+      "id": 19,
+      "name": "customField05",
+      "label": "Custom Field 05",
+      "type": "TEXT"
+    },
+    {
+      "id": 20,
+      "name": "customField06",
+      "label": "Custom Field 06",
+      "type": "TEXT"
+    },
+    {
+      "id": 21,
+      "name": "customField07",
+      "label": "Custom Field 07",
+      "type": "TEXT"
+    },
+    {
+      "id": 22,
+      "name": "customField08",
+      "label": "Custom Field 08",
+      "type": "TEXT"
+    },
+    {
+      "id": 23,
+      "name": "customField09",
+      "label": "Custom Field 09",
+      "type": "TEXT"
+    },
+    {
+      "id": 24,
+      "name": "customField10",
+      "label": "Custom Field 10",
+      "type": "TEXT"
+    },
+    {
+      "id": 25,
+      "name": "statusMaster",
+      "label": "Status Master",
+      "type": "TEXT"
+    },
+    {
+      "id": 26,
+      "name": "status",
+      "label": "Status",
+      "type": "SINGLE_INSTANCE",
+      "target": "ProtectedCaseStatus"
+    }
+  ]
+}

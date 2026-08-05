@@ -1,0 +1,202 @@
+{
+  "appProperties": [],
+  "tasks": [
+    {
+      "id": "root",
+      "routingPattern": "/",
+      "page": {
+        "id": "home"
+      }
+    },
+    {
+      "id": "clusteredBarChart2",
+      "routingPattern": "clusteredBarChart2",
+      "page": {
+        "id": "clusteredBarChart2"
+      }
+    },
+    {
+      "id": "comboChart2",
+      "routingPattern": "comboChart2",
+      "page": {
+        "id": "comboChart2"
+      }
+    },
+    {
+      "id": "stackedBarChart2",
+      "routingPattern": "stackedBarChart2",
+      "page": {
+        "id": "stackedBarChart2"
+      }
+    },
+    {
+      "id": "percentBarChart2",
+      "routingPattern": "percentBarChart2",
+      "page": {
+        "id": "percentBarChart2"
+      }
+    },
+    {
+      "id": "overlaidAreaChart2",
+      "routingPattern": "overlaidAreaChart2",
+      "page": {
+        "id": "overlaidAreaChart2"
+      }
+    },
+    {
+      "id": "stackedAreaChart2",
+      "routingPattern": "stackedAreaChart2",
+      "page": {
+        "id": "stackedAreaChart2"
+      }
+    },
+    {
+      "id": "percentAreaChart2",
+      "routingPattern": "percentAreaChart2",
+      "page": {
+        "id": "percentAreaChart2"
+      }
+    },
+    {
+      "id": "scatterChart2",
+      "routingPattern": "scatterChart2",
+      "page": {
+        "id": "scatterChart2"
+      }
+    },
+    {
+      "id": "bubbleChart2",
+      "routingPattern": "bubbleChart2",
+      "page": {
+        "id": "bubbleChart2"
+      }
+    },
+    {
+      "id": "donutChart2",
+      "routingPattern": "donutChart2",
+      "page": {
+        "id": "donutChart2"
+      }
+    },
+    {
+      "id": "lineChart2",
+      "routingPattern": "lineChart2",
+      "page": {
+        "id": "lineChart2"
+      }
+    },
+    {
+      "id": "dualAxisChart2",
+      "routingPattern": "dualAxisChart2",
+      "page": {
+        "id": "dualAxisChart2"
+      }
+    },
+    {
+      "id": "waterfallChart2",
+      "routingPattern": "waterfallChart2",
+      "page": {
+        "id": "waterfallChart2"
+      }
+    },
+    {
+      "id": "featureAccessibilityMode",
+      "routingPattern": "featureAccessibilityMode",
+      "page": {
+        "id": "featureAccessibilityMode"
+      }
+    },
+    {
+      "id": "featureLegendPosition",
+      "routingPattern": "featureLegendPosition",
+      "page": {
+        "id": "featureLegendPosition"
+      }
+    },
+    {
+      "id": "featureAnimateAndOutline",
+      "routingPattern": "featureAnimateAndOutline",
+      "page": {
+        "id": "featureAnimateAndOutline"
+      }
+    },
+    {
+      "id": "featureChartControls",
+      "routingPattern": "featureChartControls",
+      "page": {
+        "id": "featureChartControls"
+      }
+    },
+    {
+      "id": "featureSecondaryCategory",
+      "routingPattern": "featureSecondaryCategory",
+      "page": {
+        "id": "featureSecondaryCategory"
+      }
+    },
+    {
+      "id": "featureAxisOptions",
+      "routingPattern": "featureAxisOptions",
+      "page": {
+        "id": "featureAxisOptions"
+      }
+    },
+    {
+      "id": "featureChartMarkLabels",
+      "routingPattern": "featureChartMarkLabels",
+      "page": {
+        "id": "featureChartMarkLabels"
+      }
+    },
+    {
+      "id": "featureComparisonAndTargetLines",
+      "routingPattern": "featureComparisonAndTargetLines",
+      "page": {
+        "id": "featureComparisonAndTargetLines"
+      }
+    },
+    {
+      "id": "featureTooltip",
+      "routingPattern": "featureTooltip",
+      "page": {
+        "id": "featureTooltip"
+      }
+    },
+    {
+      "id": "podiumChart",
+      "routingPattern": "podiumChart",
+      "page": {
+        "id": "podiumChart"
+      }
+    },
+    {
+      "id": "featureLayouts",
+      "routingPattern": "featureLayouts",
+      "page": {
+        "id": "featureLayouts"
+      }
+    },
+    {
+      "id": "featureNumberFormatting",
+      "routingPattern": "featureNumberFormatting",
+      "page": {
+        "id": "featureNumberFormatting"
+      }
+    },
+    {
+      "id": "featureEditPage",
+      "routingPattern": "featureEditPage",
+      "page": {
+        "id": "featureEditPage"
+      }
+    },
+    {
+      "id": "featureEmptyState",
+      "routingPattern": "featureEmptyState",
+      "page": {
+        "id": "featureEmptyState"
+      }
+    }
+  ],
+  "applicationId": "chart2CatalogApp_ycjtxv"
+}

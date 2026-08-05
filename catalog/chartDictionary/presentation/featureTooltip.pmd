@@ -1,0 +1,192 @@
+{
+  "id": "featureTooltip",
+  "include": [
+    "pokemonData.script"
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Hide-in-Tooltip Feature"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "section",
+          "title": "Clustered Bar Chart - Multiple measurements - none hidden in tooltip",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "id": "chart1",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Attack",
+                  "value": "<% data.stats.attack %>"
+                },
+                {
+                  "name": "Speed",
+                  "value": "<% data.stats.speed %>"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Clustered Bar Chart - Multiple measurements - Speed hidden in tooltip",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "id": "chart2",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Attack",
+                  "value": "<% data.stats.attack %>"
+                },
+                {
+                  "name": "Speed",
+                  "value": "<% data.stats.speed %>",
+                  "hideInTooltip": true
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Clustered Bar Chart - Multiple Categories - none hidden in tooltip",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "id": "chart3",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Speed",
+                  "value": "<% data.stats.speed %>"
+                }
+              ],
+              "measurementAxisOptions": {
+                "axisTitle": "Stats"
+              },
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              },
+              "secondaryCategory": {
+                "name": "Type",
+                "value": "<% data['type'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Clustered Bar Chart - Multiple Categories - Primary Category (Pokemon) hidden in tooltip",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "id": "chart4",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Speed",
+                  "value": "<% data.stats.speed %>"
+                }
+              ],
+              "measurementAxisOptions": {
+                "axisTitle": "Stats"
+              },
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>",
+                "hideInTooltip": true
+              },
+              "secondaryCategory": {
+                "name": "Type",
+                "value": "<% data['type'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Clustered Bar Chart - Multiple Categories - Secondary Category (Type) hidden in tooltip",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "id": "chart5",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Speed",
+                  "value": "<% data.stats.speed %>"
+                }
+              ],
+              "measurementAxisOptions": {
+                "axisTitle": "Stats"
+              },
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              },
+              "secondaryCategory": {
+                "name": "Type",
+                "value": "<% data['type'] %>",
+                "hideInTooltip": true
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Clustered Bar Chart - All data hidden in tooltip",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "id": "chart6",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Speed",
+                  "value": "<% data.stats.speed %>",
+                  "hideInTooltip": true
+                }
+              ],
+              "measurementAxisOptions": {
+                "axisTitle": "Stats"
+              },
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>",
+                "hideInTooltip": true
+              },
+              "secondaryCategory": {
+                "name": "Type",
+                "value": "<% data['type'] %>",
+                "hideInTooltip": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

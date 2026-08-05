@@ -1,0 +1,365 @@
+{
+  "id": "registerForEvent",
+  "securityDomains": [
+    "RegisterForEvents"
+  ],
+  "include": [
+    "fileTypes.script"
+  ],
+  "endPoints": [
+    {
+      "name": "me",
+      "baseUrlType": "workday-staffing",
+      "url": "workers/me",
+      "authType": "sso"
+    },
+    {
+      "name": "event",
+      "baseUrlType": "app",
+      "url": "<% /*remember that queryParams.workEventId is taking in the parameterBinding from the taskReference tag on the page
+      that sent the user here. This happens to be called 'workEventId' in manageEvents.pmd but it could be called whatever the developer chooses*/
+              'workEvents/' + queryParams.workEventId %>",
+      "authType": "sso"
+    },
+    {
+      "name": "eventImage",
+      "baseUrlType": "app",
+      "url": "<% //won't fire the endpoint if
+              //there is no image saved to the
+              //event's 'image' field
+              'eventImages/' + event.image.id %>",
+      "exclude": "<% empty(event.image) %>",
+      "authType": "sso"
+    },
+    {
+      "name": "alreadyRegistered",
+      "baseUrlType": "workday-wql",
+      "url": "<%
+              var query = 'SELECT worker FROM '  + site.applicationId + '_registrants where event = ' + queryParams.workEventId + ' AND worker = ' + me.id;
+              console.info('alreadyRegistered query is ' + json:asJSON(query));
+              return 'data?query=' + query.pathEncode(); %>",
+      "authType": "sso",
+      "failOnStatusCodes": [
+        {
+          "code": "400"
+        },
+        {
+          "code": "403"
+        }
+      ]
+    },
+    {
+      "name": "getAttachments",
+      "baseUrlType": "app",
+      "url": "<% 'attachedFiles?event=' + queryParams.workEventId  %>",
+      "authType": "sso"
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "createRegistrant",
+        "baseUrlType": "app",
+        "url": "registrants",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "onSend": "<% //Outbound endpoint that submits the BO
+                   //self.data is the payload as it exists coming into this onSend event from any valueOutBindings
+                   let payload = {:}; //initialize new map to hold payload
+                   payload.put('worker',{'id': me.id}); //add link to worker
+                   payload.put('event',{'id': event.id}); //add link to work event
+                   console.info('createRegistrant payload is ' + json:asJSON(payload)); return payload; %>"
+      },
+      {
+        "name": "updateEvent",
+        "baseUrlType": "app",
+        "url": "<% 'workEvents/' + event.id %>",
+        "httpMethod": "PATCH",
+        "authType": "sso",
+        "onSend": "<% console.info('updateEvent has been invoked for event ' + event.id);
+          console.info('createRegistrant response is ' + json:asJSON(createRegistrant));
+          let currentRegistrants = event.registrants ?? []; //get list of registrant objects, id + descriptor
+          let newRegistrant = {'id':createRegistrant.id}; //grab WID of BO just created and put it in object format
+          let allRegistrants = currentRegistrants.add(newRegistrant); //add BO instance to multi-instance list
+          console.info('new list is ' + json:asJSON(allRegistrants));
+          console.info('allRegistrants is ' + json:asJSON(allRegistrants));
+          let payload = {'registrants': allRegistrants}; //initializing payload to log and send
+          console.info('this updateEvent payload is ' + json:asJSON(payload));
+          return payload; //send payload
+          %>"
+      },
+      {
+        "name": "createEventAttachment",
+        "baseUrlType": "app",
+        "url": "attachedFilesCollection",
+        "authType": "sso",
+        "httpMethod": "POST",
+        "multiPartFileLast": true,
+        "onMultiPartSend": "<%
+          for (var file : self.data.metadata.attachedFiles) { //loop through as many files as were uploaded
+            //Put an uploadedBy object with an id field to the JSON part.
+            file.put('uploadedBy',{'id': me.id}); //put the new uploadedBy map in the metadata. This captures the WID of the uploader.
+            //Put uploadedDate field to the JSON part.
+            file.uploadedDate = date:getTodaysDate(date:getDateTimeZone(userTimeZone)); //put the uploadedDate field in the metadata
+            file.put('event',{'id': event.id}); //link the file with the charity
+            console.info('metadata is ' + json:asJSON(self.data)); //log the metadata being passed in for debugging purposes
+          }
+          self.data;
+    %>",
+        "exclude": "<% //This exclude statement checks whether a file was uploaded successfully!
+                    empty attachmentFileUploader.children %>"
+      }
+    ]
+  },
+  "onLoad": "<%
+          pageVariables.debug = false;
+          pageVariables.hasError = false;
+          const alreadyApplied = !empty(alreadyRegistered.data); //if this has a result, worker already has a registration with this event
+          if (alreadyApplied == true) { //have I applied already
+            pageVariables.hasError = true;
+          }        
+    %>",
+  "onSubmit": "<%
+        if (pageVariables.hasError == false) {
+        } else {
+            name.clearError(); //clear error and let submission go through
+            name.setError('You cannot request to register for an event if you already have a registration.'); //set error on first widget to prevent submission
+        }
+%>",
+  "presentation": {
+    "applicationExceptions": [
+      {
+        "type": "applicationException",
+        "severity": "WARNING",
+        "message": "<% 'You have already registered for this event.' %>",
+        "render": "<% pageVariables.hasError %>"
+      }
+    ],
+    "micro": "true",
+    "headerSize": "HIDDEN",
+    "title": {
+      "type": "title",
+      "label": "Update Event"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "editButtonBar",
+          "editButtons": [
+            {
+              "type": "editButton",
+              "label": "Register For Event",
+              "id": "RegisterButton",
+              "buttonType": "PRIMARY",
+              "ignoreRequiredFields": "true"
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "id": "leftside",
+          "children": [
+            {
+              "type": "fieldSet",
+              "id": "eventImage",
+              "title": "Event Image",
+              "render": "<% (!(empty(event.image))) %>",
+              "children": [
+                {
+                  "type": "cardContainer",
+                  "layout": "grid",
+                  "cards": [
+                    {
+                      "type": "card",
+                      "cardId": "EventImage",
+                      "parameters": "<% {
+            'title': '',
+            'subtitle': '',
+            'imageURL': 'https://api.workday.com/apps/'+site.applicationId+'/v1/eventImages/'+event.image.id
+          }%>"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "name",
+              "label": "Event Name",
+              "value": "<% event.name %>",
+              "enabled": false
+            },
+            {
+              "type": "richText",
+              "id": "description",
+              "label": "Description",
+              "value": "<% event.description %>",
+              "enabled": false
+            },
+            {
+              "type": "text",
+              "id": "location",
+              "label": "Proposed Event Location",
+              "value": "<% event.location %>",
+              "enabled": false
+            },
+            {
+              "type": "date",
+              "id": "startdate",
+              "dateFormat": "yyyy-MM-dd",
+              "label": "Start Date of Event",
+              "value": "<% event.startDate %>",
+              "enabled": false
+            },
+            {
+              "type": "date",
+              "id": "enddate",
+              "dateFormat": "yyyy-MM-dd",
+              "label": "End Date of Event",
+              "value": "<% event.endDate %>",
+              "enabled": false
+            },
+            {
+              "type": "text",
+              "id": "sponsor",
+              "label": "Event Sponsor",
+              "value": "<% event.sponsor %>",
+              "enabled": false
+            },
+            {
+              "type": "currency",
+              "currencyCode": "USD",
+              "id": "cost",
+              "fractionDigits": 2,
+              "label": "Fee (USD)",
+              "value": "<% //the value to display on page load, in this case the existing value from the inbound endpoint
+                        event.cost.value ?? 0 %>",
+              "enabled": false
+            },
+            {
+              "type": "text",
+              "id": "contactInfo",
+              "label": "Contact Info/Email",
+              "value": "<% event.contactInfo %>",
+              "enabled": false
+            },
+            {
+              "type": "instanceList",
+              "id": "registrants",
+              "values": "<% event.registrants %>",
+              "label": "Current Registrants (prompt to open list)"
+            },
+            {
+              "type": "radioGroup",
+              "id": "internalOnlyRadioGroup",
+              "label": "Is this an internal only event?",
+              "hideDisplayOption": "true",
+              "required": "true",
+              "enabled": false,
+              "selectedValues": "<% ! empty event.internalOnly ? (event.internalOnly ? ['yes'] : ['no'] ) : ['no']  %>",
+              "instanceList": [
+                {
+                  "id": "yes",
+                  "descriptor": "Yes"
+                },
+                {
+                  "id": "no",
+                  "descriptor": "No"
+                }
+              ]
+            },
+            {
+              "type": "fieldSet",
+              "id": "updateEventFieldSet",
+              "title": "Click 'Update' to Edit the Event",
+              "children": [
+                {
+                  "type": "button",
+                  "action": "AUXILIARY",
+                  "label": "Update",
+                  "taskReference": {
+                    "taskId": "updateEvent",
+                    "parameterBindings": {
+                      "workEventId": "<% /* this workEventId is a parameter we are passing to the update page once the user clicks to it.
+                     taskId points to the target page, and on that page, the valid queryParam name in the inbond endpoint for the Event BO instance to update is populated here (event.id):*/
+                                    event.id %>"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "id": "rightside",
+          "render": "<% !empty(getAttachments.data)  %>",
+          "children": [
+            {
+              "type": "section",
+              "horizontal": false,
+              "sorted": false,
+              "children": [
+                {
+                  "type": "fileUploader",
+                  "label": "Attach Files Related to the Event",
+                  "id": "attachmentFileUploader",
+                  "maxImageDimension": "1024",
+                  "maxFileSize": "5242880",
+                  "compact": "<% true %>",
+                  "required": "<% false %>",
+                  "fileTypes": "*",
+                  "valueOutBinding": "<% 'createEventAttachment:attachedFiles' //outbound endpoint name : attachment obect API URL
+          %> ",
+                  "metadata": "<%
+              {:} //need at least an empty map in a metadata tag for onMultiPartSend() to have metadata to work with!
+              %>"
+                }
+              ]
+            },
+            {
+              "type": "fileUploader",
+              "label": "Previously attached files for Event:",
+              "id": "multiFileUploader",
+              "valueOutBinding": "postAttachments:filedata:",
+              "enabled": "false",
+              "fileTypes": "txt,jpg,jpeg,png,ppt,pptx,pdf,doc,docx,xlsx,xls",
+              "singular": false,
+              "children": [
+                {
+                  "type": "loop",
+                  "on": "<% getAttachments.data %>",
+                  "as": "file",
+                  "children": [
+                    {
+                      "type": "fileUploaderRow",
+                      "render": "<% !(empty file.fileName) %>",
+                      "attachment": {
+                        "type": "attachmentList",
+                        "attachmentURL": "https://api.workday.com/apps/<%site.applicationId%>/v1/attachedFiles/<%file.id%>?event=<%queryParams.workEventId%>",
+                        "attachmentAuth": "sso",
+                        "attachmentName": "<% file.fileName %>",
+                        "attachmentUriTemplate": "[Target]",
+                        "instanceList": [
+                          {
+                            "action": "attachment",
+                            "descriptor": "<%file.fileName%>",
+                            "mimeType": "<% fileType:getFileType(file.fileName) %>"
+                          }
+                        ]
+                      },
+                      "fileName": "<%file.fileName%>",
+                      "fileType": "<%fileType:getFileType(file.fileName) %>"
+                    }
+                  ]
+                }
+              ],
+              "fileUploaderRowTemplate": [ ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

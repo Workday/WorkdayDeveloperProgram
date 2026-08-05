@@ -1,0 +1,44 @@
+{
+  "id": "submitBP",
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "createBPevent",
+        "baseUrlType": "app",
+        "url": "tuitionReimbursementApprovalEvents",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "exclude": false,
+        "onSend": "<%
+                   var outMap = {:}
+                   outMap.put('businessProcessTarget',{'id':queryParams.id});
+                   //Uncomment the below line only for debugging purposes
+                   //console.info(json:asJSON(outMap));
+                   return outMap;
+                   %>"
+      }
+    ]
+  },
+  "presentation": {
+    "micro": "true",
+    "microFirstPageOnly": "true",
+    "body": {
+      "horizontal": true,
+      "children": [
+        {
+          "type": "text",
+          "id": "hello",
+          "enabled": false,
+          "label": "Information",
+          "value": "Clicking OK will submit your request for approval. Please ensure you have attached proof of completion for ALL courses."
+        }
+      ],
+      "type": "section",
+      "title": "Confirmation"
+    },
+    "title": {
+      "label": "Tuition Reimbursement Request - Submit for Approval",
+      "type": "title"
+    }
+  }
+}

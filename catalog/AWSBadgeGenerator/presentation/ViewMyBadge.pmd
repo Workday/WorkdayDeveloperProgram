@@ -1,0 +1,45 @@
+{
+  "id": "ViewMyBadge",
+  "endPoints": [
+    {
+      "name": "myBadges",
+      "baseUrlType": "app",
+      "authType": "sso",
+      "url": "/badges"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "My Badge"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "image",
+          "id": "badge",
+          "endPoint": {
+            "baseUrlType": "app",
+            "authType": "sso",
+            "url": "<%
+              console.info(myBadges);
+              '/badgePhotos/' + myBadges.data.last().photo.id
+            %>"
+          }
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend & AWS"
+        }
+      ]
+    }
+  }
+}

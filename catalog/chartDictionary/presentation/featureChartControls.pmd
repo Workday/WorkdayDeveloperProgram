@@ -1,0 +1,97 @@
+{
+  "id": "featureChartControls",
+  "include": [
+    "pokemonData.script"
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Show/Hide Chart Controls"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "section",
+          "title": "Combo Chart with Chart Controls - zoom, pan, select, reset (default)",
+          "children": [
+            {
+              "type": "comboChart2",
+              "id": "chart1",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "legendPosition": "BOTTOM",
+              "measurementDataSets": [
+                {
+                  "name": "HP",
+                  "value": "<% data.stats.hp %>",
+                  "chartMarkType": "BAR"
+                },
+                {
+                  "name": "Attack",
+                  "value": "<% data.stats.attack %>",
+                  "chartMarkType": "LINE"
+                },
+                {
+                  "name": "Defense",
+                  "value": "<% data.stats.defense %>",
+                  "chartMarkType": "LINE"
+                },
+                {
+                  "name": "Speed",
+                  "value": "<% data.stats.speed %>",
+                  "chartMarkType": "AREA"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Combo Chart without Chart Controls - hideChartControls",
+          "children": [
+            {
+              "type": "comboChart2",
+              "id": "chart2",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "hideChartControls": true,
+              "legendPosition": "BOTTOM",
+              "measurementDataSets": [
+                {
+                  "name": "HP",
+                  "value": "<% data.stats.hp %>",
+                  "chartMarkType": "BAR"
+                },
+                {
+                  "name": "Attack",
+                  "value": "<% data.stats.attack %>",
+                  "chartMarkType": "LINE"
+                },
+                {
+                  "name": "Defense",
+                  "value": "<% data.stats.defense %>",
+                  "chartMarkType": "LINE"
+                },
+                {
+                  "name": "Speed",
+                  "value": "<% data.stats.speed %>",
+                  "chartMarkType": "AREA"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

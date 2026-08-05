@@ -1,0 +1,313 @@
+{
+  "appProperties": [ ],
+  "flowDefinitions": [
+    {
+      "id": "calendarPopup",
+      "flowSteps": [
+        {
+          "id": "startCalendarEventPopupMicro",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "concludeCalendarEventPopupMicro",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "registerForEvent"
+        },
+        {
+          "id": "concludeCalendarEventPopupMicro",
+          "endsFlow": true,
+          "taskId": "microConfirm"
+        }
+      ]
+    },
+    {
+      "id": "calendarSubmitMicroFlow",
+      "flowSteps": [
+        {
+          "id": "startCalendarSubmitMicro",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "concludeCalendarSubmitMicro",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "quickAddWorkEvent"
+        },
+        {
+          "id": "concludeCalendarSubmitMicro",
+          "endsFlow": true,
+          "taskId": "microConfirm"
+        }
+      ]
+    },
+    {
+      "id": "actionStepFlow",
+      "flowSteps": [
+        {
+          "id": "actionStep",
+          "transitions": [
+            {
+              "id": "submitted",
+              "order": "a",
+              "value": "actionConfirm",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "workEventActionStep"
+        },
+        {
+          "id": "actionConfirm",
+          "endsFlow": true,
+          "taskId": "microConfirm"
+        }
+      ]
+    },
+    {
+      "id": "confirmationFlow",
+      "flowSteps": [
+        {
+          "id": "home",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "registerForEvent",
+              "condition": "true"
+            }
+          ],
+          "taskId": "registerForEvents"
+        },
+        {
+          "id": "registerForEvent",
+          "transitions": [
+            {
+              "order": "b",
+              "value": "registerConfirmation",
+              "condition": "true"
+            }
+          ],
+          "taskId": "registerForEvent",
+          "name": "registerForEvent"
+        },
+        {
+          "id": "registerConfirmation",
+          "endsFlow": true,
+          "taskId": "registerConfirmation",
+          "name": "registerConfirmation"
+        }
+      ]
+    },
+    {
+      "id": "orderSubmitConcludeFlow",
+      "flowSteps": [
+        {
+          "id": "start",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "deleteAttachmentFlowStep",
+              "condition": "<% flowVariables.deleteClicked %>"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "updateEvent"
+        },
+        {
+          "id": "deleteAttachmentFlowStep",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "updateEventFlowStep",
+              "condition": "<% flowVariables.deleteClicked %>"
+            }
+          ],
+          "taskId": "deleteAttachments"
+        },
+        {
+          "id": "updateEventFlowStep",
+          "endsFlow": true,
+          "taskId": "updateEvent"
+        }
+      ],
+      "cancelOutOfFlow": true
+    }
+  ],
+  "tasks": [
+    {
+      "id": "home",
+      "routingPattern": "/home",
+      "page": {
+        "id": "home"
+      }
+    },
+    {
+      "id": "createEvent",
+      "routingPattern": "createEvent",
+      "page": {
+        "id": "createEvent"
+      }
+    },
+    {
+      "id": "manageEvents",
+      "routingPattern": "manageEvents",
+      "page": {
+        "id": "manageEvents"
+      }
+    },
+    {
+      "id": "updateEvent",
+      "routingPattern": "updateEvent/{workEventId}",
+      "page": {
+        "id": "updateEvent"
+      }
+    },
+    {
+      "id": "updateEventImage",
+      "routingPattern": "updateEventImage",
+      "page": {
+        "id": "updateEventImage"
+      }
+    },
+    {
+      "id": "viewRequestByEventID",
+      "routingPattern": "/details/{eventId}",
+      "page": {
+        "id": "viewRequestByEventID"
+      }
+    },
+    {
+      "id": "workEventApprove",
+      "routingPattern": "/approve/{eventId}",
+      "page": {
+        "id": "workEventApprove"
+      }
+    },
+    {
+      "id": "workEventRevise",
+      "routingPattern": "/revise/{eventStepId}",
+      "page": {
+        "id": "workEventRevise"
+      }
+    },
+    {
+      "id": "workEventActionStep",
+      "routingPattern": "/review/{eventStepId}",
+      "page": {
+        "id": "workEventActionStep"
+      }
+    },
+    {
+      "id": "microConfirm",
+      "routingPattern": "/microConfirm",
+      "page": {
+        "id": "microConfirm"
+      }
+    },
+    {
+      "id": "eventHub",
+      "routingPattern": "/",
+      "page": {
+        "id": "eventHub"
+      }
+    },
+    {
+      "id": "manageMyEvents",
+      "routingPattern": "/manageMyEvents",
+      "page": {
+        "id": "manageMyEvents"
+      }
+    },
+    {
+      "id": "createEventWizard",
+      "routingPattern": "/createEventWizard",
+      "page": {
+        "id": "createEventWizard"
+      }
+    },
+    {
+      "id": "registerForEvents",
+      "routingPattern": "/registerForEvents",
+      "page": {
+        "id": "registerForEvents"
+      }
+    },
+    {
+      "id": "registerForEvent",
+      "routingPattern": "/registerForEvent",
+      "page": {
+        "id": "registerForEvent"
+      }
+    },
+    {
+      "id": "registerConfirmation",
+      "routingPattern": "/registerConfirmation",
+      "page": {
+        "id": "registerConfirmation"
+      }
+    },
+    {
+      "id": "calendarWorkEvents",
+      "routingPattern": "/calendarWorkEvents",
+      "page": {
+        "id": "calendarWorkEvents"
+      }
+    },
+    {
+      "id": "sidebarInfo",
+      "routingPattern": "/sidebarInfo",
+      "page": {
+        "id": "sidebarInfo"
+      }
+    },
+    {
+      "id": "quickAddWorkEvent",
+      "routingPattern": "/quickAddWorkEvent",
+      "page": {
+        "id": "quickAddWorkEvent"
+      }
+    },
+    {
+      "id": "deleteAttachments",
+      "routingPattern": "/deleteAttachments",
+      "page": {
+        "id": "deleteAttachments"
+      }
+    }
+  ],
+  "applicationId": "createAWorkEvent",
+  "dataProviders": [
+    {
+      "key": "app",
+      "value": "<% apiGatewayEndpoint + '/apps/' + site.applicationId + '/v1/' %>"
+    },
+    {
+      "key": "workday-bp",
+      "value": "<% apiGatewayEndpoint + '/businessProcess/v1/' %>"
+    },
+    {
+      "key": "workday-common",
+      "value": "<% apiGatewayEndpoint + '/common/v1/' %>"
+    },
+    {
+      "key": "workday-staffing",
+      "value": "<% apiGatewayEndpoint + '/staffing/v1/' %>"
+    },
+    {
+      "key": "workday-orchestration",
+      "value": "<% apiGatewayEndpoint + '/orchestrate/v1/apps/' + site.applicationId + '/orchestrations/' %>"
+    },
+    {
+      "key": "graph",
+      "value": "<% apiGatewayEndpoint + '/graphql/v1/' %>"
+    },
+    {
+      "key": "workday-wql",
+      "value": "<% apiGatewayEndpoint + '/wql/v1/' %>"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+    "id": "requestsByStatus",
+    "parameters": [
+    "chartData",
+    "count"
+  ],
+  "header": {
+    "title": "<% 'Requests By Status' %>",
+    "icon":"wd-accent-time",
+    "indicator":{
+      "label": "<%'Successfully Completed ' + (chartData.filter(x => {x.status == 'Successfully Completed'})[0].count ?? 0) %>",
+      "color": "green"
+    }
+  },
+  "body": {
+    "type": "chartCard",
+    "chart": {
+      "type": "donutChart2",
+      "data": "<% chartData %>",
+      "dataVariableName": "data",
+      "title": "<% count + ' Requests' %>",
+      "sliceSizeDataSet": {
+        "name": "Count",
+        "value": "<% data.count %>"
+      },
+      "sliceColorDataSet": {
+        "name": "Category",
+        "value": "<% data.status %>"
+      },
+      "animateOnLoad": true
+    }
+  },
+  "footer": [
+    {
+      "label": "View In Progress Requests",
+      "taskReference": {
+        "taskId": "home"
+      }
+    }
+  ]
+}

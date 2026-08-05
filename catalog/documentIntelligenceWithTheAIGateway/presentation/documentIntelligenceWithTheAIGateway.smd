@@ -1,0 +1,21 @@
+{
+  "id": "documentIntelligenceWithTheAiGateway",
+  "languages": [
+    {
+      "code": "en-US",
+      "description": "English"
+    }
+  ],
+  "siteAuth": {
+    "authTypes": [
+      {
+        "scheme": "SSO",
+        "id": "sso"
+      }
+    ]
+  },
+  "siteId": "documentIntelligenceWithTheAiGateway",
+  "cdnEnabled": true,
+  "siteProperties": [ ],
+  "applicationId": "documentIntelligenceWithTheAiGateway"
+}

@@ -1,0 +1,79 @@
+{
+  "id": "exportMicroPopup",
+  "endPoints": [ ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "exportCase",
+        "baseUrlType": "orchestration",
+        "httpMethod": "POST",
+        "url": "<% site.applicationId + '/orchestrations/exportCase/launch' %>",
+        "authType": "isu",
+        "values": [
+          {
+            "outboundPath": "caseNbr",
+            "value": "<% queryParams.caseID %>"
+          }
+        ]
+      },
+      {
+        "type": "outboundVariable",
+        "name": "outFlow",
+        "variableScope": "flow",
+        "values": [
+          {
+            "outboundPath": "result",
+            "value": "<% json:asJSON(exportCase) %>"
+          }
+        ]
+      },
+      {
+        "type": "outboundVariable",
+        "variableScope": "flow",
+        "name": "flowVars",
+        "values": [
+          {
+            "outboundPath": "caseID",
+            "value": "<% queryParams.caseID %>"
+          }
+        ]
+      }
+    ],
+    "responseErrorDetail": {
+      "errorSummary": "<%error%>",
+      "errors": "<%list:mapAttribute(errors, 'error')%>"
+    }
+  },
+  "presentation": {
+    "preferredLabelPosition": "aside",
+    "pageType": "edit",
+    "micro": true,
+    "microFirstPageOnly": true,
+    "title": {
+      "type": "title",
+      "label": "Export Case"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "checkBox",
+          "label": "Include Hidden Comments",
+          "value": "<% false %>",
+          "valueOutBinding": "exportCase.showHiddenComments"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

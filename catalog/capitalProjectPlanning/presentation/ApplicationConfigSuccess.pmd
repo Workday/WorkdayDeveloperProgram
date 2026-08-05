@@ -1,0 +1,17 @@
+{
+  "id": "ApplicationConfigSuccess",
+  "presentation": {
+    "microConclusion": "true",
+    "body": {
+      "type": "section",
+      "children": []
+    },
+    "title": {
+      "type": "title",
+      "label": "Application Config Set"
+    }
+  },
+  "securityDomains": [
+    "CapitalProjectPlanningAdministrator"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "id": "errorPage",
+  "endPoints": [ ],
+  "presentation": {
+    "title": {
+      "label": "Attention",
+      "type": "title"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "richText",
+          "value": "<h1><b>Action Required:</b> Please complete the prerequisites before continuing with this step.</h1>"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

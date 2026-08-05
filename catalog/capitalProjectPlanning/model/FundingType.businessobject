@@ -1,0 +1,34 @@
+{
+  "id": 4,
+  "name": "FundingType",
+  "label": "Funding Type",
+  "defaultSecurityDomains": [
+    "CapitalProjectPlanning",
+    "CapitalProjectPlanningAdministrator",
+    "CapitalProjectPlanningCommon"
+  ],
+  "defaultCollection": {
+    "name": "fundingTypes",
+    "label": "Funding Types"
+  },
+  "fields": [
+    {
+      "enableSearch": true,
+      "enableIndex": true,
+      "isPurgeable": false,
+      "useForDisplay": true,
+      "isReferenceId": false,
+      "type": "TEXT",
+      "name": "fundingTypeName",
+      "id": 1
+    },
+    {
+      "id": 2,
+      "name": "capital",
+      "type": "BOOLEAN",
+      "isPurgeable": false,
+      "enableIndex": false,
+      "securityDomains": []
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "id": 1,
+  "name": "Vehicle",
+  "label": "Vehicle",
+  "defaultSecurityDomains": [
+    "ManageVehicles"
+  ],
+  "defaultCollection": {
+    "name": "vehicles",
+    "label": "Vehicles", 
+    "description": "Displays all vehicles registered in the Vechicle Registration App"
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "licensePlate",
+      "label": "License Plate",
+      "type": "TEXT",
+      "useForDisplay": true,
+      "isReferenceId": true, 
+      "description": "License plate of registered vehicle"
+    },
+    {
+      "id": 2,
+      "name": "year",
+      "label": "Year",
+      "type": "INTEGER", 
+      "description": "Year of registered vehicle"
+    },
+    {
+      "id": 3,
+      "name": "make",
+      "label": "Make",
+      "type": "TEXT", 
+      "description": "Make of registered vehicle"
+    },
+    {
+      "id": 4,
+      "name": "model",
+      "label": "Model",
+      "type": "TEXT", 
+      "description": "Model of registered vehicle"
+    },
+    {
+      "id": 5,
+      "name": "registrationDate",
+      "label": "Date of Registration",
+      "type": "DATE",
+      "precision": "DAY", 
+      "description": "Registration date of registered vehicle"
+    },
+    {
+      "id": 6,
+      "name": "color",
+      "label": "Color",
+      "type": "TEXT", 
+      "description": "Color of registered vehicle"
+    },
+    {
+      "id": 7,
+      "name": "owner",
+      "label": "Owner",
+      "type": "SINGLE_INSTANCE",
+      "target": "WORKER",
+      "secureByTarget": true, 
+      "description": "Owner of registered vehicle"
+    },
+    {
+      "id": 8,
+      "name": "compact",
+      "type": "BOOLEAN",
+      "label": "Vehicle is Compact", 
+      "description": "Is registered vehicle compact?"
+    },
+    {
+      "id": 9,
+      "name": "location",
+      "type": "SINGLE_INSTANCE",
+      "target": "LOCATION", 
+      "description": "Place where vehicle will be registered"
+    }
+  ],
+  "derivedFields": [
+    {
+      "id": 1,
+      "name": "longDescription",
+      "type": "TEXT",
+      "label": "Long Description",
+      "expression": "year.toString() + ' ' + make + ' ' + model", 
+      "description": "Long description of registered vehicle"
+    }
+  ]
+}

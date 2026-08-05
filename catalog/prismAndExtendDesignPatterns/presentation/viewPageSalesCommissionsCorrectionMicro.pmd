@@ -1,0 +1,221 @@
+{
+  "id": "viewPageSalesCommissionsCorrectionMicro",
+  "endPoints": [
+     {
+      "name": "getCommissionInstance",
+      "baseUrlType": "workday-wql",
+      "authType": "sso",
+      "httpMethod": "GET",
+      "url": "<% 
+              const refId = empty queryParams.refid ? '' : queryParams.refid; 
+              const WQLstring = `SELECT WPA_RowID as id, agentId, amount, transactionDate, transactionId, type FROM cds_sales_Commission_TBL WHERE WPA_RowID = '{{refId}}'`; 
+              return 'data?query=' + string:urlEncode(WQLstring);
+             %>"
+     },
+     {
+      "name": "getInFlightTransactions",
+      "baseUrlType": "workday-wql",
+      "authType": "sso",
+      "httpMethod": "GET",
+      "url": "<% 
+              const test = getCommissionInstance.data[0].transactionId ?? '';
+              const WQLstring = `SELECT dataChangeTask, workdayID, correctionsToProcess{amount} FROM {{site.applicationId}}_transactionsToProcesses WHERE ON correctionsToProcess transactionId = '{{ test }}' WHERE correctionsToProcess is not empty`; 
+              return 'data?query=' + string:urlEncode(WQLstring);
+             %>"
+     },
+     {
+        "baseUrlType": "orchestrate",
+        "name": "checkDctStatus",
+        "authType": "sso",
+        "httpMethod": "GET",
+        "url": "<%  'checkDataChangeStatus/launch'  %>"
+      },
+     {
+        "baseUrlType": "orchestrate",
+        "name": "checkDctStatusDeferred",
+        "authType": "sso",
+        "httpMethod": "GET",
+        "deferred": true,
+        "url": "<%  'checkDataChangeStatus/launch'  %>"
+      }      
+
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "baseUrlType": "app",
+        "name": "commissionPost",
+        "authType": "sso",
+        "httpMethod": "POST",
+        "exclude": "<%  checkDctStatus.status == 'locked'  || (empty getInFlightTransactions.data ? false : true) %>", 
+        "url": "<%  'commissionCorrections'  %>"
+      },
+      {
+        "baseUrlType": "orchestrate",
+        "name": "launchOrchestration",
+        "authType": "sso",
+        "httpMethod": "POST",
+        "exclude": "<%  checkDctStatus.status == 'locked' || (empty getInFlightTransactions.data ? false : true)  %>", 
+        "url": "<%  'updateCorrectionQueue/launch'  %>",
+        "onSend": "<% 
+              var tmpMap = {:};
+              // There should be 1 instance of TransactionsToProcess, send that WID across as well as the newly created WID
+              tmpMap.add('correctionInstance', commissionPost.id);
+              return tmpMap;
+              %>"
+      },
+      {
+        "type": "outboundVariable",
+        "variableScope": "flow",
+        "name": "outboundFlowVariable",
+        "values": [
+          {
+            "outboundPath": "agentId",
+            "value": "<%   empty queryParams.agentId ? '' :  queryParams.agentId %>"
+          },
+          {
+            "outboundPath": "type",
+            "value": "<%   empty queryParams.type ? '' : queryParams.type;
+                      %>"
+          }
+
+        ]
+      }
+
+
+    ]
+  }, 
+  "onSubmit": "<%
+                  var inProgressDeferred = checkDctStatusDeferred.invoke();
+
+                  if (inProgressDeferred.status == 'locked' && checkDctStatus.status != 'locked') {
+                      richTextId2.setError('A data change task was started since you openeded the page.  Corrections are not allowed while DCTs are running.');
+                  }                    
+                %>",                
+  "presentation": {
+    "pageType": "edit",
+    "micro": "true",
+    "microFirstPageOnly": "true",
+    "title": {
+      "type": "title",
+      "label": "Correct Pending Commissions"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+            "type": "richText",
+            "id": "richTextId2",
+            "enabled": "false",
+            "visible": "<%  checkDctStatus.status == 'locked' %>", 
+            "value": "<p style=\"text-align:right\"><span style=\"font-size:20px; color:red;\"><b>Data Change Task is Currently Processing, check back shortly.</b></span></p>"
+        },        
+       {
+          "type": "text",
+          "id": "agentId",
+          "label": "Agent",
+          "value": "<% getCommissionInstance.data[0].agentId %>",
+          "enabled": "false",
+          "valuesOut": [
+              {
+                      "valueOutBinding": "commissionPost.agentId",
+                      "value": "<% self.value %>"
+              }
+          ]          
+        },
+        {
+          "type": "text",
+          "id": "transactionDate",
+          "label": "Transaction Date",
+          "value": "<% getCommissionInstance.data[0].transactionDate %>",
+          "enabled": "false",
+          "valuesOut": [
+              {
+                      "valueOutBinding": "commissionPost.transactionDate",
+                      "value": "<% self.value %>"
+              }
+          ]                    
+        },
+        {
+          "type": "text",
+          "id": "transactionId",
+          "label": "Transaction ID",
+          "value": "<% getCommissionInstance.data[0].transactionId %>",
+          "enabled": "false",
+          "valuesOut": [
+              {
+                      "valueOutBinding": "commissionPost.transactionId",
+                      "value": "<% self.value %>"
+              }
+          ]                    
+        },
+        {
+          "type": "text",
+          "id": "type",
+          "label": "Type",
+          "value": "<% getCommissionInstance.data[0].type %>",
+          "enabled": "false",
+          "valuesOut": [
+              {
+                      "valueOutBinding": "commissionPost.type",
+                      "value": "<% self.value %>"
+              }
+          ]                    
+        },                        
+        {
+          "type": "number",
+          "id": "amount",
+          "label": "Amount",
+          "fractionDigits": 2,
+          "value": "<% getCommissionInstance.data[0].amount %>",
+          "enabled": "<%  
+                    if (checkDctStatus.status == 'locked' || (empty getInFlightTransactions.data ? false : true) ) 
+                    {
+                        return false;
+          } else {
+            return true;
+          }
+          %>",
+          "valuesOut": [
+              {
+                      "valueOutBinding": "commissionPost.amount",
+                      "value": "<% self.value %>"
+              }
+          ]                 
+        },                        
+        {
+          "type": "textArea",
+          "id": "agentList",
+          "label": "agentFlow",
+          "value": "<% empty queryParams.agentId ? 'none' :  queryParams.agentId %>",
+          "render": false
+        },                        
+        {
+          "type": "textArea",
+          "id": "typeList",
+          "label": "typeFlow",
+          "value": "<% empty queryParams.type ? 'none' :  queryParams.type %>",
+          "render": false
+        },                        
+        {
+          "type": "textArea",
+          "id": "dctInProgress",
+          "value": "<% 'There is a pending change to this transactions.  The pending amount is ' + getInFlightTransactions.data[0].correctionsToProcess[0].amount %>",
+          "render": "<% empty getInFlightTransactions.data ? false : true %>",
+          "enabled": "false"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By<br/><b>Workday Extend</b>"
+        }
+      ]
+    }
+  }
+}

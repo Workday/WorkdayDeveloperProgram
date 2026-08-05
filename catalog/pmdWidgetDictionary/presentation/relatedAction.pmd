@@ -1,0 +1,62 @@
+{
+  "id": "relatedAction",
+  "endPoints": [
+    {
+      "name": "workers",
+      "baseUrlType": "wdayCom",
+      "url": "/workers",
+      "authType": "sso"
+    },
+    {
+      "name": "me",
+      "baseUrlType": "wdayCom",
+      "url": "/workers/me",
+      "authType": "sso"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "relatedAction"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "sorted": false,
+      "children": [
+        {
+          "type": "pod",
+          "podId": "header"
+        },
+        {
+          "type": "instanceList",
+          "label": "Related Action",
+          "idKey": "id",
+          "widKey": "id",
+          "displayKey": "descriptor",
+          "values": "<% workers.data %>"
+        },
+        {
+          "type": "instanceList",
+          "label": "Related Action With Custom Descriptor",
+          "instanceList": [
+            {
+              "id": "<% me.id %>",
+              "wid": "<% me.id %>",
+              "descriptor": "Hello, <% me.descriptor %>!"
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "pod",
+          "podId": "footer"
+        }
+      ]
+    }
+  }
+}

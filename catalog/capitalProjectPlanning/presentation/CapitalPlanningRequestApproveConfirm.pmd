@@ -1,0 +1,78 @@
+{
+  "id": "CapitalPlanningRequestApproveConfirm",
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "<% 'Request Approval for '+queryParams.requestID %>"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "readOnlyText",
+          "value": "<% 'Request approval for '+queryParams.headerTitle+'?' %>"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer"
+    },
+    "micro": true,
+    "pageType": "EDIT"
+  },
+  "endPoints": [
+    {
+      "name": "requestApprovalGET",
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+string:pathEncode('SELECT workdayID,status,statusCode FROM '+site.applicationId+'_approvalStatuses WHERE statusCode=\"Status_RequestedApproval\" ') %>"
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "baseUrlType": "ORCHESTRATE",
+        "url": "/RequestApproval/launch",
+        "onSend": "<%
+                 {
+                     \"requestHeaderID\" : queryParams.headerWID
+                 }
+                 %>",
+        "failOnStatusCodes": [
+          {
+            "code": "400"
+          },
+          {
+            "code": "401"
+          },
+          {
+            "code": "403"
+          },
+          {
+            "code": "500"
+          }
+        ],
+        "name": "requestApprovalPOST"
+      },
+      {
+        "type": "outboundVariable",
+        "name": "Output",
+        "values": [
+          {
+            "outboundPath": "CallStatus",
+            "value": "requestApprovalPost.data.success"
+          }
+        ],
+        "variableScope": "FLOW"
+      }
+    ],
+    "responseErrorDetail": {
+      "errorSummary": "There was an error creating the business processes",
+      "errors": "<% errors.map(item => {item.error}); %>"
+    }
+  },
+  "securityDomains": [
+    "CapitalProjectPlanning",
+    "CapitalProjectPlanningAdministrator"
+  ]
+}

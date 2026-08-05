@@ -1,0 +1,90 @@
+{
+  "id": "home",
+  "endPoints": [ ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Workday Extend"
+    },
+    "body": {
+      "type": "hub",
+      "label": "<% 'Protected Cases' %>",
+      "icon": "wd-accent-tablet-lock-check",
+      "initialTask": {
+        "taskId": "viewProtectedCases",
+        "parameters": {
+          "caseDataFilter": "MeAssigned"
+        }
+      },
+      "navigationTasks": [
+        {
+          "type": "item",
+          "label": "Assigned To Me",
+          "icon": "wd-icon-user",
+          "task": {
+            "taskId": "viewProtectedCases",
+            "parameters": {
+              "caseDataFilter": "MeAssigned"
+            }
+          }
+        },
+        {
+          "type": "item",
+          "label": "Open",
+          "icon": "wd-icon-document",
+          "task": {
+            "taskId": "viewProtectedCases"
+          }
+        },
+        {
+          "type": "item",
+          "label": "Archive",
+          "icon": "wd-icon-folder-close",
+          "task": {
+            "taskId": "viewProtectedCases",
+            "parameters": {
+              "caseDataFilter": "Archive"
+            }
+          }
+        },
+        {
+          "type": "item",
+          "label": "Unlinked Help Cases",
+          "icon": "wd-icon-globe",
+          "task": {
+            "taskId": "unlinkedHelpCases"
+          }
+        }
+      ],
+      "additionalLinks": {
+        "title": "Actions",
+        "links": [
+          {
+            "type": "task",
+            "label": "Create New Case",
+            "task": {
+              "taskId": "protectedCase_New"
+            }
+          },
+          {
+            "type": "task",
+            "label": "Admin: View Configuration",
+            "task": {
+              "taskId": "viewConfiguration"
+            }
+          }
+        ]
+      }
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

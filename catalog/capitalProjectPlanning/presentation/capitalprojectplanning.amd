@@ -1,0 +1,389 @@
+{
+  "appProperties": [ ],
+  "flowDefinitions": [
+    {
+      "id": "runAdaptiveTaskFlow",
+      "flowSteps": [
+        {
+          "id": "runAdaptiveTaskStep",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "runAdaptiveTaskSuccessStep",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "RunAdaptiveTask"
+        },
+        {
+          "id": "runAdaptiveTaskSuccessStep",
+          "endsFlow": true,
+          "taskId": "RunAdaptiveTaskSuccess"
+        }
+      ]
+    },
+    {
+      "id": "requestApprovalFlow",
+      "flowSteps": [
+        {
+          "id": "requestApprovalConfirmStep",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "requestApprovalSuccessStep",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "CapitalPlanningRequestApproveConfirm"
+        },
+        {
+          "id": "requestApprovalSuccessStep",
+          "endsFlow": true,
+          "taskId": "CapitalPlanningRequestApproveSuccess"
+        }
+      ]
+    },
+    {
+      "id": "runBootstrapTaskFlow",
+      "flowSteps": [
+        {
+          "id": "runBootstrapTaskStep",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "runBootstrapSuccessStep",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "RunApplicationBootstrap"
+        },
+        {
+          "id": "runBootstrapSuccessStep",
+          "endsFlow": true,
+          "taskId": "RunApplicationBootstrapSuccess"
+        }
+      ]
+    },
+    {
+      "id": "adaptiveSecretFlow",
+      "flowSteps": [
+        {
+          "id": "adaptiveSecretEditStep",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "adaptiveSecretSuccessStep",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "AdaptiveSecretEdit"
+        },
+        {
+          "id": "adaptiveSecretSuccessStep",
+          "endsFlow": true,
+          "taskId": "AdaptiveSecretSuccess"
+        }
+      ]
+    },
+    {
+      "id": "findRequestsFlow",
+      "flowSteps": [
+        {
+          "id": "filterStep",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "indexOpenStep",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "CapitalPlanningRequestsPreIndex"
+        },
+        {
+          "id": "indexOpenStep",
+          "endsFlow": true,
+          "taskId": "CapitalPlanningRequestsIndex"
+        }
+      ]
+    },
+    {
+      "id": "viewRequestFlow",
+      "flowSteps": [
+        {
+          "id": "viewFilterStep",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "viewIndexOpenStep",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "CapitalPlanningViewSpecificRequest"
+        },
+        {
+          "id": "viewIndexOpenStep",
+          "endsFlow": true,
+          "taskId": "CapitalPlanningRequestsIndex"
+        }
+      ]
+    },
+    {
+      "id": "applicationConfigFlow",
+      "flowSteps": [
+        {
+          "id": "applicationConfigEditStep",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "applicationConfigSuccessStep",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "ApplicationConfigEdit"
+        },
+        {
+          "id": "applicationConfigSuccessStep",
+          "endsFlow": true,
+          "taskId": "ApplicationConfigSuccess"
+        }
+      ]
+    },
+    {
+      "id": "requestLinkingFlow",
+      "flowSteps": [
+        {
+          "id": "requestLinkingStep",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "requestLinkingSuccessStep",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "LinkProjectToRequest"
+        },
+        {
+          "id": "requestLinkingSuccessStep",
+          "endsFlow": true,
+          "taskId": "LinkProjectToRequestSuccess"
+        }
+      ]
+    },
+    {
+      "id": "requestCreateFlow",
+      "flowSteps": [
+        {
+          "id": "requestCreateStep",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "requestBodyCreateStep",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "CapitalPlanningRequestCreate"
+        },
+        {
+          "id": "requestBodyCreateStep",
+          "endsFlow": true,
+          "taskId": "CapitalPlanningRequestEdit"
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "CapitalPlanningRequestsIndexAll",
+      "routingPattern": "/CapitalPlanningRequestsIndexAll",
+      "page": {
+        "id": "CapitalPlanningRequestsIndexAll"
+      }
+    },
+    {
+      "id": "ApplicationConfigEdit",
+      "routingPattern": "/ApplicationConfigEdit",
+      "page": {
+        "id": "ApplicationConfigEdit"
+      }
+    },
+    {
+      "id": "ApplicationConfigSuccess",
+      "routingPattern": "/ApplicationConfigSuccess",
+      "page": {
+        "id": "ApplicationConfigSuccess"
+      }
+    },
+    {
+      "id": "CapitalPlanningRequestCreate",
+      "routingPattern": "/CapitalPlanningRequestCreate",
+      "page": {
+        "id": "CapitalPlanningRequestCreate"
+      }
+    },
+    {
+      "id": "CapitalPlanningRequestEdit",
+      "routingPattern": "/CapitalPlanningRequestEdit",
+      "page": {
+        "id": "CapitalPlanningRequestEdit"
+      }
+    },
+    {
+      "id": "CapitalPlanningRequestCreateBPApprove",
+      "routingPattern": "/CapitalProjectRequestCreateBPApprove/{eventId}",
+      "page": {
+        "id": "CapitalPlanningRequestCreateBPApprove"
+      }
+    },
+    {
+      "id": "CapitalPlanningRequestApproveConfirm",
+      "routingPattern": "/CapitalPlanningRequestApproveConfirm",
+      "page": {
+        "id": "CapitalPlanningRequestApproveConfirm"
+      }
+    },
+    {
+      "id": "CapitalPlanningRequestApproveSuccess",
+      "routingPattern": "/CapitalPlanningRequestApproveSuccess",
+      "page": {
+        "id": "CapitalPlanningRequestApproveSuccess"
+      }
+    },
+    {
+      "id": "RequestedServiceCategoryEventApprove",
+      "routingPattern": "/RequestedServiceCategoryEventApprove/{eventId}",
+      "page": {
+        "id": "RequestedServiceCategoryEventApprove"
+      }
+    },
+    {
+      "id": "CapitalPlanningRequestView",
+      "routingPattern": "/CapitalPlanningRequestView",
+      "page": {
+        "id": "CapitalPlanningRequestView"
+      }
+    },
+    {
+      "id": "CapitalPlanningViewSpecificRequest",
+      "routingPattern": "/CapitalPlanningRequestView/{requestWID}",
+      "page": {
+        "id": "CapitalPlanningRequestView"
+      }
+    },
+    {
+      "id": "CapitalPlanningRequestsPreIndex",
+      "routingPattern": "/",
+      "page": {
+        "id": "CapitalPlanningRequestsPreIndex"
+      }
+    },
+    {
+      "id": "CapitalPlanningRequestsIndex",
+      "routingPattern": "/CapitalPlanningRequestsIndex",
+      "page": {
+        "id": "CapitalPlanningRequestsIndex"
+      }
+    },
+    {
+      "id": "AdaptiveSecretEdit",
+      "routingPattern": "/AdaptiveSecretEdit",
+      "page": {
+        "id": "AdaptiveSecretEdit"
+      }
+    },
+    {
+      "id": "AdaptiveSecretSuccess",
+      "routingPattern": "/AdaptiveSecretSuccess",
+      "page": {
+        "id": "AdaptiveSecretSuccess"
+      }
+    },
+    {
+      "id": "RunAdaptiveTask",
+      "routingPattern": "/RunAdaptiveTask",
+      "page": {
+        "id": "RunAdaptiveTask"
+      }
+    },
+    {
+      "id": "RunAdaptiveTaskSuccess",
+      "routingPattern": "/RunAdaptiveTaskSuccess",
+      "page": {
+        "id": "RunAdaptiveTaskSuccess"
+      }
+    },
+    {
+      "id": "CapitalPlanningRequestBPRevise",
+      "routingPattern": "/CapitalPlanningRequestEdit/{eventStepId}",
+      "page": {
+        "id": "CapitalPlanningRequestEdit"
+      }
+    },
+    {
+      "id": "LinkProjectToRequestSuccess",
+      "routingPattern": "/LinkProjectToRequestSuccess",
+      "page": {
+        "id": "LinkProjectToRequestSuccess"
+      }
+    },
+    {
+      "id": "LinkProjectToRequest",
+      "routingPattern": "/LinkProjectToRequest",
+      "page": {
+        "id": "LinkProjectToRequest"
+      }
+    },
+    {
+      "id": "tmpBPTroubleshooting",
+      "routingPattern": "/tmpBPTroubleshooting",
+      "page": {
+        "id": "tmpBPTroubleshooting"
+      }
+    },
+    {
+      "id": "RunApplicationBootstrap",
+      "routingPattern": "/RunApplicationBootstrap",
+      "page": {
+        "id": "RunApplicationBootstrap"
+      }
+    },
+    {
+      "id": "RunApplicationBootstrapSuccess",
+      "routingPattern": "/RunApplicationBootstrapSuccess",
+      "page": {
+        "id": "RunApplicationBootstrapSuccess"
+      }
+    }
+  ],
+  "applicationId": "capitalProjectPlanning",
+  "dataProviders": [
+    {
+      "key": "BUSINESS-OBJECT",
+      "value": "<% apiGatewayEndpoint + '/apps/' + site.siteId + '/v1' %>"
+    },
+    {
+      "key": "COMMON",
+      "value": "<% apiGatewayEndpoint + '/common/v1' %>"
+    },
+    {
+      "key": "ORCHESTRATE",
+      "value": "<% apiGatewayEndpoint + '/orchestrate/v1/apps/'+site.siteId+'/orchestrations' %>"
+    },
+    {
+      "key": "WQL",
+      "value": "<% apiGatewayEndpoint + '/wql/v1' %>"
+    },
+    {
+      "key": "BUSINESS-PROCESS",
+      "value": "<% apiGatewayEndpoint + '/businessProcess/v1' %>"
+    }
+  ]
+}

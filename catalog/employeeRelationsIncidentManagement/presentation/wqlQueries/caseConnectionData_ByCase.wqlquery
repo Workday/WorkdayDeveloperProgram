@@ -1,0 +1,9 @@
+{
+  "id": "caseConnectionData_ByCase",
+  "parameters": ["appId", "case"],
+  "query": "<%
+    `SELECT case, connectionType, connectionValue, connectionID, connectionComment, workdayID, linkContact, contactPhone, contactEmail, worker{workdayID as id, preferredNameInGeneralDisplayFormat as descriptor, phone_PrimaryWork, email_PrimaryWork }
+    FROM {{appId}}_protectedCaseConnectionsBO
+    WHERE case='{{case}}'`
+  %>"
+}

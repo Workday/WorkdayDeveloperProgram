@@ -1,0 +1,48 @@
+{
+  "id": "lists",
+  "endPoints": [ ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Lists"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "fieldSet",
+          "title": "Lists",
+          "children": [
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Related Action",
+              "taskReference": {
+                "taskId": "relatedAction"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Multi-Select (instanceList)",
+              "taskReference": {
+                "taskId": "instanceList"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

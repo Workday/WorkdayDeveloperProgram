@@ -1,0 +1,61 @@
+{
+  "id": "progressIndicator",
+  "endPoints": [],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "progressIndicator"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "dynamicSection",
+          "id": "dynamicAttachmentSection1",
+          "data": "<%  {'data':[]} %>",
+          "dataVariableName": "dynamicData",
+          "children": [
+            {
+              "type": "progressIndicator",
+              "id": "progressIndicatorId",
+              "value": "<%  dynamicData.piValue ?? 0 %>",
+              "maximumValue": "100",
+              "label": "Keep clicking the button below to see progress",
+              "isPercentage": false
+            }
+          ]
+        },
+        {
+          "type": "pageActionButton",
+          "id": "PageActionButton",
+          "visible": true,
+          "label": "Press!",
+          "onClick": "<%
+                      let piValue = progressIndicatorId.value;
+                      if(piValue<100){
+                          piValue = piValue+10 ;
+                      }
+                      dynamicAttachmentSection1.data= {'piValue': piValue};
+                      %>"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "enabled": false,
+          "type": "richText",
+          "value": "Inspired by: https://forum.developer.workday.com/t/progressindicator-value-label-does-not-update/12844"
+        },
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    },
+    "pageType": "EDIT"
+  }
+}

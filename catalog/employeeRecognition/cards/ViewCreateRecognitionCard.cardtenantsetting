@@ -1,0 +1,9 @@
+{
+  "id": 2,
+  "name": "ViewCreateRecognitionCard",
+  "label": "View Create Recognition Card",
+  "securityDomains": [
+    "ManageEmployeeRecognition"
+  ],
+  "routePath": "/viewCreateRecognitionCard"
+}

@@ -1,0 +1,120 @@
+{
+  "_pagePurpose1": "This page is the launch point for creating an Excel file.",
+  "_pagePurpose2": "It accepts CSV data via a textArea field, and sends that data along to an Orchestration for file creation.",
+  "id": "excelFileCreate",
+  "endPoints": [],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "createExcelFile",
+        "httpMethod": "POST",
+        "baseUrlType": "workday-orchestration",
+        "url": "createExcelFile/launch",
+        "onSend": "<%
+          const csvData = {
+            'csv': csvData.value,
+            'fileName': fileName.value,
+            'author': author.value ?? ''
+          };
+
+          return csvData; 
+        %>"
+      },
+      {
+        "type": "outboundVariable",
+        "name": "excelResponseData",
+        "values": [
+          {
+            "outboundPath": "orchResponse",
+            "value": "<% createExcelFile ?? '' %>"
+          },
+          {
+            "outboundPath": "attachmentWID",
+            "value": "<% createExcelFile.id ?? '' %>"
+          }
+        ],
+        "variableScope": "FLOW"
+      }
+    ]
+  },
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Create an Excel file from CSV input"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "text",
+          "id": "author",
+          "label": "File Author Name (optional)"
+        },
+        {
+          "type": "text",
+          "id": "fileName",
+          "label": "Excel File Name (extension must be xlsx)",
+          "required": true,
+          "placeholder": "SampleFile.xlsx",
+          "onChange": "<% 
+            fileName.clearError();
+            if(!empty fileName.value && !fileName.value.endsWith('.xlsx')){
+              fileName.setError('The file name must end in \\'.xlsx\\'');
+            }
+          %>"
+        },
+        {
+          "collapsible": true,
+          "initializeCollapsed": true,
+          "type": "fieldSet",
+          "id": "sampleCsvFS",
+          "title": "Example CSV Input",
+          "children": [
+            {
+              "enabled": false,
+              "type": "textArea",
+              "value": "TAB_BEGIN,TAB1,12,8,true,7
+              Header 1,Header 2,Header 3
+              A,\"B with a comma,\",C
+              A,\"B with newline\",C
+              A,\"B with quote\"\" in the middle\",C
+              A,B,</t>
+              A,B,</is>
+              A,B,</c>
+              A,B,C'
+              A,B,C&
+              TAB_BEGIN,TAB2,8,12,true,8
+              Header 1,Header 2,Header 3
+              A,B,C
+              A,B,C
+              A,B,C
+              A,B,C
+              A,B,C
+              A,B,C
+              A,B,C
+              A,B,C",
+              "id": "sampleCsvTxt"
+            }
+          ]
+        },
+        {
+          "type": "textArea",
+          "id": "csvData",
+          "label": "CSV Data for Excel",
+          "required": true
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "appProperties": [ ],
+  "tasks": [
+    {
+      "id": "root",
+      "routingPattern": "/",
+      "page": {
+        "id": "home"
+      }
+    },
+    {
+      "id": "requestCreditCard",
+      "routingPattern": "/requestCreditCard",
+      "page": {
+        "id": "requestCreditCard"
+      }
+    },
+    {
+      "id": "viewCreditCardEvent",
+      "routingPattern": "/cardEvent/{eventId}",
+      "page": {
+        "id": "viewCreditCardEvent"
+      }
+    },
+    {
+      "id": "errorPage",
+      "routingPattern": "/errorPage",
+      "page": {
+        "id": "errorPage"
+      }
+    }
+  ],
+  "applicationId": "requestCreditCard",
+  "dataProviders": [
+    {
+      "key": "app",
+      "value": "<% `{{apiGatewayEndpoint}}/apps/{{site.applicationId}}/v1/` %>"
+    },
+    {
+      "key": "workday-orchestrate",
+      "value": "<% `{{apiGatewayEndpoint}}/orchestrate/v1/apps/` %>"
+    },
+    {
+      "key": "workday-expenses",
+      "value": "<% `{{apiGatewayEndpoint}}/expense/v1/` %>"
+    },
+    {
+      "key": "workday-staffing",
+      "value": "<% `{{apiGatewayEndpoint}}/staffing/v1/` %>"
+    },
+    {
+      "key": "workday-bp",
+      "value": "<% `{{apiGatewayEndpoint}/businessProcess/v1/` %>"
+    }
+  ]
+}

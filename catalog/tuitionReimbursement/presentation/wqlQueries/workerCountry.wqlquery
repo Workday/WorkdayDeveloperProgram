@@ -1,0 +1,9 @@
+{
+  "id": "workerCountry",
+  "parameters": ["location"],
+  "query": "<%`
+    SELECT locationName, country, workdayID
+    FROM locationsUsedAsBusinessSite 
+    WHERE workdayID='{{location}}'` %>
+  "
+}

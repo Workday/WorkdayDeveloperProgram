@@ -1,0 +1,41 @@
+{
+  "id": 1,
+  "name": "MultiRating",
+  "label": "Multi Rating",
+  "description": "Business Process Type for MultiRating",
+  "useForOrchestrate": true,
+  "allowsCancel": true,
+  "targetBusinessObject": "MultiRaterForEmployeeReview",
+  "approvalStep": {
+    "actions": [
+      "APPROVE"
+    ]
+  },
+  "actionSteps": [
+    {
+      "id": 1,
+      "name": "RateWorker",
+      "label": "Evaluate Worker",
+      "pageRoute": "/rateWorker/{eventStepId}"
+    },
+    {
+      "id": 2,
+      "name": "ReviewAndSubmitRating",
+      "label": "Review and Submit the Rating",
+      "pageRoute": "/reviewAndSubmitRating/{eventStepId}"
+    }
+  ],
+  "details": {
+    "pageRoute": "/multiRatingProcessDetail/{eventId}"
+  },
+  "allowedParentProcesses": [
+    {
+      "id": 1,
+      "name": "InitMultiRating",
+      "initiationPageRoute": "/selectAdditionalRater/{eventStepId}",
+      "parentBusinessProcesses": [
+        "START_PERFORMANCE_REVIEW"
+      ]
+    }
+  ]
+}

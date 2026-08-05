@@ -1,0 +1,117 @@
+{
+  "id": 13,
+  "name": "CapitalProjectRequestHeader",
+  "label": "Capital Project Request Header",
+  "defaultSecurityDomains": [
+    "CapitalProjectPlanning",
+    "CapitalProjectPlanningAdministrator"
+  ],
+  "defaultCollection": {
+    "name": "capitalProjectRequestHeaders",
+    "label": "Capital Project Request Headers"
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "requestTitle",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": true,
+      "isPurgeable": false,
+      "enableIndex": false,
+      "enableSearch": false,
+      "description": ""
+    },
+    {
+      "id": 2,
+      "name": "requestDate",
+      "type": "DATE",
+      "isPurgeable": false,
+      "enableIndex": false,
+      "precision": "DAY"
+    },
+    {
+      "id": 3,
+      "name": "approvalStatus",
+      "type": "SINGLE_INSTANCE",
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "target": "ApprovalStatus",
+      "secureByTarget": false,
+      "enableReportingFromTarget": false
+    },
+    {
+      "id": 4,
+      "name": "requestedBy",
+      "type": "SINGLE_INSTANCE",
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "target": "WORKER",
+      "secureByTarget": false,
+      "enableReportingFromTarget": false
+    },
+    {
+      "id": 5,
+      "name": "sponsor",
+      "type": "SINGLE_INSTANCE",
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "target": "WORKER",
+      "secureByTarget": false,
+      "enableReportingFromTarget": false
+    },
+    {
+      "id": 6,
+      "name": "summary",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "enableIndex": false,
+      "enableSearch": false
+    },
+    {
+      "id": 7,
+      "name": "capitalProjectRequest",
+      "type": "SINGLE_INSTANCE",
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "target": "CapitalProjectRequest",
+      "secureByTarget": true,
+      "enableReportingFromTarget": false
+    },
+    {
+      "id": 8,
+      "name": "planCycle",
+      "type": "SINGLE_INSTANCE",
+      "description": "",
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "target": "PlanCycle",
+      "secureByTarget": false,
+      "enableReportingFromTarget": false
+    },
+    {
+      "id": 9,
+      "name": "project",
+      "type": "MULTI_INSTANCE",
+      "isPurgeable": false,
+      "target": "PROJECT"
+    }
+  ],
+  "derivedFields": [
+    {
+      "expression": "approvalStatus.statusCode",
+      "type": "TEXT",
+      "name": "approvalStatusCode",
+      "id": 1
+    },
+    {
+      "label": "Request ID",
+      "expression": "capitalProjectRequest.requestID",
+      "type": "TEXT",
+      "name": "requestID",
+      "id": 2
+    }
+  ]
+}

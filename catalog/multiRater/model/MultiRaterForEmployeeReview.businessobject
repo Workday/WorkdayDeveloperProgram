@@ -1,0 +1,128 @@
+{
+  "id": 1,
+  "name": "MultiRaterForEmployeeReview",
+  "label": "Multi Rater For Employee Review",
+  "defaultSecurityDomains": [
+    "MultiRater"
+  ],
+  "defaultCollection": {
+    "name": "multiRaterForEmployeeReviews",
+    "label": "Multi Rater For Employee Reviews", 
+    "description": "Get employee reviews from multiple raters in the Multi Rater Empoloyee Reviews Extend app"
+  },
+  "fields": [
+    {
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": true,
+      "isReferenceId": true,
+      "label": "ReviewWID",
+      "type": "TEXT",
+      "name": "reviewWID",
+      "id": 1, 
+      "description": "Reviews Workday ID of the rater"
+    },
+     {
+      "id": 20,
+      "name": "ratingID",
+      "type": "TEXT",
+      "label": "RatingID", 
+      "description": "Displays the rating ID of the rater"
+    },
+    {
+      "id": 2,
+      "name": "reviewer1",
+      "type": "SINGLE_INSTANCE",
+      "label": "Reviewer 1",
+      "target": "WORKER",
+      "secureByTarget": true, 
+      "description": "Displays reviewer 1"
+    },
+    {
+      "id": 3,
+      "name": "reviewerRating1",
+      "type": "TEXT",
+      "label": "Reviewer Rating 1", 
+      "description": "Displays rating of reviewer 1"
+    },
+    {
+      "id": 4,
+      "name": "reviewerComment1",
+      "type": "TEXT",
+      "label": "Reviewer Comment 1", 
+      "description": "Displays comments of reviewer 1"
+    },
+    {
+      "id": 5,
+      "name": "reviewer2",
+      "type": "SINGLE_INSTANCE",
+      "label": "Reviewer 2",
+      "target": "WORKER",
+      "secureByTarget": true, 
+      "description": "Displays reviewer 2"
+    },
+    {
+      "id": 6,
+      "name": "reviewerRating2",
+      "type": "TEXT",
+      "label": "Reviewer Rating 2", 
+      "description": "Displays rating of reviewer 2"
+    },
+    {
+      "id": 7,
+      "name": "reviewerComment2",
+      "type": "TEXT",
+      "label": "Reviewer Comment 2", 
+      "description": "Displays comments of reviewer 2"
+    },
+    {
+      "id": 8,
+      "name": "reviewer3",
+      "type": "SINGLE_INSTANCE",
+      "label": "Reviewer 3",
+      "target": "WORKER",
+      "secureByTarget": true, 
+      "description": "Displays reviewer 3"
+    },
+    {
+      "id": 9,
+      "name": "reviewerRating3",
+      "type": "TEXT",
+      "label": "Reviewer Rating 3", 
+      "description": "Displays rating of reviewer 3"
+    },
+    {
+      "id": 10,
+      "name": "reviewerComment3",
+      "type": "TEXT",
+      "label": "Reviewer Comment 3", 
+      "description": "Displays comments of reviewer 3"
+    },
+    {
+      "id": 17,
+      "name": "forWorker",
+      "type": "SINGLE_INSTANCE",
+      "label": "For Worker",
+      "target": "WORKER",
+      "secureByTarget": false, 
+      "description": "Displays the employee who is being reviewed"
+    },
+    {
+      "id": 18,
+      "name": "createdBy",
+      "label": "Created By",
+      "type": "SINGLE_INSTANCE",
+      "target": "WORKER",
+      "secureByTarget": true, 
+      "description": "Displays who created the Multi Rater Employee Review"
+    },
+    {
+      "id": 19,
+      "name": "finalRating",
+      "type": "INTEGER",
+      "label": "Final Rating", 
+      "description": "Displays final rating of the employee"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "_pagePurpose": "A launch page for testPMDBulkErrors and testOrchestrateBulkErrors samples.",
+  "id": "homeBulkErrors",
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Home - Bulk API Call Error Handling"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "richText",
+          "id": "instructions",
+          "label": "Instructions",
+          "value": "This application demonstrates a possible design pattern for bulk error handling. Specifically, this refers to when using the <b>bulk=true</b> query parameter on an API call, and encountering transactional errors.\n\nPlease configure the <b>BulkWorkersDomain</b> security domain to include the <b>Manager</b> group (with modify access) to easily allow us to create errors.  Then use one of the links below to test the error handling process."
+        },
+        {
+          "type": "cardContainer",
+          "id": "links",
+          "cards": [
+            {
+              "type": "card",
+              "id": "testPMDBulkErrors",
+              "cardId": "appLinks",
+              "parameters": {
+                "title": "PMD Bulk Error Handling - without Orchestration",
+                "body": "For demonstrative purposes, this task will perform bulk error handling on a single bulk call WITHOUT the use of an Orchestration",
+                "taskRef": "testPMDBulkErrors",
+                "taskLabel": "Test PMD Bulk Error Handling"
+              }
+            },
+            {
+              "type": "card",
+              "id": "testBulkErrorsWithOrch",
+              "cardId": "appLinks",
+              "parameters": {
+                "title": "Orchestrate Bulk Error Handling",
+                "body": "See an example of Orchestrate can be used to handle bulk error handling",
+                "taskRef": "testOrchestrateBulkErrors",
+                "taskLabel": "Test Orchestrate Bulk Error Handling"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

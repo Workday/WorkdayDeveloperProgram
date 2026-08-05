@@ -1,0 +1,203 @@
+{
+  "id": "editCaseStatuses",
+  "securityDomains": [
+    "ManageProtectedCases"
+  ],
+  "endPoints": [
+    {
+      "name": "getStatuses",
+      "baseUrlType": "app",
+      "authType": "sso",
+      "url": "protectedCaseStatuses?limit=100"
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "postStatus",
+        "url": "protectedCaseStatuses",
+        "baseUrlType": "app",
+        "exclude": "<% ! empty statusId.value %>",
+        "failOnStatusCodes": [
+          {
+            "code": 400
+          }
+        ]
+      },
+      {
+        "name": "putStatus",
+        "url": "<% 'protectedCaseStatuses/' + statusId.value %>",
+        "httpMethod": "PUT",
+        "baseUrlType": "app",
+        "allowPutForUnchangedData": true,
+        "exclude": "<% empty statusId.value %>",
+        "failOnStatusCodes": [
+          {
+            "code": 400
+          }
+        ]
+      },
+      {
+        "name": "deleteStatus",
+        "url": "<% 'protectedCaseStatuses/' + statusId.value %>",
+        "httpMethod": "DELETE",
+        "baseUrlType": "app",
+        "exclude": "<% empty statusId.value %>",
+        "failOnStatusCodes": [
+          {
+            "code": 400
+          }
+        ]
+      }
+    ]
+  },
+  "presentation": {
+    "micro": "true",
+    "microFirstPageOnly": "true",
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "<% 'Case Statuses' %>",
+      "enabled": false
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "grid",
+          "label": "Statuses",
+          "rows": "<% list:sort(getStatuses.data,'statusOrder',true) %>",
+          "rowVariableName": "statusRow",
+          "deleteEndPoint": "deleteStatus",
+          "columns": [
+            {
+              "type": "column",
+              "columnId": "col1",
+              "label": "Description",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% statusRow.description ?? '' %>",
+                "id": "description",
+                "required": "true",
+                "valuesOut": [
+                  {
+                    "value": "<% self.value %>",
+                    "valueOutBinding": "postStatus.description"
+                  },
+                  {
+                    "value": "<% self.value %>",
+                    "valueOutBinding": "putStatus.description"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "col2",
+              "label": "Code",
+              "cellTemplate": {
+                "type": "text",
+                "required": true,
+                "value": "<% statusRow.code %>",
+                "valuesOut": [
+                  {
+                    "value": "<% self.value %>",
+                    "valueOutBinding": "postStatus.code"
+                  },
+                  {
+                    "value": "<% self.value %>",
+                    "valueOutBinding": "putStatus.code"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "col4",
+              "label": "Resolved",
+              "cellTemplate": {
+                "type": "checkBox",
+                "value": "<% statusRow.resolved %>",
+                "valuesOut": [
+                  {
+                    "value": "<% self.value %>",
+                    "valueOutBinding": "postStatus.resolved"
+                  },
+                  {
+                    "value": "<% self.value %>",
+                    "valueOutBinding": "putStatus.resolved"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "col5",
+              "label": "Initial",
+              "cellTemplate": {
+                "type": "checkBox",
+                "value": "<% statusRow.initial %>",
+                "valuesOut": [
+                  {
+                    "value": "<% self.value %>",
+                    "valueOutBinding": "postStatus.initial"
+                  },
+                  {
+                    "value": "<% self.value %>",
+                    "valueOutBinding": "putStatus.initial"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "col3",
+              "label": "Order",
+              "cellTemplate": {
+                "type": "text",
+                "required": true,
+                "value": "<% statusRow.statusOrder %>",
+                "valuesOut": [
+                  {
+                    "value": "<% self.value %>",
+                    "valueOutBinding": "postStatus.statusOrder"
+                  },
+                  {
+                    "value": "<% self.value %>",
+                    "valueOutBinding": "putStatus.statusOrder"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "colID",
+              "cellTemplate": {
+                "type": "section",
+                "children": [
+                  {
+                    "type": "hidden",
+                    "id": "statusId",
+                    "value": "<% statusRow.id %>",
+                    "valueOutBinding": "putStatus.id"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Click OK to save changes"
+        }
+      ]
+    }
+  }
+}

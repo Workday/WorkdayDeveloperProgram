@@ -1,0 +1,26 @@
+{
+  "id": "infoCard",
+  "parameters": [
+    "info"
+  ],
+  "header": {
+    "title": "<% info.title %>",
+    "subtitle": "<% info.subtitle %>",
+    "icon": "<% info.icon %>",
+    "indicator": {
+      "label": "<% info.indicatorLabel %>",
+      "color": "<% info.indicatorColor %>"
+    }
+  },
+  "body": {
+    "type": "pillCard",
+    "pills": [
+      {
+        "label": "<% info.buttonLabel %>",
+        "taskReference": {
+          "taskId": "<% info.task %>"
+        }
+      }
+    ]
+  }
+}

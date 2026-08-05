@@ -1,0 +1,30 @@
+{
+  "id": 1,
+  "name": "Badge",
+  "label": "Badge",
+  "defaultSecurityDomains": [
+    "AwsOnboardingApp"
+  ],
+  "defaultCollection": {
+    "name": "badges",
+    "label": "Badges"
+  },
+  "fields": [
+    {
+      "id": 3,
+      "name": "worker",
+      "label": "Worker",
+      "type": "SINGLE_INSTANCE",
+      "target": "WORKER",
+      "secureByTarget": true,
+      "useForDisplay": false
+    },
+    {
+      "id": 4,
+      "name": "photo",
+      "label": "Photo",
+      "type": "SINGLE_INSTANCE",
+      "target": "BadgePhoto"
+    }
+  ]
+}

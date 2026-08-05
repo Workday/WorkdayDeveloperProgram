@@ -1,0 +1,11 @@
+{
+    "id": 1,
+    "name": "MyCreditCardRequests",
+    "label": "My Credit Card Requests",
+    "secured": true,
+    "businessObject": "WORKER",
+    "routePath": "/",
+    "securityDomains": [
+        "ManageCreditCardRequests"
+    ]
+} 

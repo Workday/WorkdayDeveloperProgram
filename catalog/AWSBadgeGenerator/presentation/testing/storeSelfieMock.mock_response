@@ -1,0 +1,5 @@
+{ 
+  "id": "storeSelfieMock",
+  "responseCode": 200, 
+  "responseBody": {} 
+}

@@ -1,0 +1,78 @@
+{
+  "id": "home",
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "PMD Scripting"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "sorted": false,
+      "children": [
+        {
+          "type": "fieldSet",
+          "title": "Examples",
+          "children": [
+            {
+              "type": "button",
+              "label": "Data Manipulation",
+              "action": "LINK",
+              "taskReference": {
+                "taskId": "dataManipulation"
+              }
+            },
+            {
+              "type": "button",
+              "label": "Invoking Endpoints",
+              "action": "LINK",
+              "taskReference": {
+                "taskId": "invokingEndpoints"
+              }
+            },
+            {
+              "type": "button",
+              "label": "Dynamically Update Widget State",
+              "action": "LINK",
+              "taskReference": {
+                "taskId": "updateWidgetState"
+              }
+            },
+            {
+              "type": "button",
+              "label": "Grid Events",
+              "action": "LINK",
+              "taskReference": {
+                "taskId": "gridEvents"
+              }
+            },
+            {
+              "type": "button",
+              "label": "Date Calculations",
+              "action": "LINK",
+              "taskReference": {
+                "taskId": "dateCalculations"
+              }
+            },
+            {
+              "type": "button",
+              "label": "Page Events",
+              "action": "LINK",
+              "taskReference": {
+                "taskId": "pageEvents"
+              }
+            },
+            {
+              "type": "button",
+              "label": "Custom Logging",
+              "action": "LINK",
+              "taskReference": {
+                "taskId": "logging"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

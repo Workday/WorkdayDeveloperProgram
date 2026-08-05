@@ -1,0 +1,38 @@
+{
+  "id": "ticketCreate",
+  "include": [
+    "tickets.script"
+  ],
+  "endPoints": [ ],
+  "presentation": {
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "Create New Ticket"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "richText",
+          "value": "<b>Important!</b> This is left as an example of how edit pages can be woven into the application. Given that all of the data here is mocked, nothing will actually be persisted upon submit!",
+          "enabled": "false"
+        },
+        {
+          "type": "text",
+          "label": "Name"
+        },
+        {
+          "type": "dropdown",
+          "values": "<% tickets.getAllTypes() %>",
+          "label": "Type"
+        },
+        {
+          "type": "textArea",
+          "label": "Blurb"
+        }
+      ]
+    }
+  }
+}

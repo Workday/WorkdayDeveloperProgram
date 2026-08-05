@@ -1,0 +1,45 @@
+{
+    "podId": "previouslyAttachedFiles",
+    "seed": {
+      "parameters": [],
+      "template": {
+              "type": "fileUploader",
+              "label": "Previously Attached Right to Work Verifications:",
+              "id": "multiFileUploader",
+              "valueOutBinding": "postAttachments:filedata:",
+              "enabled": "false",
+              "fileTypes": "txt,jpg,jpeg,png,ppt,pptx,pdf,doc,docx,xlsx,xls",
+              "singular": false,
+              "children": [
+                {
+                  "type": "loop",
+                  "on": "<% getAttachments.data %>",
+                  "as": "file",
+                  "children": [
+                    {
+                      "type": "fileUploaderRow",
+                      "render": "<% !(empty file.fileName) %>",
+                      "attachment": {
+                        "type": "attachmentList",
+                        "attachmentURL": "<% 'https://api.workday.com/apps/' + site.applicationId + '/v1/rightToWorkVerifications/' + file.id %>",
+                        "attachmentAuth": "sso",
+                        "attachmentName": "<% file.fileName %>",
+                        "attachmentUriTemplate": "[Target]",
+                        "instanceList": [
+                          {
+                            "action": "attachment",
+                            "descriptor": "<% file.fileName%>",
+                            "mimeType": "<% fileType:getFileType(file.fileName) %>"
+                          }
+                        ]
+                      },
+                      "fileName": "<% file.fileName%>",
+                      "fileType": "<% fileTypes.getMimeTypeIDbyContentType(file.contentType.id) %>"
+                    }
+                  ]
+                }
+              ],
+              "fileUploaderRowTemplate": [ ]
+            }
+    }
+  }

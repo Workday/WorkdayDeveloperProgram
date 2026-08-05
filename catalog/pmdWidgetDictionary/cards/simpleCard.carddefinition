@@ -1,0 +1,28 @@
+{
+  "id": "simpleCard",
+  "presentation": {
+    "type": "inlineCard",
+    "header": {
+      "type": "cardHeader",
+      "title": "My Simple Card Title",
+      "subtitle": "My Simple Card Subtitle",
+      "indicator": {
+        "label": "Home-Hub Card",
+        "color": "BLUE"
+      },
+      "icon": "WorkdayWThumbnail.jpeg"
+    },
+    "body": {
+      "type": "simpleCard",
+      "value": "My Simple Card Body"
+    },
+    "footer": [
+      {
+        "label": "home",
+        "taskReference": {
+          "taskId": "home"
+        }
+      }
+    ]
+  }
+}

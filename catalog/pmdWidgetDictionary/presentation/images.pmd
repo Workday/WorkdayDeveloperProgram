@@ -1,0 +1,44 @@
+{
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Images"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "sorted": false,
+      "children": [
+        {
+          "type": "pod",
+          "podId": "header"
+        },
+        {
+          "type": "text",
+          "value": "For all images, there are very limited options to resize."
+        },
+        {
+          "type": "image",
+          "label": "Image by URL",
+          "imageUri": "https://imgur.com/NRb0nVz.png"
+        },
+        {
+          "userPhoto": "true",
+          "type": "image",
+          "label": "Shrink Image",
+          "imageUri": "https://imgur.com/NRb0nVz.png"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "pod",
+          "podId": "footer"
+        }
+      ]
+    }
+  },
+  "id": "images"
+}

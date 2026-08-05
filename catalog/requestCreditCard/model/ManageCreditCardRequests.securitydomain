@@ -1,0 +1,6 @@
+{
+  "id": 1,
+  "name": "ManageCreditCardRequests",
+  "label": "Manage: Credit Card Requests",
+  "enabledForPageSecurity": true
+}

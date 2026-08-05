@@ -1,0 +1,104 @@
+{
+  "id": "protectedCase_New",
+  "endPoints": [
+    {
+      "name": "caseTemplateData",
+      "baseUrlType": "app",
+      "authType": "sso",
+      "url": "caseTemplatesBO"
+    },
+    {
+      "name": "configValuesData",
+      "baseUrlType": "app",
+      "authType": "sso",
+      "url": "configValuesBO"
+    },
+    {
+      "name": "helpCaseData",
+      "baseUrlType": "wql",
+      "authType": "sso",
+      "url": "data",
+      "wqlQuery": {
+        "parameters": {
+          "startDate": "<% date:format(date:now().minusYears(2),'yyyy-MM-dd HH:mm:ss') %>",
+          "endDate": "<% date:format(date:now(),'yyyy-MM-dd HH:mm:ss') %>"
+        },
+        "queryId": "helpCaseData"
+      }
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "type": "outboundVariable",
+        "variableScope": "flow",
+        "name": "addCaseVariable"
+      }
+    ]
+  },
+  "onLoad": "<%
+            //get Workday Help Type Filter from Config Values
+            pageVariables.helpTypeFilter = [];
+            for (var helpTypeRow : list:sort(list:filter(configValuesData.data,'configType','Workday Help Type Filter'),'configOrder',true)) {
+              pageVariables.helpTypeFilter.add(helpTypeRow.configValue)
+            }
+
+            if (empty(pageVariables.helpTypeFilter)) {
+              pageVariables.caseDataFiltered = helpCaseData.data;
+            } else {
+              pageVariables.caseDataFiltered = list:filterMultiple(helpCaseData.data,'type.id',pageVariables.helpTypeFilter);
+            }
+          %>",
+  "presentation": {
+    "micro": "true",
+    "microFirstPageOnly": "true",
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "Create Protected Case"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "instanceList",
+          "label": "Case Template",
+          "values": "<% caseTemplateData.data %>",
+          "valuesOut": [
+            {
+              "value": "<% self.value[0] %>",
+              "valueOutBinding": "addCaseVariable.caseTemplateID"
+            },
+            {
+              "value": "<% self.selectedEntries[0].descriptor %>",
+              "valueOutBinding": "addCaseVariable.caseTemplate"
+            }
+          ]
+        },
+        {
+          "type": "instanceList",
+          "id": "linkedCase",
+          "label": "(Optional) Create From Workday Help Case",
+          "values": "<% pageVariables.caseDataFiltered %>",
+          "selectedValues": "<% empty(queryParams.helpCaseID) ? [] : [queryParams.helpCaseID] %>",
+          "valuesOut": [
+            {
+              "value": "<% self.value[0] %>",
+              "valueOutBinding": "addCaseVariable.helpCaseID"
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

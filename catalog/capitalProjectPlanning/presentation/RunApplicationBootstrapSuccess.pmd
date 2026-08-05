@@ -1,0 +1,20 @@
+{
+  "id": "RunApplicationBootstrapSuccess",
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Application Bootstrap Succesful"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false
+    },
+    "footer": {
+      "type": "footer"
+    },
+    "microConclusion": true
+  },
+  "securityDomains": [
+    "CapitalProjectPlanningAdministrator"
+  ]
+}

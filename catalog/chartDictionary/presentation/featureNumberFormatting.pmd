@@ -1,0 +1,172 @@
+{
+  "id": "featureNumberFormatting",
+  "include": [
+    "scatterData.script"
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Number Formatting Feature"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "section",
+          "title": "No formatting options (default)",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "id": "chart1",
+              "barOrientation": "VERTICAL",
+              "data": "<% scatterData.getScatterData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Measurement A",
+                  "value": "<% data['x'] %>"
+                },
+                {
+                  "name": "Measurement B",
+                  "value": "<% data['y'] %>"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Category",
+                "value": "<% data['label'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Measurement A: numberFormatCode #.0#",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "id": "chart2",
+              "barOrientation": "VERTICAL",
+              "data": "<% scatterData.getScatterData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Measurement A",
+                  "value": "<% data['x'] %>",
+                  "numberFormatCode": "#.0#"
+                },
+                {
+                  "name": "Measurement B",
+                  "value": "<% data['y'] %>"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Category",
+                "value": "<% data['label'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Measurement B: numberFormatOptions: signType = PARENTHESIS, formatType = SCIENTIFIC",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "id": "chart3",
+              "barOrientation": "VERTICAL",
+              "data": "<% scatterData.getScatterData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Measurement A",
+                  "value": "<% data['x'] %>"
+                },
+                {
+                  "name": "Measurement B",
+                  "value": "<% data['y'] %>",
+                  "numberFormatOptions": {
+                    "signType": "PARENTHESIS",
+                    "formatType": "SCIENTIFIC"
+                  }
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Category",
+                "value": "<% data['label'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Measurement A and B: numberFormatOptions: precision = 4, showTrailingZeros = true",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "id": "chart4",
+              "barOrientation": "VERTICAL",
+              "data": "<% scatterData.getScatterData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Measurement A",
+                  "value": "<% data['x'] %>",
+                  "numberFormatOptions": {
+                    "precision": 4,
+                    "showTrailingZeros": true
+                  }
+                },
+                {
+                  "name": "Measurement B",
+                  "value": "<% data['y'] %>",
+                  "numberFormatOptions": {
+                    "precision": 4,
+                    "showTrailingZeros": true
+                  }
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Category",
+                "value": "<% data['label'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Measurement A: formatType = PERCENT, Measurement B: formatType = SCIENTIFIC",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "id": "chart5",
+              "barOrientation": "VERTICAL",
+              "data": "<% scatterData.getScatterData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Measurement A",
+                  "value": "<% data['x'] %>",
+                  "numberFormatOptions": {
+                    "formatType": "PERCENT"
+                  }
+                },
+                {
+                  "name": "Measurement B",
+                  "value": "<% data['y'] %>",
+                  "numberFormatOptions": {
+                    "formatType": "SCIENTIFIC"
+                  }
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Category",
+                "value": "<% data['label'] %>"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

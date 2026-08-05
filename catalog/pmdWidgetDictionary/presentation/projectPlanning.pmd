@@ -1,0 +1,214 @@
+{
+  "id": "projectPlanning",
+  "include": [
+    "projectPlanningData.script",
+    "tickets.script"
+  ],
+  "endPoints": [ ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Project Planning"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "section",
+          "title": "Burndown Chart",
+          "children": [
+            {
+              "type": "waterfallChart2",
+              "data": "<% tickets.getBurndownData() %>",
+              "animateOnLoad": true,
+              "legendPosition": "RIGHT",
+              "accentFirstMark": true,
+              "appendEndMark": false,
+              "dataVariableName": "data",
+              "measurementDataSet": {
+                "name": "Tickets Remaining",
+                "value": "<% data.numTicketsRemaining %>"
+              },
+              "categoryDataSet": {
+                "name": "Timeline",
+                "value": "<% data.date %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "horizontal": "true",
+          "children": [
+            {
+              "type": "section",
+              "title": "Dual Axis Combo Chart: Ticket Status and Story Points by Sprint",
+              "children": [
+                {
+                  "type": "dualAxisChart2",
+                  "data": "<% projectPlanningData.getTicketCompletionData() %>",
+                  "dataVariableName": "data",
+                  "measurementDataSets": [
+                    {
+                      "name": "Tickets Completed",
+                      "value": "<% data.ticketsCompleted %>",
+                      "chartMarkType": "BAR"
+                    },
+                    {
+                      "name": "Tickets In Progress",
+                      "value": "<% data.ticketsInProgress %>",
+                      "chartMarkType": "BAR"
+                    },
+                    {
+                      "name": "Tickets Not Started",
+                      "value": "<% data.ticketsNotStarted %>",
+                      "chartMarkType": "BAR"
+                    },
+                    {
+                      "name": "Tickets Won't Do",
+                      "value": "<% data.ticketsWontDo %>",
+                      "chartMarkType": "BAR"
+                    },
+                    {
+                      "name": "Total Story Points Committed",
+                      "value": "<% data.storyPointsCommitted %>",
+                      "chartMarkType": "LINE",
+                      "axisPosition": "RIGHT"
+                    },
+                    {
+                      "name": "Total Story Points Completed",
+                      "value": "<% data.storyPointsCompleted %>",
+                      "chartMarkType": "LINE",
+                      "axisPosition": "RIGHT"
+                    }
+                  ],
+                  "categoryDataSet": {
+                    "name": "Sprint",
+                    "value": "<% data.sprint %>"
+                  },
+                  "rightAxisOptions": {
+                    "axisTitle": "Story Points"
+                  },
+                  "leftAxisOptions": {
+                    "axisTitle": "Tickets"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "section",
+              "title": "Time Estimates",
+              "children": [
+                {
+                  "type": "stackedBarChart2",
+                  "data": "<% projectPlanningData.getTimeEstimateData() %>",
+                  "dataVariableName": "data",
+                  "accessibilityMode": true,
+                  "measurementDataSets": [
+                    {
+                      "name": "Triage",
+                      "value": "<% data.timeSpentTriage %>"
+                    },
+                    {
+                      "name": "Development",
+                      "value": "<% data.timeSpentDevelopment %>"
+                    },
+                    {
+                      "name": "Review",
+                      "value": "<% data.timeSpentReview %>"
+                    },
+                    {
+                      "name": "Testing",
+                      "value": "<% data.timeSpentTesting %>"
+                    }
+                  ],
+                  "measurementAxisOptions": {
+                    "axisTitle": "Time Spent (hours)"
+                  },
+                  "categoryDataSet": {
+                    "name": "Ticket",
+                    "value": "<% data.ticket %>"
+                  },
+                  "targetLineDataSet": {
+                    "name": "Total Time Estimate",
+                    "value": "<% data.totalTimeEstimate %>"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "horizontal": "true",
+          "children": [
+            {
+              "type": "section",
+              "title": "Ticket Types",
+              "children": [
+                {
+                  "type": "stackedAreaChart2",
+                  "data": "<% projectPlanningData.getTicketTypeData() %>",
+                  "dataVariableName": "data",
+                  "measurementDataSets": [
+                    {
+                      "name": "Stories",
+                      "value": "<% data.stories %>"
+                    },
+                    {
+                      "name": "Bugs",
+                      "value": "<% data.bugs %>"
+                    },
+                    {
+                      "name": "Spikes",
+                      "value": "<% data.spikes %>"
+                    }
+                  ],
+                  "measurementAxisOptions": {
+                    "axisTitle": "Tickets"
+                  },
+                  "categoryDataSet": {
+                    "name": "Sprint",
+                    "value": "<% data.sprint %>"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "section",
+              "title": "Ticket Status Per Sprint",
+              "children": [
+                {
+                  "type": "percentBarChart2",
+                  "data": "<% projectPlanningData.getTicketCompletionData() %>",
+                  "dataVariableName": "data",
+                  "measurementDataSets": [
+                    {
+                      "name": "Tickets Completed",
+                      "value": "<% data.ticketsCompleted %>"
+                    },
+                    {
+                      "name": "Tickets In Progress",
+                      "value": "<% data.ticketsInProgress %>"
+                    },
+                    {
+                      "name": "Tickets Not Started",
+                      "value": "<% data.ticketsNotStarted %>"
+                    }
+                  ],
+                  "measurementAxisOptions": {
+                    "hideAxisTitle": true
+                  },
+                  "categoryDataSet": {
+                    "name": "Sprint",
+                    "value": "<% data.sprint %>"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

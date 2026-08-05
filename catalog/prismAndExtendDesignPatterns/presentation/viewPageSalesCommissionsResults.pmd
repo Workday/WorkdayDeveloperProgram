@@ -1,0 +1,171 @@
+{
+  "id": "viewPageSalesCommissionsResults",
+  "endPoints": [
+    {
+      "name": "queryResults",
+      "baseUrlType": "workday-wql",
+      "authType": "sso",
+      "httpMethod": "GET",
+      "url": "<% 
+              var whereClause = ' WHERE transactionId is not null ';
+
+              var agentIdStr = '';
+                if (!empty(flowVariables.agentId) ) {
+                    agentIdStr = flowVariables.agentId;
+                }
+
+              var transTypeStr = '';
+                if (!empty(flowVariables.type) ) {
+                    transTypeStr = flowVariables.type;
+                }
+
+              whereClause =  whereClause + ' ' + agentIdStr + ' ' + transTypeStr;
+      
+              var WQLstring = 'SELECT WPA_RowID as rowId, agentId, amount, transactionDate, transactionId, type FROM cds_sales_Commission_TBL' + whereClause + ' order by transactionId'; //begin constructing a query string
+
+             return 'data?query=' + string:urlEncode(WQLstring);
+             %>"
+    }
+  ],
+  "onLoad": "<%          
+            %>",
+  "presentation": {
+    "headerSize": "STANDARD",
+    "title": {
+      "type": "title",
+      "label": "Pending Commission Data - View"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "button",
+          "id": "detailsButtonx",
+          "label": "Commission Data Hub",
+          "action": "PRIMARY",
+          "taskReference": {
+            "taskId": "home"
+          }
+        },
+        {
+          "type": "fieldSet",
+          "id": "correctionGrid",
+          "title": "Data Available to Be Corrected",
+          "children": [
+            {
+              "type": "readOnlyText",
+              "render": false,
+              "label": "Information",
+              "value": "Add instructions here."
+            },
+            {
+              "id": "queryResultsGrid",
+              "type": "grid",
+              "label": "Results",
+              "autoPaging": true,
+              "render": "<% !empty queryResults.data %>",
+              "rows": "<% queryResults.data %>",
+              "rowVariableName": "row",
+              "enabled": "false",
+              "columns": [
+                {
+                  "cellTemplate": {
+                    "type": "text",
+                    "id": "transactionId",
+                    "value": "<% row.transactionId %>",
+                    "enabled": false
+                  },
+                  "label": "Transaction ID",
+                  "columnId": "transIdCol",
+                  "_sortableAndFilterable": "true",
+                  "type": "column"
+                },
+                {
+                  "cellTemplate": {
+                    "type": "text",
+                    "id": "agentId",
+                    "value": "<% row.agentId %>",
+                    "enabled": false
+                  },
+                  "label": "Agent Id",
+                  "columnId": "agentIdCol",
+                  "_sortableAndFilterable": "true",
+                  "type": "column"
+                },
+                {
+                  "cellTemplate": {
+                    "type": "text",
+                    "id": "rowType",
+                    "value": "<% row.type %>",
+                    "enabled": false
+                  },
+                  "label": "Type",
+                  "columnId": "typeIdCol",
+                  "_sortableAndFilterable": "true",
+                  "type": "column"
+                },
+                {
+                  "sortableAndFilterable": "true",
+                  "cellTemplate": {
+                    "type": "number",
+                    "fractionDigits": 2,
+                    "id": "amount",
+                    "minimumValue": -1000000000,
+                    "maximumValue": 1000000000,
+                    "value": "<%row.amount%>",
+                    "enabled": true
+                  },
+                  "label": "Amount",
+                  "columnId": "amountCol",
+                  "type": "column"
+                },
+                {
+                  "type": "column",
+                  "id": "transDate",
+                  "label": "Transaction Date",
+                  "cellTemplate": {
+                    "type": "date",
+                    "value": "<% row.transactionDate %>",
+                    "enabled": false
+                  },
+                  "columnId": "transDateColId"
+                },
+                {
+                  "type": "column",
+                  "id": "editButton",
+                  "label": "Edit",
+                  "cellTemplate": {
+                    "type": "button",
+                    "label": "Edit",
+                    "id": "buttonLinkInv",
+                    "taskReference": {
+                      "type": "taskReference",
+                      "taskId": "viewPageSalesCommissionsCorrectionMicro",
+                      "parameterBindings": {
+                        "refid": "<% row.rowId %>",
+                        "agentId": "<% flowVariables.agentId %>",
+                        "type": "<%  flowVariables.type %>"
+                      }
+                    }
+                  },
+                  "columnId": "editRowCol"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By<br/><b>Workday Extend</b>"
+        }
+      ]
+    }
+  }
+}

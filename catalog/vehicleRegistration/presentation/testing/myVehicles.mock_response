@@ -1,0 +1,91 @@
+{
+  "id": "myVehicles",
+  "responseCode": 200,
+  "responseBody": {
+    "data": {
+      "myVehicles": {
+        "data": [
+          {
+            "color": "Silver",
+            "compact": false,
+            "descriptor": "MN9 03N",
+            "licensePlate": "MN9 03N",
+            "location": {
+              "workdayID": {
+                "id": "d13a7c46a06443c4a33c09afbdf72c73"
+              },
+              "descriptor": "San Francisco"
+            },
+            "longDescription": "2015 Chrysler Town &Country",
+            "make": "Chrysler",
+            "model": "Town &Country",
+            "owner": {
+              "workdayID": {
+                "id": "3aa5550b7fe348b98d7b5741afc65534"
+              },
+              "descriptor": "Logan McNeil"
+            },
+            "registrationDate": "2024-01-22",
+            "workdayID": {
+              "id": "566719063cd99000881475a6bd530000"
+            },
+            "year": 2015
+          },
+          {
+            "color": "Red",
+            "compact": false,
+            "descriptor": "F75 OJY",
+            "licensePlate": "F75 OJY",
+            "location": {
+              "workdayID": {
+                "id": "d13a7c46a06443c4a33c09afbdf72c73"
+              },
+              "descriptor": "San Francisco"
+            },
+            "longDescription": "2018 Chevrolet Colorado",
+            "make": "Chevrolet",
+            "model": "Colorado",
+            "owner": {
+              "workdayID": {
+                "id": "3aa5550b7fe348b98d7b5741afc65534"
+              },
+              "descriptor": "Logan McNeil"
+            },
+            "registrationDate": "2024-01-22",
+            "workdayID": {
+              "id": "566719063cd990008836edf378000000"
+            },
+            "year": 2018
+          },
+          {
+            "color": "Black",
+            "compact": false,
+            "descriptor": "Honda Odyssey",
+            "licensePlate": "Honda Odyssey",
+            "location": {
+              "workdayID": {
+                "id": "c2215e4e5d6e413aa972fc4d22f37870"
+              },
+              "descriptor": "Dallas"
+            },
+            "longDescription": "2020 Honda Odyssey",
+            "make": "Honda",
+            "model": "Odyssey",
+            "owner": {
+              "workdayID": {
+                "id": "3aa5550b7fe348b98d7b5741afc65534"
+              },
+              "descriptor": "Logan McNeil"
+            },
+            "registrationDate": "2024-01-22",
+            "workdayID": {
+              "id": "566719063cd990008836edf378001234"
+            },
+            "year": 2020
+          }
+        ],
+        "total": 2
+      }
+    }
+  }
+}

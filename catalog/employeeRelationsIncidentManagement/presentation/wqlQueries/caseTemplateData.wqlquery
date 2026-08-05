@@ -1,0 +1,10 @@
+{
+  "id": "caseTemplateData",
+  "parameters": ["appId", "rowWID"],
+  "query": "<%
+    `SELECT templateName
+    FROM {{appId}}_caseTemplatesBO 
+    WHERE workdayID = '{{rowWID}}'`
+  %>"
+}
+

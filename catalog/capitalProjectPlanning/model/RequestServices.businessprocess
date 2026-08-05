@@ -1,0 +1,25 @@
+{
+  "id": 2,
+  "name": "RequestServices",
+  "label": "Request Services",
+  "description": "Business Process Type for CreateRequestServices",
+  "useForOrchestrate": false,
+  "allowsCancel": false,
+  "approvalStep": {
+    "pageRoute": "/RequestedServiceCategoryEventApprove/{eventId}",
+    "actions": [
+      "APPROVE",
+      "DENY",
+      "SEND_BACK"
+    ]
+  },
+  "actionSteps": [],
+  "targetBusinessObject": "RequestedServiceCategory",
+  "securityDomains": [
+    "CapitalProjectPlanning"
+  ],
+  "details": {
+    "pageRoute": "/RequestedServiceCategoryEventApprove/{eventId}"
+  },
+  "revisePageRoute": "/CapitalPlanningRequestEdit/{eventStepId}"
+}

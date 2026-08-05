@@ -1,0 +1,52 @@
+{
+  "appProperties": [ ],
+  "flowDefinitions": [
+    {
+      "id": "createCaseFlow",
+      "flowSteps": [
+        {
+          "id": "home",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "confirm",
+              "condition": "true"
+            }
+          ],
+          "taskId": "home"
+        },
+        {
+          "id": "confirm",
+          "taskId": "confirm"
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "home",
+      "routingPattern": "/",
+      "page": {
+        "id": "home"
+      }
+    },
+    {
+      "id": "confirm",
+      "routingPattern": "confirm",
+      "page": {
+        "id": "confirm"
+      }
+    }
+  ],
+  "applicationId": "helpCaseCreation",
+  "dataProviders": [
+    {
+      "key": "workday-help",
+      "value": "<% `{{apiGatewayEndpoint}}/helpCase/v3` %>"
+    },
+    {
+      "key": "workday-staffing",
+      "value": "<% `{{apiGatewayEndpoint}}/staffing/v3` %>"
+    }
+  ]
+}

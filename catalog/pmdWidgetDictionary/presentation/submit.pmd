@@ -1,0 +1,18 @@
+{
+  "id": "submit",
+  "presentation": {
+    "pageType": "edit",
+    "micro": true,
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "textArea",
+          "id": "dates",
+          "label": "Selected Dates on Micro Edit page",
+          "value": "<% queryParams.toJson() %>"
+        }
+      ]
+    }
+  }
+}

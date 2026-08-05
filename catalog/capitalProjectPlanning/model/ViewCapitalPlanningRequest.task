@@ -1,0 +1,11 @@
+{
+  "id": 4,
+  "name": "ViewCapitalPlanningRequest",
+  "label": "View Capital Planning Request",
+  "securityDomains": [
+    "CapitalProjectPlanning",
+    "CapitalProjectPlanningAdministrator"
+  ],
+  "routePath": "/CapitalPlanningRequestView/{taskObjectId}",
+  "businessObject": "CapitalProjectRequest"
+}

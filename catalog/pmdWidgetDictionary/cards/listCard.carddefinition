@@ -1,0 +1,45 @@
+{
+  "id": "listCard",
+  "presentation": {
+    "type": "inlineCard",
+    "header": {
+      "type": "cardHeader",
+      "title": "My List Card Header Title",
+      "subtitle": "My List Card Header Subtitle",
+      "indicator": {
+        "label": "Home-Hub List Card",
+        "color": "GREEN"
+      },
+      "icon": "wd-accent-coffee"
+    },
+    "body": {
+      "type": "listCard",
+      "title": "List Card Title",
+      "subtitle": "List Card Subtitle",
+      "on": "<% workers.data %>",
+      "as": "currWorker",
+      "template": {
+        "label": "Template Label:",
+        "value": "<% currWorker.descriptor %>",
+        "secondaryValue": "<% 'Sec Value: ' + currWorker.primaryJob.businessTitle %>",
+        "secondaryValueWidth": "MEDIUM"
+      }
+    },
+    "footer": [
+      {
+        "label": "home",
+        "taskReference": {
+          "taskId": "home"
+        }
+      }
+    ]
+  },
+  "endPoints": [
+    {
+      "name": "workers",
+      "baseUrlType": "workday-staffing",
+      "url": "/workers?limit=10",
+      "authType": "sso"
+    }
+  ]
+}

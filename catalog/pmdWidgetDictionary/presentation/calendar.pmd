@@ -1,0 +1,61 @@
+{
+  "id": "calendar",
+  "include": [
+    "eventData.script"
+  ],
+  "presentation": {
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "multiSelectCalendar",
+          "calendarStartDate": "2023-11-01",
+          "eventData": {
+            "on": "<% eventData.getData() %>",
+            "as": "data",
+            "template": {
+              "startDate": "<% date:parse(data.start) %>",
+              "endDate": "<% date:parse(data.end ?? data.start) %>",
+              "style": "<% data.style ?? 'DEFAULT' %>",
+              "title": "<% data.label %>",
+              "editTask": {
+                "render": "<% data.enabled ?? false %>",
+                "task": {
+                  "taskId": "popup",
+                  "parameters": {
+                    "startDate": "<% date:parse(data.start) %>",
+                    "endDate": "<% date:parse(data.end) %>",
+                    "style": "<% data.style %>",
+                    "title": "<% data.label %>"
+                  }
+                }
+              }
+            }
+          },
+          "sidebar": {
+            "task": {
+              "taskId": "sidebar",
+              "parameters": {
+                "username": "lmcneil"
+              }
+            },
+            "position": "left"
+          },
+          "submitButton": {
+            "label": "SUBMIT",
+            "render": "true",
+            "datesQueryParamName": "selectedDates",
+            "task": {
+              "taskId": "submit",
+              "parameters": {
+                "userId": "12345",
+                "username": "lmcneil",
+                "date": "someQueryParamData"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

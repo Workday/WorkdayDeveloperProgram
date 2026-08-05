@@ -1,0 +1,8 @@
+{
+  "id": "getBPEvents",
+  "parameters": ["applicationId"],
+  "query": "
+    SELECT businessProcessTarget, status FROM <% applicationId + '_workFromAnywhereRequestEvents' %>
+  ",
+  "limit": "100"
+}

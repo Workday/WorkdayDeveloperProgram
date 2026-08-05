@@ -1,0 +1,18 @@
+{
+  "id": 1,
+  "name": "CreateCharity",
+  "label": "Create Charity",
+  "description": "Create a Charity to accept Charitable Donations for.",
+  "targetBusinessObject": "Charity",
+  "allowsCancel": false,
+  "approvalStep": {
+    "actions": [
+      "APPROVE",
+      "DENY"
+    ],
+    "pageRoute": "/charityEvent/{eventId}"
+  },
+  "details": {
+    "pageRoute": "/charityEvent/{eventId}"
+  }
+}

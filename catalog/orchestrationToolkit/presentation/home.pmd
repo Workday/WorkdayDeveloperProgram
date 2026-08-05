@@ -1,0 +1,114 @@
+{
+  "_pagePurpose1": "As the main landing page for this toolkit, many of the Orchestrations can be run directly from here.",
+  "_pagePurpose2": "Note: some need to be executed from other pages in the application.",
+  "id": "home",
+  "endPoints": [],
+  "onLoad": "<%
+  const orchList =[
+  {
+    'title': 'Validate with ContinueOnConditions Step',
+    'id': 'ValidateWithContinueOnConditionNoSurfacedSpecificVaidationMessageNoErrorHandlers',
+    'descriptor': 'Inclusion of a Continue on Conditions will make Orchestrate recognize there is an error. The output is strictly plain text. It will return the assertion message defined in the Continue on Condition step. (There is no local or global error handler defined.)'
+  },
+  {
+    'title': 'Validate with Validator Step',
+    'id': 'ValidateWithValidationIterator',
+    'descriptor': 'The Validate step does cause Orchestrate to recognize that an error has been detected. It is up to the developer to determine how to handle the errors. This orchestration uses a validation iterator to create a list of the failed validations to then be returned back to the system. (There is no local or global error handler defined.)'
+  },
+  {
+    'title': 'Local Error Handler - Conditional Output',
+    'id': 'LocalErrorHandlerConditionalOutputNoGlobal',
+    'descriptor': 'The inclusion of a local error handler allows the orchestration flow to be modified via the isSuccess output from error handler. The raw error has no way to be surfaced back in the response. Generally speaking, this error is very technical and would only be helpful to a developer.'
+  },
+  {
+    'title': 'Local Error Handler - Propagation',
+    'id': 'LocalErrorHandlerPropagateNoGlobalHandler',
+    'descriptor': 'The inclusion of a local error handler allows errors ONLY in the local error handler to be responded to. The orchestration will return a plain text response with the overall technical error. There is NO way to adjust the flow/behavior of the flow in this configuration.'
+  },
+  {
+    'title': 'Synch with Global Error Handler',
+    'id': 'GlobalErrorHandlerDemoNoModificationOfResponse',
+    'descriptor': 'Returns the detected error in plain/text (in a very technical format.)'
+  },
+  {
+    'title': 'Customize Synch Orch Response on Error',
+    'id': 'ModifyingSyncOrchResponseWithErrorHandlerOutput',
+    'descriptor': 'Uses the isSuccess output to customize the end response of the sync orchestration to provide a customized output instead of the default plain/text. The flip side is the low level technical error is not available to be included in this response.'
+  },
+  {
+    'title': 'HTTP Trigger Without Error Codes Defined',
+    'id': 'HTTPwithGlobalErrorHandlerNoValidResponseCodesSet',
+    'descriptor': 'Despite the options selected on the page, this orchestration will not trigger an error at all. Orchestrate is agnostic towards HTTP status codes - the developer must define what acceptable codes are. This is done by defining a HTTP retry configuration in the settings and then applying that configuration to the HTTP component.'
+  },
+  {
+    'title': 'HTTP Trigger With Error Codes Defined',
+    'id': 'HTTPwithValidResponseCodesConfig',
+    'descriptor': 'This will throw a plain/text error since the 403 code is outside the defined success range. It will be up to the developer to decide if local error handlers should be used to respond to the error.'
+  },
+  {
+    'title': 'Unhandled Error Sample',
+    'id': 'ValidateWithCustomResponseForcedUnhandledError',
+    'descriptor': 'This will ALWAYS throw a plain/text error since it is explicitly hardcoded to divide by zero. The intention of sharing this orchestration is to call attention to how you can react to errors that may arise in your orchestration without even having any error handlers defined.'
+  },
+  {
+    'title': 'Asynch with Global Handler',
+    'id': 'AsynchGlobalErrorHandlerLogging',
+    'descriptor': 'There is no response from this orch. Any error handling will and probably SHOULD use logging: either to the Extend logs or possibly to an Extend Model object that you define (lots of work to implement).'
+  }
+]
+;
+
+  pageVariables.OrchInstanceList = orchList;
+
+
+  %>",
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Workday Extend - Orchestration Error Handling in Context of PMDs"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "text",
+          "label": "Information",
+          "value": "There is only one async orch - the rest are sync orchestrations. It is intended that you are opening the orchestration source code in Orchestrate Builder to understand how each of these are configured."
+        },
+        {
+          "type": "cardContainer",
+          "id": "orchestrateCards",
+          "dynamicCards": {
+            "as": "orchEntry",
+            "on": "<% pageVariables.OrchInstanceList %>",
+            "template": {
+              "cardId": "orchLink",
+              "parameters": {
+                "title": "<% orchEntry.title %>",
+                "body": "<% orchEntry.descriptor %>",
+                "taskLabel": "<% orchEntry.title %>",
+                "orchID": "<% orchEntry.id %>"
+              }
+            }
+          }
+        },
+        {
+          "type": "text",
+          "label": "Takeaways",
+          "value": "If you want to surface a non low level error code, you should use either error handlers and/or a validate components to create custom defined response bodies on sync orchestrations. This app does NOT address 'recovery' options for relaunching orchestrations (which is a different concept from error handling, but does admittedly go hand in hand with it)."
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

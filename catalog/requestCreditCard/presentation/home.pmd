@@ -1,0 +1,209 @@
+{
+  "id": "home",
+  "securityDomains": [
+    "ManageCreditCardRequests"
+  ],
+  "endPoints": [
+    {
+      "name": "me",
+      "baseUrlType": "workday-staffing",
+      "url": "workers/me",
+      "authType": "sso"
+    },
+    {
+      "name": "creditCardRequests",
+      "baseUrlType": "app",
+      "url": "<% 'creditCardRequests?cardAssignee=' + me.id %>",
+      "authType": "sso"
+    },
+    {
+      "name": "creditCardTransactions",
+      "baseUrlType": "workday-expenses",
+      "url": "entries?entryType=cd152f26446c11de98360015c5e6daf6",
+      "authType": "sso",
+      "_comment": "only retrieve expense entries for the Credit Card Transaction entry type. "
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "My Credit Card Requests"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "sorted": false,
+      "children": [
+        {
+          "type": "section",
+          "horizontal": "true",
+          "columnWidthRatios": [
+            0.8,
+            0.2
+          ],
+          "children": [
+            {
+              "type": "section",
+              "children": [
+                {
+                  "type": "section",
+                  "title": "My Credit Card Requests",
+                  "horizontal": false,
+                  "sorted": false,
+                  "children": [
+                    {
+                      "type": "panelList",
+                      "panels": "<% creditCardRequests.data %>",
+                      "panelName": "cardRequest",
+                      "doNotAdd": "true",
+                      "doNotRemove": "true",
+                      "render": "<% (!(empty(creditCardRequests.data))) %>",
+                      "children": [
+                        {
+                          "type": "section",
+                          "horizontal": true,
+                          "sorted": false,
+                          "children": [
+                            {
+                              "type": "section",
+                              "horizontal": true,
+                              "sorted": false,
+                              "children": [
+                                {
+                                  "id": "cardPhoto",
+                                  "type": "image",
+                                  "imageUri": "data:image/png;base64,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"
+                                },
+                                {
+                                  "type": "templatedListItem",
+                                  "title": {
+                                    "type": "instanceList",
+                                    "instanceList": [
+                                      {
+                                        "type": "instance",
+                                        "id": "<% cardRequest.cardAssignee.id %>",
+                                        "descriptor": "<% cardRequest.cardAssignee.descriptor %>",
+                                        "wid": "<% cardRequest.cardAssignee.id %>"
+                                      }
+                                    ]
+                                  },
+                                  "subtitles": [
+                                    "Credit Limit: <% cardRequest.creditLimit %>",
+                                    "Business Reason: <% cardRequest.businessReason %>"
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "value": "There are no Credit Card Requests.",
+                      "render": "<% empty(creditCardRequests.data) %>"
+                    },
+                    {
+                      "type": "button",
+                      "id": "requestCreditCardButton",
+                      "label": "Request Credit Card",
+                      "action": "PRIMARY",
+                      "taskReference": {
+                        "taskId": "requestCreditCard"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "grid",
+                  "id": "gridCreditCardTransactions",
+                  "gridType": "LIST",
+                  "label": "Credit Card Transactions",
+                  "rows": "<% creditCardTransactions.data.sort(c => { c.date }).reverse() %>",
+                  "rowVariableName": "cardTransaction",
+                  "doNotAdd": "true",
+                  "doNotRemoveRow": "true",
+                  "selectionEnabled": "false",
+                  "columns": [
+                    {
+                      "type": "column",
+                      "columnId": "columnCardTransactionDescriptor",
+                      "cellTemplate": {
+                        "type": "instanceList",
+                        "label": "Expense",
+                        "instanceList": [
+                          {
+                            "id": "<% cardTransaction.id %>",
+                            "descriptor": "<% cardTransaction.descriptor %>",
+                            "wid": "<% cardTransaction.id %>"
+                          }
+                        ]
+                      },
+                      "label": "Expense",
+                      "sortableAndFilterable": true
+                    },
+                    {
+                      "type": "column",
+                      "columnId": "columnCardTransactionDate",
+                      "cellTemplate": {
+                        "type": "date",
+                        "value": "<% cardTransaction.date %>",
+                        "datePrecision": "DAY"
+                      },
+                      "label": "Date",
+                      "sortableAndFilterable": true
+                    },
+                    {
+                      "type": "column",
+                      "columnId": "columnCardTransactionAmount",
+                      "cellTemplate": {
+                        "enabled": "false",
+                        "type": "currency",
+                        "currencyCode": "<% cardTransaction.amount.currency %>",
+                        "value": "<% cardTransaction.amount.value %>",
+                        "showCurrencySymbol": "true",
+                        "fractionDigits": "2"
+                      },
+                      "label": "Amount",
+                      "sortableAndFilterable": true
+                    },
+                    {
+                      "type": "column",
+                      "columnId": "columnCardTransactionStatus",
+                      "cellTemplate": {
+                        "type": "instanceList",
+                        "instanceList": [
+                          {
+                            "id": "<% cardTransaction.expenseEntryStatus.id %>",
+                            "descriptor": "<% cardTransaction.expenseEntryStatus.descriptor %>",
+                            "wid": "<% cardTransaction.expenseEntryStatus.id %>"
+                          }
+                        ]
+                      },
+                      "label": "Status"
+                    },
+                    {
+                      "type": "column",
+                      "columnId": "columnCardTransactionEntryType",
+                      "cellTemplate": {
+                        "type": "instanceList",
+                        "instanceList": [
+                          {
+                            "id": "<% cardTransaction.entryType.id %>",
+                            "descriptor": "<% cardTransaction.entryType.descriptor %>",
+                            "wid": "<% cardTransaction.entryType.id %>"
+                          }
+                        ]
+                      },
+                      "label": "Expense Type"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

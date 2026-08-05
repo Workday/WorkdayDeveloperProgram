@@ -1,0 +1,60 @@
+{
+  "id": 1,
+  "name": "CreditCardRequest",
+  "defaultSecurityDomains": [
+    "ManageCreditCardRequests"
+  ],
+  "columns": [
+    {
+      "id": 2,
+      "name": "Card Assignee",
+      "field": "cardAssignee",
+      "order": "b"
+    },
+    {
+      "id": 3,
+      "name": "Credit Limit",
+      "field": "creditLimit",
+      "order": "c"
+    },
+    {
+      "id": 4,
+      "name": "Business Reason",
+      "field": "businessReason",
+      "order": "d"
+    },
+    {
+      "id": 5,
+      "name": "Last 4 Digits",
+      "field": "last4Digits",
+      "order": "e"
+    },
+    {
+      "id": 6,
+      "name": "Expiration Month",
+      "field": "expirationMonth",
+      "order": "f"
+    },
+    {
+      "id": 7,
+      "name": "Expiration Year",
+      "field": "expirationYear",
+      "order": "g"
+    },
+    {
+      "id": 1,
+      "name": "CreditCardRequest",
+      "order": "a",
+      "isSelfReferencing": true
+    }
+  ],
+  "businessObject": "CreditCardRequest",
+  "sortConfigs": [
+    {
+      "id": 1,
+      "order": "a",
+      "field": "cardAssignee",
+      "direction": "ASCENDING"
+    }
+  ]
+}

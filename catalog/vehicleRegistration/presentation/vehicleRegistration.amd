@@ -1,0 +1,88 @@
+{
+  "appProperties": [ ],
+  "tasks": [
+    {
+      "id": "home",
+      "routingPattern": "/home",
+      "page": {
+        "id": "home"
+      }
+    },
+    {
+      "id": "register",
+      "routingPattern": "/register",
+      "page": {
+        "id": "register"
+      }
+    },
+    {
+      "id": "delete",
+      "routingPattern": "/delete",
+      "page": {
+        "id": "delete"
+      }
+    },
+    {
+      "id": "errorPage",
+      "routingPattern": "/errorPage",
+      "page": {
+        "id": "errorPage"
+      }
+    },
+    {
+      "id": "vehicleHub",
+      "routingPattern": "/",
+      "page": {
+        "id": "vehicleHub"
+      }
+    },
+    {
+      "id": "viewRegistration",
+      "routingPattern": "/viewRegistration",
+      "page": {
+        "id": "viewRegistration"
+      }
+    },
+    {
+      "id": "registerVehicleWizard",
+      "routingPattern": "/registerVehicleWizard",
+      "page": {
+        "id": "registerVehicleWizard"
+      }
+    },
+    {
+      "id": "viewLocations",
+      "routingPattern": "/viewLocations",
+      "page": {
+        "id": "viewLocations"
+      }
+    }
+  ],
+  "applicationId": "vehicleRegistration",
+  "dataProviders": [
+    {
+      "key": "app",
+      "value" : "<% `{{apiGatewayEndpoint}}/apps/{{site.applicationId}}/v1/` %>"
+    },
+    {
+      "key": "external-car-api",
+      "value": "https://carapi.app/api/"
+    },
+    {
+      "key": "workday-common",
+      "value" : "<% `{{apiGatewayEndpoint}}/common/v1/` %>"
+    },
+    {
+      "key": "workday-staffing",
+      "value" : "<% `{{apiGatewayEndpoint}}/staffing/v1/` %>"
+    },
+    {
+      "key": "workday-wql",
+      "value" : "<% `{{apiGatewayEndpoint}}/wql/v1/`  %>"
+    },
+    {
+      "key": "workday-graph",
+      "value" : "<% `{{apiGatewayEndpoint}}/graphql/v1/` %>"
+    }
+  ]
+}

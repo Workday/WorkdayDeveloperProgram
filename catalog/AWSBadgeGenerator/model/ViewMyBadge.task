@@ -1,0 +1,11 @@
+{
+  "id": 2,
+  "name": "ViewMyBadge",
+  "label": "View My Badge",
+  "securityDomains": [
+    "AwsOnboardingApp"
+  ],
+  "routePath": "/ViewMyBadge",
+  "businessObject": "WORKER",
+  "secured": true
+}

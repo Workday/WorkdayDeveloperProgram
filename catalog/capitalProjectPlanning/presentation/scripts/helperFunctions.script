@@ -1,0 +1,28 @@
+var getCurrentTime = function() {
+  return date:getTodaysDate(date:getDateTimeZone('US/Pacific'));
+};
+
+//Used to validate dates on edit page
+var isNewDateAfterReferenceDate = function (widget, newDate, referenceDate, message, message_type) {
+    //if referenceDate is empty, there's nothing to compare
+    if (referenceDate==null){
+        return null;
+    }
+
+    //if newly provided date is blank or the date is after, validation is passed
+    if (newDate == null || newDate > referenceDate) {
+        widget.clearError();
+        widget.clearWarning();
+    } else {
+        if (message_type == "ERROR") {
+            widget.setError(message);
+        } else {
+            widget.setWarning(message);
+        }
+    }
+};
+
+{
+  "getCurrentTime": getCurrentTime,
+  "isNewDateAfterReferenceDate": isNewDateAfterReferenceDate
+}

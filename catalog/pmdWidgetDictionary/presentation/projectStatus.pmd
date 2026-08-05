@@ -1,0 +1,56 @@
+{
+  "id": "projectStatus",
+  "include": [
+    "tickets.script"
+  ],
+  "endPoints": [ ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Project Status"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "cardContainer",
+          "layout": "MASONRY",
+          "cards": [
+            {
+              "type": "card",
+              "cardId": "features",
+              "parameters": "<% {
+                  'ticketStatus': 'Open',
+                  'allTickets': tickets.getAllTickets()
+              } %>"
+            },
+            {
+              "type": "card",
+              "cardId": "features",
+              "parameters": "<% {
+                  'ticketStatus': 'In Progress',
+                  'allTickets': tickets.getAllTickets()
+              } %>"
+            },
+            {
+              "type": "card",
+              "cardId": "features",
+              "parameters": "<% {
+                  'ticketStatus': 'In Review',
+                  'allTickets': tickets.getAllTickets()
+              } %>"
+            },
+            {
+              "type": "card",
+              "cardId": "features",
+              "parameters": "<% {
+                  'ticketStatus': 'Completed',
+                  'allTickets': tickets.getAllTickets()
+              } %>"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

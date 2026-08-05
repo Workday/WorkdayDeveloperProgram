@@ -1,0 +1,72 @@
+{
+  "id": 1,
+  "name": "AllVehicles",
+  "businessObject": "Vehicle",
+  "defaultSecurityDomains": [
+    "ManageVehicles"
+  ],
+  "sortConfigs": [
+    {
+      "id": 1,
+      "order": "a",
+      "field": "licensePlate",
+      "direction": "ASCENDING"
+    }
+  ],
+  "columns": [
+    {
+      "id": 1,
+      "field": "licensePlate",
+      "name": "License Plate",
+      "order": "a"
+    },
+    {
+      "id": 2,
+      "field": "year",
+      "name": "Year",
+      "order": "b"
+    },
+    {
+      "id": 3,
+      "field": "make",
+      "name": "Make",
+      "order": "c"
+    },
+    {
+      "id": 4,
+      "field": "model",
+      "name": "Model",
+      "order": "d"
+    },
+    {
+      "id": 5,
+      "field": "registrationDate",
+      "name": "Date of Registration",
+      "order": "e"
+    },
+    {
+      "id": 6,
+      "field": "color",
+      "name": "Color",
+      "order": "f"
+    },
+    {
+      "id": 7,
+      "field": "owner",
+      "name": "Owner",
+      "order": "g"
+    },
+    {
+      "id": 8,
+      "field": "compact",
+      "name": "Vehicle is Compact",
+      "order": "h"
+    },
+    {
+      "id": 9,
+      "field": "location",
+      "name": "Vehicle Location",
+      "order": "i"
+    }
+  ]
+}

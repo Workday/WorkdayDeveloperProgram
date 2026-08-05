@@ -1,0 +1,149 @@
+{
+  "id": "updateUserPreferences",
+  "endPoints": [
+    {
+      "name": "currentUserData",
+      "baseUrlType": "general",
+      "authType": "sso",
+      "url": "common/v1/workers/me"
+    },
+    {
+      "name": "userPreferenceData",
+      "baseUrlType": "app",
+      "authType": "sso",
+      "url": "<% 'userPreferencesBO?worker=' + currentUserData.id %>"
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "postUserPreferences",
+        "url": "userPreferencesBO",
+        "baseUrlType": "app",
+        "exclude": "<% !empty(prefID.value) %>",
+        "failOnStatusCodes": [
+          {
+            "code": 400
+          }
+        ]
+      },
+      {
+        "name": "putUserPreferences",
+        "url": "<% 'userPreferencesBO/' + prefID.value %>",
+        "httpMethod": "PUT",
+        "baseUrlType": "app",
+        "exclude": "<% empty(prefID.value) %>",
+        "failOnStatusCodes": [
+          {
+            "code": 400
+          }
+        ]
+      },
+      {
+        "type": "outboundVariable",
+        "variableScope": "flow",
+        "name": "flowVars",
+        "values": [
+          {
+            "outboundPath": "caseID",
+            "value": "<% queryParams.caseID %>"
+          }
+        ]
+      }
+    ]
+  },
+  "presentation": {
+    "pageType": "edit",
+    "micro": true,
+    "microFirstPageOnly": true,
+    "title": {
+      "type": "title",
+      "label": "Protected Case Management - User Preferences"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "fieldSet",
+          "title": "Protected Case Comments",
+          "children": [
+            {
+              "type": "checkBox",
+              "label": "Include Linked Comments",
+              "enabled": false,
+              "id": "includeLinkedComments",
+              "value": "<% empty(userPreferenceData.data[0].includeLinkedComments) ? false : userPreferenceData.data[0].includeLinkedComments %>",
+              "valuesOut": [
+                {
+                  "value": "<% self.value %>",
+                  "valueOutBinding": "postUserPreferences.includeLinkedComments"
+                },
+                {
+                  "value": "<% self.value %>",
+                  "valueOutBinding": "putUserPreferences.includeLinkedComments"
+                }
+              ]
+            },
+            {
+              "type": "radioGroup",
+              "label": "Sort Comments",
+              "id": "sortComments",
+              "hideDisplayOption": true,
+              "selectedValues": "<% empty(userPreferenceData.data[0].sortComments) ? ['Asc'] : [userPreferenceData.data[0].sortComments] %>",
+              "instanceList": [
+                {
+                  "id": "Asc",
+                  "descriptor": "Ascending"
+                },
+                {
+                  "id": "Desc",
+                  "descriptor": "Descending"
+                }
+              ],
+              "valuesOut": [
+                {
+                  "value": "<% self.value[0] %>",
+                  "valueOutBinding": "postUserPreferences.sortComments"
+                },
+                {
+                  "value": "<% self.value[0] %>",
+                  "valueOutBinding": "putUserPreferences.sortComments"
+                }
+              ]
+            },
+            {
+              "type": "hidden",
+              "value": "<% currentUserData.id %>",
+              "valuesOut": [
+                {
+                  "value": "<% self.value %>",
+                  "valueOutBinding": "postUserPreferences.worker.id"
+                },
+                {
+                  "value": "<% self.value %>",
+                  "valueOutBinding": "putUserPreferences.worker.id"
+                }
+              ]
+            },
+            {
+              "type": "hidden",
+              "id": "prefID",
+              "value": "<% empty(userPreferenceData.data[0].id) ? null : userPreferenceData.data[0].id %>"
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "id": "viewPageSalesCommissionSearch",
+  "endPoints": [
+    {
+      "name": "salesCommissionPrompt",
+      "baseUrlType": "workday-wql",
+      "authType": "sso",
+      "url": "<% 
+                 //const resultSize = 1200;
+                 const WQLstring = 'SELECT agentId, type FROM cds_sales_Commission_TBL GROUP BY agentId, type'; 
+                 return 'data?query=' + string:urlEncode(WQLstring);
+                  %>",
+      "failOnStatusCodes": [
+          {
+            "code": 400
+          },
+          {
+            "code": 403
+          },
+          {
+            "code": 404
+          },
+          {
+            "code": 500
+          }
+        ]
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "type": "outboundVariable",
+        "variableScope": "flow",
+        "name": "outboundFlowVariable",
+        "values": [
+          {
+            "outboundPath": "agentId",
+            "value": "<%   var agentIdStr = '';
+                                  if (!empty(agentIdFilter.getSelectedEntries())) {                                    
+                                        for ( var item :  agentIdFilter.getSelectedEntries()){
+                                              agentIdStr = agentIdStr + '\"' + item.id + '\",'
+                                        } 
+                                    agentIdStr = agentIdStr.removeEndIgnoreCase(',');
+                                    agentIdStr = ' and agentId in (' + agentIdStr + ')';
+                                  }
+                           return agentIdStr;
+                      %>"
+          },
+          {
+            "outboundPath": "type",
+            "value": "<%   var typeStr = '';
+                                  if (!empty(typeFilters.getSelectedEntries())) {                                    
+                                        for ( var item :  typeFilters.getSelectedEntries()){
+                                              typeStr = typeStr + '\"' + item.id + '\",'
+                                        } 
+                                    typeStr = typeStr.removeEndIgnoreCase(',');
+                                    typeStr = ' and type in (' + typeStr + ')';
+                                  }
+                           return typeStr;
+                      %>"
+          }
+
+        ]
+      }
+    ]
+  },
+"onLoad": "<%
+            //filter variables
+            pageVariables.agentIdFilters = [];
+            pageVariables.typeFilters = [];
+
+            for (var listRow : salesCommissionPrompt.data) {
+              //prepare filter data
+              if (!(empty(listRow.agentId))) {
+                pageVariables.agentIdFilters.add({'id': listRow.agentId ,'descriptor': listRow.agentId});
+              }
+              if (!(empty(listRow.type))) {
+                pageVariables.typeFilters.add({'id': listRow.type,'descriptor': listRow.type});
+              }
+            }
+
+            pageVariables.agentIdFilters = list:distinct(pageVariables.agentIdFilters);
+            pageVariables.typeFilters = list:distinct(pageVariables.typeFilters);
+
+            %>",  
+  "presentation": {
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "Pending Commission Data - Filter"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "fieldSet",
+          "children": [
+            {
+              "type": "fieldSet",
+              "title": "Filter",
+              "horizontal": true,
+              "collapsible": true,
+              "initializeCollapsed": false,
+              "children": [
+                {
+                  "type": "instanceList",
+                  "label": "Agent ID",
+                  "id": "agentIdFilter",
+                  "multiSelect": true,
+                  "values": "<% pageVariables.agentIdFilters %>"
+                },
+                {
+                  "type": "instanceList",
+                  "label": "Commission Type",
+                  "id": "typeFilters",
+                  "multiSelect": true,
+                  "values": "<% pageVariables.typeFilters %>"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

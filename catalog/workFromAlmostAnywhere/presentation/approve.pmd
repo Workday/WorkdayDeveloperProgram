@@ -1,0 +1,84 @@
+{
+  "id": "approve",
+  "include": [
+    "fileTypes.script"
+  ],
+  "endPoints": [
+    {
+      "name": "me",
+      "baseUrlType": "workday-common",
+      "url": "workers/me",
+      "authType": "sso"
+    },
+    {
+      "name": "userInfo",
+      "baseUrlType": "workday-common",
+      "url": "userInfo",
+      "authType": "sso"
+    },
+    {
+      "baseUrlType": "workday-wql",
+      "name": "getRequestId",
+      "authType": "sso",
+      "wqlQuery": {
+        "parameters": {
+          "applicationId": "<% site.applicationId %>",
+          "eventId": "<% queryParams.eventId %>"
+        },
+        "queryId": "getRequestId"
+      },
+      "url": "data"
+    },
+    {
+      "name": "request",
+      "baseUrlType": "app",
+      "url": "<% //this endpoint calls our app's Model BO endpoint for remote requests, and uses the ID of the BO retrieved above
+              'workFromAnywhereRequests/' + getRequestId.data[0].businessProcessTarget.id %>",
+      "authType": "sso"
+    },
+    {
+      "name": "getAttachments",
+      "baseUrlType": "app",
+      "url": "<% 'rightToWorkVerifications?workRequest=' + request.id  %>",
+      "authType": "sso"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Please Review Remote Work Request"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": true,
+      "children": [
+        {
+          "type": "fieldSet",
+          "title": "Instructions and Request Details",
+          "id": "leftside",
+          "children": [
+            {
+              "type": "readOnlyText",
+              "id": "advisory",
+              "value": "Please ensure this request is created according to company standards and includes applicable proof of the applicant's Right to Work in the requested country."
+            },
+            {
+              "type": "pod",
+              "podId": "requestDetailsViewOnly"
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "id": "rightside",
+          "children": [
+            {
+              "type": "pod",
+              "podId": "previouslyAttachedFiles"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "id": 1,
+  "name": "EventImage",
+  "label": "Event Image",
+  "defaultSecurityDomains": [
+    "ManageCreateAnEvent"
+  ],
+  "defaultCollection": {
+    "name": "eventImages",
+    "label": "All Event Images"
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "uploadedBy",
+      "label": "Image Uploaded By",
+      "type": "SINGLE_INSTANCE",
+      "target": "WORKER"
+    },
+    {
+      "id": 2,
+      "name": "uploadedDate",
+      "label": "Image Upload Date",
+      "type": "DATE",
+      "precision": "DAY"
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "id": "linkToDelivered",
+  "endPoints": [ ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Link to Delivered Task & Reports"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "pod",
+          "podId": "header"
+        },
+        {
+          "type": "richText",
+          "value": "Flows within Workday will always return you to the last View page.  The below buttons show different examples of flows.<br><br>The first two examples shows a link to a View page - <b>Manage Absence</b>.  From there you can request an absence, after requesting your absence you are returned to the last View page which is the <b>Manage Absence</b> page<br><br>The third example takes you directly to the <b>Request Absence</b> page which is an Edit page.  After requesting your absence, you will be returned to this page because this is your last View page.
+The fourth example takes you to an Extend edit page.  From there you can proceed to another Edit page to <b>Request Absence</b>.  After requesting the absence, you are returned here because this is your last View page."
+        },
+        {
+          "type": "fieldSet",
+          "title": "Example 1 & 2",
+          "children": [
+            {
+              "type": "richText",
+              "value": "When moving through these flows, you will not be returned here.  Instead you will be returned to the <b>Manage Absence<b> page because it is a View page."
+            },
+            {
+              "type": "button",
+              "label": "Manage Absence",
+              "action": "AUXILIARY",
+              "workdayTaskReference": {
+                "wid": "dcf164fbbe5e10002789cb62f84f0000"
+              }
+            },
+            {
+              "type": "cardContainer",
+              "cards": [
+                {
+                  "type": "card",
+                  "cardId": "landingActionDeliveredTask",
+                  "parameters": "<% {
+                      'title': 'Manage Absence',
+                      'WID': 'dcf164fbbe5e10002789cb62f84f0000',
+                      'body' : 'Enables you to view the Manage Absence calendar to review, edit, and request absence for you or your team members.'
+                  }%>"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "fieldSet",
+          "title": "Example 3 & 4",
+          "children": [
+            {
+              "type": "richText",
+              "value": "When moving through these flows, you will be returned here because this is your last View page."
+            },
+            {
+              "type": "button",
+              "label": "Request Absence",
+              "action": "AUXILIARY",
+              "workdayTaskReference": {
+                "wid": "c4936fdad7d110001d9c005c57510000"
+              }
+            },
+            {
+              "type": "button",
+              "label": "Extend Edit Task",
+              "action": "PRIMARY",
+              "taskReference": {
+                "taskId": "task"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

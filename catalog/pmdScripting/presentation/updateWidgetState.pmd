@@ -1,0 +1,198 @@
+{
+  "id": "updateWidgetState",
+  "include": [
+    "updateWidgetState.script"
+  ],
+  "endPoints": [
+    {
+      "name": "expenses",
+      "baseUrlType": "workday-expenses",
+      "url": "<% '/entries?' + params %>",
+      "authType": "sso",
+      "deferred": true
+    }
+  ],
+  "presentation": {
+    "pageType": "edit",
+    "standardEditButtonsHidden": true,
+    "title": {
+      "type": "title",
+      "label": "PMD Scripting - Dynamically Update Widget State"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "readOnlyText",
+          "id": "debug"
+        },
+        {
+          "type": "fieldSet",
+          "title": "Instructions",
+          "children": [
+            {
+              "type": "readOnlyText",
+              "value": "Select a 'All' or 'Date range' from the 'Dates' dropdown below to dynamically change the visible state of 'Start Date' and 'End Date'. The onChange event on each input widget will trigger a function that dynamically invokes an endPoint to to retrieve Expense Entries that match the provided values and update the results grid."
+            },
+            {
+              "type": "section",
+              "horizontal": true,
+              "children": [
+                {
+                  "type": "dropdown",
+                  "id": "datePeriod",
+                  "label": "Dates",
+                  "onChange": "<% updateWidgetState.invokeEndpoint(); %>",
+                  "instanceList": [
+                    {
+                      "id": "1",
+                      "descriptor": "All"
+                    },
+                    {
+                      "id": "2",
+                      "descriptor": "Date range"
+                    }
+                  ]
+                },
+                {
+                  "type": "dropdown",
+                  "id": "expenseEntryStatus",
+                  "label": "Status",
+                  "onChange": "<% updateWidgetState.invokeEndpoint(); %>",
+                  "instanceList": [
+                    {
+                      "id": "dc74b9a0446c11de98360015c5e6daf6",
+                      "descriptor": "New"
+                    },
+                    {
+                      "id": "dc74b8b0446c11de98360015c5e6daf6",
+                      "descriptor": "Pending"
+                    },
+                    {
+                      "id": "dc74ba90446c11de98360015c5e6daf6",
+                      "descriptor": "Expensed"
+                    },
+                    {
+                      "id": "dc74bb80446c11de98360015c5e6daf6",
+                      "descriptor": "Closed"
+                    },
+                    {
+                      "id": "fdef527489e34c00b438b5dd7dacee79",
+                      "descriptor": "Prepaid"
+                    },
+                    {
+                      "id": "281f291f7a1b4a2b8c9e94b0e733510e",
+                      "descriptor": "Do Not Show"
+                    },
+                    {
+                      "id": "d5478541ee1b431ab34a28339b40caf5",
+                      "descriptor": "Paid"
+                    }
+                  ]
+                },
+                {
+                  "type": "dropdown",
+                  "id": "entryType",
+                  "label": "Type",
+                  "onChange": "<% updateWidgetState.invokeEndpoint(); %>",
+                  "instanceList": [
+                    {
+                      "id": "744524587a9b4f74bdaa69fd7ffb91fc",
+                      "descriptor": "Quick Expense"
+                    },
+                    {
+                      "id": "cd152f26446c11de98360015c5e6daf6",
+                      "descriptor": "Credit Card Transaction"
+                    },
+                    {
+                      "id": "3b370c53eda4100004772fea0e870002",
+                      "descriptor": "Travel Booking Record"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "id": "dates",
+                  "horizontal": true,
+                  "visible": false,
+                  "children": [
+                    {
+                      "type": "date",
+                      "id": "fromDate",
+                      "label": "Start Date",
+                      "datePrecision": "DAY",
+                      "value": "2015-01-01",
+                      "onChange": "<% updateWidgetState.invokeEndpoint(); %>"
+                    },
+                    {
+                      "type": "date",
+                      "id": "toDate",
+                      "label": "End Date",
+                      "datePrecision": "DAY",
+                      "value": "<% date:getTodaysDate(date:getDateTimeZone('America/Los_Angeles')) %>",
+                      "onChange": "<% updateWidgetState.invokeEndpoint(); %>"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "id": "dataGrid",
+              "label": "Expense Entries",
+              "gridType": "LIST",
+              "rows": "<% updateWidgetState.emptyList() %>",
+              "rowVariableName": "row",
+              "doNotAdd": "true",
+              "doNotRemoveRow": "true",
+              "enabled": false,
+              "columns": [
+                {
+                  "type": "column",
+                  "columnId": "dateColumn",
+                  "label": "Date",
+                  "cellTemplate": {
+                    "type": "readOnlyText",
+                    "value": "<% row.date %>"
+                  }
+                },
+                {
+                  "type": "column",
+                  "columnId": "categoryColumn",
+                  "label": "Category",
+                  "cellTemplate": {
+                    "type": "readOnlyText",
+                    "value": "<% row.expenseItem.descriptor %>"
+                  }
+                },
+                {
+                  "type": "column",
+                  "columnId": "descriptionColumn",
+                  "label": "Description",
+                  "cellTemplate": {
+                    "type": "readOnlyText",
+                    "value": "<% row.descriptor %>"
+                  }
+                },
+                {
+                  "type": "column",
+                  "columnId": "amountColumn",
+                  "label": "Amount",
+                  "cellTemplate": {
+                    "type": "readOnlyText",
+                    "value": "<% row.amount.value %>"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "pod",
+          "podId": "doneButton"
+        }
+      ]
+    }
+  }
+}

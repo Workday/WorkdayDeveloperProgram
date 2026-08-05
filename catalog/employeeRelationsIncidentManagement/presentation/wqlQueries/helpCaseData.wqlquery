@@ -1,0 +1,12 @@
+{
+  "id": "helpCaseData",
+  "parameters": ["startDate", "endDate"],
+  "query": "<%
+    `SELECT workdayID as id, title as descriptor, caseType as type, caseCreatedForWorker as for, serviceTeam, caseStatus, caseCreationDate 
+    FROM allCases (dataSourceFilter = casesOpenedWithinDateRangeFilter, startingCaseCreationDate ='{{startDate}}', endingCaseCreationDate ='{{endDate}}')`
+  %>",
+  "limit": "1000"
+}
+
+
+

@@ -1,0 +1,99 @@
+{
+  "id": 3,
+  "name": "TuitionReimbursementCourse",
+  "label": "Tuition Reimbursement Course",
+  "defaultSecurityDomains": [
+    "ManageTuitionReimbursement"
+  ],
+  "defaultCollection": {
+    "name": "tuitionReimbursementCourses",
+    "label": "All Tuition Reimbursement Courses", 
+    "description": "Displays all tuition Reimbursement courses"
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "courseName",
+      "label": "Course Name",
+      "type": "TEXT", 
+      "description": "Name of course submitted for reimbursement"
+    },
+    {
+      "id": 2,
+      "name": "courseStartDate",
+      "label": "Course Start Date",
+      "type": "DATE",
+      "precision": "DAY", 
+      "description": "Start date of course submitted for reimbursement"
+    },
+    {
+      "id": 3,
+      "name": "courseEndDate",
+      "label": "Course End Date",
+      "type": "DATE",
+      "precision": "DAY", 
+      "description": "End date of course submitted for reimbursement"
+    },
+    {
+      "id": 5,
+      "name": "school",
+      "label": "School",
+      "type": "TEXT", 
+      "description": "School where course submitted for reimbursement is being taken"
+    },
+    {
+      "id": 6,
+      "name": "courseCost",
+      "label": "Course Cost",
+      "type": "DECIMAL",
+      "decimals": 2, 
+      "description": "Course cost submitted for reimbursement"
+    },
+    {
+      "id": 7,
+      "name": "textbookCost",
+      "label": "Textbook Cost",
+      "type": "DECIMAL",
+      "decimals": 2, 
+      "description": "Textbook cost of course submitted for reimbursement"
+    },
+    {
+      "id": 9,
+      "name": "courseSubtotal",
+      "label": "Course Subtotal",
+      "type": "DECIMAL",
+      "decimals": 2, 
+      "description": "Subtotal of course submitted for reimbursement"
+    },
+    {
+      "id": 10,
+      "name": "courseCostCurrency",
+      "label": "Course Cost Currency",
+      "type": "TEXT", 
+      "description": "Course cost currency of course submitted for reimbursement"
+    },
+    {
+      "id": 11,
+      "name": "textbookCostCurrency",
+      "label": "Textbook Cost Currency",
+      "type": "TEXT", 
+      "description": "Textbook cost currency of course submitted for reimbursement"
+    },
+    {
+      "id": 12,
+      "name": "courseSubtotalCurrency",
+      "label": "Course Subtotal Currency",
+      "type": "TEXT", 
+      "description": "Course subtotal currency of course submitted for reimbursement"
+    },
+    {
+      "id": 8,
+      "name": "tuitionReimbursementRequest",
+      "label": "Tuition Reimbursement Request",
+      "type": "SINGLE_INSTANCE",
+      "target": "TuitionReimbursementRequest",
+      "secureByTarget": true, 
+      "description": "Displays the tuition reimbursement request"
+    }
+  ]
+}

@@ -1,0 +1,1291 @@
+{
+  "id": "CapitalPlanningRequestEdit",
+  "endPoints": [
+    {
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+string:pathEncode('SELECT name FROM '+site.applicationId+'_referenceData WHERE type=\"submitActionEvent\" AND code=\"submitWID\"') %>",
+      "name": "submitWidGET"
+    },
+    {
+      "exclude": "<% empty queryParams.eventStepId %>",
+      "name": "bpEventStepGET",
+      "baseUrlType": "BUSINESS-PROCESS",
+      "url": "<% '/eventSteps/'+queryParams.eventStepId %>"
+    },
+    {
+      "exclude": "<% empty queryParams.eventStepId %>",
+      "name": "eventInfoGET",
+      "baseUrlType": "BUSINESS-PROCESS",
+      "url": "<% '/events/'+ bpEventStepGET.event.id %>"
+    },
+    {
+      "exclude": "<% empty queryParams.eventStepId %>",
+      "name": "eventCommentsGET",
+      "baseUrlType": "BUSINESS-PROCESS",
+      "url": "<% '/events/' + bpEventStepGET.event.id + '/comments'  %>"
+    },
+    {
+      "exclude": "<% empty queryParams.eventStepId || bpEventStepGET.descriptor!='Request Services' %>",
+      "name": "mainServiceCatGET",
+      "baseUrlType": "BUSINESS-OBJECT",
+      "url": "<% '/requestedServiceCategories/'+eventInfoGET.for.id %>",
+      "authType": "isu"
+    },
+    {
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+string:pathEncode('SELECT workdayID, status FROM '+site.applicationId+'_approvalStatuses WHERE status Not IN (\"Approved\",\"Denied\") ORDER BY status asc') %>",
+      "name": "statusGET"
+    },
+    {
+      "name": "workersGET",
+      "baseUrlType": "COMMON",
+      "url": "/workers"
+    },
+    {
+      "deferred": true,
+      "exclude": "<% empty instanceListQuery %>",
+      "name": "workerSearchGET",
+      "baseUrlType": "COMMON",
+      "url": "<% '/workers?search=' + instanceListQuery %>"
+    },
+    {
+      "name": "costCentersGET",
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+ string:pathEncode('SELECT workdayID, name,inactive from costCenters WHERE inactive=false') %>"
+    },
+    {
+      "name": "companiesGET",
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+ string:pathEncode('SELECT workdayID, name,inactive from companies WHERE inactive=false') %>"
+    },
+    {
+      "name": "agenciesGET",
+      "baseUrlType": "BUSINESS-OBJECT",
+      "url": "/agencies"
+    },
+    {
+      "name": "suppliersGET",
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+ string:pathEncode(\"select supplierStatus,workdayID,supplierName from suppliers where supplierStatus = 'dc755d56446c11de98360015c5e6daf6' \") %>"
+    },
+    {
+      "deferred": true,
+      "exclude": "<% empty instanceListQuery %>",
+      "name": "costCenterSearchGET",
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+ string:pathEncode('SELECT workdayID, name,inactive from costCenters WHERE inactive=false AND name CONTAINS \"'+instanceListQuery+'\"') %>"
+    },
+    {
+      "deferred": true,
+      "exclude": "<% empty instanceListQuery %>",
+      "name": "companiesSearchGET",
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+ string:pathEncode('SELECT workdayID, name,inactive from companies WHERE inactive=false AND name CONTAINS \"'+instanceListQuery+'\"') %>"
+    },
+    {
+      "baseUrlType": "ORCHESTRATE",
+      "url": "<%
+               if(!empty bpEventStepGET && bpEventStepGET.descriptor=='Request Services'){
+               \treturn '/GetCapitalProjectRequest/launch?requestWID='+mainServiceCatGET.capitalProjectRequest.id ;
+               }else{
+               \tif(!empty queryParams.eventStepId){
+               \t\treturn '/GetCapitalProjectRequest/launch?requestWID='+eventInfoGET.for.id;
+               \t}else{
+               \t\treturn '/GetCapitalProjectRequest/launch?headerWID='+queryParams.headerWID+'&edit=true';
+               \t}
+               }
+              %>",
+      "name": "requestGET",
+      "responseErrorDetail": {},
+      "failOnStatusCodes": [
+        {
+          "code": "400"
+        },
+        {
+          "code": "401"
+        },
+        {
+          "code": "403"
+        },
+        {
+          "code": "404"
+        },
+        {
+          "code": "500"
+        },
+        {
+          "code": "501"
+        },
+        {
+          "code": "503"
+        },
+        {
+          "code": "504"
+        }
+      ]
+    },
+    {
+      "name": "attachmentsGET",
+      "baseUrlType": "BUSINESS-OBJECT",
+      "url": "<% '/capitalRequestAttachments?request='+requestGET.requestWID %>"
+    },
+    {
+      "name": "servicesGET",
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+string:pathEncode('SELECT workdayID, serviceName,serviceCategory{serviceCategoryName} as serviceCategoryName, displayOrder FROM '+site.applicationId+'_services WHERE active=true') %>"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "<% queryParams.eventStepId ? 'Revise Capital Project Planning Request' : 'Edit Capital Project Planning Request' %>"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "horizontal": true,
+          "render": "<% !empty queryParams.eventStepId %>",
+          "type": "fieldSet",
+          "id": "fldRevise",
+          "title": "Request sent back for revision",
+          "children": [
+            {
+              "enabled": false,
+              "type": "text",
+              "label": "Sent back by",
+              "value": "<% (eventCommentsGET?.data && eventCommentsGET.data[0]?.person?.descriptor) ? eventCommentsGET.data[0]?.person?.descriptor : '' %>"
+            },
+            {
+              "enabled": false,
+              "type": "text",
+              "label": "Comment",
+              "value": "<% eventCommentsGET.data ? eventCommentsGET.data[eventCommentsGET.data.size() - 1].comment : '' %>"
+            }
+          ]
+        },
+        {
+          "horizontal": true,
+          "type": "section",
+          "id": "sectionHeading",
+          "children": [
+            {
+              "type": "hidden",
+              "id": "requestWIDWidget",
+              "value": "<% requestGET.requestWID %>"
+            },
+            {
+              "type": "hidden",
+              "id": "headerWIDWidget",
+              "value": "<% requestGET.headerWID %>"
+            },
+            {
+              "type": "fieldSet",
+              "id": "fldEditableWidgets",
+              "children": [
+                {
+                  "required": true,
+                  "type": "text",
+                  "id": "titleWidget",
+                  "label": "Title",
+                  "value": "<% requestGET.requestHeader.requestTitle %>"
+                },
+                {
+                  "type": "textArea",
+                  "id": "summaryWidget",
+                  "label": "Summary",
+                  "value": "<% requestGET.requestHeader.summary %>"
+                }
+              ]
+            },
+            {
+              "type": "fieldSet",
+              "id": "fldOtherFields",
+              "children": [
+                {
+                  "type": "readOnlyText",
+                  "id": "requestIDWidget",
+                  "label": "Request ID",
+                  "value": "<% requestGET.request.requestID %>"
+                },
+                {
+                  "enabled": false,
+                  "required": true,
+                  "type": "instanceList",
+                  "id": "statusWidget",
+                  "displayKey": "status",
+                  "idKey": "workdayID",
+                  "values": "<% statusGET.data %>",
+                  "label": "Status",
+                  "selectedValuesAndDescriptors": "<% [requestGET.requestHeader.approvalStatus] %>"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "pageType": "EDIT",
+    "tabs": [
+      {
+        "type": "section",
+        "label": "Overview",
+        "id": "sectionOverview",
+        "children": [
+          {
+            "horizontal": true,
+            "type": "fieldSet",
+            "id": "fldRequestorDetails",
+            "label": "Requestor Details",
+            "title": "Requestor Details",
+            "children": [
+              {
+                "type": "section",
+                "children": [
+                  {
+                    "required": true,
+                    "type": "instanceList",
+                    "id": "requestedByWidget",
+                    "label": "Requested By",
+                    "searchEndPoint": "<% endpoints.workerSearchGET %>",
+                    "searchResultValues": "<% workerSearchGET.data %>",
+                    "values": "<% [] %>",
+                    "selectedValuesAndDescriptors": "<% [requestGET.request.requestedBy] %>"
+                  },
+                  {
+                    "required": true,
+                    "type": "instanceList",
+                    "id": "costCenterWidget",
+                    "label": "Cost Center",
+                    "displayKey": "name",
+                    "idKey": "workdayID",
+                    "searchEndPoint": "<% endpoints.costCenterSearchGET %>",
+                    "searchResultValues": "<% costCenterSearchGET.data  %>",
+                    "values": "<% costCentersGET.data %>",
+                    "selectedValuesAndDescriptors": "<% [requestGET.request.costCenter] %>",
+                    "helpText": "Approval for this request will be routed to the designated approver within the specified Cost Center."
+                  },
+                  {
+                    "required": true,
+                    "type": "instanceList",
+                    "id": "companyWidget",
+                    "label": "Company",
+                    "displayKey": "name",
+                    "idKey": "workdayID",
+                    "searchEndPoint": "<% endpoints.companiesSearchGET %>",
+                    "searchResultValues": "<% companiesSearchGET.data ? companiesSearchGET.data : [] %>",
+                    "values": "<% companiesGET.data %>",
+                    "selectedValuesAndDescriptors": "<% [requestGET.request.company] %>",
+                    "helpText": "All funds will be requested in the default currency of the Company."
+                  }
+                ]
+              },
+              {
+                "type": "section",
+                "children": [
+                  {
+                    "type": "readOnlyText",
+                    "id": "requestDateWidget",
+                    "label": "Request Date",
+                    "value": "<% requestGET.requestHeader.requestDate %>"
+                  },
+                  {
+                    "required": true,
+                    "type": "instanceList",
+                    "id": "sponsorWidget",
+                    "label": "Sponsor",
+                    "searchEndPoint": "<% endpoints.workerSearchGET %>",
+                    "searchResultValues": "<% workerSearchGET.data %>",
+                    "values": "<% workersGET.data %>",
+                    "selectedValuesAndDescriptors": "<% [requestGET.requestHeader.sponsor] %>",
+                    "helpText": "Approvals are based on the appropriate approver role in the selected Cost Center, a sponsor is assigned here for tracking & information only."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "horizontal": true,
+            "type": "fieldSet",
+            "label": "Overview",
+            "title": "Overview",
+            "children": [
+              {
+                "value": "<% requestGET.request.newProcedures %>",
+                "type": "checkBox",
+                "id": "newServicesWidget",
+                "label": "Allows new services or products?",
+                "onChange": "<% detailsOfCostRevenueFields.setVisible(newServicesWidget.value||newRevenueWidget.value); %>"
+              },
+              {
+                "value": "<% requestGET.request.newRevenueOrCostSaving %>",
+                "type": "checkBox",
+                "id": "newRevenueWidget",
+                "label": "Provides new revenue or cost savings?",
+                "onChange": "<% detailsOfCostRevenueFields.setVisible(newServicesWidget.value||newRevenueWidget.value); %>"
+              },
+              {
+                "visible": "<% requestGET.request.newRevenueOrCostSaving||requestGET.request.newProcedures %>",
+                "type": "fieldSet",
+                "id": "detailsOfCostRevenueFields",
+                "children": [
+                  {
+                    "type": "richText",
+                    "id": "detailsOfCostSavingsWidget",
+                    "label": "Details of new service, product or revenue/cost savings",
+                    "value": "<% requestGET.request.costSavingDetail %>"
+                  }
+                ]
+              },
+              {
+                "type": "number",
+                "id": "usefulLifeWidget",
+                "label": "Estimated Useful Life (Years)",
+                "value": "<% requestGET.request.estimatedUsefulLifeInYears %>",
+                "minimumValue": "0"
+              },
+              {
+                "type": "richText",
+                "id": "purposeWidget",
+                "label": "Purpose",
+                "value": "<% requestGET.request.purpose %>"
+              }
+            ]
+          },
+          {
+            "type": "fieldSet",
+            "label": "Timing",
+            "title": "Timing",
+            "children": [
+              {
+                "type": "date",
+                "id": "startDateWidget",
+                "label": "When will this project start?",
+                "value": "<% requestGET.request.projectStart %>",
+                "onChange": "<%
+                            var today = date: getTodaysDate(date: getDateTimeZone(userTimeZone));
+                            var startDate = startDateWidget.value;
+                            helperFunctions.isNewDateAfterReferenceDate(startDateWidget,startDate,today,\"The project start date should be in the future.\",\"WARNING\");
+                           %>"
+              },
+              {
+                "type": "date",
+                "id": "endDateWidget",
+                "label": "When will this project finish?",
+                "value": "<% requestGET.request.projectEnd %>",
+                "onChange": "<%
+                            var startDate = startDateWidget.value;
+                            var endDate = endDateWidget.value;
+                            helperFunctions.isNewDateAfterReferenceDate(endDateWidget,endDate,startDate,\"The project should end after the start date.\",\"ERROR\");                            
+                           %>"
+              },
+              {
+                "type": "date",
+                "id": "serviceDateWidget",
+                "label": "When will the result of this project go into service?",
+                "value": "<% requestGET.request.inServiceDate %>",
+                "onChange": "<%
+                            var startDate = startDateWidget.value;
+                            var serviceDate = serviceDateWidget.value;
+                            helperFunctions.isNewDateAfterReferenceDate(serviceDateWidget,serviceDate,startDate,\"The in-service date should be after the start date.\",\"ERROR\");                              
+                           %>"
+              },
+              {
+                "type": "text",
+                "id": "timingWidget",
+                "label": "Why is it important to pursue at this time? Is there an urgent need?",
+                "value": "<% requestGET.request.timingJustification %>"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "label": "Alignment",
+        "children": [
+          {
+            "type": "fieldSet",
+            "label": "Alignment/Categorization",
+            "title": "Alignment/Categorization",
+            "children": [
+              {
+                "type": "readOnlyText",
+                "value": "Which strategic pillar/initiative does this concept align to? How does it align?"
+              },
+              {
+                "type": "instanceList",
+                "id": "agenciesWidget",
+                "label": "Regulatory Agency (if applicable)",
+                "values": "<% agenciesGET.data %>",
+                "selectedValuesAndDescriptors": "<% ! empty requestGET.request.agency ? [requestGET.request.agency] : null %>"
+              }
+            ]
+          },
+          {
+            "doNotAdd": true,
+            "doNotRemove": true,
+            "type": "panelList",
+            "id": "pnlStratCat",
+            "panelName": "stratCat",
+            "panels": "<% requestGET.strategicAlignments %>",
+            "children": [
+              {
+                "type": "hidden",
+                "id": "stratAlignmentWIDWidget",
+                "value": "<% stratCat.StratAlignmentID %>"
+              },
+              {
+                "type": "hidden",
+                "id": "stratCatWIDWidget",
+                "value": "<% stratCat.StratCatID %>"
+              },
+              {
+                "horizontal": true,
+                "type": "section",
+                "children": [
+                  {
+                    "type": "fieldSet",
+                    "children": [
+                      {
+                        "displayAsSwitch": true,
+                        "value": "<% stratCat.isAligned %>",
+                        "type": "checkBox",
+                        "id": "stratCatCheckWidget",
+                        "label": "<% stratCat.StratCatName %>",
+                        "onChange": "<%
+                                    if(self.value){
+                                    stratCatExplainWidget.setEnabled(true);
+                                    }else{
+                                    stratCatExplainWidget.setValue(\"\");
+                                    stratCatExplainWidget.setEnabled(false);
+                                    }
+                                   %>"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "fieldSet",
+                    "children": [
+                      {
+                        "enabled": "<% stratCat.isAligned %>",
+                        "type": "text",
+                        "id": "stratCatExplainWidget",
+                        "label": "Explanation",
+                        "value": "<% stratCat.explanation %>"
+                      }
+                    ],
+                    "id": "stratCatExplain"
+                  },
+                  {
+                    "type": "fieldSet",
+                    "children": [
+                      {
+                        "enabled": false,
+                        "type": "richText",
+                        "value": "<% stratCat.catDef %>"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "label": "Services",
+        "children": [
+          {
+            "doNotAdd": true,
+            "doNotRemove": true,
+            "type": "panelList",
+            "id": "pnlServices",
+            "panelName": "servCat",
+            "panels": "<% requestGET.services %>",
+            "children": [
+              {
+                "type": "fieldSet",
+                "label": "<% servCat.serviceCategoryName %>",
+                "title": "<% servCat.serviceCategoryName %>",
+                "children": [
+                  {
+                    "horizontal": true,
+                    "type": "fieldSet",
+                    "children": [
+                      {
+                        "type": "fieldSet",
+                        "children": [
+                          {
+                            "enabled": false,
+                            "type": "richText",
+                            "value": "<% servCat.catDef %>"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "fieldSet",
+                        "children": [
+                          {
+                            "type": "readOnlyText",
+                            "label": "Approving Cost Center",
+                            "value": "<% servCat.approvingCostCenter %>"
+                          }
+                        ]
+                      },
+                      {
+                        "visible": false,
+                        "type": "fieldSet",
+                        "children": [
+                          {
+                            "type": "readOnlyText",
+                            "label": "Approving Organization",
+                            "value": "<% servCat.approvingOrg %>"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "id": "fldMainServiceArea"
+              },
+              {
+                "type": "loop",
+                "as": "reqService",
+                "on": "<% servCat.services %>",
+                "index": "idx",
+                "children": [
+                  {
+                    "horizontal": true,
+                    "type": "fieldSet",
+                    "children": [
+                      {
+                        "type": "hidden",
+                        "value": "<% reqService.requestedServiceWID %>"
+                      },
+                      {
+                        "type": "fieldSet",
+                        "children": [
+                          {
+                            "displayAsSwitch": true,
+                            "value": "<% reqService.isRequired %>",
+                            "type": "checkBox",
+                            "id": "serviceIsRequiredWidget",
+                            "label": "<% reqService.serviceName %>",
+                            "onChange": "<%
+                                        if (self.value) {
+                                        \tserviceExplanation.clearWarning();
+                                        \taddServiceToPageVariablebyWID(serviceWID.value);
+                                        \tserviceExplanation.setEnabled(true);
+                                        \tserviceCommentWidget.setEnabled(true);
+                                        } else {
+                                        \tlet fundServiceLkp = pageVariables.fundsServices.find(serv => {serv.id == serviceWID.value});
+                                        \tif(!empty fundServiceLkp){
+                                        \t\tserviceExplanation.setWarning(\"Funds have been associated with \"+ self.label +\", this service can't be removed.\");
+                                        \t\tself.setValue(true);
+                                        \t\treturn null;
+                                        \t}
+                                        \t
+                                        \tserviceExplanation.clearWarning();
+                                        \tlet serviceLkp = pageVariables.reqServices.find(serv => {serv.id == serviceWID.value});
+                                        \tif (!empty serviceLkp) {
+                                        \t\tpageVariables.reqServices.remove(serviceLkp);
+                                        \t}
+                                        \tserviceExplanation.setValue(\"\");
+                                        \tserviceExplanation.setEnabled(false);
+                                        \tserviceCommentWidget.setValue(\"\");
+                                        \tserviceCommentWidget.setEnabled(false);
+                                        }
+                                       %>"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "fieldSet",
+                        "children": [
+                          {
+                            "enabled": "<% reqService.isRequired %>",
+                            "type": "text",
+                            "id": "serviceExplanation",
+                            "label": "Explanation",
+                            "value": "<% reqService.explanation %>"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "fieldSet",
+                        "children": [
+                          {
+                            "enabled": "<% reqService.isRequired %>",
+                            "type": "text",
+                            "id": "serviceCommentWidget",
+                            "label": "Comment",
+                            "value": "<% reqService.comment %>"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "hidden",
+                        "id": "serviceWID",
+                        "value": "<% reqService.serviceWID %>"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "label": "Funding",
+        "children": [
+          {
+            "type": "loop",
+            "id": "loopFunds",
+            "as": "fund",
+            "on": "<% requestGET.funds %>",
+            "children": [
+              {
+                "type": "fieldSet",
+                "label": "<% fund.name %>",
+                "title": "<% fund.name %>",
+                "children": [
+                  {
+                    "type": "hidden",
+                    "id": "fundWIDWidget",
+                    "value": "<% fund.workdayID %>"
+                  },
+                  {
+                    "type": "hidden",
+                    "id": "fundIsCapitalWidget",
+                    "value": "<% fund.capital %>"
+                  },
+                  {
+                    "type": "grid",
+                    "id": "grdFunding",
+                    "rows": "<% fund.requestedFunds %>",
+                    "rowVariableName": "reqFund",
+                    "columns": [
+                      {
+                        "type": "column",
+                        "id": "gfundWID",
+                        "cellTemplate": {
+                          "type": "hidden",
+                          "value": "<% reqFund.workdayID %>",
+                          "id": "gfundWIDInner"
+                        },
+                        "columnId": "gfundWID"
+                      },
+                      {
+                        "type": "column",
+                        "id": "gfundQuantity",
+                        "label": "Quantity",
+                        "cellTemplate": {
+                          "type": "number",
+                          "value": "<% reqFund.quantity ? reqFund.quantity : 1; %>",
+                          "onChange": "<%
+                                     var quantity = self.value ? self.value : 0;
+                                     var unitPrice = gUnitPriceInner.value ? gUnitPriceInner.value : 0;
+                                     gTotalCostInner.value = quantity * unitPrice;
+                                     
+                                     if(self.value==null||self.value==0){
+                                     \tgQuantityInner.setWarning(\"Quantity cannot be zero.\");
+                                     } else {
+                                     \tgQuantityInner.clearWarning();
+                                     }
+                                     %>",
+                          "id": "gQuantityInner",
+                          "minimumValue": "1"
+                        },
+                        "columnId": "gfundQuantity"
+                      },
+                      {
+                        "required": true,
+                        "type": "column",
+                        "id": "gfundDesc",
+                        "label": "Description",
+                        "cellTemplate": {
+                          "required": true,
+                          "type": "text",
+                          "value": "<% reqFund.itemDescription %>",
+                          "id": "gItemDescInner"
+                        },
+                        "columnId": "gfundDesc"
+                      },
+                      {
+                        "type": "column",
+                        "id": "gfundUnitPrice",
+                        "label": "Unit Price",
+                        "cellTemplate": {
+                          "type": "currency",
+                          "value": "<% reqFund.unitPrice.value %>",
+                          "fractionDigits": "2",
+                          "currencyCode": "USD",
+                          "id": "gUnitPriceInner",
+                          "onChange": "<%
+                                      var quantity = gQuantityInner.value ? gQuantityInner.value : 0;
+                                      var unitPrice = self.value ? self.value : 0;
+                                      gTotalCostInner.value = quantity * unitPrice;
+                                      
+                                      if(self.value==null||self.value==0){
+                                      \tgUnitPriceInner.setWarning(\"Price cannot be zero.\");
+                                      } else {
+                                      \tgUnitPriceInner.clearWarning();
+                                      }
+                                     %>"
+                        },
+                        "columnId": "gfundUnitPrice"
+                      },
+                      {
+                        "type": "column",
+                        "id": "gfundTotalCost",
+                        "label": "Total Cost",
+                        "cellTemplate": {
+                          "enabled": false,
+                          "type": "number",
+                          "value": "<% reqFund.totalCost %>",
+                          "fractionDigits": "2",
+                          "id": "gTotalCostInner"
+                        },
+                        "columnId": "gfundTotalCost"
+                      },
+                      {
+                        "type": "column",
+                        "id": "gfundNew",
+                        "label": "Is New",
+                        "cellTemplate": {
+                          "enabled": "<% fundIsCapitalWidget.value %>",
+                          "value": "<% reqFund.isNew %>",
+                          "type": "checkBox",
+                          "id": "gNewInner"
+                        },
+                        "columnId": "gfundNew"
+                      },
+                      {
+                        "type": "column",
+                        "id": "gfundService",
+                        "label": "Service",
+                        "cellTemplate": {
+                          "type": "instanceList",
+                          "selectedValuesAndDescriptors": "<% ! empty reqFund.service ?  [reqFund.service ] : null %>",
+                          "values": "<% pageVariables.allServices %>",
+                          "id": "fundsServicesList",
+                          "onChange": "<%
+                                      if (!empty self.value) {
+                                          //update list of services selected on funds
+                                      \tpageVariables.fundsServices = getCurrentServicesFromFunds();
+                                      \t
+                                      \t//get info about the service and check if it's selected on the Services tab
+                                          let service = pageVariables.allServices.find(serv => {serv.id == self.value[0]});
+                                          let serviceLkp = pageVariables.reqServices.find(serv => {serv.id == self.value[0]});
+                                          if (empty serviceLkp) {
+                                              self.setWarning(\"The service \" + service.descriptor + \" has been automatically enabled due to requested funds.\");
+                                              enableServicebyWID(self.value[0]);
+                                          } else {
+                                              self.clearWarning();
+                                          }
+                                      
+                                      } else {
+                                          self.clearWarning();
+                                          pageVariables.fundsServices = getCurrentServicesFromFunds();
+                                      }
+                                     %>"
+                        },
+                        "columnId": "gfundService"
+                      },
+                      {
+                        "type": "column",
+                        "id": "gfundSupplier",
+                        "label": "Supplier",
+                        "cellTemplate": {
+                          "type": "instanceList",
+                          "displayKey": "supplierName",
+                          "idKey": "workdayID",
+                          "values": "<% suppliersGET.data %>",
+                          "selectedValuesAndDescriptors": "<% ! empty reqFund.supplier ?  [{\"workdayID\" : reqFund.supplier.id, \"supplierName\" : reqFund.supplier.descriptor} ] : null %>"
+                        },
+                        "columnId": "gfundSupplier"
+                      },
+                      {
+                        "type": "column",
+                        "id": "gfundInServiceDate",
+                        "label": "In Service Date",
+                        "cellTemplate": {
+                          "enabled": "<% fundIsCapitalWidget.value %>",
+                          "type": "date",
+                          "value": "<% reqFund.inServiceDate %>",
+                          "id": "gInServiceDateInner"
+                        },
+                        "columnId": "gfundInServiceDate"
+                      },
+                      {
+                        "type": "column",
+                        "id": "gfundDateOfPurchase",
+                        "label": "Date of Purchase",
+                        "cellTemplate": {
+                          "type": "date",
+                          "value": "<% reqFund.dateOfPurchase %>"
+                        },
+                        "columnId": "gfundDateOfPurchase"
+                      }
+                    ],
+                    "deleteEndPoint": "requestedFundsDELETE",
+                    "currentRowVariable": "reqFundCurrent",
+                    "onRowRemove": "<% pageVariables.fundsServices= getCurrentServicesFromFunds(); %>",
+                    "onRowAdd": "<%
+                                var newRow = grdFunding.rows[0];
+                                newRow.childrenMap.gfundNew.setEnabled(fundIsCapitalWidget.value);
+                                newRow.childrenMap.gfundInServiceDate.setEnabled(fundIsCapitalWidget.value);
+                               %>"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "id": "fundingSection"
+      },
+      {
+        "type": "section",
+        "label": "Additional Info",
+        "children": [
+          {
+            "type": "fieldSet",
+            "label": "Additional Info",
+            "title": "Additional Info",
+            "children": [
+              {
+                "type": "panelList",
+                "id": "pnlAddInfo",
+                "panelName": "addInfo",
+                "panels": "<% requestGET.additionalData %>",
+                "children": [
+                  {
+                    "type": "hidden",
+                    "id": "addInfoWIDWidget",
+                    "value": "<% addInfo.workdayID %>"
+                  },
+                  {
+                    "required": true,
+                    "type": "text",
+                    "label": "Label",
+                    "value": "<% addInfo.label %>",
+                    "id": "addInfoLabelWidget"
+                  },
+                  {
+                    "required": true,
+                    "type": "richText",
+                    "label": "Data",
+                    "value": "<% addInfo.data %>",
+                    "id": "addInfoDataWidget"
+                  }
+                ],
+                "deleteEndPoint": "additionalDataDELETE"
+              }
+            ]
+          },
+          {
+            "type": "fieldSet",
+            "label": "Attachments",
+            "title": "Attachments",
+            "children": [
+              {
+                "type": "loop",
+                "as": "attachment",
+                "on": "<% attachmentsGET.data %>",
+                "children": [
+                  {
+                    "sizingHint": "THUMBNAIL",
+                    "type": "image",
+                    "endPoint": {
+                      "baseUrlType": "BUSINESS-OBJECT",
+                      "url": "<% '/capitalRequestAttachments/'+attachment.id %>",
+                      "allowEmptyValue": false,
+                      "authType": "sso",
+                      "httpMethod": "GET",
+                      "name": "attachmentDetailGET"
+                    },
+                    "id": "attachmentWidget"
+                  }
+                ]
+              },
+              {
+                "type": "fileUploader",
+                "fileTypes": "pdf,doc,docx,xls,xlsx,jpeg,gif,png,pptx",
+                "metadata": "<% {:} %>",
+                "valueOutBinding": "attachmentPOST:capitalRequestAttachments",
+                "id": "fileUploaderWidget",
+                "children": [
+                  {
+                    "type": "loop",
+                    "on": "<% attachmentsGET.data %>",
+                    "as": "attachment",
+                    "children": [
+                      {
+                        "render": "<% !(empty attachment.fileName) %>",
+                        "type": "fileUploaderRow",
+                        "attachment": {
+                          "type": "attachmentList",
+                          "attachmentAuth": "sso",
+                          "attachmentName": "<% attachment.fileName %>",
+                          "attachmentUriTemplate": "[Target]",
+                          "instanceList": [
+                            {
+                              "action": "attachment",
+                              "descriptor": "<% attachment.fileName%>"
+                            }
+                          ],
+                          "attachmentURL": "<% 'https://api.workday.com/apps/' + site.applicationId + '/v1/capitalRequestAttachments/' + attachment.id %>"
+                        },
+                        "fileName": "<% attachment.fileName %>",
+                        "fileType": "<% fileType:getFileType(attachment.fileName) %>",
+                        "contentArea": [
+                          {
+                            "type": "hidden",
+                            "id": "gattWIDInner",
+                            "value": "<% attachment.id %>"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "deleteEndPoint": "attachmentDELETE"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "outboundData": {
+    "responseErrorDetail": {
+      "errorSummary": "<% error %>",
+      "errors": "<% errors.map(item => {item.error}); %>"
+    },
+    "outboundEndPoints": [
+      {
+        "baseUrlType": "ORCHESTRATE",
+        "url": "/UpdateProjectRequest/launch",
+        "onSend": "<%
+                                                 var stratCatList = [];
+                                                 var serviceList =[];
+                                                 var addInfoList = [];
+                                                 var fundList = [];
+                                                 
+                                                 var requestHeader = {
+                                                 'headerID' : headerWIDWidget.value,
+                                                 'requestTitle' : titleWidget.value,
+                                                 'summary' : summaryWidget.value ? summaryWidget.value : '',
+                                                 'sponsorID' : sponsorWidget.value[0]
+                                                 };
+                                                 
+                                                 var request = {
+                                                 'requestedByID': requestedByWidget.value[0],
+                                                 'requestID': requestWIDWidget.value,
+                                                 'newProcedures' :  newServicesWidget.value ?  newServicesWidget.value : false,
+                                                 'newRevenueOrCostSaving' : newRevenueWidget.value ? newRevenueWidget.value : false,
+                                                 'costCenterID': costCenterWidget.value[0],
+                                                 'companyID' : companyWidget.value[0],
+                                                 'costSavingDetail' : detailsOfCostSavingsWidget.value ? detailsOfCostSavingsWidget.value : '',
+                                                 'estimatedUsefulLifeInYears' : usefulLifeWidget.value ? usefulLifeWidget.value : 0,
+                                                 'purpose' : purposeWidget.value ? purposeWidget.value : '',
+                                                 'projectStart':startDateWidget.value ? startDateWidget.value.format('yyyy-MM-dd') : '',
+                                                 'projectEnd' : endDateWidget.value ? endDateWidget.value.format('yyyy-MM-dd') : '',
+                                                 'inServiceDate' : serviceDateWidget.value ? serviceDateWidget.value.format('yyyy-MM-dd') : '',
+                                                 'timingJustification' : timingWidget.value ? timingWidget.value : '',
+                                                 'agencyID' : ! empty agenciesWidget.value ? agenciesWidget.value[0] : ''
+                                                 };
+                                                 
+                                                 for (var row : pnlStratCat.getChildren()) {
+                                                 
+                                                 stratCatList.add(
+                                                 {
+                                                 
+                                                 'alignmentID' :  row.children[0].value,  
+                                                 'requestID' : requestWIDWidget.value,
+                                                 //'strategicPillarID' : row.children[1].value,
+                                                 'isAligned' : row.children[2].children[0].children[0].value ? row.children[2].children[0].children[0].value : false,
+                                                 'explanation' : row.children[2].children[1].children[0].value ? row.children[2].children[1].children[0].value : ''
+                                                 }
+                                                 )
+                                                 }
+                                                 
+                                                 
+                                                 
+                                                 for (var servPanel : pnlServices.getChildren()) {
+                                                 //var servCatID = servPanel.children[0].children[0].children[1].value;
+                                                 //var appOrgWID = servPanel.children[0].children[0].children[2].value;
+                                                 //var appCCWID = servPanel.children[0].children[0].children[3].value;
+                                                 var cnt=0;
+                                                 for (var servWidBlock : servPanel.getChildren()) { 
+                                                 if(cnt>0){
+                                                 serviceList.add(
+                                                 {
+                                                 'reqServiceID': servWidBlock.children[0].value,
+                                                 'isRequired' : servWidBlock.children[1].children[0].value ? servWidBlock.children[1].children[0].value : false,
+                                                 'explanation': servWidBlock.children[2].children[0].value ?  servWidBlock.children[2].children[0].value : '',
+                                                 'comment' : servWidBlock.children[3].children[0].value ? servWidBlock.children[3].children[0].value : ''
+                                                 });  
+                                                 }
+                                                 cnt++;
+                                                 }  
+                                                 }
+                                                 
+                                                 
+                                                 
+                                                 for(var fundPart : fundingSection.getChildren()) {
+                                                 
+                                                 var fundID = fundPart.children[0].value;
+                                                 //jumping to index=2 here to get to the grid, skipping 2 hidden fields (change to childrenMap?)
+                                                 for(var fundRow : fundPart.children[2].rows) {
+                                                 
+                                                 fundList.add(
+                                                 {
+                                                 'reqFundID' : fundRow.childrenMap.gfundWID.value ? fundRow.childrenMap.gfundWID.value : '',  
+                                                 'requestID': requestWIDWidget.value,
+                                                 'fundID' : fundID,
+                                                 'supplierID' : ! empty fundRow.childrenMap.gfundSupplier.value ? fundRow.childrenMap.gfundSupplier.value[0] : '',
+                                                 'serviceID' : ! empty fundRow.childrenMap.gfundService.value ? fundRow.childrenMap.gfundService.value[0] : '',
+                                                 'itemDescription' : fundRow.childrenMap.gfundDesc.value,
+                                                 'quantity':  fundRow.childrenMap.gfundQuantity.value ? fundRow.childrenMap.gfundQuantity.value :0,
+                                                 'unitPrice' : fundRow.childrenMap.gfundUnitPrice.value ? fundRow.childrenMap.gfundUnitPrice.value : 0,
+                                                 'totalCost' : fundRow.childrenMap.gfundTotalCost.value ? fundRow.childrenMap.gfundTotalCost.value : 0,
+                                                 'isNew' : fundRow.childrenMap.gfundNew.value ? fundRow.childrenMap.gfundNew.value : false,
+                                                 'inServiceDate' : fundRow.childrenMap.gfundInServiceDate.value ? fundRow.childrenMap.gfundInServiceDate.value.format('yyyy-MM-dd') : '',
+                                                 'dateOfPurchase' : fundRow.childrenMap.gfundDateOfPurchase.value ? fundRow.childrenMap.gfundDateOfPurchase.value.format('yyyy-MM-dd') : ''
+                                                 }
+                                                 );
+                                                 }
+                                                 }
+                                                 
+                                                 
+                                                 
+                                                 
+                                                 
+                                                 for(var addInfoPanel : pnlAddInfo.getChildren()) {
+                                                 addInfoList.add({
+                                                 'requestID': requestWIDWidget.value,
+                                                 'addInfoID': addInfoPanel.children[0].value ? addInfoPanel.children[0].value  : '',
+                                                 'label' : addInfoPanel.children[1].value,
+                                                 'data' : addInfoPanel.children[2].value  
+                                                 })
+                                                 }
+                                                 
+                                                 
+                                                 
+                                                 
+                                                 var payload ={
+                                                 'requestHeader' : requestHeader,
+                                                 'request' : request,
+                                                 'services': serviceList,
+                                                 'strategicPillars': stratCatList,
+                                                 'addInfo' : addInfoList,
+                                                 'funds' : fundList 
+                                                 };
+                                                 
+                                                 //console.info(json:asJSON(payload));
+                                                 return payload;
+                                                %>",
+        "name": "updateRequestPOST",
+        "failOnStatusCodes": [
+          {
+            "code": "400"
+          },
+          {
+            "code": "404"
+          },
+          {
+            "code": "403"
+          },
+          {
+            "code": "500"
+          },
+          {
+            "code": "501"
+          },
+          {
+            "code": "503"
+          }
+        ]
+      },
+      {
+        "exclude": "<% empty addInfoWIDWidget.value %>",
+        "httpMethod": "DELETE",
+        "baseUrlType": "BUSINESS-OBJECT",
+        "name": "additionalDataDELETE",
+        "url": "<% '/additionalData/'+addInfoWIDWidget.value %>"
+      },
+      {
+        "exclude": "<% empty gfundWIDInner.value %>",
+        "httpMethod": "DELETE",
+        "name": "requestedFundsDELETE",
+        "baseUrlType": "BUSINESS-OBJECT",
+        "url": "<% '/requestedFunds/'+gfundWIDInner.value %>"
+      },
+      {
+        "exclude": "<% empty fileUploaderWidget.children %>",
+        "baseUrlType": "BUSINESS-OBJECT",
+        "name": "attachmentPOST",
+        "url": "/capitalRequestAttachmentsCollection",
+        "onMultiPartSend": "<%
+                          for (var file : self.data.metadata.capitalRequestAttachments) {
+                           var requestID = {'id': requestWIDWidget.value};
+                           file.put ('request',requestID);
+                          }
+                          self.data;
+                          %>",
+        "failOnStatusCodes": [
+          {}
+        ],
+        "ignoreFailures": [
+          {}
+        ]
+      },
+      {
+        "exclude": "<% empty gattWIDInner.value %>",
+        "httpMethod": "DELETE",
+        "name": "attachmentDELETE",
+        "baseUrlType": "BUSINESS-OBJECT",
+        "url": "<% '/capitalRequestAttachments/'+gattWIDInner.value %>"
+      },
+      {
+        "exclude": "<% empty queryParams.eventStepId %>",
+        "name": "bpSubmitPOST",
+        "baseUrlType": "BUSINESS-PROCESS",
+        "url": "<% '/eventSteps/'+queryParams.eventStepId+'/submit' %>",
+        "values": [
+          {
+            "outboundPath": "stepAction.id",
+            "value": "<% submitWidGET.data[0].name %>"
+          }
+        ]
+      }
+    ]
+  },
+  "onLoad": "<%
+                pageVariables.allServices = servicesGET.data.map(serv => { {
+                    'id': serv.workdayID,
+                    'descriptor': serv.serviceName + ' (' + serv.serviceCategoryName.serviceCategoryName + ')'
+                }
+                });
+                
+                pageVariables.reqServices = getRequiredServicesFlat(requestGET.services);
+                pageVariables.fundsServices = getFundsServicesFlat(requestGET.funds);
+               %>",
+  "script": "<%
+                // Adds new Service to array of selected service, if it's not present
+                var addServiceToPageVariablebyWID = function (WID) {
+                 let service = pageVariables.allServices.find(serv => {
+                     serv.id == WID
+                 });
+                 let serviceLkp = pageVariables.reqServices.find(serv => {
+                     serv.id == WID
+                 });
+                 if (empty serviceLkp) {
+                     pageVariables.reqServices.add({
+                         'id': WID,
+                         'descriptor': service.descriptor
+                     });
+                 }
+                }
+                
+                // Flattens the list of Services from the selections on the Services page (used onLoad from request)
+                var getRequiredServicesFlat = function (reqServices) {
+                
+                 const requiredServices = [];
+                
+                 //console.info(\"input array\", reqServices.toJson());
+                 for (let category: reqServices) {
+                     for (let service: category.services) {
+                         if (service.isRequired) {
+                             requiredServices.add({
+                                 'id': service.serviceWID,
+                                 'descriptor': service.serviceName + ' (' + category.serviceCategoryName + ')'
+                             });
+                         }
+                     }
+                 }
+                
+                 return requiredServices;
+                }
+                
+                // Flattens the list of Services from provided Funds (used onLoad from request)
+                var getFundsServicesFlat = function (fundTypes) {
+                
+                 const requiredFundsServices = [];
+                
+                 //console.info(\"input array\", fundTypes.toJson());
+                 for (let fundType: fundTypes) {
+                     for (let fund: fundType.requestedFunds) {
+                         if (!empty fund.service) {
+                             requiredFundsServices.add({
+                                 'id': fund.service.id
+                             });
+                         }
+                     }
+                 }
+                
+                 return !empty requiredFundsServices ? requiredFundsServices.distinct() : requiredFundsServices;
+                }
+                
+                var getServiceFromList = function (id, services) {
+                 return services.find(serv => {
+                     serv.id == id
+                 });
+                }
+                
+                // Evaluates Funds in the current fund grids and builds an array of WIDs of all selected services
+                var getCurrentServicesFromFunds = function () {
+                
+                 const fundServList = [];
+                
+                 for (var fundPart: fundingSection.getChildren()) {
+                     for (var fundRow: fundPart.childrenMap.grdFunding.rows) {
+                         if (!empty fundRow.childrenMap.gfundService.value) {
+                             fundServList.add({
+                                 'id': fundRow.childrenMap.gfundService.value[0]
+                             });
+                         }
+                     }
+                 }
+                
+                 return !empty fundServList ? fundServList.distinct() : fundServList;
+                }
+                
+                // Enables appropriate Service on the Services tab based on provided WID
+                var enableServicebyWID = function (WID) {
+                 //console.info(\"Looking to enable service by WID\", WID);
+                 for (var servPanel: pnlServices.getChildren()) {
+                     var cnt = 0;
+                     let serviceWID;
+                     for (var servWidBlock: servPanel.getChildren()) {
+                         if (cnt > 0) {
+                             serviceWID = servWidBlock.children[4].value;
+                             //console.info(\"services WIDs:\", serviceWID);
+                             if (serviceWID == WID) {
+                                 //console.info(\"Found service to enable based on funds\");
+                                 servWidBlock.children[1].children[0].setValue(true);
+                                 servWidBlock.children[2].children[0].setEnabled(true);
+                                 servWidBlock.children[3].children[0].setEnabled(true);
+                                 addServiceToPageVariablebyWID(WID);
+                                 return null;
+                             }
+                         }
+                         cnt++;
+                     }
+                 }
+                }
+                
+               %>",
+  "securityDomains": [
+    "CapitalProjectPlanning",
+    "CapitalProjectPlanningAdministrator"
+  ],
+  "include": [
+    "helperFunctions.script"
+  ]
+}

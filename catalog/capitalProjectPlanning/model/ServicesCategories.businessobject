@@ -1,0 +1,68 @@
+{
+  "id": 9,
+  "name": "ServiceCategory",
+  "label": "Service Category",
+  "defaultSecurityDomains": [
+    "CapitalProjectPlanning",
+    "CapitalProjectPlanningAdministrator",
+    "CapitalProjectPlanningCommon"
+  ],
+  "defaultCollection": {
+    "name": "servicesCategories",
+    "label": "Services Categories"
+  },
+  "fields": [
+    {
+      "description": "",
+      "enableSearch": false,
+      "enableIndex": true,
+      "isPurgeable": false,
+      "useForDisplay": true,
+      "isReferenceId": false,
+      "type": "TEXT",
+      "name": "serviceCategoryName",
+      "id": 1
+    },
+    {
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "isReferenceId": false,
+      "type": "TEXT",
+      "name": "categoryDefinition",
+      "id": 2
+    },
+    {
+      "enableReportingFromTarget": false,
+      "secureByTarget": false,
+      "target": "SUPERVISORY_ORGANIZATION",
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "type": "SINGLE_INSTANCE",
+      "name": "approvingOrganization",
+      "id": 3
+    },
+    {
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "isReferenceId": false,
+      "label": "Order",
+      "type": "TEXT",
+      "name": "displayOrder",
+      "id": 4
+    },
+    {
+      "enableReportingFromTarget": false,
+      "secureByTarget": true,
+      "target": "COST_CENTER",
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "type": "SINGLE_INSTANCE",
+      "name": "approvingCostCenter",
+      "id": 5
+    }
+  ]
+}

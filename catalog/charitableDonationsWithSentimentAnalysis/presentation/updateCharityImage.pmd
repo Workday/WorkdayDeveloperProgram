@@ -1,0 +1,196 @@
+{
+  "id": "updateCharityImage",
+  "securityDomains": [
+    "ManageCharities"
+  ],
+  "endPoints": [
+    {
+      "name": "worker",
+      "baseUrlType": "workday-staffing",
+      "url": "workers/me",
+      "authType": "sso"
+    },
+    {
+      "name": "charity",
+      "baseUrlType": "app",
+      "url": "<% 'charities/' + queryParams.charityId %>",
+      "authType": "sso"
+    },
+    {
+      "name": "charityLogo",
+      "baseUrlType": "app",
+      "url": "<% 'charityLogos/' + charity.logo.id %>",
+      "exclude": "<% //won't fire the endpoint if there is no image saved to the charity's 'image' field
+                  empty(charity.logo) %>",
+      "authType": "sso"
+    },
+    {
+      "name": "charityLogoMetadata",
+      "baseUrlType": "app",
+      "url": "<% //Get the Charity Logo metadata by specifying the Accept header as JSON.
+              'charityLogos/' + charity.logo.id %>",
+      "exclude": "<% //won't fire the endpoint if there is no logo saved to the charity's 'logo' field
+                  empty(charity.logo) %>",
+      "authType": "sso",
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ]
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "createCharityLogo",
+        "baseUrlType": "app",
+        "url": "<% 'charityLogosCollection' //Attachment API URL needs to have 'Collection' to use onMultiPartSend()
+      %>",
+        "authType": "sso",
+        "httpMethod": "POST",
+        "onMultiPartSend": "<%
+          for (var file : self.data.metadata.charityLogos) { //loop through as many files as were uploaded
+            //Put an uploadedBy object with an id field to the JSON part.
+            var uploadData = {'id': worker.id};
+            file.put('uploadedBy',uploadData); //put the new uploadedBy map in the metadata. This captures the WID of the uploader.
+            //Put uploadedDate field to the JSON part.
+            file.uploadedDate = date:getTodaysDate(date:getDateTimeZone(userTimeZone)); //put the uploadedDate field in the metadata
+            console.info('metadata is ' + json:asJSON(self.data)); //log the metadata being passed in for debugging purposes
+          }
+          self.data;
+    %>",
+        "exclude": "<% //This exclude statement checks whether a file was uploaded successfully
+                    empty imageFileUploader.children %>"
+      },
+      {
+        "name": "updateCharity",
+        "baseUrlType": "app",
+        "url": "<% //Set the newly created Charity logo on the charity since the relationship did not previously exist.
+                'charities/' + charity.id %>",
+        "authType": "sso",
+        "httpMethod": "PATCH",
+        "exclude": "<% //This exclude statement checks whether a file was uploaded successfully, so the current picture is always the one set on the charity
+                    empty createCharityLogo.charityLogos[0].id
+                     %>",
+        "values": [
+          {
+            "outboundPath": "logo.id",
+            "value": "<% //Set Charity Logo relationship with ID returned by createCharityLogo endpoint
+                      createCharityLogo.charityLogos[0].id %>"
+          }
+        ]
+      },
+      {
+        "name": "deleteOldImage",
+        "baseUrlType": "app",
+        "url": "<% //Delete the old Charity Image if one existed
+                'charityLogos/' + charity.logo.id %>",
+        "authType": "sso",
+        "httpMethod": "DELETE",
+        "multiPartFileLast": true,
+        "exclude": "<% //Delete prior Charity Image only if there was one already there
+                    empty(charity.logo) %>"
+      }
+    ],
+    "responseErrorDetail": {
+      "errorSummary": "<% error %>",
+      "errors": "<% errors.map(item => { item.error }); %>"
+    }
+  },
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Update Charity Logo"
+    },
+    "body": {
+      "type": "section",
+      "title": "Charity",
+      "horizontal": false,
+      "sorted": false,
+      "children": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "value": "<% charity.name %>",
+          "enabled": "<% false %>"
+        },
+        {
+          "type": "section",
+          "horizontal": true,
+          "sorted": false,
+          "children": [
+            {
+              "type": "section",
+              "horizontal": false,
+              "sorted": false,
+              "children": [
+                {
+                  "type": "fileUploader",
+                  "id": "imageFileUploader",
+                  "label": "New Logo",
+                  "maxImageDimension": "1024",
+                  "maxFileSize": "5242880",
+                  "singular": "<% true %>",
+                  "compact": "<% false %>",
+                  "required": "<% true %>",
+                  "fileTypes": "gif,jpg,jpeg,png",
+                  "valueOutBinding": "<% 'createCharityLogo:charityLogos' %>",
+                  "metadata": "<%
+                   {:} //need at least an empty map in a metadata tag for onMultiPartSend() to have metadata to work with!
+              %>"
+                }
+              ]
+            },
+            {
+              "type": "section",
+              "title": "Current Logo",
+              "horizontal": false,
+              "sorted": false,
+              "children": [
+                {
+                  "type": "section",
+                  "id": "currentLogoInfo",
+                  "horizontal": false,
+                  "sorted": false,
+                  "render": "<% (!(empty(charity.logo))) %>",
+                  "children": [
+                    {
+                      "type": "cardContainer",
+                      "layout": "grid",
+                      "cards": [
+                        {
+                          "type": "card",
+                          "cardId": "CharityLogo",
+                          "parameters": "<% {
+            'title': '',
+            'subtitle': 'Uploaded by '+charityLogoMetadata.uploadedBy.descriptor+' on '+charityLogoMetadata.uploadedDate,
+            'imageURL': 'https://api.workday.com/apps/'+site.applicationId+'/v1/charityLogos/'+charity.logo.id
+          }%>"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "label": "File Size",
+                      "id": "fileSize",
+                      "value": "<% file:byteCountToDisplaySize(charityLogoMetadata.fileLength) %>",
+                      "enabled": "<% false %>"
+                    }
+                  ]
+                },
+                {
+                  "type": "readOnlyText",
+                  "id": "noLogoMessage",
+                  "value": "There is currently no logo for this Charity.",
+                  "render": "<% empty(charity.logo) %>"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

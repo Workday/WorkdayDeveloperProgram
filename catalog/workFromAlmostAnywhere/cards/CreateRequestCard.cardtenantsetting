@@ -1,0 +1,10 @@
+{
+  "id": 1,
+  "name": "CreateRequestCard",
+  "label": "Create Request Card",
+  "securityDomains": [
+    "RemoteWorkSelfService",
+    "ManageWorkFromAnywhere"
+  ],
+  "routePath": "/createRequestCard"
+}

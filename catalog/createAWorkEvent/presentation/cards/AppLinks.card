@@ -1,0 +1,50 @@
+{
+  "id": "AppLinks",
+  "parameters": [
+  ],
+  "header": {
+    "title": "Get Started",
+    "icon": "wd-accent-megaphone",
+    "indicator": {
+      "label": "Welcome!",
+      "color": "blue"
+    }
+  },
+  "body": {
+    "type": "pillCard",
+    "pills": [
+      {
+        "label": "Create an Event",
+        "taskReference": {
+          "taskId": "createEventWizard"
+        }
+      },
+      {
+        "label": "Manage Events",
+        "taskReference": {
+          "taskId": "manageEvents"
+        }
+      },
+      {
+        "label": "Register for an Event",
+        "taskReference": {
+          "taskId": "registerForEvents"
+        }
+      },
+      {
+        "label": "Work Event Calendar",
+        "taskReference": {
+          "taskId": "calendarWorkEvents"
+        }
+      }
+    ]
+  },
+  "footer": [
+    {
+      "label": "Return Home",
+      "taskReference": {
+        "taskId": "eventHub"
+      }
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "_pagePurpose1": "A launch page for the teamDataCreate and teamDataBulkDelete pages.",
+  "_pagePurpose2": "Visit the create page first, in order to ensure there is data available for the deletion sample.",
+  "id": "homeTeamData",
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Home - Bulk Deletion via Orchestrate"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "cardContainer",
+          "id": "links",
+          "cards": [
+            {
+              "type": "card",
+              "id": "bulkCreate",
+              "cardId": "appLinks",
+              "parameters": {
+                "title": "Create data for the bulk delete process",
+                "body": "In order to see the bulk delete process, you're going to need some data! Go here to create it.",
+                "taskRef": "teamDataCreate",
+                "taskLabel": "Create Data"
+              }
+            },
+            {
+              "type": "card",
+              "id": "bulkDelete",
+              "cardId": "appLinks",
+              "parameters": {
+                "title": "Delete Bulk Data",
+                "body": "See an example of how data can be deleted in bulk, via Orchestration",
+                "taskRef": "teamDataBulkDelete",
+                "taskLabel": "Delete Data"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

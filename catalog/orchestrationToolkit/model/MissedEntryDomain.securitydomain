@@ -1,0 +1,6 @@
+{
+  "id": 4,
+  "name": "MissedEntryDomain",
+  "label": "Missed Entry Domain",
+  "enabledForPageSecurity": false
+}

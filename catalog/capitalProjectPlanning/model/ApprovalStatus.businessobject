@@ -1,0 +1,39 @@
+{
+  "id": 3,
+  "name": "ApprovalStatus",
+  "label": "Approval Status",
+  "defaultSecurityDomains": [
+    "CapitalProjectPlanning",
+    "CapitalProjectPlanningAdministrator",
+    "CapitalProjectPlanningCommon"
+  ],
+  "defaultCollection": {
+    "description": "Approval Status for Capital Planning Request",
+    "name": "approvalStatuses",
+    "label": "Approval Statuses"
+  },
+  "fields": [
+    {
+      "description": "",
+      "enableSearch": true,
+      "enableIndex": true,
+      "isPurgeable": false,
+      "useForDisplay": true,
+      "isReferenceId": false,
+      "type": "TEXT",
+      "name": "status",
+      "id": 1
+    },
+    {
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "isReferenceId": true,
+      "description": "",
+      "type": "TEXT",
+      "name": "statusCode",
+      "id": 2
+    }
+  ]
+}

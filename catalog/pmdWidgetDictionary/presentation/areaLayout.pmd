@@ -1,0 +1,24 @@
+{
+  "id": "areaLayout",
+  "presentation": {
+    "body": {
+      "type": "areaLayout",
+      "layout": "left",
+      "primaryArea": [
+        {
+          "type": "richText",
+          "label": "rich text",
+          "id": "text",
+          "value": "this is a test"
+        }
+      ],
+      "secondaryArea": [
+        {
+          "type": "date",
+          "label": "date label",
+          "value": "<% date:getTodaysDate(date:getDateTimeZone('Asia/Bangkok')) %>"
+        }
+      ]
+    }
+  }
+}

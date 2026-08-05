@@ -1,0 +1,10 @@
+{
+  "id": "getReports",
+  "parameters": ["protectedCaseObjectWID"],
+  "query": "<%
+    `SELECT customReport, reportOwner{username}, reportName, businessObject
+    FROM allCustomReports
+    WHERE businessObject in ({{protectedCaseObjectWID}}) AND enableAsWebService = true AND fieldsDisplayedOnReport in (990ee6a02d014540b75abdb8ab2da866)`
+  %>"
+}
+

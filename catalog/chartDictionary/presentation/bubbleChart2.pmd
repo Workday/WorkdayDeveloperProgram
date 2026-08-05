@@ -1,0 +1,112 @@
+{
+  "id": "bubbleChart2",
+  "include": [
+    "pokemonData.script"
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Bubble Charts"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "section",
+          "title": "Simple Bubble Chart",
+          "children": [
+            {
+              "type": "bubbleChart2",
+              "id": "chart1",
+              "data": "<% pokemonData.getSimplePokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSet": {
+                "name": "Level",
+                "value": "<% data.level %>"
+              },
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data.pokemon %>"
+              },
+              "bubbleSizeDataSet": {
+                "name": "Stage",
+                "value": "<% data.stage %>"
+              },
+              "bubbleColorDataSet": {
+                "name": "Type",
+                "value": "<% data.type %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Bubble Chart - chartMarkLabel and comparisonLine",
+          "children": [
+            {
+              "type": "bubbleChart2",
+              "id": "chart2",
+              "data": "<% pokemonData.getSimplePokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSet": {
+                "name": "Level",
+                "value": "<% data.level %>"
+              },
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data.pokemon %>"
+              },
+              "bubbleSizeDataSet": {
+                "name": "Stage",
+                "value": "<% data.stage %>"
+              },
+              "bubbleColorDataSet": {
+                "name": "Type",
+                "value": "<% data.type %>"
+              },
+              "chartMarkLabel": "<% 'Type: ' + data.type %>",
+              "measurementAxisOptions": {
+                "comparisonLineLabel": "Level to Evolve",
+                "comparisonLineValue": "<% 30 %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Bubble Chart - axis options: titles, increment, min, max",
+          "children": [
+            {
+              "type": "bubbleChart2",
+              "id": "chart3",
+              "data": "<% pokemonData.getSimplePokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSet": {
+                "name": "Level",
+                "value": "<% data.level %>"
+              },
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data.pokemon %>"
+              },
+              "bubbleSizeDataSet": {
+                "name": "Stage",
+                "value": "<% data.stage %>"
+              },
+              "measurementAxisOptions": {
+                "axisTitle": "Current Level",
+                "axisIncrement": "<% 25 %>",
+                "axisMinimum": "5",
+                "axisMaximum": "100"
+              },
+              "categoryAxisOptions": {
+                "axisTitle": "Who's that Pokemon?"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,247 @@
+{
+  "id": "review",
+"securityDomains": [
+    "RemoteWorkSelfService"
+  ],
+  "include": [
+    "fileTypes.script"
+  ],
+  "endPoints": [
+    {
+      "name": "bpEventStep",
+      "baseUrlType": "workday-bp",
+      "url": "<% //note the query param is mentioned in the pageRoute of the action step
+              //in the .businessprocess file --> /review/{eventStepId}. Use this syntax to grab the eventStepId path parameter
+              console.info('eventStepId of review step is ' + queryParams.eventStepId);
+              'eventSteps/' + queryParams.eventStepId %>",
+      "authType": "sso"
+    },
+    {
+      "name": "eventInfo",
+      "baseUrlType": "workday-bp",
+      "url": "<% //this endpoint is calling the Workday Business Processes REST API for information about a specific BP Event for our Model BP
+              //use the event.id value from the bpEventStep response to get info about the Model BP Overall Event (overall process)
+              //bpEventStep.event would give us information about the entire BP Event (aka the overall process)
+              //and the bpEventStep.event.id grabs the ID of the BP's target BO, in this case our Model BO for a work event
+              'events/' + bpEventStep.event.id %>",
+      "authType": "sso"
+    },
+    {
+      "name": "request",
+      "baseUrlType": "app",
+      "url": "<% //this endpoint calls our app's Model BO endpoint for remote requests, and uses the ID of the BO retrieved above
+                //The ID of the Model BO in question is found in eventInfo['for'].id so calling this endpoint returns all the current Model BO data for that instace
+              'workFromAnywhereRequests/' + eventInfo['for'].id %>",
+      "authType": "sso"
+    },
+    {
+      "name": "getAttachments",
+      "baseUrlType": "app",
+      "url": "<% 'rightToWorkVerifications?workRequest=' + eventInfo['for'].id  %>",
+      "authType": "sso"
+    },
+    {
+      "name": "userInfo",
+      "baseUrlType": "workday-common",
+      "url": "userInfo",
+      "authType": "sso"
+    },
+    {
+      "name": "me",
+      "baseUrlType": "workday-common",
+      "url": "workers/me",
+      "authType": "sso"
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "updateRequest",
+        "baseUrlType": "app",
+        "url": "workEvents/<% eventInfo['for'].id %>",
+        "httpMethod": "PATCH",
+        "authType": "sso",
+        "onSend": "<% console.info(json:asJSON(self.data)); return self.data; %>"
+      },
+      {
+        "name": "updateRequestAttachment",
+        "baseUrlType": "app",
+        "url": "rightToWorkVerificationsCollection",
+        "authType": "sso",
+        "httpMethod": "POST",
+        "multiPartFileLast": true,
+        "onMultiPartSend": "<%
+          for (var file : self.data.metadata.rightToWorkVerifications) { //loop through as many files as were uploaded
+            //Put an uploadedBy object with an id field to the JSON part.
+            file.put('uploadedBy',{'id': me.id}); //put the new uploadedBy map in the metadata. This captures the WID of the uploader.
+            //Put uploadedDate field to the JSON part.
+            file.uploadedDate = date:getTodaysDate(date:getDateTimeZone(userTimeZone)); //put the uploadedDate field in the metadata
+            file.put('workRequest',{'id': request.id}); //link the file with the charity
+            console.info('metadata is ' + json:asJSON(self.data)); //log the metadata being passed in for debugging purposes
+          }
+          self.data;
+    %>",
+        "exclude": "<% //This exclude statement checks whether a file was uploaded successfully!
+                    empty attachmentFileUploader.children %>"
+      },
+      {
+        "name": "updateAttachmentList",
+        "baseUrlType": "app",
+        "url": "<% //now add the attachments posted on the page (if any) to the multi instance field on the parent BO
+        'workFromAnywhereRequests/' +  request.id %>",
+        "httpMethod": "PATCH",
+        "exclude": "<% empty(attachmentFileUploader.children) %>",
+        "authType": "sso",
+        "onSend": "<% 
+        console.info('attachments list is ' + json:asJSON(request.rightToWorkVerification));
+        let currentVerifications = request.rightToWorkVerification ?? []; //get current list of attachments, id + descriptor
+        console.info('new attachments data is ' + json:asJSON(updateRequestAttachment));
+        updateRequestAttachment.rightToWorkVerifications.forEach(file => { currentVerifications.add({'id':file.id}) }); //make a list of all the posted attachments' IDs
+        let payload = {'rightToWorkVerification': currentVerifications}; //initializing payload to log and send
+        console.info('this updateAttachmentList payload is ' + json:asJSON(payload));
+        return payload; //send payload
+        %>",
+        "failOnStatusCodes": [
+          {
+            "code": 403
+          },
+          {
+            "code": 400
+          }
+        ]
+      },
+      {
+        "name": "submitStep",
+        "baseUrlType": "workday-bp",
+        "url": "eventSteps/<% queryParams.eventStepId %>/submit",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "onSend": "<% console.info(json:asJSON(self.data)); return self.data; %>",
+        "values": [
+          {
+            "outboundPath": "stepAction.id",
+            "value": "<% //this action page is ultimately just a PMD; when the information is submitted we need to
+                      //advance the BP by calling the BP event with this exact value, which corresponds to the 'submit' step action ID
+                      //this WID corrresponds to the step action ID of 'submitted'
+                      'd9e4223e446c11de98360015c5e6daf6' %>"
+          }
+        ]
+      }
+    ]
+  },
+  "presentation": {
+    "title": {
+      "label": "Work From Almost Anywhere Request Details",
+      "type": "title"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": true,
+      "children": [
+        {
+          "_comments": "Business Objects Details block",
+          "type": "section",
+          "horizontal": true,
+          "title": "Please Upload Any Additional Verification Documents",
+          "children": [
+            {
+              "type": "section",
+              "horizontal": false,
+              "children": [
+                {
+                  "type": "pod",
+                  "podId": "requestDetailsViewOnly"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "id": "rightside",
+          "children": [
+            {
+              "type": "section",
+              "horizontal": false,
+              "sorted": false,
+              "children": [
+                {
+                  "type": "fileUploader",
+                  "label": "Attach New Right to Work Verifications",
+                  "id": "attachmentFileUploader",
+                  "maxImageDimension": "1024",
+                  "maxFileSize": "5242880",
+                  "compact": "<% true %>",
+                  "required": "<% false %>",
+                  "fileTypes": "*",
+                  "valueOutBinding": "<% 'updateRequestAttachment:rightToWorkVerifications' //outbound endpoint name : attachment obect API URL
+          %> ",
+                  "metadata": "<%
+              {:} //need at least an empty map in a metadata tag for onMultiPartSend() to have metadata to work with!
+              %>"
+                }
+              ]
+            },
+            {
+              "type": "pod",
+              "podId": "previouslyAttachedFiles",
+              "_podComment": "loads a fileUploader that returns all relevant attached files for the request"
+            },
+            {
+              "type": "fieldSet",
+              "title": "Confirm Documentation Is Uploaded",
+              "children": [
+                {
+                  "id": "confirmedAllGoodCheckBox",
+                  "type": "checkBox",
+                  "visible": "<% true %>",
+                  "required": "<% true %>",
+                  "label": "Do you confirm all required documents are uploaded?",
+                  "trueLabel": "Yes",
+                  "falseLabel": "No"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "editButtonBar",
+          "editButtons": [
+            {
+              "type": "editButton",
+              "label": "Confirm Request",
+              "id": "updateRequestButton",
+              "buttonType": "PRIMARY"
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Remote Work Requests",
+          "children": [
+            {
+              "type": "cardContainer",
+              "layout": "MASONRY",
+              "cards": [
+                {
+                  "type": "card",
+                  "cardId": "AppLinks"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By<br/><b>Workday Extend 💼</b>"
+        }
+      ]
+    }
+  }
+}

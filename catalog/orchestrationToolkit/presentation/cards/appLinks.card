@@ -1,0 +1,19 @@
+{
+    "id": "appLinks",
+    "parameters": ["title", "body", "taskRef", "taskLabel"],
+    "header": {
+        "title": "<% title %>"
+    },
+    "body": {
+        "type": "simpleCard",
+        "value": "<% body %>"
+    },
+    "footer": [
+        {
+            "label": "<% taskLabel %>",
+            "taskReference": {
+                "taskId": "<% taskRef %>"
+            }
+        }
+    ]
+}

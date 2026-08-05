@@ -1,0 +1,21 @@
+{
+  "id": "chart2CatalogApp_ycjtxv",
+  "languages": [
+    {
+      "code": "en-US",
+      "description": "English"
+    }
+  ],
+  "siteAuth": {
+    "authTypes": [
+      {
+        "scheme": "SSO",
+        "id": "sso"
+      }
+    ]
+  },
+  "siteId": "chart2CatalogApp_ycjtxv",
+  "cdnEnabled": true,
+  "siteProperties": [ ],
+  "applicationId": "chart2CatalogApp_ycjtxv"
+}
