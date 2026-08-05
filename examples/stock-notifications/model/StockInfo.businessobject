@@ -1,0 +1,44 @@
+{
+  "id": 1,
+  "name": "StockInfo",
+  "label": "Stock Info",
+  "defaultSecurityDomains": [
+    "StockSecurityDomain"
+  ],
+  "defaultCollection": {
+    "name": "stockInfos",
+    "label": "Stock Infos"
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "stockTicker",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": true,
+      "isPurgeable": false,
+      "enableIndex": false,
+      "enableSearch": false
+    },
+    {
+      "id": 2,
+      "name": "currentPrice",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "enableIndex": false,
+      "enableSearch": false
+    },
+    {
+      "id": 3,
+      "name": "lastUpdated",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "enableIndex": false,
+      "enableSearch": false
+    }
+  ]
+}

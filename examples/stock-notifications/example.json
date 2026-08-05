@@ -1,0 +1,20 @@
+{
+  "title": "Stock Notifications",
+  "description": "An Extend app that fetches Workday's current stock price from an external API and displays it on a home page card.",
+  "type": "Extend App",
+  "components": [
+    "Presentation",
+    "Card",
+    "Model",
+    "Orchestration"
+  ],
+  "products": [
+    "Workday Extend",
+    "Workday Orchestrate"
+  ],
+  "authors": [
+    "tony-gilfillan"
+  ],
+  "tutorial": "",
+  "source": "community"
+}
