@@ -57,3 +57,6 @@ jobs:
         uses: actions/deploy-pages@v5
         with:
           artifact_name: github-pages-${{ github.run_attempt }}
+          # Pages can be slow to process deployments; give it 20 minutes
+          # instead of the default 10 before declaring a timeout.
+          timeout: 1200000

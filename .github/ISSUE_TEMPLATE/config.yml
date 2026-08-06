@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Questions and ideas
+    url: https://github.com/Workday/WorkdayDeveloperProgram/discussions
+    about: Start a discussion for anything that is not a bug report or a proposal.
+  - name: Support policy
+    url: https://github.com/Workday/WorkdayDeveloperProgram/blob/main/SUPPORT.md
+    about: How entries are maintained, and where to go for Workday tenant or product issues.

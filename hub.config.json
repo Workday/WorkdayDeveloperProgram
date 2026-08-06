@@ -1,8 +1,8 @@
 {
   "org": "Workday",
-  "repo": "Developer-Relations",
-  "repoUrl": "https://github.com/Workday/Developer-Relations",
-  "pagesUrl": "https://workday.github.io/Developer-Relations",
+  "repo": "WorkdayDeveloperProgram",
+  "repoUrl": "https://github.com/Workday/WorkdayDeveloperProgram",
+  "pagesUrl": "https://workday.github.io/WorkdayDeveloperProgram",
   "defaultBranch": "main",
   "types": [
     "Extend App",

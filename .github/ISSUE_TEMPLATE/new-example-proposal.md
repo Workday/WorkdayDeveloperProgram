@@ -9,11 +9,9 @@ labels: proposal
 
 <!-- The use case, and the Workday products or APIs involved. -->
 
-## Category
+## Type
 
-<!-- One of: getting-started, integrations, apps, automation -->
-
-## Language(s)
+<!-- One of: Extend App, Integration App, Orchestration, Agent Skill, Reference -->
 
 ## Why is it useful?
 

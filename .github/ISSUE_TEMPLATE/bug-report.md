@@ -1,20 +1,25 @@
 ---
 name: Bug report
-about: An example does not run or behaves unexpectedly
+about: An entry does not deploy, import, or run the way its README says
 title: "Bug: "
 labels: bug
 ---
 
-## Which example?
+## Which entry?
 
-<!-- Folder name, for example: worker-directory-node -->
+<!-- The folder name under catalog/ or examples/, for example: catalog/charitableDonations -->
 
-## What happened?
+## What did you do?
 
-<!-- What you ran, what you expected, and what you got instead. Include the exact error output. -->
+<!-- The steps you followed from the entry's README: deploy, import, configure, run. -->
 
-## Environment
+## What did you expect, and what happened instead?
 
-- OS:
-- Runtime and version (for example Node 20.11, Python 3.12):
-- Mode: mock or live
+<!-- Include the exact error output if there is any. Screenshots help too. -->
+
+## Tenant and version context
+
+- Workday release (for example 2026R1):
+- Tenant type (for example Extend developer tenant, sandbox):
+- Entry version, if the README lists one (for example 2024.2):
+- Tools you used (for example App Builder, Console, IntelliJ Extend plugin):

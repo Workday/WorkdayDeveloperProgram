@@ -11,7 +11,7 @@ Thanks for helping build the open home for Workday Build examples. Adding an exa
 
 - **Add a new example.** The main event. See below.
 - **Improve an existing example.** Clearer READMEs, fixes, and better sample data are all welcome.
-- **Report a problem.** Open an issue with the bug report template.
+- **Report a problem.** Open an issue with the bug report template. The [support policy](SUPPORT.md) explains what happens next.
 - **Propose an idea.** Open an issue with the proposal template if you want feedback before building.
 
 ## Add an example
@@ -85,6 +85,10 @@ npm run dev
 ```
 
 Then open the local URL Astro prints. The gallery reads every `example.json` directly, so your example appears as soon as the folder exists.
+
+## Licensing
+
+This repository is licensed under the [Apache License 2.0](LICENSE). By opening a pull request you agree that your contribution is licensed under the same terms.
 
 ## Review process
 
