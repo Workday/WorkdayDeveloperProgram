@@ -1,0 +1,20 @@
+{
+  "title": "Work From Almost Anywhere",
+  "description": "Enable employees to request to work from anywhere, for a manager to approve, and use a calendar view.",
+  "type": "Extend App",
+  "components": [
+    "Presentation",
+    "Model",
+    "Card",
+    "Business Process",
+    "WQL"
+  ],
+  "products": [
+    "Workday Extend",
+    "Workday HCM",
+    "Workday Absence Management"
+  ],
+  "authors": [],
+  "tutorial": "https://forum.developer.workday.com/t/app-catalog-app-work-from-almost-anywhere/7493",
+  "source": "workday"
+}

@@ -1,0 +1,16 @@
+{
+  "title": "Update Workday Accounts Boomerang",
+  "description": "Fetch workers that meet a certain condition and update their workday accounts.",
+  "type": "Integration App",
+  "components": [
+    "Orchestration"
+  ],
+  "products": [
+    "Workday Orchestrate",
+    "Workday RaaS",
+    "Workday HCM"
+  ],
+  "authors": [],
+  "tutorial": "",
+  "source": "workday"
+}

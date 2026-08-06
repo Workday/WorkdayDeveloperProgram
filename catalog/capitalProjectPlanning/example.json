@@ -1,0 +1,19 @@
+{
+  "title": "Capital Project Planning",
+  "description": "This application simplifies requesting new capital projects and managing their planned capital funds, providing transparency and accountability. It allows you to track financial impact, manage funds efficiently, and make informed investment decisions. Built to complement Workday Adaptive Planning capabilities, it enhances the end-user experience and streamlines capital project request workflows, especially beneficial for Healthcare, SLED, and beyond.",
+  "type": "Extend App",
+  "components": [
+    "Presentation",
+    "Model",
+    "Orchestration",
+    "Business Process"
+  ],
+  "products": [
+    "Workday Extend",
+    "Workday Orchestrate",
+    "Workday Financials"
+  ],
+  "authors": [],
+  "tutorial": "https://forum.developer.workday.com/t/app-catalog-app-capital-project-planning/28455",
+  "source": "workday"
+}

@@ -1,0 +1,16 @@
+{
+  "title": "Create Spot Bonus",
+  "description": "Create Spot Bonuses using a single API request from Orchestrate. Powered by Workday Graph API.",
+  "type": "Orchestration",
+  "components": [
+    "Orchestration",
+    "Graph API"
+  ],
+  "products": [
+    "Workday Orchestrate",
+    "Workday HCM"
+  ],
+  "authors": [],
+  "tutorial": "",
+  "source": "workday"
+}

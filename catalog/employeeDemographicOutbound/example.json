@@ -1,0 +1,15 @@
+{
+  "title": "Employee Demographic Outbound",
+  "description": "This employee demographic solution can be used as a starting point to generate a delimited file containing employee demographic information.",
+  "type": "Integration App",
+  "components": [
+    "Orchestration"
+  ],
+  "products": [
+    "Workday Orchestrate",
+    "Workday HCM"
+  ],
+  "authors": [],
+  "tutorial": "https://forum.developer.workday.com/t/app-catalog-app-worker-demographic-sample/44076",
+  "source": "workday"
+}

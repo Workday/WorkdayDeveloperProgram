@@ -1,0 +1,14 @@
+{
+  "title": "Chart Dictionary",
+  "description": "Get familiar with new chart 2.0 widgets with sections for many additional chart features.",
+  "type": "Reference",
+  "components": [
+    "Presentation"
+  ],
+  "products": [
+    "Workday Extend"
+  ],
+  "authors": [],
+  "tutorial": "",
+  "source": "workday"
+}

@@ -1,0 +1,18 @@
+{
+  "title": "Charitable Donations",
+  "description": "Enable employees to donate to charities with one-time and recurring payroll deductions. Features hubs and cards.",
+  "type": "Extend App",
+  "components": [
+    "Presentation",
+    "Model",
+    "Card",
+    "Business Process"
+  ],
+  "products": [
+    "Workday Extend",
+    "Workday Payroll"
+  ],
+  "authors": [],
+  "tutorial": "",
+  "source": "workday"
+}

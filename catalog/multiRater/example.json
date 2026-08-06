@@ -1,0 +1,19 @@
+{
+  "title": "MultiRater",
+  "description": "This app enhances the performance review process by allowing multiple raters to provide feedback and the manager to update ratings based on this feedback.",
+  "type": "Extend App",
+  "components": [
+    "Presentation",
+    "Model",
+    "Orchestration",
+    "Business Process"
+  ],
+  "products": [
+    "Workday Extend",
+    "Workday Orchestrate",
+    "Workday HCM"
+  ],
+  "authors": [],
+  "tutorial": "https://forum.developer.workday.com/t/app-catalog-app-multi-rater-for-employee-reviews/15466",
+  "source": "workday"
+}
