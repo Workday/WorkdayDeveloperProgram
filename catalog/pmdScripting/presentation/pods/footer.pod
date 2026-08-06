@@ -1,0 +1,15 @@
+{
+  "podId": "footer",
+  "seed": {
+    "template": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By<br><b>Workday Extend</b>"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "caseConnectionData_All",
+  "parameters": ["appId"],
+  "query": "<%
+    `SELECT connectionID
+    FROM {{appId}}_protectedCaseConnectionsBO
+    WHERE connectionType contains 'People Involved'`
+  %>"
+}
+
+

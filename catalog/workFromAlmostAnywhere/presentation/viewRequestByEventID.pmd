@@ -1,0 +1,109 @@
+{
+  "id": "viewRequestByEventID",
+  "include": [
+    "fileTypes.script"
+  ],
+  "endPoints": [
+    {
+      "name": "me",
+      "baseUrlType": "workday-common",
+      "url": "workers/me",
+      "authType": "sso"
+    },
+    {
+      "name": "userInfo",
+      "baseUrlType": "workday-common",
+      "url": "userInfo",
+      "authType": "sso"
+    },
+    {
+      "baseUrlType": "workday-wql",
+      "name": "getRequestId",
+      "authType": "sso",
+      "url": "data",
+      "failOnStatusCodes": [
+        {
+          "code": "400"
+        },
+        {
+          "code": "403"
+        }
+      ],
+      "wqlQuery": {
+        "parameters": {
+          "eventId": "<% queryParams.eventId %>",
+          "applicationId": "<% site.applicationId %>"
+        },
+        "queryId": "getRequestId"
+      }
+    },
+    {
+      "baseUrlType": "app",
+      "name": "request",
+      "authType": "sso",
+      "url": "<% //Grab the relevant instance of the Work Event BO using the results of the getRequestId endpoint
+              'workFromAnywhereRequests/' + getRequestId.data[0].businessProcessTarget.id %>",
+      "exclude": false
+    },
+    {
+      "name": "getAttachments",
+      "baseUrlType": "app",
+      "url": "<% 'rightToWorkVerifications?workRequest=' + getRequestId.data[0].businessProcessTarget.id  %>",
+      "authType": "sso"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "label": "Work From Almost Anywhere Request Details",
+      "type": "title"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "_comments": "Business Objects Details block",
+          "type": "section",
+          "horizontal": true,
+          "title": "Work Remote Request Information",
+          "children": [
+            {
+              "type": "pod",
+              "podId": "requestDetailsViewOnly"
+            }
+          ]
+        },
+        {
+          "type": "fieldSet",
+          "title": "Right to Work Verifications",
+          "render": "<% !(empty getAttachments.data) %>",
+          "children": [
+            {
+              "type": "pod",
+              "podId": "previouslyAttachedFiles",
+              "_podComment": "loads a fileUploader that returns all relevant attached files for the request"
+            }
+          ]
+        },
+        {
+          "type": "button",
+          "label": "<% 'Return to Work From Almost Anywhere Home' %>",
+          "action": "PRIMARY",
+          "taskReference": {
+            "taskId": "home"
+          }
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By<br/><b>Workday Extend 💼</b>"
+        }
+      ]
+    }
+  }
+}

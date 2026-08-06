@@ -1,0 +1,299 @@
+{
+  "appProperties": [ ],
+  "flowDefinitions": [
+    {
+      "id": "actionStepFlow",
+      "flowSteps": [
+        {
+          "id": "actionStep1",
+          "transitions": [
+            {
+              "id": "submitted",
+              "order": "a",
+              "value": "actionConfirm",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "actionStep"
+        },
+        {
+          "id": "actionConfirm",
+          "endsFlow": true,
+          "taskId": "microConfirm"
+        }
+      ]
+    },
+    {
+      "id": "bpFlow",
+      "flowSteps": [
+        {
+          "id": "flowStep1",
+          "transitions": [
+            {
+              "id": "submitted",
+              "order": "a",
+              "value": "flowStep2",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "requestForm"
+        },
+        {
+          "id": "flowStep2",
+          "endsFlow": true,
+          "taskId": "eaRequestSubmitConfirmation"
+        }
+      ]
+    },
+    {
+      "id": "bpFlowRevise",
+      "flowSteps": [
+        {
+          "id": "flowStep1rv",
+          "transitions": [
+            {
+              "id": "submitted",
+              "order": "a",
+              "value": "flowStep2rv",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "eaRevise"
+        },
+        {
+          "id": "flowStep2rv",
+          "endsFlow": true,
+          "taskId": "microConfirm"
+        }
+      ]
+    },
+    {
+      "id": "myFlowId",
+      "name": "myFlow",
+      "flowSteps": [
+        {
+          "id": "flowStep1att",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "flowStep2att",
+              "condition": "<% true %>"
+            }
+          ],
+          "taskId": "addAttachment"
+        },
+        {
+          "id": "submitBP",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "flowStep2att",
+              "condition": "<% true %>"
+            }
+          ],
+          "taskId": "submitBP"
+        },
+        {
+          "id": "flowStep2att",
+          "taskId": "microConfirm"
+        }
+      ]
+    },
+    {
+      "id": "myFlow2Id",
+      "name": "myFlow2",
+      "flowSteps": [
+        {
+          "id": "flow2Step1",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "flow2Step2",
+              "condition": "<% true %>"
+            }
+          ],
+          "taskId": "deleteAttachments"
+        },
+        {
+          "id": "flow2Step2",
+          "taskId": "microConfirm"
+        }
+      ]
+    },
+    {
+      "id": "myFlow3Id",
+      "name": "myFlow3",
+      "flowSteps": [
+        {
+          "id": "flow3Step1",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "flow3Step2",
+              "condition": "<% true %>"
+            }
+          ],
+          "taskId": "home"
+        },
+        {
+          "id": "flow3Step2",
+          "taskId": "attachConfirm"
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "home",
+      "routingPattern": "/",
+      "page": {
+        "id": "home"
+      }
+    },
+    {
+      "id": "viewRequest",
+      "routingPattern": "/request/{id}",
+      "page": {
+        "id": "viewRequest"
+      }
+    },
+    {
+      "id": "requestForm",
+      "routingPattern": "requestForm",
+      "page": {
+        "id": "requestForm"
+      }
+    },
+    {
+      "id": "eaRequestSubmitConfirmation",
+      "routingPattern": "eaRequestSubmitConfirmation",
+      "page": {
+        "id": "eaRequestSubmitConfirmation"
+      }
+    },
+    {
+      "id": "eaApprove",
+      "routingPattern": "/approve/{eventId}",
+      "page": {
+        "id": "eaApprove"
+      }
+    },
+    {
+      "id": "verification",
+      "routingPattern": "verification/{id}",
+      "page": {
+        "id": "verification"
+      }
+    },
+    {
+      "id": "eaRevise",
+      "routingPattern": "/revise/{eventStepId}",
+      "page": {
+        "id": "eaRevise"
+      }
+    },
+    {
+      "id": "managerHome",
+      "routingPattern": "managerHome",
+      "page": {
+        "id": "managerHome"
+      }
+    },
+    {
+      "id": "deleteAttachments",
+      "routingPattern": "deleteAttachments",
+      "page": {
+        "id": "deleteAttachments"
+      }
+    },
+    {
+      "id": "addAttachment",
+      "routingPattern": "addAttachment",
+      "page": {
+        "id": "addAttachment"
+      }
+    },
+    {
+      "id": "microConfirm",
+      "routingPattern": "microConfirm",
+      "page": {
+        "id": "microConfirm"
+      }
+    },
+    {
+      "id": "attachConfirm",
+      "routingPattern": "/attachConfirm",
+      "page": {
+        "id": "attachConfirm"
+      }
+    },
+    {
+      "id": "errorPage",
+      "routingPattern": "errorPage",
+      "page": {
+        "id": "errorPage"
+      }
+    },
+    {
+      "id": "actionStep",
+      "routingPattern": "actionStep/{eventStepId}",
+      "page": {
+        "id": "actionStep"
+      }
+    },
+    {
+      "id": "viewAttachments",
+      "routingPattern": "viewAttachments",
+      "page": {
+        "id": "viewAttachments"
+      }
+    },
+    {
+      "id": "about",
+      "routingPattern": "about",
+      "page": {
+        "id": "about"
+      }
+    },
+    {
+      "id": "viewRequestByEventID",
+      "routingPattern": "details/{eventId}",
+      "page": {
+        "id": "viewRequestByEventID"
+      }
+    },
+    {
+      "id": "submitBP",
+      "routingPattern": "submitBP",
+      "page": {
+        "id": "submitBP"
+      }
+    }
+  ],
+  "applicationId": "tuitionReimbursement",
+  "dataProviders": [
+    {
+      "key": "WORKDAY-COMMON",
+      "value" : "<% `{{apiGatewayEndpoint}}/common/v1` %>"
+    },
+    {
+      "key": "app",
+      "value" : "<% `{{apiGatewayEndpoint}}/apps/{{site.applicationId}}/v1/` %>"
+    },
+    {
+      "key": "WORKDAY-WQL",
+      "value" : "<% `{{apiGatewayEndpoint}}/wql/v1` %>"
+    },
+    {
+      "key": "WORKDAY-REFERENCE-DATA",
+      "value" : "<% `{{apiGatewayEndpoint}}/referenceData` %>"
+    },
+    {
+      "key": "WORKDAY-BP",
+      "value" : "<% `{{apiGatewayEndpoint}}/businessProcess/v1` %>"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+    "id": "landingAction",
+    "parameters": ["title", "task", "action", "body"],
+    "header": {
+        "title": "<% title %>"
+    },
+    "body": {
+        "type": "simpleCard",
+        "value": "<% body %>"
+    },
+    "footer": [
+        {
+            "label": "<% title %>",
+            "taskReference": {
+                "taskId": "<% task %>",
+                "parameterBindings": {
+                    "action": "<% action %>"
+                }
+            }
+        }
+    ]
+}

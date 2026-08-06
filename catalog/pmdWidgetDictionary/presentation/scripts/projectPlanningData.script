@@ -1,0 +1,147 @@
+var getVelocityData = function() {
+  var velocityData = [
+    {
+      'sprint': 'Sprint 1',
+      'commitment': 25,
+      'delivered': {
+        'commitments': 25,
+        'lateAdds': 4
+      }
+    }, 
+    {
+      'sprint': 'Sprint 2',
+      'commitment': 38,
+      'delivered': {
+        'commitments': 29,
+        'lateAdds': 2
+      }
+    }, 
+    {
+      'sprint': 'Sprint 3',
+      'commitment': 23,
+      'delivered': {
+        'commitments': 18,
+        'lateAdds': 12
+      }
+    },
+    {
+      'sprint': 'Sprint 4',
+      'commitment': 27,
+      'delivered': {
+        'commitments': 20,
+        'lateAdds': 0
+      }
+    }
+  ]
+  return velocityData
+}
+
+var getTicketTypeData = function() {
+  var ticketTypes = [
+    {
+      'sprint': 'Sprint 1',
+      'stories': 8,
+      'bugs': 3,
+      'spikes': 2
+    }, 
+    {
+      'sprint': 'Sprint 2',
+      'stories': 12,
+      'bugs': 5,
+      'spikes': 1
+    }, 
+    {
+      'sprint': 'Sprint 3',
+      'stories': 7,
+      'bugs': 6,
+      'spikes': 3
+    },
+    {
+      'sprint': 'Sprint 4',
+      'stories': 14,
+      'bugs': 2,
+      'spikes': 0
+    }
+  ]
+  return ticketTypes
+}
+
+var getTicketCompletionData = function() {
+  var ticketCompletionData = [
+    {
+      'sprint': 'Sprint 1',
+      'ticketsCompleted': 12,
+      'ticketsInProgress': 3,
+      'ticketsNotStarted': 1,
+      'ticketsWontDo': 4,
+      'storyPointsCommitted': 74,
+      'storyPointsCompleted': 78
+    }, 
+    {
+      'sprint': 'Sprint 2',
+      'ticketsCompleted': 17,
+      'ticketsInProgress': 5,
+      'ticketsNotStarted': 6,
+      'ticketsWontDo': 2,
+      'storyPointsCommitted': 65,
+      'storyPointsCompleted': 62
+    }, 
+    {
+      'sprint': 'Sprint 3',
+      'ticketsCompleted': 14,
+      'ticketsInProgress': 2,
+      'ticketsNotStarted': 4,
+      'ticketsWontDo': 0,
+      'storyPointsCommitted': 104,
+      'storyPointsCompleted': 85
+    },
+    {
+      'sprint': 'Sprint 4',
+      'ticketsCompleted': 9,
+      'ticketsInProgress': 7,
+      'ticketsNotStarted': 3,
+      'ticketsWontDo': 3,
+      'storyPointsCommitted': 88,
+      'storyPointsCompleted': 87
+    }
+  ]
+  return ticketCompletionData
+}
+
+var getTimeEstimateData = function() {
+  var timeEstimateData = [
+    {
+      'ticket': 'Ticket A',
+      'totalTimeEstimate': 17,
+      'timeSpentTriage': 2,
+      'timeSpentDevelopment': 12,
+      'timeSpentReview': 1,
+      'timeSpentTesting': 3
+    },
+    {
+      'ticket': 'Ticket B',
+      'totalTimeEstimate': 27,
+      'timeSpentTriage': 5,
+      'timeSpentDevelopment': 8,
+      'timeSpentReview': 3,
+      'timeSpentTesting': 3
+    },
+    {
+      'ticket': 'Ticket C',
+      'totalTimeEstimate': 12,
+      'timeSpentTriage': 0,
+      'timeSpentDevelopment': 3,
+      'timeSpentReview': 6,
+      'timeSpentTesting': 1
+    }
+  ]
+  return timeEstimateData
+}
+
+
+{
+  "getVelocityData": getVelocityData,
+  "getTicketCompletionData": getTicketCompletionData,
+  "getTimeEstimateData": getTimeEstimateData,
+  "getTicketTypeData": getTicketTypeData
+}

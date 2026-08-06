@@ -1,0 +1,38 @@
+{
+  "id": "donut",
+  "parameters": [
+    "chartData",
+    "headerTitle",
+    "donutTitle",
+    "countFieldName"
+  ],
+  "header": {
+    "title": "<% headerTitle %>"
+  },
+  "body": {
+    "type": "chartCard",
+    "chart": {
+      "type": "donutChart2",
+      "data": "<% chartData %>",
+      "dataVariableName": "data",
+      "title": "<% donutTitle %>",
+      "sliceSizeDataSet": {
+        "name": "Votes",
+        "value": "<% data[countFieldName] %>"
+      },
+      "sliceColorDataSet": {
+        "name": "Desire Level",
+        "value": "<% data.desire %>"
+      },
+      "animateOnLoad": true
+    }
+  },
+  "footer": [
+    {
+      "label": "See Details",
+      "taskReference": {
+        "taskId": "projectUserFeedback"
+      }
+    }
+  ]
+}

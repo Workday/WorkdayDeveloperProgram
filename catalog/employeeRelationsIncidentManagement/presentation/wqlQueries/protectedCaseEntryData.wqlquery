@@ -1,0 +1,9 @@
+{
+  "id": "protectedCaseEntryData",
+  "parameters": ["appId", "case"],
+  "query": "<%
+    `SELECT workdayID, entryComment, personTagging{connectionValue as descriptor, connectionID as id}, createdDate, createdBy, lastUpdatedBy, lastUpdatedDate, hideComment
+    FROM {{appId}}_protectedCaseEntryBO
+    WHERE case={{case}}`
+  %>"
+}

@@ -1,0 +1,8 @@
+{
+    "id": 3,
+    "routePath": "/charities/{taskObjectId}",
+    "businessObject": "Charity",
+    "securityDomains": ["ManageCharities"],
+    "label": "View Charity",
+    "name": "ViewCharity"
+ }

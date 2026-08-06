@@ -1,0 +1,20 @@
+{
+    "id": "deleteVehicle",
+    "_comment": "Make sure to replace this app's ID, e.g. 'vehicleRegistration20241_nkzjqw' with YOUR app's ID.",
+    "parameters": ["vehicleId"],
+    "query": "
+      mutation vehicleRegistration20241_nkzjqw_deleteVehicle($vehicleId: IdentifierInput!) {
+  vehicleRegistration20241_nkzjqw_deleteVehicle(
+    vehiclesId: $vehicleId
+  ) {
+    ok
+  }
+}
+    ",
+   "variables": {
+            "vehicleId": {
+              "id": "<% vehicleId %>",
+              "type": "WID"
+            }
+          }
+}

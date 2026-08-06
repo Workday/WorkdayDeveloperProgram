@@ -1,0 +1,174 @@
+{
+  "id": "editConfigValues",
+  "securityDomains": [
+    "ManageProtectedCases"
+  ],
+  "endPoints": [
+    {
+      "name": "configValuesData",
+      "baseUrlType": "app",
+      "authType": "sso",
+      "url": "configValuesBO"
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "postConfigValue",
+        "url": "configValuesBO",
+        "baseUrlType": "app",
+        "exclude": "<% ! empty configValueId.value %>",
+        "failOnStatusCodes": [
+          {
+            "code": 400
+          }
+        ]
+      },
+      {
+        "name": "putConfigValue",
+        "url": "<% 'configValuesBO/' + configValueId.value %>",
+        "httpMethod": "PUT",
+        "baseUrlType": "app",
+        "allowPutForUnchangedData": true,
+        "exclude": "<% empty configValueId.value %>",
+        "failOnStatusCodes": [
+          {
+            "code": 400
+          }
+        ]
+      },
+      {
+        "name": "deleteConfigValue",
+        "url": "<% 'configValuesBO/' + configValueId.value %>",
+        "httpMethod": "DELETE",
+        "baseUrlType": "app",
+        "failOnStatusCodes": [
+          {
+            "code": 400
+          }
+        ]
+      }
+    ]
+  },
+  "presentation": {
+    "micro": "true",
+    "microFirstPageOnly": "true",
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "<% 'Config Values' %>",
+      "enabled": false
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "grid",
+          "label": "Configuration Values",
+          "rows": "<% list:sort(configValuesData.data,'configOrder',true) %>",
+          "rowVariableName": "configValueRow",
+          "deleteEndPoint": "deleteConfigValue",
+          "columns": [
+            {
+              "type": "column",
+              "columnId": "col1",
+              "label": "Config Type",
+              "cellTemplate": {
+                "type": "dropdown",
+                "selectedValues": "<% [configValueRow.configType] %>",
+                "id": "dropdownList",
+                "required": "true",
+                "instanceList": [
+                  {
+                    "id": "Case Tag",
+                    "descriptor": "Case Tag"
+                  },
+                  {
+                    "id": "Workday Help Type Filter",
+                    "descriptor": "Workday Help Type Filter"
+                  }
+                ],
+                "valuesOut": [
+                  {
+                    "value": "<% self.value[0] %>",
+                    "valueOutBinding": "postConfigValue.configType"
+                  },
+                  {
+                    "value": "<% self.value[0] %>",
+                    "valueOutBinding": "putConfigValue.configType"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "col2",
+              "label": "Value",
+              "cellTemplate": {
+                "type": "text",
+                "required": true,
+                "value": "<% configValueRow.configValue %>",
+                "valuesOut": [
+                  {
+                    "value": "<% self.value %>",
+                    "valueOutBinding": "postConfigValue.configValue"
+                  },
+                  {
+                    "value": "<% self.value %>",
+                    "valueOutBinding": "putConfigValue.configValue"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "col3",
+              "label": "Order",
+              "cellTemplate": {
+                "type": "text",
+                "required": true,
+                "value": "<% configValueRow.configOrder %>",
+                "valuesOut": [
+                  {
+                    "value": "<% self.value %>",
+                    "valueOutBinding": "postConfigValue.configOrder"
+                  },
+                  {
+                    "value": "<% self.value %>",
+                    "valueOutBinding": "putConfigValue.configOrder"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "colID",
+              "cellTemplate": {
+                "type": "section",
+                "children": [
+                  {
+                    "type": "hidden",
+                    "id": "configValueId",
+                    "value": "<% configValueRow.id %>",
+                    "valueOutBinding": "putConfigValue.id"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Click OK to save changes"
+        }
+      ]
+    }
+  }
+}

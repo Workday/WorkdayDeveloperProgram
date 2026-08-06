@@ -1,0 +1,78 @@
+{
+  "id": "references",
+  "endPoints": [ ],
+  "presentation": {
+    "pageType": "edit",
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "panelList",
+          "id": "referenceContacts",
+          "label": "Reference Contacts",
+          "children": [
+            {
+              "type": "fieldSet",
+              "id": "referenceFieldSetHorizontal",
+              "horizontal": true,
+              "children": [
+                {
+                  "type": "fieldSet",
+                  "id": "referenceFieldSet0",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "firstName1",
+                      "label": "First Name",
+                      "value": ""
+                    },
+                    {
+                      "type": "text",
+                      "id": "email1",
+                      "label": "Email",
+                      "required": false,
+                      "value": ""
+                    }
+                  ]
+                },
+                {
+                  "type": "fieldSet",
+                  "id": "referenceFieldSet1",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "lastName1",
+                      "label": "Last Name",
+                      "value": ""
+                    },
+                    {
+                      "type": "text",
+                      "id": "phone1",
+                      "label": "Phone",
+                      "required": false,
+                      "value": ""
+                    }
+                  ]
+                },
+                {
+                  "type": "fieldSet",
+                  "id": "referenceFieldSet2",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "relation1",
+                      "label": "Relation",
+                      "required": false,
+                      "value": ""
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

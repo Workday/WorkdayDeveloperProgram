@@ -1,0 +1,314 @@
+{
+  "id": "home",
+  "include": [
+    "wql.script"
+  ],
+  "endPoints": [
+    {
+      "name": "me",
+      "baseUrlType": "WORKDAY-COMMON",
+      "url": "/workers/me",
+      "authType": "sso",
+      "_comment": "Used to grab the current users Worker ID (WID)"
+    },
+    {
+      "name": "userInfo",
+      "baseUrlType": "WORKDAY-COMMON",
+      "url": "/userInfo",
+      "authType": "sso",
+      "_comment": "Used to determine the language of the user throughout the app"
+    },
+    {
+      "baseUrlType": "WORKDAY-WQL",
+      "name": "workerCountry",
+      "authType": "sso",
+      "url": "/data",
+      "_comment": "Not currently used in the app....but could be used to limit who is permitted to start a request based on a location.",
+      "wqlQuery": {
+        "parameters": {
+          "location": "<% me.location.id %>"
+        },
+        "queryId": "workerCountry"
+      }
+    },
+        {
+      "baseUrlType": "WORKDAY-WQL",
+      "name": "workerEmployeeTypeBeta",
+      "authType": "sso",
+      "exclude": true,
+      "url": "/data",
+       "_comment": "Not currently used in the app....but could be used to limit who is permitted to start a request based on a employee type.",
+      "wqlQuery": {
+        "parameters": {
+          "workerID": "<% me.id %>"
+        },
+        "queryId": "workerEmployeeType"
+      }
+    },
+    {
+      "baseUrlType": "WORKDAY-WQL",
+      "name": "requests",
+      "authType": "sso",
+      "url": "/data",
+      "wqlQuery": {
+        "parameters": {
+           "appId": "<% site.applicationId %>",
+          "workerID": "<% me.id %>"
+        },
+        "queryId": "requests"
+      },
+      "responseErrorDetail": {
+        "errorSummary": "<%  'Error retrieving requests for logged in user.'  %>"
+      },
+      "_comment": "Grab all the tuition requests that exist for a specific worker"
+    }
+  ],
+  "script": "<% 
+  // The below script is an example of how dynamic data may need to be translated in the app. This is based on functionality present as of July 2021.
+    var getProgramTypeTranslation = function(programType) {
+        if (userInfo.data[0].language == 'fr_CA') {
+            if (programType == 'Degree - Associate') {
+                return 'Diplôme – grade d’associé';
+            }
+            else if (programType == 'Degree - Bachelor') {
+                return 'Diplôme – baccalauréat';
+            }
+            else if (programType == 'Degree - Master') {
+                return 'Diplôme – maîtrise';
+            }
+            else if (programType == 'Degree - Doctorate') {
+                return 'Diplôme – doctorat';
+            }
+            else if (programType == 'Certificate') {
+                return 'Certificat';
+            }
+            else if (programType == 'Professional Designation') {
+                return 'Titre professionnel';
+            }
+            else if (programType == 'Individual Course(s)') {
+                return 'Cours individuel';
+            }
+            else if (programType == 'Other') {
+                return 'Autre';
+            }
+        }
+        else {
+                return programType;
+        }
+    }
+
+   %>",
+  "presentation": {
+    "title": {
+      "label": "<%  presentationLabels.homeTitle  %>",
+      "type": "title"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "button",
+          "id": "eaRequestBtn",
+          "label": "<% presentationLabels.homeRequestButton %>",
+          "taskReference": {
+            "type": "taskReference",
+            "taskId": "requestForm"
+          },
+          "action": "PRIMARY",
+          "commandHttpMethod": "GET"
+        },
+        {
+          "type": "section",
+          "title": "<%  presentationLabels.allRequestsGridTitle  %>",
+          "horizontal": false,
+          "children": [
+            {
+              "_comment": "This is a grid of all requests per worker",
+              "type": "grid",
+              "id": "eaDataGrid",
+              "rows": "<%  requests.data  %>",
+              "rowVariableName": "eaData",
+              "enabled": "<% false %>",
+              "columns": [
+                {
+                  "cellTemplate": {
+                    "type": "section",
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "<% eaData.creationDate %>"
+                      }
+                    ]
+                  },
+                  "columnId": "v1",
+                  "label": "<%  presentationLabels.allRequestsGridSubmissionDateHeader %>",
+                  "type": "column"
+                },
+                {
+                  "cellTemplate": {
+                    "type": "section",
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "<%  getProgramTypeTranslation(eaData.programType)  %>",
+                        "enabled": false
+                      }
+                    ]
+                  },
+                  "columnId": "v2",
+                  "label": "<%  presentationLabels.allRequestsGridProgramTypeHeader %>",
+                  "type": "column"
+                },
+                {
+                  "cellTemplate": {
+                    "type": "section",
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "<% eaData.school %>"
+                      }
+                    ]
+                  },
+                  "columnId": "v3",
+                  "label": "<%  presentationLabels.allRequestsGridSchoolHeader  %>",
+                  "type": "column"
+                },
+                {
+                  "cellTemplate": {
+                    "type": "section",
+                    "children": [
+                      {
+                        "id": "tcRequestAmountValue",
+                        "value": "<% eaData.requestAmount %>",
+                        "type": "currency",
+                        "useDefaultCurrencyFormat": "true",
+                        "currencyCode": "CAD",
+                        "showCurrencySymbol": true
+                      }
+                    ]
+                  },
+                  "columnId": "v4",
+                  "label": "<%  presentationLabels.allRequestsGridRequestAmountHeader  %>",
+                  "type": "column"
+                },
+                {
+                  "cellTemplate": {
+                    "type": "section",
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "<% eaData.requestAmountCurrency %>"
+                      }
+                    ]
+                  },
+                  "columnId": "v5",
+                  "label": "<%  presentationLabels.allRequestsGridRequestAmountCurrencyHeader  %>",
+                  "type": "column"
+                },
+                {
+                  "cellTemplate": {
+                    "type": "section",
+                    "children": [
+                      {
+                        "type": "instanceList",
+                        "render": "<%  !empty(eaData.businessProcesses) %>",
+                        "instanceList": [
+                          {
+                            "id": "<%  eaData.businessProcesses[0].id  %>",
+                            "descriptor": "<%  eaData.businessProcesses[0].status ?: 'Not Submitted'  %>",
+                            "wid": "<%  eaData.businessProcesses[0].id  %>"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "text",
+                        "render": "<%  empty(eaData.businessProcesses) %>",
+                        "value": "<%  eaData.businessProcesses[0].status ?: 'Not Submitted'  %>"
+                      }
+                    ]
+                  },
+                  "columnId": "colStatus",
+                  "label": "<%  presentationLabels.allRequestsGridStatus  %>",
+                  "type": "column"
+                },
+                {
+                  "type": "column",
+                  "render": true,
+                  "id": "verification",
+                  "columnId": "verification",
+                  "cellTemplate": {
+                    "type": "section",
+                    "horizontal": false,
+                    "children": [
+                      {
+                        "type": "button",
+                        "taskReference": {
+                          "type": "taskReference",
+                          "taskId": "viewRequest",
+                          "parameterBindings": {
+                            "id": "<%  eaData.requestId ?: 'noID'  %>"
+                          }
+                        },
+                        "label": "<%  presentationLabels.allRequestsGridRequestDetailsButton  %>",
+                        "action": "AUXILIARY"
+                      },
+                      {
+                        "type": "button",
+                        "visible": "<%  empty(eaData.businessProcesses)  %>",
+                        "taskReference": {
+                          "type": "taskReference",
+                          "taskId": "verification",
+                          "parameterBindings": {
+                            "id": "<%  eaData.requestId ?: 'noID'  %>"
+                          }
+                        },
+                        "label": "<%  presentationLabels.allRequestsGridProofOfPassButton  %>",
+                        "action": "AUXILIARY"
+                      },
+                      {
+                        "type": "button",
+                        "visible": "<%  empty(eaData.businessProcesses) ? true : false  %>",
+                        "taskReference": {
+                          "type": "taskReference",
+                          "taskId": "submitBP",
+                          "parameterBindings": {
+                            "id": "<%  eaData.requestId ?: 'noID'  %>"
+                          }
+                        },
+                        "label": "<%  presentationLabels.allRequestsGridSubmitForReimbursement  %>",
+                        "action": "PRIMARY",
+                        "commandHttpMethod": "POST"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "children": [
+            {
+              "_comments": "Spacer - Layout",
+              "type": "richText",
+              "value": "<hr>",
+              "enabled": false
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Extend"
+        }
+      ]
+    }
+  }
+}

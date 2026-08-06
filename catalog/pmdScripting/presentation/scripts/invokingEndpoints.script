@@ -1,0 +1,19 @@
+// Invoke endpoint and pass id as a URL paramater
+var populate = function(id) {
+  if( !(empty id)) {
+    var workerData = getWorkerbyId.invoke({'id': id[0]});
+      descriptor.value = workerData.descriptor;
+      primaryWorkEmail.value = workerData.primaryWorkEmail;
+      businessTitle.value = workerData.businessTitle;
+      dateOfBirth.value = workerData.dateOfBirth;
+      isManager.value = workerData.isManager ? 'Yes' : 'No';
+      workerDetail.visible = true;
+  } else {
+    workerDetail.visible = false;
+  }
+};
+
+/* Export all functions */
+{
+  "populate": populate
+}

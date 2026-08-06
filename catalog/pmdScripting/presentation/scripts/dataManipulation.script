@@ -1,0 +1,156 @@
+// Return an empty list
+var emptyList = function() {
+  return [];
+}
+
+// Concatenation. Map one column by joining two strings.
+var concatList = function() {
+  return  workers.data
+    .map( worker => {
+{
+    'column1': worker.descriptor + ' - ' + worker.businessTitle
+  }
+  })
+    .distinct();
+};
+
+// Filter list with only Managers, then map two columns (businessTitle, descriptor).
+var filterList = function() {
+  return workers.data
+    .filter( worker => {
+    worker.isManager == true
+  })
+    .map( worker => {
+{
+    'column1': worker.descriptor,
+    'column2': worker.businessTitle
+  }
+  });
+};
+
+// Get a distict list of businessTitle.
+var distinctList = function() {
+  return  workers.data
+    .map( worker => {
+{
+    'column1': worker.businessTitle
+  }
+  })
+    .distinct();
+};
+
+// Sort list by businessTitle, then map two columns (businessTitle, descriptor).
+var sortList = function() {
+  return workers.data
+    .sort(worker => { worker.businessTitle })
+    .map( worker => {
+{
+    'column1': worker.businessTitle,
+    'column2': worker.descriptor
+  }
+  });
+};
+
+// Map only one colunn.
+var descriptorList = function() {
+  return workers.data
+    .map(worker => {
+{
+    'column1': worker.descriptor
+  }
+  });
+};
+
+// Convert list into comma separated values.
+var csvList = function() {
+  return workers.data
+    .map(worker => {
+    worker.descriptor
+  })
+    .join(', ');
+};
+
+// Example static raas report structure
+var raas_report = function() {
+  var x = {
+    'Report_Entry': [{
+      'Location_Name': 'Corp Office',
+      'Test_Return_to_Work_group': [{
+        'test_Q1': '1',
+        'test_Q2': '2',
+        'test_Q3': '3',
+        'test_Q4': '4'
+      }],
+      'column1': 'John Doe',
+      'column2': '9bb69d275b4801e04013736e5e555f5b',
+      'employeeId': '1234'
+    }]
+  };
+}
+
+// Flatten an array with nested array
+var flattenList = function() {
+  var list =  raas_report().Report_Entry.map(x => {
+    x.Test_Return_to_Work_group.map( y => {
+      y.add('Location_Name', x.Location_Name);
+      y.add('Employee_ID',  x.employeeId);
+      y.add('WorkerID',  x.column2);
+      y.add('Name',  x.column1);
+      return y;
+    });
+  });
+  list = list:flatten(list);
+  return json:asJSON(list.toString());
+};
+
+// Main function to change the grid dasta source
+var changeGridSource = function(option) {
+  title.value = '';
+  subtitle.value = '';
+  details.value = '';
+  if (option.isEmpty()) {
+    dataGrid.setRows(emptyList());
+  } else {
+    if (option[0] == '1') {
+      dataGrid.setRows(concatList());
+        title.value = 'Concatenate Worker Name and Business Title';
+        subtitle.value = 'Source: <b>/common/v1/workers</b><br>Column 1: <b>Name</b> + <b>Business Title</b>';
+    } else if (option[0] == '2') {
+      dataGrid.setRows(filterList());
+        title.value = 'Filter out all Workers that are Managers';
+        subtitle.value = 'Source: <b>/common/v1/workers</b><br>Column 1: <b>Name</b><br>Column 2: <b>Business Title</b>';
+    } else if (option[0] == '3') {
+      dataGrid.setRows(distinctList());
+        title.value = 'Get list of distinct Business Titles';
+        subtitle.value = 'Source: <b>/common/v1/workers</b><br>Column 1: <b>Business Title</b>';
+    } else if (option[0] == '4') {
+      dataGrid.setRows(sortList());
+        title.value = 'Sort Workers by Business Title';
+        subtitle.value = 'Source: <b>/common/v1/workers</b><br>Column 1: <b>Business Title</b><br>Column 2: <b>Name</b>';
+    } else if (option[0] == '5') {
+      dataGrid.setRows(descriptorList());
+        details.value = csvList();
+        title.value = 'Output Workers as comma separated string';
+        subtitle.value = 'Source: <b>/common/v1/workers</b><br>Column 1: <b>Name</b>';
+    } else if (option[0] == '6') {
+      dataGrid.setRows(raas_report().Report_Entry);
+        title.value = 'Flatten data to only nested array';
+        subtitle.value = '<b>Data Set</b>: ' + raas_report();
+        details.value = '<b>Flatten Set</b>: ' + flattenList();
+    }
+  }
+};
+
+/* Export all functions */
+{
+  "changeGridSource": changeGridSource,
+  "flattenList": flattenList,
+  "raas_report": raas_report,
+  "csvList": csvList,
+  "descriptorList": descriptorList,
+  "sortList": sortList,
+  "distinctList": distinctList,
+  "filterList": filterList,
+  "concatList": concatList,
+  "emptyList": emptyList
+}

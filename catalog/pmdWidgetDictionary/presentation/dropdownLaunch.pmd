@@ -1,0 +1,42 @@
+{
+  "id": "dropdownLaunch",
+  "endPoints": [],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Workday Extend"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "richText",
+          "id": "documentation",
+          "label": "Documentation",
+          "value": "Creates a prompt that enables users to select an option from a list of options.
+Use dropdown on edit pages when you want the user to select a single option from a dropdown list. You can also use the dropdown tag with the dropdownEditButton.
+The dropdown widget value is a list of strings."
+        },
+        {
+          "action": "PRIMARY",
+          "type": "button",
+          "label": "View Dropdown",
+          "taskReference": {
+            "taskId": "dropdown"
+          }
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

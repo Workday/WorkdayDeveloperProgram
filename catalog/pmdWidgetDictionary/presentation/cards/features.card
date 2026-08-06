@@ -1,0 +1,48 @@
+{
+  "id": "features",
+  "parameters": [
+    "ticketStatus",
+    "allTickets"
+  ],
+  "header": {
+    "title": "<% ticketStatus %>",
+    "subtitle": "Tickets"
+  },
+  "body": {
+    "type": "listCard",
+    "on": "<%
+           var outputTickets = [];
+           for (var ticket : allTickets) {
+               if (ticket.status == ticketStatus) {
+                   outputTickets.add(ticket);
+               }
+           }
+           outputTickets
+           %>",
+    "as": "ticket",
+    "limit": 5,
+    "template": {
+      "label": "<% ticket.name %>",
+      "indicator": {
+        "label": "<% ticket.type %>",
+        "color": "<%   if (ticket.type == 'Bug') {
+                        return 'red'
+                      } else if (ticket.type == 'Spike') {
+                        return 'blue'
+                      } else if (ticket.type == 'Story') {
+                        return 'green'
+                      } else {
+                        return 'gray'
+                      } %>"
+      }
+    }
+  },
+  "footer": [
+    {
+      "label": "See all Tickets",
+      "taskReference": {
+        "taskId": "ticketsListDetail"
+      }
+    }
+  ]
+}

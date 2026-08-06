@@ -1,0 +1,136 @@
+{
+  "id": "educationAndEmployment",
+  "endPoints": [ ],
+  "presentation": {
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "Education and Employment History"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "panelList",
+          "id": "educationPanelList",
+          "label": "Education",
+          "children": [
+            {
+              "type": "fieldSet",
+              "id": "referenceFieldSetHorizontal",
+              "horizontal": true,
+              "children": [
+                {
+                  "type": "fieldSet",
+                  "id": "fieldSet0",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "college",
+                      "label": "College",
+                      "value": ""
+                    },
+                    {
+                      "type": "text",
+                      "id": "degree",
+                      "label": "Degree",
+                      "value": ""
+                    }
+                  ]
+                },
+                {
+                  "type": "fieldSet",
+                  "id": "fieldSet1",
+                  "children": [
+                    {
+                      "type": "date",
+                      "label": "Start Date",
+                      "id": "startDate",
+                      "value": ""
+                    },
+                    {
+                      "type": "checkBox",
+                      "label": "Did you graduate?",
+                      "helpText": "Check box for yes.",
+                      "value": ""
+                    }
+                  ]
+                },
+                {
+                  "type": "fieldSet",
+                  "id": "fieldSet2",
+                  "children": [
+                    {
+                      "type": "date",
+                      "label": "End Date",
+                      "id": "endDate",
+                      "value": ""
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "panelList",
+          "id": "employmentPanelList",
+          "label": "Employment",
+          "children": [
+            {
+              "type": "fieldSet",
+              "id": "referenceFieldSetHorizontal1",
+              "horizontal": true,
+              "children": [
+                {
+                  "type": "fieldSet",
+                  "id": "fieldSet3",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Employer",
+                      "label": "Employer",
+                      "value": ""
+                    },
+                    {
+                      "type": "text",
+                      "id": "role",
+                      "label": "Role",
+                      "value": ""
+                    }
+                  ]
+                },
+                {
+                  "type": "fieldSet",
+                  "id": "fieldSet4",
+                  "children": [
+                    {
+                      "type": "date",
+                      "label": "Start Date",
+                      "id": "employmentStartDate",
+                      "value": ""
+                    },
+                    {
+                      "type": "date",
+                      "label": "End Date",
+                      "id": "employmentEndDate",
+                      "value": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "textArea",
+              "id": "jobDescription",
+              "label": "Description",
+              "helpText": "Describe relevant work experience and skills.",
+              "value": "Describe relevant work experience and skills."
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

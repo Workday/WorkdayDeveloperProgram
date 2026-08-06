@@ -1,0 +1,41 @@
+{
+  "id": "detectPIIEnd",
+  "endPoints": [ ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "PII END Page"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "action": "LINK",
+          "type": "button",
+          "id": "home",
+          "label": "← Home",
+          "taskReference": {
+            "taskId": "home"
+          }
+        },
+        {
+          "type": "textArea",
+          "id": "debug",
+          "label": "Lambda Output",
+          "value": "<% flowVariables.uploadResult.Entities.join()  %>"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

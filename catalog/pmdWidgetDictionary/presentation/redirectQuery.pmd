@@ -1,0 +1,35 @@
+{
+  "id": "redirectQuery",
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Redirect: <% queryParams.id %>"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "sorted": false,
+      "children": [
+        {
+          "type": "pod",
+          "podId": "header"
+        },
+        {
+          "type": "text",
+          "id": "redirectVal",
+          "label": "Sample Redirect",
+          "value": "<%'\"id\" from queryParams: ' + queryParams.id %>"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "pod",
+          "podId": "footer"
+        }
+      ]
+    }
+  }
+}

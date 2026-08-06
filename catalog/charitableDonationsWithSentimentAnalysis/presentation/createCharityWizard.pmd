@@ -1,0 +1,32 @@
+{
+  "id": "createCharityWizard",
+  "endPoints": [ ],
+  "presentation": {
+    "body": {
+      "type": "editWizard",
+      "title": "Create Charity",
+      "subtitle": "New Charity",
+      "summarySettings": {
+        "enabled": true,
+        "label": "Review Charity"
+      },
+      "editTasks": [
+        {
+          "label": "Create Charity",
+          "task": {
+            "taskId": "createCharity"
+          }
+        }
+      ],
+      "conclusion": {
+        "task": {
+          "taskId": "charityHub",
+          "parameters": {
+            "message": "Request has been submitted."
+          }
+        },
+        "render": true
+      }
+    }
+  }
+}

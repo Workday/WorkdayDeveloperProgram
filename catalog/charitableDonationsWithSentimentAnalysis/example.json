@@ -1,0 +1,18 @@
+{
+  "title": "Charitable Donations with Sentiment Analysis",
+  "description": "Enable employees to donate to charities with one-time and recurring payroll deductions, with the AI Gateway's sentiment analysis API rating charity descriptions. Features hubs and cards.",
+  "type": "Extend App",
+  "components": [
+    "Presentation",
+    "Model",
+    "Card",
+    "Business Process"
+  ],
+  "products": [
+    "Workday Extend",
+    "Workday Payroll"
+  ],
+  "authors": [],
+  "tutorial": "https://forum.developer.workday.com/t/draft-devcon-2025-reference-app-charitable-donations-pro-update/24293",
+  "source": "workday"
+}

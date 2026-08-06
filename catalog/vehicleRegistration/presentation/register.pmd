@@ -1,0 +1,377 @@
+{
+  "id": "register",
+  "securityDomains": [
+    "ManageVehicles"
+  ],
+  "endPoints": [
+    {
+      "name": "me",
+      "baseUrlType": "workday-graph",
+      "graphQuery": {
+        "queryId": "me"
+      },
+      "httpMethod": "POST",
+      "authType": "sso",
+      "failOnStatusCodes": [
+        {
+          "code": 400
+        }
+      ]
+    },
+    {
+      "name": "allMakesDeferred",
+      "baseUrlType": "external-car-api",
+      "url": "makes?year=<% vehicleYear.value %>",
+      "authType": "noAuth",
+      "deferred": true
+    },
+    {
+      "name": "allModelsDeferred",
+      "baseUrlType": "external-car-api",
+      "url": "<% const query = 'models?year=' + vehicleYear.value[0] + '&make=' + vehicleMake.selectedEntries[0].descriptor;
+      return query.pathEncode();%>",
+      "authType": "noAuth",
+      "deferred": true
+    },
+    {
+      "name": "allTrimsDeferred",
+      "baseUrlType": "external-car-api",
+      "url": "<% const endpoint = 'trims?year='+ vehicleYear.value[0] + '&make_model_id=' + vehicleMake.selectedEntries[0].id;
+      console.info('trims endpoint URL is ' + endpoint);
+      return endpoint.pathEncode(); %>",
+      "authType": "noAuth",
+      "deferred": true
+    },
+    {
+      "name": "currentVehicleGRAPH",
+      "baseUrlType": "workday-graph",
+      "httpMethod": "POST",
+      "authType": "sso",
+      "exclude": "<% /*exclude statement prevents this endpoint from firing if there is no vehicleId being passed in. This way we can use the same PMD
+      for both 'create' and 'update' Vehicle Registration operations and the page will work, regardless of whether a Vehicle's ID is being passed in to it.*/
+                  empty queryParams.vehicleId %>",
+      "graphQuery": {
+        "queryId": "currentVehicle",
+        "parameters": {
+          "vehicleId": "<% queryParams.vehicleId %>"
+        }
+      },
+      "failOnStatusCodes": [
+        {
+          "code": 400
+        }
+      ]
+    }
+  ],
+  "script": "<%
+
+    var getAllVehicleYears = function() {
+      var yearList = [];
+      var x = date:extractValue('YEAR', date:now()) -4;
+      while (x >= 2000) {
+        var year = {:};
+        year.id = x;
+        year.descriptor = x;
+        yearList.add(year);
+        x = x - 1;
+      }
+      return yearList;
+    };
+
+     // Called by year
+    var getAllVehicleMakes = function() {
+      if (true){ //! empty vehicleYear.value[0]) {
+        if (vehicleMake.value.isEmpty()) {
+          var allVehicleMakes = allMakesDeferred.invoke();
+          vehicleMake.setValues(allVehicleMakes.data);
+          vehicleMake.setEnabled(true);
+        }
+        if (vehicleModel.value.isEmpty()) {
+          vehicleModel.setValues([]);
+        }
+      } else {
+        vehicleMake.setValues([]);
+        vehicleMake.setEnabled(false);
+        vehicleModel.setValues([]);
+        vehicleModel.setEnabled(false);
+        //vehicleCompact.value = false;
+      }
+    };
+    // Called by Make
+    var getAllVehicleModels = function() {
+      if (! empty vehicleMake.value[0]) {
+        var allVehiclesModels = allModelsDeferred.invoke();
+        vehicleModel.setValues(allVehiclesModels.data);
+        vehicleModel.setEnabled(true);
+      } else {
+        vehicleModel.setValues([]);
+        vehicleModel.setEnabled(false);
+        //vehicleCompact.value = false;
+      }
+    };
+    
+        var getAllVehicleTrims = function() {
+      if (! empty vehicleModel.value[0]) {
+        var allVehiclesTrims = allTrimsDeferred.invoke();
+        var msrp = allVehiclesTrims.data[0].msrp ?? 0;
+        vehicleMSRP.value = msrp;
+      } else {
+        vehicleMSRP.setVisible(false);
+        vehicleMSRP.value = 0;
+      }
+      if (msrp != 0) {
+      vehicleMSRP.setVisible(true);
+      }
+    };
+
+
+    var getVehicleColors = function() {
+      var tmpList = [];
+      var colors = ['White','Silver','Black','Grey','Blue','Red','Brown','Green'];
+      for (var color : colors) {
+        var item = {:};
+        item.id = color;
+        item.descriptor = color;
+        tmpList.add(item);
+      }
+      return tmpList;
+    };
+
+  %>",
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "createVehicle",
+        "baseUrlType": "workday-graph",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "exclude": "<% /*exclude statement prevents this endpoint from firing if there is no vehicleId being passed in. This way we can use the same PMD
+      for both 'create' and 'update' Vehicle Registration operations and the page will work, regardless of whether a Vehicle's ID is being passed in to it.*/
+                    (!empty(currentVehicleGRAPH)) %>",
+        "onSend": "<% /*This outbound endpoint submits the request to the BO API
+        This expression will log the payload being sent to the endpoint using console.info()
+        the return statement then ensures that the payload will be sent and the endpoint will be triggered*/
+                   console.info('Create vehicle: ' + json:asJSON(self.data)); return self.data; %>",
+        "graphQuery": {
+          "queryId": "createVehicle",
+          "variables": {
+            "createVehicle_input": {
+              "color": "<% vehicleColor.value[0] %>",
+              "licensePlate": "<% vehiclePlate.value %>",
+              "location": {
+                "id": {
+                  "id": "<% me.data.worker.data[0].primaryJob.location.workdayID.id %>",
+                  "type": "WID"
+                }
+              },
+              "make": "<% vehicleMake.selectedEntries[0].descriptor %>",
+              "model": "<% vehicleModel.selectedEntries[0].descriptor %>",
+              "owner": {
+                "id": {
+                  "id": "<% me.data.worker.data[0].workdayID.id %>",
+                  "type": "WID"
+                }
+              },
+              "registrationDate": "<% date:getTodaysDate(date:getDateTimeZone(userTimeZone)) %>",
+              "year": "<% number:convertStringToInt(vehicleYear.value[0]) %>"
+            }
+          }
+        },
+        "failOnStatusCodes": [
+          {
+            "code": 400
+          }
+        ]
+      },
+      {
+        "name": "updateVehicle",
+        "baseUrlType": "workday-graph",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "exclude": "<% /*exclude statement prevents this endpoint from firing if there is no vehicleId being passed in. This way we can use the same PMD
+      for both 'create' and 'update' Vehicle Registration operations and the page will work, regardless of whether a Vehicle's ID is being passed in to it.*/
+                  empty queryParams.vehicleId %>",
+        "onSend": "<% /*This outbound endpoint submits the request to the BO API
+        This expression will log the payload being sent to the endpoint using console.info()
+        the return statement then ensures that the payload will be sent and the endpoint will be triggered*/
+                   console.info('Update Vehicle:' + json:asJSON(self.data)); return self.data; %>",
+        "graphQuery": {
+          "queryId": "updateVehicle",
+          "variables": {
+            "updateVehicle_input": {
+              "color": "<% vehicleColor.value[0] %>",
+              "compact": "<% vehicleCompact.value %>",
+              "licensePlate": "<% vehiclePlate.value %>",
+              "location": {
+                "id": {
+                  "id": "<% me.data.worker.data[0].primaryJob.location.workdayID.id %>",
+                  "type": "WID"
+                }
+              },
+              "make": "<% vehicleMake.selectedEntries[0].descriptor %>",
+              "model": "<% vehicleModel.selectedEntries[0].descriptor %>",
+              "owner": {
+                "id": {
+                  "id": "<% me.data.worker.data[0].workdayID.id %>",
+                  "type": "WID"
+                }
+              },
+              "registrationDate": "<% date:getTodaysDate(date:getDateTimeZone(userTimeZone)) %>",
+              "year": "<% number:convertStringToInt(vehicleYear.value[0]) %>"
+            },
+            "updateVehicle_vehicleId": {
+              "id": "<% queryParams.vehicleId %>",
+              "type": "WID"
+            }
+          }
+        },
+        "failOnStatusCodes": [
+          {
+            "code": 400
+          }
+        ]
+      }
+    ],
+    "responseErrorDetail": {
+      "errorSummary": "<% error + '. Once you have successfully fixed the error(s), deploy this app to proceed.' %>",
+      "errors": "<% list:mapAttribute(errors, 'error') %>"
+    }
+  },
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "<% presentationLabels.RegisterVehicle %>"
+    },
+    "pageType": "edit",
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "section",
+          "horizontal": true,
+          "columnWidthRatios": [
+            0.3,
+            0.7
+          ],
+          "children": [
+            {
+              "type": "section",
+              "title": "<% presentationLabels.VehicleDetails %>",
+              "children": [
+                {
+                  "type": "richText",
+                  "id": "notice",
+                  "enabled": false,
+                  "value": "<% presentationLabels.PleaseCompleteTheFieldsBelow %>"
+                },
+                {
+                  "type": "richText",
+                  "id": "fyi",
+                  "enabled": false,
+                  "value": "<p><i>Note that years start at 2020 for demo purposes; the app uses an external API that makes data available up to 2020.</i></p>"
+                },
+                {
+                  "type": "richText",
+                  "label": "<% currentVehicleGRAPH.data.currentVehicle.data[0].make + ' ' + currentVehicleGRAPH.data.currentVehicle.data[0].model %>",
+                  "value": "<% presentationLabels.CarDescriptionYear + currentVehicleGRAPH.data.currentVehicle.data[0].year + presentationLabels.CarDescriptionColor + currentVehicleGRAPH.data.currentVehicle.data[0].color + presentationLabels.CarDescriptionLicensePlate + currentVehicleGRAPH.data.currentVehicle.data[0].licensePlate %>",
+                  "render": "<% (!empty(currentVehicleGRAPH)) %>",
+                  "enabled": false
+                },
+                {
+                  "required": true,
+                  "type": "dropdown",
+                  "id": "vehicleYear",
+                  "label": "<% presentationLabels.Year %>",
+                  "values": "<% getAllVehicleYears() %>",
+                  "onChange": "<% getAllVehicleMakes() %>"
+                },
+                {
+                  "enabled": "<% !vehicleYear.value.isEmpty() %>",
+                  "required": true,
+                  "type": "instanceList",
+                  "id": "vehicleMake",
+                  "label": "<% presentationLabels.Make %>",
+                  "values": "<% [] %>",
+                  "idKey": "id",
+                  "displayKey": "name",
+                  "onChange": "<% getAllVehicleModels() %>"
+                },
+                {
+                  "enabled": "<% !vehicleMake.value.isEmpty() %>",
+                  "required": true,
+                  "type": "instanceList",
+                  "id": "vehicleModel",
+                  "label": "<% presentationLabels.Model %>",
+                  "values": "<% [] %>",
+                  "idKey": "id",
+                  "displayKey": "name",
+                  "onChange": "<% getAllVehicleTrims() %>"
+                },
+                {
+                  "type": "checkBox",
+                  "id": "vehicleCompact",
+                  "label": "<% presentationLabels.IsCompact %>",
+                  "value": "<% !empty(currentVehicleGRAPH.data.currentVehicle.data[0].compact) ? currentVehicleGRAPH.data.currentVehicle.data[0].compact : false %>",
+                  "enabled": true
+                },
+                {
+                  "type": "number",
+                  "id": "vehicleMSRP",
+                  "label": "MSRP",
+                  "visible": false,
+                  "value": "<% 0 %>",
+                  "enabled": "<% !vehicleModel.value.isEmpty() %>"
+                },
+                {
+                  "required": true,
+                  "type": "dropdown",
+                  "id": "vehicleColor",
+                  "label": "<% presentationLabels.Color %>",
+                  "values": "<% getVehicleColors() %>",
+                  "selectedValues": "<% !empty(currentVehicleGRAPH.data.currentVehicle.data[0].color) ? list:toList(currentVehicleGRAPH.data.currentVehicle.data[0].color) : null %>"
+                },
+                {
+                  "type": "text",
+                  "id": "vehiclePlate",
+                  "label": "<% presentationLabels.LicensePlateNumber %>",
+                  "value": "<% !empty(currentVehicleGRAPH.data.currentVehicle.data[0].licensePlate) ? currentVehicleGRAPH.data.currentVehicle.data[0].licensePlate : null %>",
+                  "required": true,
+                  "onChange": "<%
+                       if (!empty(self.value))
+            { if(validate:match('^[a-zA-Z0-9. ]*$', self.value))
+            { self.clearError() } else { self.setError('Plate number is of an illegal format.') } }
+                           else { self.clearError() } %>"
+                }
+              ]
+            },
+            {
+              "type": "section",
+              "title": "<% presentationLabels.DeleteRegistration %>",
+              "render": "<% !empty(currentVehicle) %>",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "<% presentationLabels.DeleteText %>",
+                  "enabled": false
+                },
+                {
+                  "type": "button",
+                  "id": "deleteButton",
+                  "label": "<% presentationLabels.DeleteButton %>",
+                  "action": "AUXILIARY",
+                  "taskReference": {
+                    "taskId": "delete",
+                    "parameterBindings": {
+                      "vehicleId": "<% queryParams.vehicleId %>"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

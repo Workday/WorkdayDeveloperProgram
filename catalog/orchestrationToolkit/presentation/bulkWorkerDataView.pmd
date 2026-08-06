@@ -1,0 +1,73 @@
+{
+  "_pagePurpose1": "A view grid to inspect the BulkWorkerList object data. Pairs with the testBulkErrors page.",
+  "_pagePurpose2": "This page does not utilize and Orchestrations and is mainly a helper page testBulkErrors.",
+  "id": "bulkWorkerDataView",
+  "endPoints": [
+    {
+      "baseUrlType": "workday-common",
+      "name": "allWorkers",
+      "authType": "sso",
+      "url": "workers",
+      "isCollection": true
+    },
+    {
+      "baseUrlType": "workday-app",
+      "name": "bulkWorkerGet",
+      "authType": "sso",
+      "url": "bulkWorkersLists?limit=100"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Workday Extend"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "grid",
+          "id": "bulkRows",
+          "rows": "<% bulkWorkerGet.data %>",
+          "isArrayOutBinding": true,
+          "rowVariableName": "rosterRow",
+          "columns": [
+            {
+              "type": "column",
+              "columnId": "colStart",
+              "label": "Starting Worker",
+              "cellTemplate": {
+                "type": "dropdown",
+                "values": "<% allWorkers.data %>",
+                "valueOutBinding": "workerPOST.[].workerStarter.id",
+                "selectedValues": "<% empty rosterRow.workerStarter.id ? [] : [rosterRow.workerStarter.id] %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "colHandoff",
+              "label": "Handoff Worker",
+              "cellTemplate": {
+                "type": "dropdown",
+                "values": "<% allWorkers.data %>",
+                "valueOutBinding": "workerPOST.[].workerHandoff.id",
+                "selectedValues": "<% empty rosterRow.workerHandoff.id ? [] : [rosterRow.workerHandoff.id] %>"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

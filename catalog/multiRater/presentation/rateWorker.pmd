@@ -1,0 +1,271 @@
+{
+  "id": "rateWorker",
+  "securityDomains": [ ],
+  "microConclusion": true,
+  "endPoints": [
+    {
+      "name": "eventStep",
+      "baseUrlType": "workday-bp",
+      "url": "<% 'eventSteps/' + queryParams.eventStepId %>",
+      "authType": "sso",
+      "failOnStatusCodes": [
+        {
+          "code": 400
+        },
+        {
+          "code": 403
+        }
+      ]
+    },
+    {
+      "name": "event",
+      "baseUrlType": "workday-bp",
+      "url": "<% 'events/' + eventStep.event.id %>",
+      "authType": "sso",
+      "exclude": "<% empty(eventStep.event.id) %>",
+      "failOnStatusCodes": [
+        {
+          "code": 400
+        },
+        {
+          "code": 403
+        }
+      ]
+    },
+    {
+      "name": "workerMe",
+      "baseUrlType": "workday-staffing",
+      "url": "workers/me",
+      "authType": "sso"
+    },
+    {
+      "name": "getMultiRater",
+      "baseUrlType": "app",
+      "url": "<% 'multiRaterForEmployeeReviews/' + event['for'].id %>",
+      "authType": "sso",
+      "exclude": "<% empty(event['for'].id) %>",
+      "failOnStatusCodes": [
+        {
+          "code": 400
+        },
+        {
+          "code": 403
+        }
+      ]
+    },
+    {
+      "name": "getRatings",
+      "baseUrlType": "workday-orchestrate",
+      "url": "<% 'getRatings/launch?ratingScaleWID=' 
+      + getMultiRater.ratingID %>",
+      "httpMethod": "GET",
+      "authType": "sso"
+    },
+    {
+      "name": "getManagerRating",
+      "baseUrlType": "workday-orchestrate",
+      "url": "<% 'getManagerRating/launch?reviewWID=' 
+      + getMultiRater.reviewWID + 
+      '&ratingScaleWID='
+      + getMultiRater.ratingID %>",
+      "httpMethod": "GET",
+      "authType": "sso"
+    },
+    {
+      "name": "getManagerComment",
+      "baseUrlType": "workday-orchestrate",
+      "url": "<% 'getManagerComment/launch?reviewWID=' 
+      + getMultiRater.reviewWID %>",
+      "httpMethod": "GET",
+      "authType": "sso"
+    },
+    {
+      "name": "getEmployeeRating",
+      "baseUrlType": "workday-orchestrate",
+      "url": "<% 'getEmployeeRating/launch?reviewWID=' 
+      + getMultiRater.reviewWID + 
+      '&ratingScaleWID='
+      + getMultiRater.ratingID %>",
+      "httpMethod": "GET",
+      "authType": "sso"
+    },
+    {
+      "name": "getEmployeeComment",
+      "baseUrlType": "workday-orchestrate",
+      "url": "<% 'getEmployeeComment/launch?reviewWID=' 
+      + getMultiRater.reviewWID %>",
+      "httpMethod": "GET",
+      "authType": "sso"
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "updateMultiRater",
+        "baseUrlType": "app",
+        "url": "<% 'multiRaterForEmployeeReviews/' + getMultiRater.id %>",
+        "httpMethod": "PATCH",
+        "allowEmptyValue": true,
+        "authType": "sso",
+        "onSend": "<% 
+              let postData = {:};
+              if (! empty(getMultiRater.reviewer1.id) && getMultiRater.reviewer1.id == workerMe.id) {
+                postData.reviewerComment1 = additionalComment.value;
+                postData.reviewerRating1 = additionalRating.value[0];
+              } else if (! empty(getMultiRater.reviewer2.id) && getMultiRater.reviewer2.id == workerMe.id) {
+                postData.reviewerComment2 = additionalComment.value;
+                postData.reviewerRating2 = additionalRating.value[0];
+              } else if (! empty(getMultiRater.reviewer3.id) && getMultiRater.reviewer3.id == workerMe.id) {
+                postData.reviewerComment3 = additionalComment.value;
+                postData.reviewerRating3 = additionalRating.value[0];
+              };
+          console.info('reviewAndSubmitRating action step ---> outbound ---> updateMultiRater', json:asJSON(postData));
+          return postData; 
+        %>"
+      },
+      {
+        "name": "submitStep",
+        "baseUrlType": "workday-bp",
+        "url": "eventSteps/<% queryParams.eventStepId %>/submit",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "onSend": "<% console.info('reviewAndSubmitRating action step ---> outbound ---> submitStep', json:asJSON(self.data)); return self.data; %>",
+        "values": [
+          {
+            "outboundPath": "stepAction.id",
+            "value": "<% //this action page is ultimately just a PMD; when the information is submitted we need to
+                      //advance the BP by calling the BP event with this exact value, which corresponds to the 'submit' step action ID
+                      //this WID corrresponds to the step action ID of 'submitted'
+                      'd9e4223e446c11de98360015c5e6daf6' %>"
+          }
+        ]
+      }
+    ]
+  },
+  "presentation": {
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "Review Worker <% getMultiRater.forWorker.descriptor %>"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "readOnlyText",
+          "id": "overallSection",
+          "label": "Overall Section",
+          "value": "Please enter a rating and comment for the employee review."
+        },
+        {
+          "horizontal": true,
+          "type": "section",
+          "id": "overallData",
+          "label": "Overall Data",
+          "children": [
+            {
+              "type": "section",
+              "id": "managerEvaluation",
+              "label": "Manager Evaluation",
+              "children": [
+                {
+                  "type": "readOnlyText",
+                  "id": "managerRating",
+                  "label": "Manager Rating",
+                  "value": "<% getManagerRating.managerRatingLabel %>"
+                },
+                {
+                  "enabled": false,
+                  "type": "richText",
+                  "id": "managerComment",
+                  "label": "Manager Comment",
+                  "value": "<% getManagerComment.managerComment %>"
+                }
+              ]
+            },
+            {
+              "type": "section",
+              "id": "employeeEvaluation",
+              "label": "Employee Evaluation",
+              "children": [
+                {
+                  "type": "readOnlyText",
+                  "id": "employeeRating",
+                  "label": "Employee Rating",
+                  "value": "<% getEmployeeRating.employeeRating %>"
+                },
+                {
+                  "enabled": false,
+                  "type": "richText",
+                  "id": "employeeComment",
+                  "label": "Employee Comment",
+                  "value": "<% getEmployeeComment.employeeComment %>"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "id": "supplementalEvaluation",
+          "label": "Supplemental Evaluation",
+          "children": [
+            {
+              "type": "readOnlyText",
+              "id": "supplementalEvaluationTitle",
+              "label": "Supplemental Evaluation",
+              "value": "<% if (! empty(getMultiRater.reviewer1.id) && getMultiRater.reviewer1.id == workerMe.id) {
+                getMultiRater.reviewer1.descriptor
+              } else if (! empty(getMultiRater.reviewer2.id) && getMultiRater.reviewer2.id == workerMe.id) {
+                getMultiRater.reviewer2.descriptor
+              } else if (! empty(getMultiRater.reviewer3.id) && getMultiRater.reviewer3.id == workerMe.id) {
+                getMultiRater.reviewer3.descriptor
+              }
+              %>"
+            },
+            {
+              "required": false,
+              "type": "instanceList",
+              "id": "additionalRating",
+              "label": "Rating",
+              "idKey": "ratingId",
+              "displayKey": "ratingName",
+              "values": "<% getRatings.ratingData ?? [] %>"
+            },
+            {
+              "required": false,
+              "type": "richText",
+              "id": "additionalComment",
+              "label": "Comment"
+            }
+          ]
+        },
+        {
+          "visible": false,
+          "type": "readOnlyText",
+          "id": "multiRatingData",
+          "label": "Multi Rating Data!",
+          "value": "<% getMultiRater %>"
+        },
+        {
+          "visible": false,
+          "type": "readOnlyText",
+          "id": "multiRatingID",
+          "label": "Multi Rating ID!",
+          "value": "<% getMultiRater.id %>"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "_pagePurpose1": "This page can be used to see all Excel files that have been created.",
+  "_pagePurpose2": "It can be accessed directly as well as via a flow from the excelFileCreate page.",
+  "id": "excelFilesView",
+  "endPoints": [
+    {
+      "name": "getExcelFiles",
+      "baseUrlType": "workday-wql",
+      "url": "data",
+      "wqlQuery": {
+        "parameters": {
+          "applicationId": "<% site.applicationId %>"
+        },
+        "queryId": "getExcelFiles"
+      }
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "View Excel Files"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "textArea",
+          "id": "orchInfo",
+          "enabled": false,
+          "label": "Orch Response Raw",
+          "render": "<% !empty flowVariables.orchResponse %>",
+          "value": "<% flowVariables.orchResponse %>"
+        },
+        {
+          "type": "readOnlyText",
+          "id": "noFiles",
+          "label": "No Files Found",
+          "render": "<% empty getExcelFiles.data %>",
+          "value": "No Excel Attachment files have been created. Please run the task CreateExcelFromCSV to get started."
+        },
+        {
+          "enabled": false,
+          "type": "fileUploader",
+          "id": "multiFileUploader",
+          "children": [
+            {
+              "type": "loop",
+              "on": "<% getExcelFiles.data ?? [] %>",
+              "as": "file",
+              "children": [
+                {
+                  "type": "fileUploaderRow",
+                  "attachment": {
+                    "type": "attachmentList",
+                    "attachmentURL": "<% `https://api.workday.com/apps/{{site.applicationId}}/v1/excelFiles/{{file.id}}`%>",
+                    "attachmentAuth": "sso",
+                    "attachmentName": "<% file.fileName %>",
+                    "attachmentUriTemplate": "[Target]",
+                    "instanceList": [
+                      {
+                        "action": "attachment",
+                        "descriptor": "test",
+                        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                      }
+                    ]
+                  },
+                  "fileName": "<% file.fileName %>",
+                  "fileType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                  "contentArea": [
+                    {
+                      "type": "fieldSet",
+                      "id": "fileDataFS",
+                      "children": [
+                        {
+                          "type": "readOnlyText",
+                          "id": "createdMoment",
+                          "label": "Created Moment",
+                          "value": "<% file.createdMoment ?? '' %>"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "fileUploaderRowTemplate": []
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

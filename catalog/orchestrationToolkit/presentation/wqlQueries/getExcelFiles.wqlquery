@@ -1,0 +1,8 @@
+{
+  "id": "getExcelFiles",
+  "parameters": ["applicationId"],
+  "query": "
+    SELECT workdayID as id, fileName, createdMoment FROM <% applicationId + '_excelFiles' %>
+  ",
+  "limit": "100"
+}

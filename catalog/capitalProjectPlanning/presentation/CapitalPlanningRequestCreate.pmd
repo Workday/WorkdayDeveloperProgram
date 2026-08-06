@@ -1,0 +1,205 @@
+{
+  "id": "CapitalPlanningRequestCreate",
+  "endPoints": [
+    {
+      "baseUrlType": "COMMON",
+      "url": "/workers",
+      "authType": "sso",
+      "name": "workersGET"
+    },
+    {
+      "name": "workersMeGET",
+      "baseUrlType": "COMMON",
+      "url": "/workers/me",
+      "authType": "sso"
+    },
+    {
+      "deferred": true,
+      "exclude": "<% empty instanceListQuery %>",
+      "baseUrlType": "COMMON",
+      "url": "<% '/workers?search=' + instanceListQuery %>",
+      "name": "workerSearchGET"
+    },
+    {
+      "baseUrlType": "WQL",
+      "name": "planCyclesGET",
+      "url": "<% '/data?query='+string:pathEncode('SELECT workdayID as id, descriptor FROM '+site.applicationId+'_planCycles WHERE status.code =  \"planCycleOpen\"') %>"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Create Capital Project Planning Request"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "required": true,
+          "type": "text",
+          "id": "titleWidget",
+          "label": "Title"
+        },
+        {
+          "type": "textArea",
+          "id": "summaryWidget",
+          "label": "Summary"
+        },
+        {
+          "type": "readOnlyText",
+          "id": "planCycleWidget",
+          "label": "Planning Cycle",
+          "value": "<% queryParams.planCycleName %>"
+        },
+        {
+          "enabled": false,
+          "type": "date",
+          "id": "requestDateWidget",
+          "label": "Request Date",
+          "value": "<% date:now().format('yyyy-MM-dd\\'T\\'HH:mm:ss.SSS\\'Z\\'') %>"
+        },
+        {
+          "required": true,
+          "type": "instanceList",
+          "id": "requestedByWidget",
+          "label": "Requested By",
+          "displayKey": "descriptor",
+          "idKey": "id",
+          "values": "<% [] %>",
+          "selectedValuesAndDescriptors": "<% [{'id' : workersMeGET.id,'descriptor' : workersMeGET.descriptor} ] %>",
+          "searchEndPoint": "<% endpoints.workerSearchGET %>",
+          "searchResultValues": "<% workerSearchGET.data %>"
+        },
+        {
+          "required": true,
+          "type": "instanceList",
+          "id": "sponsorWidget",
+          "label": "Sponsor",
+          "displayKey": "descriptor",
+          "idKey": "id",
+          "values": "<% [] %>",
+          "searchEndPoint": "<% endpoints.workerSearchGET %>",
+          "searchResultValues": "<% workerSearchGET.data %>"
+        }
+      ],
+      "columnWidthRatios": [
+        "70",
+        "30"
+      ]
+    },
+    "footer": {
+      "type": "footer"
+    },
+    "pageType": "EDIT",
+    "microFirstPageOnly": true,
+    "micro": true
+  },
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "CreateRequestPOST",
+        "values": [
+          {}
+        ],
+        "baseUrlType": "ORCHESTRATE",
+        "url": "/CreateCapitalProjectRequest/launch",
+        "onSend": "<%
+                                                 {
+                                                 'title':titleWidget.value,
+                                                 'summary' : summaryWidget.value,
+                                                 'requestDate' : requestDateWidget.value.format('yyyy-MM-dd'),
+                                                 'requestedBy' : requestedByWidget.value[0],
+                                                 'sponsor' : sponsorWidget.value[0],
+                                                 'planCycle' : pmdSessionVariables.planCycleWID
+                                                 }
+                                                %>",
+        "failOnStatusCodes": [
+          {
+            "code": "400"
+          },
+          {
+            "code": "401"
+          },
+          {
+            "code": "403"
+          },
+          {
+            "code": "404"
+          },
+          {
+            "code": "500"
+          },
+          {
+            "code": "503"
+          },
+          {
+            "code": "504"
+          }
+        ]
+      },
+      {
+        "type": "outboundVariable",
+        "variableScope": "FLOW",
+        "values": [
+          {
+            "outboundPath": "requestID–",
+            "value": "<% CreateRequestPOST.RequestID %>"
+          },
+          {
+            "outboundPath": "requestWID",
+            "value": "<% CreateRequestPOST.RequestWID %>"
+          },
+          {
+            "outboundPath": "headerWID",
+            "value": "<%  CreateRequestPOST.HeaderWID %>"
+          },
+          {
+            "outboundPath": "requestDate",
+            "value": "<% requestDateWidget.value.format('yyyy-MM-dd') %>"
+          },
+          {
+            "outboundPath": "requestTitle",
+            "value": "<% titleWidget.value %>"
+          },
+          {
+            "outboundPath": "summary",
+            "value": "<% summaryWidget.value %>"
+          },
+          {
+            "outboundPath": "sponsorID",
+            "value": "<% sponsorWidget.selectedEntries %>"
+          },
+          {
+            "outboundPath": "requestedByID",
+            "value": "<% requestedByWidget.selectedEntries %>"
+          },
+          {
+            "outboundPath": "costCenterWID",
+            "value": "<%  CreateRequestPOST.CostCenterWID %>"
+          },
+          {
+            "outboundPath": "costCenterName",
+            "value": "<%  CreateRequestPOST.CostCenterName %>"
+          },
+          {
+            "outboundPath": "companyWID",
+            "value": "<%  CreateRequestPOST.CompanyWID %>"
+          },
+          {
+            "outboundPath": "companyName",
+            "value": "<%  CreateRequestPOST.CompanyName %>"
+          }
+        ],
+        "name": "requestIDs"
+      }
+    ],
+    "responseErrorDetail": {
+      "errorSummary": "<% error %>",
+      "errors": "<% errors.map(item => {item.error}); %>"
+    }
+  },
+  "securityDomains": [
+    "CapitalProjectPlanning",
+    "CapitalProjectPlanningAdministrator"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "templateFieldData",
+  "parameters": ["appId", "templateID"],
+  "query": "<%
+    `SELECT fieldNumber, fieldLabel, fieldType, fieldEnabled, fieldRequired, fieldBindingID, fieldValues, caseTemplate
+    FROM {{appId}}_caseTemplateCustomFieldsBO
+    WHERE caseTemplate= {{templateID}}
+    ORDER BY fieldNumber ASC`
+  %>",
+  "limit": "10"
+}
+

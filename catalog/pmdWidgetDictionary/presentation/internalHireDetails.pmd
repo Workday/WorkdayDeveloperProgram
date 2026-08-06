@@ -1,0 +1,38 @@
+{
+  "id": "internalHireDetails",
+  "endPoints": [ ],
+  "presentation": {
+    "pageType": "edit",
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "fieldSet",
+          "id": "internalHireFieldSet",
+          "title": "Current Employee Details",
+          "children": [
+            {
+              "type": "text",
+              "id": "workerId",
+              "label": "Worker ID",
+              "value": ""
+            },
+            {
+              "type": "text",
+              "id": "Current Job Title",
+              "label": "current Job Title",
+              "value": ""
+            },
+            {
+              "type": "text",
+              "id": "Current Team",
+              "label": "current Team",
+              "value": ""
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

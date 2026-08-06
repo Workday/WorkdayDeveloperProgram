@@ -1,0 +1,10 @@
+{
+  "id": "getRequestId",
+  "parameters": ["applicationId","eventId"],
+  "query": "
+    SELECT businessProcessTarget 
+    FROM <% applicationId + '_workFromAnywhereRequestEvents' %> 
+    WHERE workdayID = <% eventId %>
+  ",
+  "limit": "100"
+}

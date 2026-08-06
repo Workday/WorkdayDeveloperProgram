@@ -1,0 +1,145 @@
+var getTeamSkillsData = function() {
+  var teamSkillsData = [
+    {
+      'skill': 'Skill 1',
+      'avgRating': 6.1,
+      'numMembers': 3,
+      'skillType': 'Category A'
+    },
+    {
+      'skill': 'Skill 2',
+      'avgRating': 10.0,
+      'numMembers': 5,
+      'skillType': 'Category B'
+    },
+    {
+      'skill': 'Skill 3',
+      'avgRating': 4.7,
+      'numMembers': 2,
+      'skillType': 'Category A'
+    },
+    {
+      'skill': 'Skill 4',
+      'avgRating': 2.6,
+      'numMembers': 1,
+      'skillType': 'Category C'
+    },
+    {
+      'skill': 'Skill 5',
+      'avgRating': 3.5,
+      'numMembers': 4,
+      'skillType': 'Category B'
+    }
+  ]
+  return teamSkillsData
+}
+
+var getTicketLeaderboardData = function() {
+  var ticketLeaderboardData = [
+    {
+      'name': 'Templeton',
+      'numTicketsComplete': 14,
+      'numTicketsReviewed': 17
+    }, 
+    {
+      'name': 'Stuart',
+      'numTicketsComplete': 12,
+      'numTicketsReviewed': 10
+    },
+    {
+      'name': 'Roscuro',
+      'numTicketsComplete': 5,
+      'numTicketsReviewed': 22
+    },
+    {
+      'name': 'Angelina',
+      'numTicketsComplete': 15,
+      'numTicketsReviewed': 12
+    },
+    {
+      'name': 'Remmy',
+      'numTicketsComplete': 12,
+      'numTicketsReviewed': 6
+    }
+  ]
+  return ticketLeaderboardData
+}
+
+var getBowlingLeaderboardData = function() {
+  var bowlingData = [
+    {
+      'name': 'Templeton',
+      'game1': 143,
+      'game2': 132,
+      'game3': 112
+    }, 
+    {
+      'name': 'Stuart',
+      'game1': 103,
+      'game2': 135,
+      'game3': 95
+    },
+    {
+      'name': 'Roscuro',
+      'game1': 141,
+      'game2': 117,
+      'game3': 157
+    },
+    {
+      'name': 'Angelina',
+      'game1': 138,
+      'game2': 112,
+      'game3': 115
+    },
+    {
+      'name': 'Remmy',
+      'game1': 158,
+      'game2': 122,
+      'game3': 107
+    }
+  ]
+  return bowlingData
+}
+
+
+var getTimeSupportEachBusinessUnit = function() {
+  var supportTimeData = [
+         {'worker': 'Bruce B', 'finance': '15', 'it': '7', 'sales' : '14', 'humanResources': '4'},
+         {'worker': 'Diana', 'finance': '8', 'it' : '8', 'sales' : '14', 'humanResources': '10'},
+         {'worker': 'Bruce W', 'finance': '2', 'it' : '8', 'sales' : '4', 'humanResources': '26'},
+         {'worker': 'Peter', 'finance': '17', 'it' : '8', 'sales' : '5', 'humanResources': '10'},
+         {'worker': 'Carol', 'finance': '18', 'it' : '10', 'sales' : '3', 'humanResources': '9'},
+         {'worker': 'Wade', 'finance': '20', 'it' : '3', 'sales' : '8', 'humanResources': '7'}
+  ]
+  return supportTimeData
+}
+
+var moviesWatchedByWorker = function() {
+  var moviesWatched = [
+         {'worker': 'Bruce B', 'adventure': '2', 'fantasy': '4', 'romCom' : '6', 'drama': '8', 'western': '10'},
+         {'worker': 'Diana', 'adventure': '2', 'fantasy': '1', 'romCom' : '4', 'drama': '6', 'western': '3'},
+         {'worker': 'Peter', 'adventure': '4', 'fantasy': '8', 'romCom' : '6', 'drama': '3', 'western': '1'},
+         {'worker': 'Bruce W', 'adventure': '9', 'fantasy': '2', 'romCom' : '6', 'drama': '8', 'western': '0'}
+  ]
+  return moviesWatched
+}
+
+var workersByRegion = function() {
+  var workersInRegion = [
+         {'hiredCandidates': {'hired': 5}, 'applicants' : 40, 'quota': '10', 'region': 'North America'},
+         {'hiredCandidates': {'hired': 6}, 'applicants' : 15 , 'quota': '5', 'region': 'EMEA'},
+         {'hiredCandidates': {'hired': 1}, 'applicants' : 15 , 'quota': '3', 'region': 'APAC'},
+         {'hiredCandidates': {'hired': 3}, 'applicants' : 15 , 'quota': '7', 'region': 'South America'}
+  ]
+  return workersInRegion
+}
+
+
+{
+  "getTeamSkillsData": getTeamSkillsData,
+  "getTicketLeaderboardData": getTicketLeaderboardData,
+  "getBowlingLeaderboardData": getBowlingLeaderboardData,
+  "getTimeSupportEachBusinessUnit": getTimeSupportEachBusinessUnit,
+  "moviesWatchedByWorker" : moviesWatchedByWorker,
+  "workersByRegion": workersByRegion
+}

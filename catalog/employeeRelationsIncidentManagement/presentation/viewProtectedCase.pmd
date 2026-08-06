@@ -1,0 +1,615 @@
+{
+  "id": "viewProtectedCase",
+  "include": [
+    "fileTypes.script",
+    "transform.script"
+  ],
+  "endPoints": [
+    {
+      "name": "currentUserData",
+      "baseUrlType": "general",
+      "authType": "sso",
+      "url": "common/v1/workers/me"
+    },
+    {
+      "name": "userPreferenceData",
+      "baseUrlType": "app",
+      "authType": "sso",
+      "url": "<% 'userPreferencesBO?worker=' + currentUserData.id %>"
+    },
+    {
+      "name": "protectedCaseData",
+      "baseUrlType": "app",
+      "authType": "sso",
+      "url": "<% 'protectedCaseBO/' + pageVariables.caseID %>",
+      "deferred": true
+    },
+    {
+      "name": "protectedAttachments",
+      "baseUrlType": "wql",
+      "authType": "sso",
+      "url": "data",
+      "deferred": true,
+       "wqlQuery": {
+        "parameters": {
+          "appId": "<% site.applicationId %>",
+          "case" : "<%  pageVariables.caseID  %>"
+        },
+        "queryId": "protectedAttachments_ByCase"
+      } 
+    },
+    {
+      "name": "protectedCaseEntryData",
+      "baseUrlType": "wql",
+      "authType": "sso",
+      "url": "data",
+      "deferred": true,
+      "wqlQuery": {
+        "parameters": {
+          "appId": "<% site.applicationId %>",
+          "case" : "<%  pageVariables.caseID %>"
+        },
+        "queryId": "protectedCaseEntryData"
+      }
+    },
+    {
+      "name": "caseConnectionData",
+      "baseUrlType": "wql",
+      "authType": "sso",
+      "url": "data",
+      "deferred": true,
+      "wqlQuery": {
+        "parameters": {
+          "appId": "<% site.applicationId %>",
+          "case" : "<%  pageVariables.caseID %>"
+        },
+        "queryId": "caseConnectionData_ByCase"
+      }
+    },
+    {
+      "name": "linkedCaseData",
+      "baseUrlType": "general",
+      "authType": "sso",
+      "url": "<% 'helpCase/v3/cases/' + caseID %>",
+      "deferred": true
+    },
+    {
+      "name": "getStatuses",
+      "baseUrlType": "app",
+      "authType": "sso",
+      "url": "protectedCaseStatuses?limit=100"
+    }
+  ],
+  "onLoad": "<%
+              //store caseID from either query params or flow variables & use to inoke endpoints
+              pageVariables.caseID = empty(queryParams.caseID) ? flowVars.caseID : queryParams.caseID;
+              pageVariables.protectedCaseData = protectedCaseData.invoke();
+              pageVariables.showHiddenComments = empty(queryParams.showHiddenComments) ? false : queryParams.showHiddenComments;
+              if (pageVariables.showHiddenComments) {
+                pageVariables.apiCaseEntryData = protectedCaseEntryData.invoke().data;
+                pageVariables.protectedAttachments = protectedAttachments.invoke().data;
+              } else {
+                pageVariables.apiCaseEntryData = list:filter(protectedCaseEntryData.invoke().data,'hideComment', false);
+                pageVariables.protectedAttachments = list:filter(protectedAttachments.invoke().data,'hideComment', false);
+              }
+              pageVariables.caseConnectionData = caseConnectionData.invoke();
+              
+              //determine user preferences
+              var tempSort = empty(userPreferenceData.data[0].sortComments) ? 'Asc' : userPreferenceData.data[0].sortComments;
+              pageVariables.booSortCommentsAsc = (tempSort == 'Asc') ? true : false;
+              pageVariables.booIncludeLinked = empty(userPreferenceData.data[0].includeLinkedComments) ? false : userPreferenceData.data[0].includeLinkedComments;
+
+              //format tags for card
+              pageVariables.tags = list:emptyList();
+              for (var tagRow : pageVariables.protectedCaseData.tags) {
+                  pageVariables.tags.add(json:create(
+                    json:attribute('label', tagRow.descriptor)
+                  ));
+              }
+              //format people involved for card
+              pageVariables.peopleInvolved = list:emptyList();
+              for (var personInvolved : list:filterMultiple(pageVariables.caseConnectionData.data,'connectionType',['People Involved - Worker Select','People Involved - Free Text'])) {
+                  pageVariables.peopleInvolved.add(json:create(
+                    json:attribute('label', personInvolved.connectionValue),
+                    json:attribute('value', personInvolved.connectionComment),
+                    json:attribute('secondaryValue', empty(personInvolved.linkContact) ? '' : personInvolved.linkContact)
+                  ));
+              }
+              //format linked cases for card
+              pageVariables.linkedCases = list:emptyList();
+              for (var linkedCase : list:filterMultiple(pageVariables.caseConnectionData.data,'connectionType',['Linked Case - Workday Help'])) {
+                  //call workday help to get case data
+                  var apiLinkedCaseData = linkedCaseData.invoke({'caseID': linkedCase.connectionID});
+                  //pageVariables.linkedCases
+                  pageVariables.linkedCases.add(json:create(
+                    json:attribute('label', linkedCase.connectionValue),
+                    json:attribute('value', apiLinkedCaseData.status.descriptor),
+                    json:attribute('secondaryValue', linkedCase.connectionComment),
+                    json:attribute('caseLink', empty(linkedCase.linkContact) ? '' : linkedCase.linkContact),
+                    json:attribute('status', apiLinkedCaseData.status.descriptor),
+                    json:attribute('creationDate', apiLinkedCaseData.creationDate)
+                  ));
+              }
+              %>",
+  "script": "<%
+            var getStatusColour = function(strCaseStatus) {
+
+                var obj = (getStatuses.data.find(x=>{  x.id == strCaseStatus}) ?? {:});
+
+                if(empty obj)
+                    return 'transparent';
+                else if(obj.initial)
+                    return 'orange';
+                else if(obj.resolved)
+                    return  'green';
+                else
+                    return 'blue';
+            }
+            %>",
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "<% 'Protected Case: ' + pageVariables.protectedCaseData.descriptor %>"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "section",
+          "horizontal": true,
+          "columnWidthRatios": [
+            0.6,
+            0.4
+          ],
+          "children": [
+            {
+              "type": "section",
+              "children": [
+                {
+                  "type": "section",
+                  "horizontal": true,
+                  "children": [
+                    {
+                      "type": "button",
+                      "action": "AUXILIARY",
+                      "label": "Home",
+                      "taskReference": {
+                        "taskId": "root"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "fieldSet",
+                  "title": "Case Comments",
+                  "collapsible": true,
+                  "children": [
+                    {
+                      "type": "grid",
+                      "label": "Protected Comments",
+                      "rows": "<% list:sort(pageVariables.apiCaseEntryData,'createdDate',true) %>",
+                      "rowVariableName": "commentRow",
+                      "doNotAdd": true,
+                      "doNotRemove": true,
+                      "columns": [
+                        {
+                          "type": "column",
+                          "columnId": "col1",
+                          "label": "Comment",
+                          "sortableAndFilterable": true,
+                          "cellTemplate": {
+                            "type": "textArea",
+                            "required": true,
+                            "value": "<% commentRow.entryComment %>"
+                          }
+                        },
+                        {
+                          "type": "column",
+                          "columnId": "col2",
+                          "label": "Person Tagged",
+                          "sortableAndFilterable": true,
+                          "cellTemplate": {
+                            "type": "fieldSet",
+                            "children": [
+                              {
+                                "type": "instanceList",
+                                "values": "<% !empty(commentRow.personTagging) ? [commentRow.personTagging] : [] %>",
+                                "widKey": "id",
+                                "render": "<% !empty commentRow.personTagging && commentRow.personTagging.id != 'Non-Worker' %>"
+                              },
+                              {
+                                "type": "readOnlyText",
+                                "value": "<% empty(commentRow.personTagging.descriptor) ? null : commentRow.personTagging.descriptor %>",
+                                "render": "<% !empty commentRow.personTagging && commentRow.personTagging.id == 'Non-Worker' %>"
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "type": "column",
+                          "columnId": "col3",
+                          "label": "Created By",
+                          "sortableAndFilterable": true,
+                          "cellTemplate": {
+                            "type": "instanceList",
+                            "values": "<% !empty commentRow.createdBy ? [commentRow.createdBy] : [] %>",
+                            "widKey": "id"
+                          }
+                        },
+                        {
+                          "type": "column",
+                          "columnId": "col4",
+                          "label": "Created Date",
+                          "sortableAndFilterable": true,
+                          "cellTemplate": {
+                            "type": "date",
+                            "value": "<%  !empty commentRow.createdDate ? transform.formatDateString(commentRow.createdDate, userTimeZone)  : '' %>"
+                          }
+                        },
+                        {
+                          "type": "column",
+                          "columnId": "col5",
+                          "label": "Last Updated By",
+                          "sortableAndFilterable": true,
+                          "cellTemplate": {
+                            "type": "instanceList",
+                            "values": "<% empty(commentRow.lastUpdatedBy) ? [commentRow.createdBy] : [commentRow.lastUpdatedBy] %>",
+                            "widKey": "id"
+                          }
+                        },
+                        {
+                          "type": "column",
+                          "columnId": "col6",
+                          "label": "Last Updated Date",
+                          "sortableAndFilterable": true,
+                          "cellTemplate": {
+                            "type": "date",
+                            "value": "<% empty(commentRow.lastUpdatedDate) ?  transform.formatDateString(commentRow.createdDate, userTimeZone):transform.formatDateString(commentRow.lastUpdatedDate, userTimeZone) %>"
+                          }
+                        },
+                        {
+                          "type": "column",
+                          "columnId": "colID",
+                          "cellTemplate": {
+                            "type": "section",
+                            "children": [
+                              {
+                                "type": "button",
+                                "action": "AUXILIARY",
+                                "label": "Edit",
+                                "taskReference": {
+                                  "taskId": "editProtectedComment",
+                                  "parameterBindings": {
+                                    "commentID": "<% commentRow.workdayID %>"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "hidden",
+                                "id": "commentId",
+                                "value": "<% commentRow.workdayID %>"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "section",
+                      "horizontal": true,
+                      "children": [
+                        {
+                          "type": "button",
+                          "label": "Add Protected Comment",
+                          "action": "PRIMARY",
+                          "taskReference": {
+                            "taskId": "addProtectedComment",
+                            "parameterBindings": {
+                              "caseID": "<% pageVariables.caseID %>"
+                            }
+                          }
+                        },
+                        {
+                          "type": "button",
+                          "label": "Include Hidden",
+                          "render": "<% !(pageVariables.showHiddenComments) %>",
+                          "taskReference": {
+                            "type": "taskReference",
+                            "taskId": "viewProtectedCase",
+                            "parameterBindings": {
+                              "caseID": "<% pageVariables.caseID %>",
+                              "showHiddenComments": true
+                            }
+                          },
+                          "action": "AUXILIARY"
+                        },
+                        {
+                          "type": "button",
+                          "label": "Exclude Hidden",
+                          "render": "<% (pageVariables.showHiddenComments) %>",
+                          "taskReference": {
+                            "type": "taskReference",
+                            "taskId": "viewProtectedCase",
+                            "parameterBindings": {
+                              "caseID": "<% pageVariables.caseID %>"
+                            }
+                          },
+                          "action": "AUXILIARY"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "fieldSet",
+                      "title": "Attachments",
+                      "collapsible": true,
+                      "children": [
+                        {
+                          "type": "grid",
+                          "label": "Attachments",
+                          "rows": "<% pageVariables.protectedAttachments %>",
+                          "rowVariableName": "attachmentRow",
+                          "columns": [
+                            {
+                              "type": "column",
+                              "columnId": "col1",
+                              "label": "Attachment",
+                              "sortableAndFilterable": true,
+                              "cellTemplate": {
+                                "type": "fileUploader",
+                                "id": "multiFileUploader",
+                                "enabled": "false",
+                                "singular": false,
+                                "children": [
+                                  {
+                                    "type": "fileUploaderRow",
+                                    "render": "<% !(empty attachmentRow.fileName) %>",
+                                    "attachment": {
+                                      "type": "attachmentList",
+                                      "attachmentURL": "<% `{{apiGatewayEndpoint}}/apps/{{site.applicationId}}/v1/protectedAttachments/{{attachmentRow.id}}` %>",
+                                      "attachmentAuth": "sso",
+                                      "attachmentName": "<% attachmentRow.fileName %>",
+                                      "attachmentUriTemplate": "[Target]",
+                                      "instanceList": [
+                                        {
+                                          "action": "attachment",
+                                          "descriptor": "<% attachmentRow.fileName %>"
+                                        }
+                                      ]
+                                    },
+                                    "fileName": "<% attachmentRow.fileName %>",
+                                    "fileType": "<% fileTypes.getMimeTypeIDbyContentType(attachmentRow.mimeType.id) %>"
+                                  }
+                                ],
+                                "fileUploaderRowTemplate": [ ]
+                              }
+                            },
+                            {
+                              "type": "column",
+                              "columnId": "col2",
+                              "label": "Created By",
+                              "sortableAndFilterable": true,
+                              "cellTemplate": {
+                                "type": "instanceList",
+                                "values": "<% !empty attachmentRow.createdBy ? [attachmentRow.createdBy] : [] %>",
+                                "widKey": "id"
+                              }
+                            },
+                            {
+                              "type": "column",
+                              "columnId": "col3",
+                              "label": "Created Date",
+                              "sortableAndFilterable": true,
+                              "cellTemplate": {
+                                "type": "richText",
+                                "value": "<% attachmentRow.createdDate %>"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "fieldSet",
+                      "title": "Linked Case Details",
+                      "collapsible": true,
+                      "initializeCollapsed": true,
+                      "children": [
+                        {
+                          "type": "grid",
+                          "label": "Linked Cases",
+                          "rows": "<% pageVariables.linkedCases %>",
+                          "rowVariableName": "linkedCaseRow",
+                          "columns": [
+                            {
+                              "type": "column",
+                              "columnId": "col1",
+                              "label": "Case Link",
+                              "sortableAndFilterable": true,
+                              "cellTemplate": {
+                                "type": "externalLink",
+                                "descriptor": "<% linkedCaseRow.label %>",
+                                "url": "<% linkedCaseRow.caseLink %>"
+                              }
+                            },
+                            {
+                              "type": "column",
+                              "columnId": "col2",
+                              "label": "Case Description",
+                              "sortableAndFilterable": true,
+                              "cellTemplate": {
+                                "type": "readOnlyText",
+                                "value": "<% linkedCaseRow.secondaryValue %>"
+                              }
+                            },
+                            {
+                              "type": "column",
+                              "columnId": "col3",
+                              "label": "Case Status",
+                              "sortableAndFilterable": true,
+                              "cellTemplate": {
+                                "type": "readOnlyText",
+                                "value": "<% linkedCaseRow.status ?? '' %>"
+                              }
+                            },
+                            {
+                              "type": "column",
+                              "columnId": "col4",
+                              "label": "Creation Date",
+                              "sortableAndFilterable": true,
+                              "cellTemplate": {
+                                "type": "readOnlyText",
+                                "value": "<% !empty linkedCaseRow.creationDate ?  transform.formatDateString(linkedCaseRow.creationDate, userTimeZone) : '' %>"
+              
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "section",
+              "children": [
+                {
+                  "type": "section",
+                  "horizontal": true,
+                  "children": [
+                    {
+                      "type": "button",
+                      "action": "PRIMARY",
+                      "label": "Edit Protected Case",
+                      "taskReference": {
+                        "taskId": "protectedCase_Edit",
+                        "parameterBindings": {
+                          "caseID": "<% pageVariables.caseID %>",
+                          "action": "Edit"
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "action": "AUXILIARY",
+                      "label": "Assign To Me",
+                      "taskReference": {
+                        "taskId": "protectedCase_Edit",
+                        "parameterBindings": {
+                          "caseID": "<% pageVariables.caseID %>",
+                          "action": "Edit",
+                          "assignToMe": true
+                        }
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "action": "AUXILIARY",
+                      "label": "Export",
+                      "taskReference": {
+                        "taskId": "exportMicroPopup",
+                        "parameterBindings": {
+                          "caseID": "<% pageVariables.caseID %>"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "cardContainer",
+                  "layout": "masonry",
+                  "cards": [
+                    {
+                      "type": "card",
+                      "cardId": "listCard",
+                      "parameters": "<%
+                            {
+                                'list': {
+                                    'title': 'Case Detail',
+                                    'subtitle': pageVariables.protectedCaseData.caseName,
+                                    'icon': 'wd-accent-student-records',
+                                    'indicatorLabel': (pageVariables.protectedCaseData.status.descriptor ?? ''),
+                                    'indicatorColor': getStatusColour(pageVariables.protectedCaseData.status.id ?? ''),
+                                    'items': [
+                                        {
+                                            'label': 'Description',
+                                            'secondaryValue': pageVariables.protectedCaseData.caseDescription
+                                        },
+                                        {
+                                            'label': 'Created Date',
+                                            'secondaryValue':  transform.formatDateString(pageVariables.protectedCaseData.createdDate, userTimeZone)
+                                        },
+                                        {
+                                            'label': 'About',
+                                            'secondaryValue': pageVariables.protectedCaseData.createdAbout.descriptor
+                                        },
+                                        {
+                                            'label': 'Assigned To',
+                                            'secondaryValue': empty(pageVariables.protectedCaseData.assignedTo.descriptor) ? 'unassigned' : pageVariables.protectedCaseData.assignedTo.descriptor
+                                        },
+                                        {
+                                            'label': 'Status',
+                                            'secondaryValue': pageVariables.protectedCaseData.status.descriptor
+                                        },
+                                        {
+                                            'label': 'Status (Active/Inactive)',
+                                            'secondaryValue': pageVariables.protectedCaseData.statusMaster
+                                        },
+                                        {
+                                            'label': 'Tags',
+                                            'secondaryValue': empty(pageVariables.protectedCaseData.tags) ? 'none' : list:mapAttribute(pageVariables.protectedCaseData.tags,'descriptor').toString()
+                                        }
+                                    ]
+                                }
+                            }
+                        %>"
+                    },
+                    {
+                      "type": "card",
+                      "cardId": "listCard",
+                      "parameters": "<%
+                            {
+                                'list': {
+                                    'title': 'People Involved',
+                                    'subtitle': pageVariables.peopleInvolved.size() + ' people involved',
+                                    'icon': 'wd-accent-people-group',
+                                    'items': pageVariables.peopleInvolved
+                                }
+                            }
+                        %>"
+                    },
+                    {
+                      "type": "card",
+                      "cardId": "listCard",
+                      "parameters": "<%
+                            {
+                                'list': {
+                                    'title': 'Linked Cases',
+                                    'subtitle': pageVariables.linkedCases.size() + ' linked Workday Help cases',
+                                    'icon': 'wd-accent-handshake',
+                                    'items': pageVariables.linkedCases
+                                }
+                            }
+                        %>"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

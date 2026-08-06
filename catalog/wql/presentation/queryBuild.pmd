@@ -1,0 +1,387 @@
+{
+  "id" : "queryBuild",
+  "endPoints" : [ {
+    "name" : "dataSources",
+    "baseUrlType" : "workday-wql",
+    "url" : "dataSources?limit=100",
+    "authType" : "sso"
+  }, {
+    "name" : "dataSourcesSearch",
+    "baseUrlType" : "workday-wql",
+    "url" : "<% `dataSources?searchString={{instanceListQuery}}&limit=100` %>",
+    "authType" : "sso",
+    "deferred" : true
+  }, {
+    "name" : "dataSourceFields",
+    "baseUrlType" : "workday-wql",
+    "url" : "<% `dataSources/{{dataSourceInstanceList.value[0]}}/fields?limit=100` %>",
+    "authType" : "sso",
+    "deferred" : true
+  }, {
+    "name" : "dataSourceFieldsSearch",
+    "baseUrlType" : "workday-wql",
+    "url" : "<% `dataSources/{{dataSourceInstanceList.value[0]}}/fields?searchString={{instanceListQuery}}&limit=100` %>",
+    "authType" : "sso",
+    "deferred" : true
+  }, {
+    "name" : "dataSourceFilters",
+    "baseUrlType" : "workday-wql",
+    "url" : "<% `dataSources/{{dataSourceInstanceList.value[0]}}/dataSourceFilters?limit=100` %>",
+    "authType" : "sso",
+    "deferred" : true
+  }, {
+    "name" : "queryResults",
+    "baseUrlType" : "workday-wql",
+    "authType" : "sso",
+    "httpMethod" : "POST",
+    "url" : "data",
+    "exclude" : "<% empty query.getValue() %>",
+    "deferred" : true,
+    "onSend" : "<%
+                 self.data = {:}; //create a new JSON body; self.data will always hold the payload of this endpoint
+                 self.data.query = query.getValue(); //read in current value of the 'query' textArea widget and add it to payload under a 'query' tag
+                 //note the POST version of WQL has 'query' in the body of the requesst, not in the endpoint as a query param
+                 console.info(json:asJSON(self.data)); //log the payload to the console logs
+                 self.data; //return the payload itself for the app to send to the WQL endpoint
+                 %>"
+  } ],
+  "script" : "<%
+    var buildQuery = function() {
+        //function to construct the WQL query and refactor it whenever fields on the page are changed
+        if (!(empty dataSourceInstanceList.getValue()[0])) { //if there is a data source selected from the instance list
+            var queryString = 'SELECT '; //begin constructing a query string
+                queryString += fieldsInstanceList.getSelectedEntries().map(f => { f.descriptor }).join(', ') + '\\r\\n'; //get selected fields, add them to a map of values separated by commas
+                queryString += 'FROM ' + dataSourceInstanceList.getSelectedEntries()[0].descriptor + '\\r\\n'; //get selected data sources and add this to the query string FROM argument
+                if(!empty limit.getValue()) { //if a limit was populated by the user
+                    queryString += 'LIMIT ' + limit.getValue(); //add the LIMIT parameter to the query
+                }
+                query.setValue(queryString); //set the value of the 'query' textArea widget to the resulting string that was built; the user can still edit it if they want to
+        }
+            else {
+            query.setValue(''); //if there wasn't a data source selected, clear out the query
+        }
+    }
+
+    var setDataSource = function() {
+      if (!(empty dataSourceInstanceList.getValue()[0])) { //if there is a data source selected from the instance list
+        var allFields = dataSourceFields.invoke(); //save results of deferred endpoint to a variable
+          fieldsInstanceList.setValues(allFields.data); //populate instance list with the list[] within the response payload
+          fieldsInstanceList.setEnabled(true); //turn on the instance list for editing
+          var allDataSourceFilters = dataSourceFilters.invoke(); //save results of deferred endpoint to a variable
+          if(!empty allDataSourceFilters.data) { //check if there are data source filters associated with the data source
+              dataSourceInstanceList.setWarning('This Data Source requires Data Source Filters, which are not supported by this app. You can manually add data source filters to the query on this page.');
+          } else {
+            dataSourceInstanceList.clearWarning(); //remove any warning messages
+          }
+      } else { //if no data source
+        fieldsInstanceList.setEnabled(false); //inactivate the field
+        fieldsInstanceList.setValues([]); //clear out the instance list
+        dataSourceInstanceList.clearWarning(); //remove any warning messages
+      }
+    }
+  %>",
+  "presentation" : {
+    "standardEditButtonsHidden" : true,
+    "headerSize" : "STANDARD",
+    "pageType" : "EDIT",
+    "title" : {
+      "label" : "Build WQL Query",
+      "type" : "title"
+    },
+    "body" : {
+      "type" : "section",
+      "horizontal" : true,
+      "children" : [ {
+        "type" : "section",
+        "id" : "leftside-querybuild",
+        "children" : [ {
+          "type" : "fieldSet",
+          "title" : "Data Source",
+          "children" : [ {
+            "type" : "text",
+            "enabled" : "false",
+            "value" : "<% 'Find Data Sources by entering a search string.' %>"
+          }, {
+            "type" : "instanceList",
+            "id" : "dataSourceInstanceList",
+            "label" : "Data Source",
+            "values" : "<% dataSources.data.sort(d => { d.descriptor }) %>",
+            "searchEndPoint" : "<% endpoints.dataSourcesSearch %>",
+            "searchResultValues" : "<% dataSourcesSearch.data %>",
+            "idKey" : "id",
+            "displayKey" : "alias",
+            "required" : true,
+            "multiSelect" : false,
+            "onChange" : "<% setDataSource(); buildQuery(); %>",
+            "guide" : {
+              "type" : "guide",
+              "id" : "guideDataSource",
+              "title" : "Data Source",
+              "text" : "Find Data Sources by entering a search string."
+            }
+          } ]
+        }, {
+          "type" : "fieldSet",
+          "title" : "Data Source Fields",
+          "children" : [ {
+            "type" : "text",
+            "enabled" : "false",
+            "value" : "<% 'Find Data Source Fields for your selected Data Source by entering a search string and/or selecting individual fields.' %>"
+          }, {
+            "type" : "instanceList",
+            "id" : "fieldsInstanceList",
+            "label" : "Data Source Fields",
+            "values" : "<% [] %>",
+            "searchEndPoint" : "<% endpoints.dataSourceFieldsSearch %>",
+            "searchResultValues" : "<% dataSourceFieldsSearch.data %>",
+            "idKey" : "id",
+            "displayKey" : "alias",
+            "required" : "true",
+            "multiSelect" : "true",
+            "enabled" : false,
+            "onChange" : "<% buildQuery() %>",
+            "guide" : {
+              "type" : "guide",
+              "id" : "guideDataSourceFields",
+              "title" : "Data Source Fields",
+              "text" : "Find Data Source Fields for your selected Data Source by entering a search string and/or selecting individual fields."
+            }
+          } ]
+        }, {
+          "type" : "fieldSet",
+          "title" : "Limit Parameter",
+          "children" : [ {
+            "type" : "text",
+            "enabled" : "false",
+            "value" : "<% 'The limit query parameter will limit the number of results returned for your query; defaults to 10. \\n Note that if you remove this parameter, all results will be returned and it may take a few moments for them to appear.' %>"
+          }, {
+            "id" : "limit",
+            "type" : "number",
+            "label" : "<% presentationLabels.SelectDataSourceFields %>",
+            "value" : "10",
+            "minimumValue" : 0,
+            "maximumValue" : 50000,
+            "totalDigits" : 3,
+            "fractionDigits" : 0,
+            "onChange" : "<% buildQuery() %>",
+            "guide" : {
+              "type" : "guide",
+              "id" : "guideLimit",
+              "title" : "Limit Parameter",
+              "text" : "The limit query parameter will limit the number of results returned for your query; defaults to 10. Note that if you remove this parameter, all results will be returned and it may take a few moments for them to appear."
+            }
+          } ]
+        }, {
+          "type" : "fieldSet",
+          "title" : "Query",
+          "children" : [ {
+            "type" : "text",
+            "enabled" : "false",
+            "value" : "<% 'The generated query that will execute. You can manually adjust the query before executing.' %>"
+          }, {
+            "id" : "query",
+            "type" : "textArea",
+            "required" : true,
+            "guide" : {
+              "type" : "guide",
+              "id" : "guideQuery",
+              "title" : "WQL Query",
+              "text" : "The generated query that will execute. You can manually adjust the query before executing."
+            }
+          } ]
+        }, {
+          "type" : "pageActionButton",
+          "id" : "executeQueryButton",
+          "label" : "Execute Query",
+          "onClick" : "<%
+            // clicking the 'Execute Query' button will cause several changes on the page
+            const wqlEndpointData = queryResults.invoke();  //.invoke() calls the endpoint and returns its response; save it to a variable
+            rightsidequeryexecute.setVisible(true); // unhide the right side of the page with the results textArea widgets and the grid
+            var dataObj = {:};
+            dataObj.fieldList = fieldsInstanceList.getSelectedEntries().map(f => { f.descriptor }); // any fields the user clicked are added to a list, where each element is the field's descriptor
+            dataObj.wqlQuery = query.value; 
+            dataObj.wqlResult = wqlEndpointData.data; // set the value of a hidden wqlResults textArea widget to the WQL endpoint response var
+            dataObj.wqlResultsError = wqlEndpointData.errors;
+
+            console.info(json:asJSON(dataObj)); // log the payload to the console logs
+
+            queryResultsGridSection.setData(dataObj);
+            %>"
+        } ]
+      }, {
+        "type" : "section",
+        "id" : "rightsidequeryexecute",
+        "visible" : "<% false %>",
+        "enabled" : "<% false %>",
+        "children" : [
+        {
+          "id": "queryResultsGridSection",
+          "type": "dynamicSection",
+          "data": "<% {'fieldList': []} %>",
+          "dataVariableName": "data",
+          "children": [
+            {
+              "label" : "Query",
+              "id" : "queryprint",
+              "type" : "text",
+              "enabled" : "false",
+              "render": "<% !(empty data.wqlQuery) %>",
+              "value" : "<% data.wqlQuery %>"
+            },
+            {
+              "label" : "Error",
+              "type" : "textArea",
+              "enabled" : "false",
+              "render": "<% !(empty data.wqlResultsError) %>",
+              "value" : "<% data.wqlResultsError.join('\\r\\n') %>"
+            }, 
+            {
+              "_comments" : "Display the query results in grid form. Limited to displaying only the first 10 fields in the SELECT clause. Using map:getObject to get the appropriate value from the fields list of the returned queryResult rows. This is a good example of how to get an attribute from an object without knowing the attribute you want until runtime.",
+              "id": "queryResultsGrid",
+              "type": "grid",
+              "label": "Results",
+              "rows": "<% data.wqlResult %>",
+              "enabled": "false",
+              "showRowMover": "false",
+              "selectionEnabled": "false",
+              "doNotAdd": true,
+              "doNotRemove": true,
+              "render": "<% data.fieldList.size() > 0 %>",
+              "rowVariableName": "queryResult",
+              "columns": [
+                {
+                  "type": "column",
+                  "label": "<% data.fieldList.get(0) %>",
+                  "columnId": "0",
+                  "id": "col0",
+                  "render": "<% data.fieldList.size() > 0 %>",
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% queryResult[data.fieldList[0]] %>"
+                  }
+                },
+                {
+                  "type": "column",
+                  "label": "<% data.fieldList.get(1) %>",
+                  "columnId": "1",
+                  "id": "col1",
+                  "render": "<% data.fieldList.size() > 1 %>",
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% queryResult[data.fieldList[1]] %>"
+                  }
+                },
+                {
+                  "type": "column",
+                  "label": "<% data.fieldList.get(2) %>",
+                  "columnId": "2",
+                  "id": "col2",
+                  "render": "<% data.fieldList.size() > 2 %>",
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% queryResult[data.fieldList[2]] %>"
+                  }
+                },
+                {
+                  "type": "column",
+                  "label": "<% data.fieldList.get(3) %>",
+                  "columnId": "3",
+                  "id": "col3",
+                  "render": "<% data.fieldList.size() > 3 %>",
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% queryResult[data.fieldList[3]] %>"
+                  }
+                },
+                {
+                  "type": "column",
+                  "label": "<% data.fieldList.get(4) %>",
+                  "columnId": "4",
+                  "id": "col4",
+                  "render": "<% data.fieldList.size() > 4 %>",
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% queryResult[data.fieldList[4]] %>"
+                  }
+                },
+                {
+                  "type": "column",
+                  "label": "<% data.fieldList.get(5) %>",
+                  "columnId": "5",
+                  "id": "col5",
+                  "render": "<% data.fieldList.size() > 5 %>",
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% queryResult[data.fieldList[5]] %>"
+                  }
+                },
+                {
+                  "type": "column",
+                  "label": "<% data.fieldList.get(6) %>",
+                  "columnId": "6",
+                  "id": "col6",
+                  "render": "<% data.fieldList.size() > 6 %>",
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% queryResult[data.fieldList[6]] %>"
+                  }
+                },
+                {
+                  "type": "column",
+                  "label": "<% data.fieldList.get(7) %>",
+                  "columnId": "7",
+                  "id": "col7",
+                  "render": "<% data.fieldList.size() > 7 %>",
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% queryResult[data.fieldList[7]] %>"
+                  }
+                },
+                {
+                  "type": "column",
+                  "label": "<% data.fieldList.get(8) %>",
+                  "columnId": "8",
+                  "id": "col8",
+                  "render": "<% data.fieldList.size() > 8 %>",
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% queryResult[data.fieldList[8]] %>"
+                  }
+                },
+                {
+                  "type": "column",
+                  "label": "<% data.fieldList.get(9) %>",
+                  "columnId": "9",
+                  "id": "col9",
+                  "render": "<% data.fieldList.size() > 9 %>",
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% queryResult[data.fieldList[9]] %>"
+                  }
+                },
+                {
+                  "type": "column",
+                  "label": "<% data.fieldList.get(10) %>",
+                  "columnId": "10",
+                  "id": "col10",
+                  "render": "<% data.fieldList.size() > 10 %>",
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% queryResult[data.fieldList[10]] %>"
+                  }
+                }
+              ]
+            }, {
+              "label" : "Raw Results",
+              "id" : "wqlResults",
+              "type" : "textArea",
+              "enabled" : "false",
+              "value": "<% !(empty data.wqlResult) ? json:asJSON(data.wqlResult) : '' %>"
+            } ]
+          }
+          ]
+        } 
+      ]
+    }
+  }
+}

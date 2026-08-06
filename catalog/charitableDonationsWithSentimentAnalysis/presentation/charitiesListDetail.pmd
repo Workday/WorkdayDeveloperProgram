@@ -1,0 +1,54 @@
+{
+  "id": "charitiesListDetail",
+  "securityDomains": [
+    "ManageCharities"
+  ],
+  "endPoints": [
+    {
+      "baseUrlType": "app",
+      "name": "charities",
+      "authType": "sso",
+      "url": "charities",
+      "isCollection": "true"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Donate to Charity"
+    },
+    "body": {
+      "type": "listDetailHub",
+      "label": "Donate to Charity",
+      "items": "<% charities.data %>",
+      "itemVariableName": "charity",
+      "icon": "wd-accent-heart",
+      "navigationTemplate": {
+        "icon": "wd-icon-checkboxes",
+        "label": "Charity - <% charity.descriptor %>",
+        "task": {
+          "taskId": "viewCharity",
+          "parameters": {
+            "charityId": "<% charity.id %>"
+          }
+        }
+      },
+      "additionalLinks": {
+        "title": "Additionals Links",
+        "links": [
+          {
+            "label": "Charitable Donations Home",
+            "task": {
+              "taskId": "charityHub"
+            }
+          },
+          {
+            "type": "external",
+            "label": "Developer Forum",
+            "url": "https://forum.developer.workday.com/"
+          }
+        ]
+      }
+    }
+  }
+}

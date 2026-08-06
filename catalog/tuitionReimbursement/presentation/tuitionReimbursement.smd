@@ -1,0 +1,70 @@
+{
+  "id": "tuitionReimbursement",
+  "languages": [
+    {
+      "code": "en-US",
+      "description": "English"
+    },
+    {
+      "code": "fr-CA",
+      "description": "Français (Canada)"
+    },
+    {
+      "code": "en-CA",
+      "description": "English"
+    }
+  ],
+  "siteAuth": {
+    "authTypes": [
+      {
+        "scheme": "SSO",
+        "id": "sso"
+      }
+    ]
+  },
+  "siteId": "tuitionReimbursement",
+  "auth": {
+    "type": "SSO"
+  },
+  "errorPageConfigurations": [
+    {
+      "statusCode": "401",
+      "page": {
+        "id": "errorPage"
+      }
+    },
+    {
+      "statusCode": "403",
+      "page": {
+        "id": "errorPage"
+      }
+    },
+    {
+      "statusCode": "404",
+      "page": {
+        "id": "errorPage"
+      }
+    },
+    {
+      "statusCode": "408",
+      "page": {
+        "id": "errorPage"
+      }
+    },
+    {
+      "statusCode": "500",
+      "page": {
+        "id": "errorPage"
+      }
+    },
+    {
+      "statusCode": "503",
+      "page": {
+        "id": "errorPage"
+      }
+    }
+  ],
+  "cdnEnabled": true,
+  "siteProperties": [ ],
+  "applicationId": "tuitionReimbursement"
+}

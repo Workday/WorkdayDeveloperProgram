@@ -1,0 +1,7 @@
+[
+    {
+        "name": "Max Remote Days",
+        "type": "numeric",
+        "alias": "Max Remote Days"
+    }
+]

@@ -1,0 +1,218 @@
+{
+  "id": "home",
+  "securityDomains": [
+    "SelfServiceCreateCaseWithWorkdayExtend"
+  ],
+  "endPoints": [
+    {
+      "name": "worker",
+      "baseUrlType": "workday-staffing",
+      "url": "/workers/me",
+      "authType": "sso"
+    },
+    {
+      "name": "configuration",
+      "baseUrlType": "workday-help",
+      "url": "/configuration",
+      "authType": "sso"
+    },
+    {
+      "name": "serviceCategories",
+      "baseUrlType": "workday-help",
+      "url": "/serviceCategories?limit=100",
+      "authType": "sso",
+      "isCollection": true
+    },
+    {
+      "name": "caseSuggestions",
+      "baseUrlType": "workday-help",
+      "url": "<% '/caseSuggestions?caseType=' + caseType + '&limit=100' %>",
+      "authType": "sso",
+      "isCollection": true,
+      "deferred": true
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "uploadCaseAttachment",
+        "baseUrlType": "workday-help",
+        "url": "/attachments",
+        "authType": "sso",
+        "exclude": "<% empty fileUploaderCaseAttachment.children %>",
+        "httpMethod": "POST",
+        "multiPartFileLast": true
+      },
+      {
+        "name": "createCase",
+        "baseUrlType": "workday-help",
+        "url": "/cases",
+        "authType": "sso",
+        "httpMethod": "POST",
+        "values": [
+          {
+            "outboundPath": "attachments[].id",
+            "value": "<% uploadCaseAttachment ? uploadCaseAttachment.id : null %>"
+          }
+        ],
+        "onSend": "<%
+                   self.data;
+                   %>"
+      }
+    ]
+  },
+  "script": "<%
+             var setCaseSuggestions = function(selectedCaseType) {
+                 if(!(empty selectedCaseType)) {
+                     var caseSuggestions = caseSuggestions.invoke({'caseType': selectedCaseType.get(0)});
+                         gridCaseSuggestions.rows = caseSuggestions.data.sort(c => { c.order });
+                         fieldSetCaseDetails.visible = true;
+                 }
+                     else {
+                     gridCaseSuggestions.rows = [];
+                         fieldSetCaseDetails.visible = false;
+                 }
+             }
+             %>",
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Create a Help Case with Workday Extend"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "fieldSet",
+          "title": "Case Details",
+          "children": [
+            {
+              "id": "instanceListWorker",
+              "type": "instanceList",
+              "label": "Worker",
+              "required": true,
+              "enabled": false,
+              "values": "<% [worker] %>",
+              "selectedValues": "<% [worker.id] %>"
+            },
+            {
+              "id": "instanceListCaseType",
+              "type": "instanceList",
+              "label": "Case Type",
+              "required": true,
+              "idKey": "id",
+              "displayKey": "name",
+              "values": "<% serviceCategories.data %>",
+              "valueOutBinding": "createCase.caseType.id",
+              "monikerLevels": [
+                {
+                  "type": "monikerLevel",
+                  "levelValues": "<%
+                                  var selectedServiceCategory = self.promptSelections[0];
+                                  var matchingServiceCategory = serviceCategories.data.find(x => { selectedServiceCategory == x.id; });
+                                  matchingServiceCategory.caseTypes ? matchingServiceCategory.caseTypes : [];
+                                  %>"
+                }
+              ],
+              "onChange": "<% setCaseSuggestions(self.value); %>"
+            },
+            {
+              "type": "fieldSet",
+              "id": "fieldSetCaseDetails",
+              "visible": false,
+              "children": [
+                {
+                  "id": "gridCaseSuggestions",
+                  "type": "grid",
+                  "rows": "<% [] %>",
+                  "label": "Suggestions",
+                  "enabled": false,
+                  "doNotAdd": true,
+                  "doNotRemove": true,
+                  "rowVariableName": "suggestion",
+                  "_comments": "This grid will only display if case suggestions for the case type have been configured. Use task Maintain Case Suggestions to manage.",
+                  "columns": [
+                    {
+                      "cellTemplate": {
+                        "type": "text",
+                        "value": "<% suggestion.name %>"
+                      },
+                      "label": "Name",
+                      "columnId": "name",
+                      "type": "column"
+                    },
+                    {
+                      "cellTemplate": {
+                        "type": "text",
+                        "value": "<% suggestion.type.descriptor %>"
+                      },
+                      "label": "Type",
+                      "columnId": "type",
+                      "type": "column"
+                    },
+                    {
+                      "cellTemplate": {
+                        "type": "externalLink",
+                        "descriptor": "Open Link",
+                        "url": "<% suggestion.url %>"
+                      },
+                      "label": "Link",
+                      "columnId": "link",
+                      "type": "column"
+                    }
+                  ]
+                },
+                {
+                  "id": "textCaseTitle",
+                  "type": "text",
+                  "label": "Case Title",
+                  "value": "New Case From Workday Extend",
+                  "required": true,
+                  "valueOutBinding": "createCase.title",
+                  "onChange": "<% //Enforce 100 character limit on field per the helpCase API
+                               if (!empty(self.value))
+{ if(validate:match('^.{0,1000}', self.value))
+{ self.clearError() } else { self.setError('Case Titles must be 100 characters or less.') } }
+                                   else { self.clearError() } %>"
+                },
+                {
+                  "id": "textAreaCaseDetails",
+                  "type": "textArea",
+                  "label": "Case Details",
+                  "value": "More details about the issue.",
+                  "required": true,
+                  "valueOutBinding": "createCase.detailedMessage"
+                },
+                {
+                  "type": "fileUploader",
+                  "required": false,
+                  "id": "fileUploaderCaseAttachment",
+                  "label": "Case Attachment",
+                  "singular": "<% true %>",
+                  "compact": "<% false %>",
+                  "fileTypes": "<%
+                                var supportedFileTypes = configuration.data[0].fileConfigurations.supportedFileTypes;
+                                var supportedFileTypesAsCommaSepString = supportedFileTypes.map(x => { x.descriptor }).toString().stripPrefix('[').stripSuffix(']');
+                                supportedFileTypesAsCommaSepString;
+                                %>",
+                  "valueOutBinding": "uploadCaseAttachment:file",
+                  "maxImageDimension": 1024
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

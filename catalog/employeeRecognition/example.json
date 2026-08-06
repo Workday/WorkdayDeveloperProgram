@@ -1,0 +1,17 @@
+{
+  "title": "Employee Recognition",
+  "description": "Give feedback to your coworkers and even reward them with gift cards for their hard work.",
+  "type": "Extend App",
+  "components": [
+    "Presentation",
+    "Card",
+    "WQL"
+  ],
+  "products": [
+    "Workday Extend",
+    "Workday HCM"
+  ],
+  "authors": [],
+  "tutorial": "",
+  "source": "workday"
+}

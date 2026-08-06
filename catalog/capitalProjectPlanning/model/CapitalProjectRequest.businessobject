@@ -1,0 +1,196 @@
+{
+  "id": 5,
+  "name": "CapitalProjectRequest",
+  "label": "Capital Project Request",
+  "defaultSecurityDomains": [
+    "CapitalProjectPlanning",
+    "CapitalProjectPlanningAdministrator"
+  ],
+  "defaultCollection": {
+    "name": "capitalProjectRequests",
+    "label": "Capital Project Requests"
+  },
+  "fields": [
+    {
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "isReferenceId": true,
+      "label": "Request ID",
+      "type": "TEXT",
+      "name": "requestID",
+      "id": 1
+    },
+    {
+      "enableReportingFromTarget": false,
+      "secureByTarget": true,
+      "target": "COST_CENTER",
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "type": "SINGLE_INSTANCE",
+      "name": "costCenter",
+      "id": 2
+    },
+    {
+      "enableReportingFromTarget": false,
+      "secureByTarget": false,
+      "target": "COMPANY",
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "type": "SINGLE_INSTANCE",
+      "name": "company",
+      "id": 3
+    },
+    {
+      "enableReportingFromTarget": false,
+      "secureByTarget": true,
+      "target": "WORKER",
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "type": "SINGLE_INSTANCE",
+      "name": "requestedBy",
+      "id": 4
+    },
+    {
+      "enableIndex": false,
+      "isPurgeable": false,
+      "type": "BOOLEAN",
+      "name": "newProcedures",
+      "id": 10
+    },
+    {
+      "enableIndex": false,
+      "isPurgeable": false,
+      "type": "BOOLEAN",
+      "name": "newRevenueOrCostSaving",
+      "id": 11
+    },
+    {
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "isReferenceId": false,
+      "type": "TEXT",
+      "name": "costSavingDetail",
+      "id": 12
+    },
+    {
+      "enableIndex": false,
+      "isPurgeable": false,
+      "type": "INTEGER",
+      "name": "estimatedUsefulLifeInYears",
+      "id": 13
+    },
+    {
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "isReferenceId": false,
+      "type": "TEXT",
+      "name": "purpose",
+      "id": 14
+    },
+    {
+      "precision": "DAY",
+      "enableIndex": false,
+      "isPurgeable": false,
+      "type": "DATE",
+      "name": "projectStart",
+      "id": 15
+    },
+    {
+      "precision": "DAY",
+      "enableIndex": false,
+      "isPurgeable": false,
+      "type": "DATE",
+      "name": "projectEnd",
+      "id": 16
+    },
+    {
+      "precision": "DAY",
+      "enableIndex": false,
+      "isPurgeable": false,
+      "type": "DATE",
+      "name": "inServiceDate",
+      "id": 18
+    },
+    {
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "isReferenceId": false,
+      "type": "TEXT",
+      "name": "timingJustification",
+      "id": 19
+    },
+    {
+      "enableReportingFromTarget": false,
+      "secureByTarget": false,
+      "target": "Agency",
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "type": "SINGLE_INSTANCE",
+      "name": "agency",
+      "id": 20
+    },
+    {
+      "target": "StrategicPillarAlignment",
+      "isPurgeable": false,
+      "type": "MULTI_INSTANCE",
+      "name": "alignmentAndCategorization",
+      "id": 21
+    },
+    {
+      "target": "RequestedService",
+      "isPurgeable": false,
+      "type": "MULTI_INSTANCE",
+      "name": "services",
+      "id": 22
+    },
+    {
+      "target": "RequestedFund",
+      "isPurgeable": false,
+      "type": "MULTI_INSTANCE",
+      "name": "fundsRequested",
+      "id": 23
+    },
+    {
+      "target": "CapitalRequestAttachment",
+      "isPurgeable": false,
+      "type": "MULTI_INSTANCE",
+      "name": "attachments",
+      "id": 24
+    },
+    {
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "isReferenceId": false,
+      "type": "TEXT",
+      "name": "equipmentLeadTime",
+      "id": 25
+    },
+    {
+      "target": "AdditionalData",
+      "isPurgeable": false,
+      "type": "MULTI_INSTANCE",
+      "name": "additionalData",
+      "id": 26
+    },
+    {
+      "enableReportingFromTarget": false,
+      "secureByTarget": false,
+      "target": "CapitalProjectRequestHeader",
+      "isPurgeable": false,
+      "useForDisplay": true,
+      "type": "SINGLE_INSTANCE",
+      "name": "requestHeader",
+      "id": 27
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "id": "locations",
+  "responseCode": 200,
+  "responseBody": {
+    "data": {
+      "locations": {
+        "data": [
+          {
+            "location": {
+              "workdayID": {
+                "id": "c2215e4e5d6e413aa972fc4d22f37870"
+              },
+              "descriptor": "Dallas"
+            }
+          },
+          {
+            "location": {
+              "workdayID": {
+                "id": "d13a7c46a06443c4a33c09afbdf72c73"
+              },
+              "descriptor": "San Francisco"
+            }
+          },
+          {
+            "location": {
+              "workdayID": {
+                "id": "d13a7c46a06443c4a33c09afbdf72c73"
+              },
+              "descriptor": "San Francisco"
+            }
+          }
+        ],
+        "total": 7
+      }
+    }
+  }
+}

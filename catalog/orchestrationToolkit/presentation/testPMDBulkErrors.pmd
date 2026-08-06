@@ -1,0 +1,176 @@
+{
+  "_pagePurpose1": "This page uses a bulk call to a Model REST API and applies a pattern for handling errors in the bulk call.",
+  "_pagePurpose2": "Note: this does not utilize Orchestrations, but it is a good general pattern for handling errors on bulk calls!",
+  "id": "testPMDBulkErrors",
+  "script": "<%
+             const getGridRowsWithStatus = function(){
+                // Get the Grid data and prepare a simplified format for passing to the next page
+                const myGridRows = bulkRows.getRows();
+                const newGridRows = myGridRows.map(row => { 
+                  {
+                    'column1': row.childrenMap.colStart.value[0],
+                    'column2': row.childrenMap.colHandoff.value[0],
+                    'status' : 201,
+                    'message' : 'good'
+                  } 
+                });
+
+                 // Now loop through the responses, applying the correct response to each row from the grid
+                let rowCounter = 0;
+
+                for (let newRow : newGridRows) {
+                  const postRow = workerPOST.data[rowCounter];
+                  newRow.status = postRow.status;
+
+                  if (newRow.status != 201) { 
+                    newRow.message = postRow.body.error; 
+                  }
+
+                  rowCounter += 1;
+                }
+
+                // Now filter out the grid rows that went through, and only pass the error records back
+                const failureRows = newGridRows.filter(tempRow => {tempRow.status != 201});
+                return failureRows
+             }
+
+             %>",
+  "endPoints": [
+    {
+      "baseUrlType": "workday-common",
+      "name": "allWorkers",
+      "authType": "sso",
+      "url": "workers",
+      "_comment": "Please don't use isCollection in your real apps where you pull a list of workers. This leads to perf issues.",
+      "isCollection": true
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "baseUrlType": "workday-app",
+        "name": "workerPOST",
+        "authType": "sso",
+        "url": "bulkWorkersLists?bulk=true",
+        "httpMethod": "POST",
+        "onSend": "<% 
+          console.debug('data: ', self.data);
+          const postData = {'data': self.data};
+          return postData;
+        %>"
+      },
+      {
+        "type": "outboundVariable",
+        "name": "RestResponse",
+        "variableScope": "flow",
+        "values": [
+          {
+            "outboundPath": "wholeResponse",
+            "value": "<% json:asJSON(workerPOST) %>"
+          },
+          {
+            "outboundPath": "StatusFlagError",
+            "value": "<% return !empty workerPOST.data.find(entry => {entry.status != 201}) ?? false %>"
+          },
+          {
+            "outboundPath": "RowsMap",
+            "value": "<% getGridRowsWithStatus(); %>"
+          }
+        ]
+      }
+    ]
+  },
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Workday Extend"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "richText",
+          "enabled": false,
+          "label": "Instructions",
+          "value": "If you are logged in as <b>Logan</b> and gave <b>Manager</b> modify permissions on the <b>BulkWorkersDomain</B> security domain, using Logan's direct reports in the Starting Worker column will go through and anyone else will not (Betty Liu is a good example). Good records will be saved. If there are error records you will be rerouted to this page with the good records removed, and the error records presented with the error code. Fix the errors and click OK again to reprocess"
+        },
+        {
+          "type": "text",
+          "enabled": false,
+          "label": "Limits",
+          "value": "Please use this design pattern below 100 records in the grid. For sample code to limit a grid size, this has been limited to 10 records. A separate design pattern will be created using Orchestrations for larger datasets."
+        },
+        {
+          "type": "grid",
+          "id": "bulkRows",
+          "rows": "<% flowVariables.RowsMap %>",
+          "isArrayOutBinding": true,
+          "onRowAdd": "<%
+            const doNotAddRows = bulkRows.getRows().size() > 10;
+            bulkRows.setDoNotAdd(doNotAddRows);
+          %>",
+          "rowVariableName": "rosterRow",
+          "columns": [
+            {
+              "type": "column",
+              "columnId": "colStart",
+              "label": "Starting Worker",
+              "cellTemplate": {
+                "type": "dropdown",
+                "values": "<% allWorkers.data %>",
+                "displayKey": "descriptor",
+                "idKey": "id",
+                "valueOutBinding": "workerPOST.[].workerStarter.id",
+                "selectedValues": "<% [rosterRow.column1] ?? []  %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "colHandoff",
+              "label": "Handoff Worker",
+              "cellTemplate": {
+                "type": "dropdown",
+                "values": "<% allWorkers.data %>",
+                "displayKey": "descriptor",
+                "idKey": "id",
+                "valueOutBinding": "workerPOST.[].workerHandoff.id",
+                "selectedValues": "<% [rosterRow.column2] ?? []  %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "colStatus",
+              "label": "Status",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% rosterRow.status ?? ''  %>",
+                "enabled": false
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "colMessage",
+              "label": "Error Message",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% rosterRow.message ?? ''  %>",
+                "enabled": false
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

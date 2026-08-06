@@ -1,0 +1,187 @@
+{
+  "id": "install",
+  "endPoints": [
+    {
+      "name": "configureApp",
+      "url": "<% 'install/launch' %>",
+      "baseUrlType": "orchestrate",
+      "deferred": true,
+      "authType": "sso",
+      "httpMethod": "POST",
+      "onSend": "<%
+        self.data = {:};
+        self.data.option = operationName;
+        return self.data;
+
+      %>"
+    }
+  ],
+  "presentation": {
+    "standardEditButtonsHidden": true,
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "Installation Page"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "text",
+          "label": "Instructions",
+          "value": "Click the buttons in sequence to auto populate the app configuration.",
+          "enabled": "false"
+        },
+        {
+          "type": "section",
+          "horizontal": true,
+          "children": [
+            {
+              "type": "section",
+              "children": [
+                {
+                  "type": "pageActionButton",
+                  "id": "myPageActionButton1",
+                  "label": "Prism Table",
+                  "onClick": "<% 
+                            response1.value = configureApp.invoke({'operationName':'table'}); 
+                            %>"
+                }
+              ]
+            },
+            {
+              "type": "section",
+              "children": [
+                {
+                  "type": "textArea",
+                  "id": "response1",
+                  "label": "Response",
+                  "enabled": false,
+                  "value": "<%  %>"
+                }
+              ]
+            }
+          ]
+        },
+                {
+            "type" : "section",
+            "children" : [
+              {
+                "type" : "fieldSet",
+                "title" : "Download Sample File for Create Data Change Task",
+                "children" : [
+                          {
+        "type": "attachmentList",
+        "attachmentURL": "<% `{{apiGatewayEndpoint}}/orchestrate/v1/apps/{{site.applicationId}}/orchestrations/install/launch` %>",
+        "attachmentName": "sample.csv",
+        "attachmentAuth" : "sso",
+        "attachmentUriTemplate": "[Target]",
+        "instanceList": [
+          {
+            "action": "attachment",
+            "descriptor": "Sample CSV",
+            "mimeType": "text/csv",
+            "iconId": "mime_plain"
+          }
+        ]
+      }
+                ]
+              }
+            ]
+        },
+        {
+          "type": "text",
+          "enabled": false,
+          "label": "STOP",
+          "value": "Create Data Change Task in new tab before Proceeding"
+        },
+        {
+          "type": "section",
+          "horizontal": true,
+          "children": [
+            {
+              "type": "section",
+              "children": [
+                {
+                  "type": "pageActionButton",
+                  "id": "myPageActionButton2",
+                  "label": "Prism Data",
+                  "onClick": "<% 
+                            response2.value = configureApp.invoke({'operationName':'prism_data'}); 
+                            %>"
+                }
+              ]
+            },
+            {
+              "type": "section",
+              "children": [
+                {
+                  "type": "textArea",
+                  "id": "response2",
+                  "label": "Response",
+                  "enabled": false,
+                  "value": "<%  %>"
+                }
+              ]
+            }
+          ]
+        },
+
+      {
+          "type": "text",
+          "enabled": false,
+          "label": "STOP",
+          "value": "Create & Configure the domain DataCorrections in App Manager in new tab before Proceeding"
+        },
+        {
+          "type": "text",
+          "enabled": false,
+          "label": "STOP",
+          "value": "Activate Pending Security Changes in new tab before proceeding."
+        },
+       {
+          "type": "section",
+          "horizontal": true,
+          "children": [
+            {
+              "type": "section",
+              "children": [
+                {
+                  "type": "pageActionButton",
+                  "id": "myPageActionButton4",
+                  "label": "Extend Data",
+                  "onClick": "<% 
+                            response4.value = configureApp.invoke({'operationName':'extend_data'}); 
+                            %>"
+                }
+              ]
+            },
+            {
+              "type": "section",
+              "children": [
+                {
+                  "type": "textArea",
+                  "id": "response4",
+                  "label": "Response",
+                  "enabled": false,
+                  "value": "<%  %>"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By<br/><b>Workday Extend</b>"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "id": "fileUploaderRow",
+  "endPoints": [],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "attachmentList & fileUploaderRow"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+        "type": "pod",
+        "podId": "header"
+        }, 
+        {
+          "type": "fileUploader",
+          "id": "fileUploaderWithAttachmentList",
+          "label": "Review the document, and upload additional files:",
+          "valueOutBinding": "attachFiles",
+          "children": [
+            {
+              "type": "fileUploaderRow",
+              "attachment": {
+                "type": "attachmentList",
+                "attachmentURL": "https://www.workday.com/content/dam/web/en-us/documents/datasheets/datasheet-workday-human-capital-management.pdf",
+                "attachmentName": "datasheet-workday-human-capital-management.pdf",
+                "attachmentUriTemplate": "[Target]",
+                "instanceList": [
+                  {
+                    "action": "attachment",
+                    "descriptor": "Workday Human Capital Management Datasheet",
+                    "mimeType": "application/pdf",
+                    "iconId": "mime_pdf"
+                  }
+                ]
+              },
+              "fileName": "Workday Human Capital Management Datasheet",
+              "fileType": "application/pdf",
+              "allowRemove": "false"
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

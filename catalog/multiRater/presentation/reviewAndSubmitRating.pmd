@@ -1,0 +1,432 @@
+{
+  "id": "reviewAndSubmitRating",
+  "securityDomains": [ ],
+  "endPoints": [
+    {
+      "name": "eventStep",
+      "baseUrlType": "workday-bp",
+      "url": "<% 'eventSteps/' + queryParams.eventStepId %>",
+      "authType": "sso",
+      "failOnStatusCodes": [
+        {
+          "code": 400
+        },
+        {
+          "code": 403
+        }
+      ]
+    },
+    {
+      "name": "event",
+      "baseUrlType": "workday-bp",
+      "url": "<% 'events/' + eventStep.event.id %>",
+      "authType": "sso",
+      "exclude": "<% empty(eventStep.event.id) %>",
+      "failOnStatusCodes": [
+        {
+          "code": 400
+        },
+        {
+          "code": 403
+        }
+      ]
+    },
+    {
+      "name": "getMultiRater",
+      "baseUrlType": "app",
+      "url": "<% 'multiRaterForEmployeeReviews/' + event['for'].id %>",
+      "authType": "sso",
+      "exclude": "<% empty(event['for'].id) %>",
+      "failOnStatusCodes": [
+        {
+          "code": 400
+        },
+        {
+          "code": 403
+        }
+      ]
+    },
+    {
+      "name": "getManagerRating",
+      "baseUrlType": "workday-orchestrate",
+      "url": "<% 'getManagerRating/launch?reviewWID=' 
+      + getMultiRater.reviewWID + 
+      '&ratingScaleWID='
+      + getMultiRater.ratingID %>",
+      "httpMethod": "GET",
+      "authType": "sso"
+    },
+    {
+      "name": "getManagerComment",
+      "baseUrlType": "workday-orchestrate",
+      "url": "<% 'getManagerComment/launch?reviewWID=' 
+      + getMultiRater.reviewWID %>",
+      "httpMethod": "GET",
+      "authType": "sso"
+    },
+    {
+      "name": "getRatings",
+      "baseUrlType": "workday-orchestrate",
+      "url": "<% 'getRatings/launch?ratingScaleWID=' 
+      + getMultiRater.ratingID %>",
+      "httpMethod": "GET",
+      "authType": "sso"
+    },
+    {
+      "name": "getReviewerRating1",
+      "baseUrlType": "workday-orchestrate",
+      "url": "<% 'getRatingLabelAndValue/launch?ratingScaleWID=' + getMultiRater.ratingID 
+      + '&ratingID=' + getMultiRater.reviewerRating1 %>",
+      "httpMethod": "GET",
+      "authType": "sso",
+      "exclude": "<% empty getMultiRater.reviewerRating1 %>"
+    },
+    {
+      "name": "getReviewerRating2",
+      "baseUrlType": "workday-orchestrate",
+      "url": "<% 'getRatingLabelAndValue/launch?ratingScaleWID=' + getMultiRater.ratingID 
+      + '&ratingID=' + getMultiRater.reviewerRating2 %>",
+      "httpMethod": "GET",
+      "authType": "sso",
+      "exclude": "<% empty getMultiRater.reviewerRating2 %>"
+    },
+    {
+      "name": "getReviewerRating3",
+      "baseUrlType": "workday-orchestrate",
+      "url": "<% 'getRatingLabelAndValue/launch?ratingScaleWID=' + getMultiRater.ratingID 
+      + '&ratingID=' + getMultiRater.reviewerRating3 %>",
+      "httpMethod": "GET",
+      "authType": "sso",
+      "exclude": "<% empty getMultiRater.reviewerRating3 %>"
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "updateRating",
+        "baseUrlType": "workday-orchestrate",
+        "url": "<% 'updateRating/launch' %>",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "onSend": "<% 
+        console.info('updateRating', json:asJSON(self.data));
+        return self.data;
+        %>",
+        "values": [
+          {
+            "outboundPath": "reviewWID",
+            "value": "<% getMultiRater.reviewWID %>"
+          },
+          {
+            "outboundPath": "ratingID",
+            "value": "<% finalRating.value[0] %>"
+          }
+        ]
+      },
+      {
+        "name": "updateMultiRater",
+        "baseUrlType": "app",
+        "url": "<% 'multiRaterForEmployeeReviews/' + getMultiRater.id %>",
+        "httpMethod": "PATCH",
+        "allowEmptyValue": true,
+        "authType": "sso",
+        "onSend": "<% return self.data; %>"
+      },
+      {
+        "name": "submitStep",
+        "baseUrlType": "workday-bp",
+        "url": "eventSteps/<% queryParams.eventStepId %>/submit",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "onSend": "<% return self.data; %>",
+        "values": [
+          {
+            "outboundPath": "stepAction.id",
+            "value": "<% //this action page is ultimately just a PMD; when the information is submitted we need to
+                      //advance the BP by calling the BP event with this exact value, which corresponds to the 'submit' step action ID
+                      //this WID corrresponds to the step action ID of 'submitted'
+                      'd9e4223e446c11de98360015c5e6daf6' %>"
+          }
+        ]
+      }
+    ]
+  },
+  "script": "<%
+    var calcRating = function(currentValue) {
+      
+      var ratings = getRatings.ratingData;
+      var sumOfWeights = (weight0.value ?? 0) + (weight1.value ?? 0) + (weight2.value ?? 0) + (weight3.value ?? 0);
+      var ratingValueByWeights = number:toBigDecimal(((getManagerRating.managerRatingValue ?? 0)*(weight0.value ?? 0)) + ((getReviewerRating1.returnRatingValue ?? 0)*(weight1.value ?? 0)) + ((getReviewerRating2.returnRatingValue ?? 0)*(weight2.value ?? 0)) + ((getReviewerRating3.returnRatingValue ?? 0)*(weight3.value ?? 0)), 2, 'UNNECESSARY');
+      var calculatedRatingValue = (sumOfWeights != 0) ? ratingValueByWeights/sumOfWeights : null;
+
+      totalWeight.value = sumOfWeights;
+      
+      if (calculatedRatingValue != null)
+      {
+        ratings.forEach( x =>
+        {
+          if(calculatedRatingValue >= x.ratingRangeBegin && calculatedRatingValue <= x.ratingRangeEnd)
+          {
+            calculatedRating.value = x.ratingName;
+            exactCalculatedRatingValue.value = calculatedRatingValue;
+            ratingUniqueId.value = x.ratingId;
+            ratingMax.value = x.ratingRangeEnd;
+            ratingMin.value = x.ratingRangeBegin;
+          }
+        }); 
+      } 
+      else 
+      {
+        calculatedRating.value = '';
+      }             
+    }             
+  %>",
+  "presentation": {
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "Review and Submit Final Rating for <% getMultiRater.forWorker.descriptor  %>"
+    },
+    "body": {
+      "type": "fieldSet",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "section",
+          "horizontal": true,
+          "id": "managerEvaluation",
+          "label": "Manager Evaluation",
+          "children": [
+            {
+              "type": "readOnlyText",
+              "id": "managerName",
+              "label": "Manager Name",
+              "value": "<% getMultiRater.createdBy.descriptor %>"
+            },
+            {
+              "type": "readOnlyText",
+              "id": "managerRating",
+              "label": "Rating",
+              "value": "<% getManagerRating.managerRatingLabel %>"
+            },
+            {
+              "type": "number",
+              "id": "weight0",
+              "label": "Weight",
+              "onChange": "<% calcRating(self.getValue()); %>"
+            },
+            {
+              "enabled": false,
+              "type": "richText",
+              "id": "managerComment",
+              "label": "Comment",
+              "value": "<% getManagerComment.managerComment %>"
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "id": "additionalReviews",
+          "label": "Additional Reviewer Responses",
+          "children": [
+            {
+              "horizontal": true,
+              "visible": "<% ! empty getMultiRater.reviewer1 %>",
+              "type": "section",
+              "children": [
+                {
+                  "type": "readOnlyText",
+                  "id": "Rater1Name",
+                  "label": "Multiple Rater Name",
+                  "value": "<% getMultiRater.reviewer1.descriptor ?: '' %>"
+                },
+                {
+                  "type": "readOnlyText",
+                  "id": "ReviewerRating1",
+                  "label": "Rating",
+                  "value": "<% getReviewerRating1.returnRatingLabel ?: '' %>"
+                },
+                {
+                  "type": "number",
+                  "id": "weight1",
+                  "label": "Weight",
+                  "onChange": "<% calcRating(self.getValue()); %>"
+                },
+                {
+                  "type": "richText",
+                  "enabled": false,
+                  "id": "reviewerComment1",
+                  "label": "Comment",
+                  "value": "<% getMultiRater.reviewerComment1 ?? '' %>"
+                }
+              ],
+              "id": "reviewer1"
+            },
+            {
+              "horizontal": true,
+              "visible": "<% ! empty getMultiRater.reviewer2 %>",
+              "type": "section",
+              "children": [
+                {
+                  "type": "readOnlyText",
+                  "id": "Rater2Name",
+                  "label": "Multiple Rater Name",
+                  "value": "<% getMultiRater.reviewer2.descriptor ?? '' %>"
+                },
+                {
+                  "type": "readOnlyText",
+                  "id": "ReviewerRating2",
+                  "label": "Rating",
+                  "value": "<% getReviewerRating2.returnRatingLabel ?? '' %>"
+                },
+                {
+                  "type": "number",
+                  "id": "weight2",
+                  "label": "Weight",
+                  "onChange": "<% calcRating(self.getValue()); %>"
+                },
+                {
+                  "type": "richText",
+                  "enabled": false,
+                  "id": "reviewerComment2",
+                  "label": "Comment",
+                  "value": "<% getMultiRater.reviewerComment2 ?? '' %>"
+                }
+              ],
+              "id": "reviewer2"
+            },
+            {
+              "horizontal": true,
+              "visible": "<% ! empty getMultiRater.reviewer3 %>",
+              "type": "section",
+              "children": [
+                {
+                  "type": "readOnlyText",
+                  "id": "Rater3Name",
+                  "label": "Multiple Rater Name",
+                  "value": "<% getMultiRater.reviewer3.descriptor ?? '' %>"
+                },
+                {
+                  "type": "readOnlyText",
+                  "id": "ReviewerRating3",
+                  "label": "Rating",
+                  "value": "<% getReviewerRating3.returnRatingLabel ?? '' %>"
+                },
+                {
+                  "type": "number",
+                  "id": "weight3",
+                  "label": "Weight",
+                  "disabled": true,
+                  "onChange": "<% calcRating(self.getValue()); %>"
+                },
+                {
+                  "type": "richText",
+                  "enabled": false,
+                  "id": "reviewerComment3",
+                  "label": "Comment",
+                  "value": "<% getMultiRater.reviewerComment3 ?? '' %>"
+                }
+              ],
+              "id": "reviewer3"
+            },
+            {
+              "horizontal": true,
+              "type": "section",
+              "children": [
+                {
+                  "enabled": false,
+                  "type": "text",
+                  "id": "calculatedRating",
+                  "label": "Calculated Rating"
+                },
+                {
+                  "enabled": false,
+                  "visible": false,
+                  "type": "number",
+                  "id": "exactCalculatedRatingValue",
+                  "label": "Exact Calculated Rating Value"
+                },
+                {
+                  "enabled": false,
+                  "visible": false,
+                  "type": "text",
+                  "id": "ratingUniqueId",
+                  "label": "Rating Unique ID"
+                },
+                {
+                  "enabled": false,
+                  "visible": false,
+                  "type": "text",
+                  "id": "ratingMin",
+                  "label": "Rating Min"
+                },
+                {
+                  "enabled": false,
+                  "visible": false,
+                  "type": "text",
+                  "id": "ratingMax",
+                  "label": "Rating Max"
+                },
+                {
+                  "enabled": false,
+                  "type": "number",
+                  "id": "totalWeight",
+                  "label": "Total Weight"
+                }
+              ],
+              "id": "finalRatingSection"
+            },
+            {
+              "horizontal": true,
+              "type": "section",
+              "id": "confirmation",
+              "children": [
+                {
+                  "required": true,
+                  "type": "instanceList",
+                  "id": "finalRating",
+                  "label": "Final Rating",
+                  "idKey": "ratingId",
+                  "displayKey": "ratingName",
+                  "values": "<% getRatings.ratingData ?? [] %>"
+                },
+                {
+                  "required": true,
+                  "type": "checkBox",
+                  "id": "confirmationCheckBox",
+                  "label": "Confirmation",
+                  "helpText": "Submitting this rating will override the Manager Rating for the employee review."
+                },
+                {
+                  "visible": false,
+                  "enabled": false,
+                  "type": "text",
+                  "id": "ConfirmationText",
+                  "value": "Submitting this rating will override the Manager Rating for the employee review."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "visible": false,
+          "type": "readOnlyText",
+          "id": "multiRatingData",
+          "label": "Multi Rating Data!",
+          "value": "<% getMultiRater %>"
+        },
+        {
+          "visible": false,
+          "type": "readOnlyText",
+          "id": "multiRatingID",
+          "label": "Multi Rating ID!",
+          "value": "<% getMultiRater.id %>"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer"
+    },
+    "microConclusion": true
+  }
+}

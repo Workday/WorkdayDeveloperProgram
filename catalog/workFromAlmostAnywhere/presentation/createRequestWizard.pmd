@@ -1,0 +1,32 @@
+{
+  "id": "createRequestWizard",
+  "endPoints": [ ],
+  "presentation": {
+    "body": {
+      "type": "editWizard",
+      "title": "Work From Almost Anywhere",
+      "subtitle": "New Request",
+      "summarySettings": {
+        "enabled": true,
+        "label": "Review Request"
+      },
+      "editTasks": [
+        {
+          "label": "Create Request",
+          "task": {
+            "taskId": "createRequest"
+          }
+        }
+      ],
+      "conclusion": {
+        "task": {
+          "taskId": "requestHub",
+          "parameters": {
+            "message": "Request has been submitted."
+          }
+        },
+        "render": true
+      }
+    }
+  }
+}

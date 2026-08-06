@@ -1,0 +1,6 @@
+{
+  "id": 1,
+  "name": "BulkWorkersDomain",
+  "label": "Bulk Testing Domain",
+  "enabledForPageSecurity": false
+}

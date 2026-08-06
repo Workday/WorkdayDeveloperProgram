@@ -1,0 +1,127 @@
+var getPokemonData = function() {
+  var chartData = [
+    {
+      "pokemon": "Cloyster",
+      "type": "Water",
+      "stats": {
+        "hp": 108,
+        "attack": 130,
+        "defense": 84,
+        "speed": 160
+      },
+      "level": {
+        "startLevel": 18,
+        "currentLevel": 25,
+        "levelToEvolve": 30
+      },
+      "stage": 2
+    },
+    {
+      "pokemon": "Meowth",
+      "type": "Normal",
+      "stats": {
+        "hp": 71,
+        "attack": 53,
+        "defense": 78,
+        "speed": 65
+      },
+      "level": {
+        "startLevel": 2,
+        "currentLevel": 5,
+        "levelToEvolve": 15
+      },
+      "stage": 1
+    },
+    {
+      "pokemon": "Poliwhirl",
+      "type": "Water",
+      "stats": {
+        "hp": 162,
+        "attack": 180,
+        "defense": 150,
+        "speed": 120
+      },
+      "level": {
+        "startLevel": 27,
+        "currentLevel": 30,
+        "levelToEvolve": 55
+      },
+      "stage": 3
+    },
+    {
+      "pokemon": "Rattata",
+      "type": "Normal",
+      "stats": {
+        "hp": 18,
+        "attack": 55,
+        "defense": 26,
+        "speed": 89
+      },
+      "level": {
+        "startLevel": 15,
+        "currentLevel": 19,
+        "levelToEvolve": 20
+      },
+      "stage": 1
+    },
+    {
+      "pokemon": "Dragonair",
+      "type": "Dragon",
+      "stats": {
+        "hp": 200,
+        "attack": 250,
+        "defense": 180,
+        "speed": 170
+      },
+      "level": {
+        "startLevel": 40,
+        "currentLevel": 50,
+        "levelToEvolve": 60
+      },
+      "stage": 2
+    }
+  ]
+  return chartData
+}
+
+var getSimplePokemonData = function() {
+  var chartData = [
+    {
+      "pokemon": "Cloyster",
+      "type": "Water",
+      "stage": 2,
+      "level": 18
+    },
+    {
+      "pokemon": "Meowth",
+      "type": "Normal",
+      "stage": 1,
+      "level": 26
+    },
+    {
+      "pokemon": "Poliwrath",
+      "type": "Water",
+      "stage": 3,
+      "level": 32
+    },
+    {
+      "pokemon": "Rattata",
+      "type": "Normal",
+      "stage": 1,
+      "level": 4
+    },
+    {
+      "pokemon": "Dragonair",
+      "type": "Dragon",
+      "stage": 2,
+      "level": 35
+    }
+  ]
+  return chartData
+}
+
+
+{
+  "getPokemonData": getPokemonData,
+  "getSimplePokemonData": getSimplePokemonData
+}

@@ -1,0 +1,9 @@
+{
+  "id": 1,
+  "name": "CreateRecognitionCard",
+  "label": "Create Recognition Card",
+  "securityDomains": [
+    "ManageEmployeeRecognition"
+  ],
+  "routePath": "/createRecognitionCard"
+}

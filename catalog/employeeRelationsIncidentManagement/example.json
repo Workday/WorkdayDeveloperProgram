@@ -1,0 +1,21 @@
+{
+  "title": "Employee Relations Incident Management",
+  "description": "Enable HR to manage protected cases of HR incidents",
+  "type": "Extend App",
+  "components": [
+    "Presentation",
+    "Model",
+    "Orchestration",
+    "WQL",
+    "Template"
+  ],
+  "products": [
+    "Workday Extend",
+    "Workday Orchestrate",
+    "Workday HCM",
+    "Workday RaaS"
+  ],
+  "authors": [],
+  "tutorial": "https://forum.developer.workday.com/t/app-catalog-app-employee-relations-incident-management/30999",
+  "source": "workday"
+}

@@ -1,0 +1,50 @@
+{
+  "id": "ticketManage",
+  "_comment": "To be replaced with an endpoint + model",
+  "include": [
+    "tickets.script"
+  ],
+  "endPoints": [ ],
+  "outboundData": {
+    "outboundEndPoints": [ ]
+  },
+  "presentation": {
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "Ticket - <% tickets.getTicket(queryParams.ticketId).name %>"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "richText",
+          "value": "<b>Important!</b> This is left as an example of how edit pages can be woven into the application. Given that all of the data here is mocked, nothing will actually be persisted upon submit!",
+          "enabled": "false"
+        },
+        {
+          "type": "text",
+          "label": "Identifier",
+          "enabled": false,
+          "value": "<% tickets.getTicket(queryParams.ticketId).id %>"
+        },
+        {
+          "type": "text",
+          "label": "Name",
+          "value": "<% tickets.getTicket(queryParams.ticketId).name %>"
+        },
+        {
+          "type": "radioGroup",
+          "values": "<% tickets.getAllStatuses() %>",
+          "selectedValues": "<% [tickets.getTicket(queryParams.ticketId).status] %>",
+          "label": "Status"
+        },
+        {
+          "type": "textArea",
+          "value": "<% tickets.getTicket(queryParams.ticketId).blurb ?? '' %>",
+          "label": "Blurb"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,155 @@
+{
+  "id": "labeledImage",
+  "endPoints": [ ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "labeledImage"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "sorted": false,
+      "children": [
+        {
+          "type": "pod",
+          "podId": "header"
+        },
+        {
+          "type": "labeledImage",
+          "charm": "FOLDER",
+          "label": "folder charm"
+        },
+        {
+          "type": "labeledImage",
+          "charm": "SUBFOLDER",
+          "label": "subfolder charm"
+        },
+        {
+          "type": "labeledImage",
+          "charm": "CREATE",
+          "label": "create charm"
+        },
+        {
+          "type": "labeledImage",
+          "charm": "SEARCH",
+          "label": "search charm"
+        },
+        {
+          "type": "labeledImage",
+          "charm": "INSTANCE",
+          "label": "instance charm"
+        },
+        {
+          "type": "labeledImage",
+          "charm": "SEARCH_ICON",
+          "label": "search icon charm"
+        },
+        {
+          "type": "labeledImage",
+          "charm": "AOL_CHAT",
+          "label": "aol chat charm"
+        },
+        {
+          "type": "labeledImage",
+          "charm": "ADDRESS",
+          "label": "address charm"
+        },
+        {
+          "type": "labeledImage",
+          "charm": "EMAIL",
+          "label": "email charm"
+        },
+        {
+          "type": "labeledImage",
+          "charm": "FACEBOOK",
+          "label": "facebook charm"
+        },
+        {
+          "type": "labeledImage",
+          "charm": "GOOGLE",
+          "label": "google charm"
+        },
+        {
+          "type": "labeledImage",
+          "charm": "LINKED_IN",
+          "label": "linkedIn charm"
+        },
+        {
+          "type": "labeledImage",
+          "charm": "IBM_CONNECTIONS",
+          "label": "ibm connections charm"
+        },
+        {
+          "type": "labeledImage",
+          "charm": "LOCATION",
+          "label": "location charm"
+        },
+        {
+          "type": "labeledImage",
+          "charm": "LYNC_CHAT",
+          "label": "lync chat charm"
+        },
+        {
+          "type": "labeledImage",
+          "charm": "MSN_CHAT",
+          "label": "msn chat charm"
+        },
+        {
+          "type": "labeledImage",
+          "charm": "SKYPE_CHAT",
+          "label": "skype chat charm"
+        },
+        {
+          "type": "labeledImage",
+          "charm": "XING",
+          "label": "xing charm"
+        },
+        {
+          "type": "labeledImage",
+          "charm": "YAHOO_CHAT",
+          "label": "yahoo chat charm"
+        },
+        {
+          "type": "labeledImage",
+          "charm": "YELP",
+          "label": "yelp charm"
+        },
+        {
+          "type": "labeledImage",
+          "charm": "SAML",
+          "label": "saml charm"
+        },
+        {
+          "type": "labeledImage",
+          "charm": "POSTED_DATE",
+          "label": "posted date charm"
+        },
+        {
+          "type": "labeledImage",
+          "charm": "JOB_REQ",
+          "label": "job req charm"
+        },
+        {
+          "type": "labeledImage",
+          "charm": "JOB_TYPE",
+          "label": "job type charm"
+        },
+        {
+          "type": "labeledImage",
+          "imageURL": "https://i.imgur.com/faX6J5q.png",
+          "label": "No Charm - imageURL"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "pod",
+          "podId": "footer"
+        }
+      ]
+    }
+  }
+}

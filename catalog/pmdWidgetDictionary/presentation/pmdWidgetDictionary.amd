@@ -1,0 +1,673 @@
+{
+  "appProperties": [],
+  "flowDefinitions": [
+    {
+      "id": "calendarPopup",
+      "flowSteps": [
+        {
+          "id": "startCalendarEventPopupMicro",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "concludeCalendarEventPopupMicro",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "popup"
+        },
+        {
+          "id": "concludeCalendarEventPopupMicro",
+          "endsFlow": true,
+          "taskId": "micro"
+        }
+      ]
+    },
+    {
+      "id": "calendarSubmitMicroFlow",
+      "flowSteps": [
+        {
+          "id": "startCalendarSubmitMicro",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "concludeCalendarSubmitMicro",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "submit"
+        },
+        {
+          "id": "concludeCalendarSubmitMicro",
+          "endsFlow": true,
+          "taskId": "micro"
+        }
+      ]
+    },
+    {
+      "id": "microFirstPageFlow",
+      "name": "microFirstPageFlow",
+      "flowSteps": [
+        {
+          "id": "popup",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "nextFull",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "popupMicroFirst"
+        },
+        {
+          "id": "nextFull",
+          "taskId": "nextPage"
+        }
+      ]
+    },
+    {
+      "id": "dropdownFlow",
+      "flowSteps": [
+        {
+          "id": "dropdown",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "dropdownHome",
+              "condition": "true"
+            }
+          ],
+          "taskId": "dropdown"
+        },
+        {
+          "id": "dropdownHome",
+          "taskId": "home"
+        }
+      ]
+    },
+    {
+      "id": "simpleTypesFlow",
+      "flowSteps": [
+        {
+          "id": "simpleTypes",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "simpleTypesHome",
+              "condition": "true"
+            }
+          ],
+          "taskId": "simpleTypes"
+        },
+        {
+          "id": "simpleTypesHome",
+          "taskId": "home"
+        }
+      ]
+    },
+    {
+      "id": "instanceListFlow",
+      "flowSteps": [
+        {
+          "id": "instanceList",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "instanceListHome",
+              "condition": "true"
+            }
+          ],
+          "taskId": "instanceList"
+        },
+        {
+          "id": "instanceListHome",
+          "taskId": "home"
+        }
+      ]
+    },
+    {
+      "id": "extenderFlow",
+      "flowSteps": [
+        {
+          "id": "extenderFlowStep1",
+          "transitions": [
+            {
+              "id": "extenderFlowStep1a",
+              "order": "a",
+              "value": "extenderFlowStep2",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "bpExtender"
+        },
+        {
+          "id": "extenderFlowStep2",
+          "endsFlow": true,
+          "taskId": "bpExtenderConfirm"
+        }
+      ]
+    },
+        {
+      "id": "taskMicroFlow",
+      "flowSteps": [
+        {
+          "id": "taskMicroFlowStep1",
+          "transitions": [
+            {
+              "id": "taskMicroFlowStep1a",
+              "order": "a",
+              "value": "taskMicroFlowStep2",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "task"
+        },
+        {
+          "id": "taskMicroFlowStep2",
+          "endsFlow": true,
+          "taskId": "microConclusion"
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "sidebar",
+      "routingPattern": "/sidebar",
+      "page": {
+        "id": "sidebar"
+      }
+    },
+    {
+      "id": "popup",
+      "routingPattern": "/popup",
+      "page": {
+        "id": "popup"
+      }
+    },
+    {
+      "id": "calendar",
+      "routingPattern": "/calendar",
+      "page": {
+        "id": "calendar"
+      }
+    },
+    {
+      "id": "micro",
+      "routingPattern": "/micro",
+      "page": {
+        "id": "micro"
+      }
+    },
+    {
+      "id": "submit",
+      "routingPattern": "/submit",
+      "page": {
+        "id": "submit"
+      }
+    },
+    {
+      "id": "popupMicroFirst",
+      "routingPattern": "/popupMicroFirst",
+      "page": {
+        "id": "popupMicroFirst"
+      }
+    },
+    {
+      "id": "nextPage",
+      "routingPattern": "/nextPage",
+      "page": {
+        "id": "nextPage"
+      }
+    },
+    {
+      "id": "home",
+      "routingPattern": "/",
+      "page": {
+        "id": "home"
+      }
+    },
+    {
+      "id": "simpleTypes",
+      "routingPattern": "simpleTypes",
+      "page": {
+        "id": "simpleTypes"
+      }
+    },
+    {
+      "id": "buttons",
+      "routingPattern": "buttons",
+      "page": {
+        "id": "buttons"
+      }
+    },
+    {
+      "id": "dropdown",
+      "routingPattern": "dropdown",
+      "page": {
+        "id": "dropdown"
+      }
+    },
+    {
+      "id": "instanceList",
+      "routingPattern": "instanceList",
+      "page": {
+        "id": "instanceList"
+      }
+    },
+    {
+      "id": "images",
+      "routingPattern": "images",
+      "page": {
+        "id": "images"
+      }
+    },
+    {
+      "id": "labeledImage",
+      "routingPattern": "labeledImage",
+      "page": {
+        "id": "labeledImage"
+      }
+    },
+    {
+      "id": "grids",
+      "routingPattern": "grids",
+      "page": {
+        "id": "grids"
+      }
+    },
+    {
+      "id": "sections",
+      "routingPattern": "sections",
+      "page": {
+        "id": "sections"
+      }
+    },
+    {
+      "id": "tabs",
+      "routingPattern": "tabs",
+      "page": {
+        "id": "tabs"
+      }
+    },
+    {
+      "id": "redirectQuery",
+      "routingPattern": "/redirectQuery",
+      "page": {
+        "id": "redirectQuery",
+        "descriptor": "Redirect with Query Parameter"
+      }
+    },
+    {
+      "id": "relatedAction",
+      "routingPattern": "relatedAction",
+      "page": {
+        "id": "relatedAction"
+      }
+    },
+    {
+      "id": "basicWidgets",
+      "routingPattern": "/basicWidgets",
+      "page": {
+        "id": "basicWidgets"
+      }
+    },
+    {
+      "id": "dropdownLaunch",
+      "routingPattern": "/dropdownLaunch",
+      "page": {
+        "id": "dropdownLaunch"
+      }
+    },
+    {
+      "id": "imagesOverview",
+      "routingPattern": "/imagesOverview",
+      "page": {
+        "id": "imagesOverview"
+      }
+    },
+    {
+      "id": "lists",
+      "routingPattern": "/lists",
+      "page": {
+        "id": "lists"
+      }
+    },
+    {
+      "id": "pageLayout",
+      "routingPattern": "/pageLayout",
+      "page": {
+        "id": "pageLayout"
+      }
+    },
+    {
+      "id": "editWizard",
+      "routingPattern": "/editWizard",
+      "page": {
+        "id": "editWizard"
+      }
+    },
+    {
+      "id": "educationAndEmployment",
+      "routingPattern": "/educationAndEmployment",
+      "page": {
+        "id": "educationAndEmployment"
+      }
+    },
+    {
+      "id": "resume",
+      "routingPattern": "/resume",
+      "page": {
+        "id": "resume"
+      }
+    },
+    {
+      "id": "references",
+      "routingPattern": "/references",
+      "page": {
+        "id": "references"
+      }
+    },
+    {
+      "id": "internalHireDetails",
+      "routingPattern": "/internalHireDetails",
+      "page": {
+        "id": "internalHireDetails"
+      }
+    },
+    {
+      "id": "personalInformation",
+      "routingPattern": "/personalInformation",
+      "page": {
+        "id": "personalInformation"
+      }
+    },
+    {
+      "id": "splashPage",
+      "routingPattern": "/splashPage",
+      "page": {
+        "id": "splashPage"
+      }
+    },
+    {
+      "id": "ticketView",
+      "routingPattern": "ticketView",
+      "page": {
+        "id": "ticketView"
+      }
+    },
+    {
+      "id": "ticketManage",
+      "routingPattern": "ticketManage",
+      "page": {
+        "id": "ticketManage"
+      }
+    },
+    {
+      "id": "ticketsListDetail",
+      "routingPattern": "ticketsListDetail",
+      "page": {
+        "id": "ticketsListDetail"
+      }
+    },
+    {
+      "id": "projectHub",
+      "routingPattern": "projectHub",
+      "page": {
+        "id": "projectHub"
+      }
+    },
+    {
+      "id": "projectTeam",
+      "routingPattern": "projectTeam",
+      "page": {
+        "id": "projectTeam"
+      }
+    },
+    {
+      "id": "projectHome",
+      "routingPattern": "projectHome",
+      "page": {
+        "id": "projectHome"
+      }
+    },
+    {
+      "id": "projectTickets",
+      "routingPattern": "projectTickets",
+      "page": {
+        "id": "projectTickets"
+      }
+    },
+    {
+      "id": "projectStatus",
+      "routingPattern": "projectStatus",
+      "page": {
+        "id": "projectStatus"
+      }
+    },
+    {
+      "id": "projectPlanning",
+      "routingPattern": "/projectPlanning",
+      "page": {
+        "id": "projectPlanning"
+      }
+    },
+    {
+      "id": "projectUserFeedback",
+      "routingPattern": "/projectUserFeedback",
+      "page": {
+        "id": "projectUserFeedback"
+      }
+    },
+    {
+      "id": "ticketCreate",
+      "routingPattern": "/ticketCreate",
+      "page": {
+        "id": "ticketCreate"
+      }
+    },
+    {
+      "id": "basicFormLayout",
+      "routingPattern": "/basicFormLayout",
+      "page": {
+        "id": "basicFormLayout"
+      }
+    },
+    {
+      "id": "areaLayout",
+      "routingPattern": "/areaLayout",
+      "page": {
+        "id": "areaLayout"
+      }
+    },
+    {
+      "id": "sortFilterEditGrid",
+      "routingPattern": "/sortFilterEditGrid",
+      "page": {
+        "id": "sortFilterEditGrid"
+      }
+    },
+    {
+      "id": "loops",
+      "routingPattern": "/loops",
+      "page": {
+        "id": "loops"
+      }
+    },
+    {
+      "id": "queryBuild",
+      "routingPattern": "/queryBuild",
+      "page": {
+        "id": "queryBuild"
+      }
+    },
+    {
+      "id": "attachmentList",
+      "routingPattern": "/attachmentList",
+      "page": {
+        "id": "attachmentList"
+      }
+    },
+    {
+      "id": "fileUploaderRow",
+      "routingPattern": "/fileUploaderRow",
+      "page": {
+        "id": "fileUploaderRow"
+      }
+    },
+    {
+      "id": "labeledThumbnail",
+      "routingPattern": "/labeledThumbnail",
+      "page": {
+        "id": "labeledThumbnail"
+      }
+    },
+    {
+      "id": "imageCardExample",
+      "routingPattern": "/imageCardExample",
+      "page": {
+        "id": "imageCardExample"
+      }
+    },
+    {
+      "id": "congratulationsPopup",
+      "routingPattern": "/congratulationsPopup",
+      "page": {
+        "id": "congratulationsPopup"
+      }
+    },
+    {
+      "id": "snapSlider",
+      "routingPattern": "/snapSlider",
+      "page": {
+        "id": "snapSlider"
+      }
+    },
+    {
+      "id": "templatedListItem",
+      "routingPattern": "/templatedListItem",
+      "page": {
+        "id": "templatedListItem"
+      }
+    },
+    {
+      "id": "progressIndicator",
+      "routingPattern": "/progressIndicator",
+      "page": {
+        "id": "progressIndicator"
+      }
+    },
+    {
+      "id": "superEdit",
+      "routingPattern": "/superEdit",
+      "page": {
+        "id": "superEdit"
+      }
+    },
+    {
+      "id": "monikerLevel",
+      "routingPattern": "/monikerLevel",
+      "page": {
+        "id": "monikerLevel"
+      }
+    },
+    {
+      "id": "simpleCard",
+      "routingPattern": "/simpleCard",
+      "page": {
+        "id": "simpleCard"
+      }
+    },
+    {
+      "id": "listCard",
+      "routingPattern": "/listCard",
+      "page": {
+        "id": "listCard"
+      }
+    },
+    {
+      "id": "bpExtender",
+      "routingPattern": "/bpExtender",
+      "page": {
+        "id": "bpExtender"
+      }
+    },
+    {
+      "id": "bpExtenderConfirm",
+      "routingPattern": "/bpExtenderConfirm",
+      "page": {
+        "id": "bpExtenderConfirm"
+      }
+    },
+    {
+      "id": "gridsEdit",
+      "routingPattern": "/gridsEdit",
+      "page": {
+        "id": "gridsEdit"
+      }
+    },
+    {
+      "id": "gridsView",
+      "routingPattern": "/gridsView",
+      "page": {
+        "id": "gridsView"
+      }
+    },    
+    {
+      "id": "task",
+      "routingPattern": "/task",
+      "page": {
+        "id": "task"
+      }
+    },
+    {
+      "id": "microConclusion",
+      "routingPattern": "/microConclusion",
+      "page": {
+        "id": "microConclusion"
+      }
+    },
+    {
+      "id": "linkToDelivered",
+      "routingPattern": "/linkToDelivered",
+      "page": {
+        "id": "linkToDelivered"
+      }
+    }
+  ],
+  "applicationId": "pmdWidgetDictionary",
+  "dataProviders": [
+    {
+      "key": "wdayRef",
+      "value": "<% apiGatewayEndpoint + '/referenceData' %>"
+    },
+    {
+      "key": "wdayCom",
+      "value": "<% apiGatewayEndpoint + '/common/v1' %>"
+    },
+    {
+      "key": "workday-wql",
+      "value": "<% apiGatewayEndpoint + '/wql/v1/' %>"
+    },
+    {
+      "key": "workday-staffing",
+      "value": "<% apiGatewayEndpoint + '/staffing/v4' %>"
+    },
+    {
+      "key": "workday-projects",
+      "value": "<% apiGatewayEndpoint + '/projects/v2Beta' %>"
+    },
+    {
+      "key": "workday-staffingv2",
+      "value": "<% apiGatewayEndpoint + '/staffing/v2' %>"
+    },
+    {
+      "key": "orchestration",
+      "value": "<% `{{apiGatewayEndpoint}}/orchestrate/v1/apps/{{site.applicationId}}/orchestrations/` %>"
+    }
+  ]
+}

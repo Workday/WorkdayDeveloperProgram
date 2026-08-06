@@ -1,0 +1,16 @@
+{
+  "title": "Workday Query Language (WQL)",
+  "description": "Compare organization data from the standard endpoint with the data from WQL.",
+  "type": "Reference",
+  "components": [
+    "Presentation",
+    "WQL"
+  ],
+  "products": [
+    "Workday Extend",
+    "Workday REST API"
+  ],
+  "authors": [],
+  "tutorial": "",
+  "source": "workday"
+}

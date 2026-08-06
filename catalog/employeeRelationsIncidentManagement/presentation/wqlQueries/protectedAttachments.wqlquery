@@ -1,0 +1,12 @@
+{
+  "id": "protectedAttachments",
+  "parameters": ["appId", "commentID"],
+  "query": "<%
+    `SELECT workdayID as id, fileName, mimeType, createdBy, createdDate, hideComment
+    FROM {{appId}}_protectedAttachments 
+    WHERE caseEntry = '{{commentID}}'` 
+  %>",
+  "limit": "100"
+}
+
+

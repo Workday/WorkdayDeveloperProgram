@@ -1,0 +1,9 @@
+{
+  "id": "lastGiftCard",
+  "parameters": ["start_date", "end_date", "workerId"],
+  "query": "
+    SELECT employee, actualBonus_Amount, one_TimePaymentEvent{effectiveDate} as Event 
+    FROM bonusAndOne_TimePayments (startDate ='<%start_date%>', endDate='<%end_date%>') 
+    WHERE plan in (27e0426346184fcc93e11ff21bcce203) AND employee in <% workerId %>
+  "
+}

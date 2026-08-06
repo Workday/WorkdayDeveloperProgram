@@ -1,0 +1,100 @@
+{
+  "appProperties": [ ],
+  "flowDefinitions": [
+    {
+      "id": "submitBadgePhotoFlow",
+      "flowSteps": [
+        {
+          "id": "UploadBadgePhoto",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "ConfirmBadgePhoto",
+              "condition": "<% flowVariables.validationResult.valid %>"
+            },
+            {
+              "order": "a",
+              "value": "UploadBadgePhoto",
+              "condition": "<% !flowVariables.validationResult.valid %>"
+            }
+          ],
+          "taskId": "UploadBadgePhoto"
+        },
+        {
+          "id": "ConfirmBadgePhoto",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "CompleteBadge",
+              "condition": "true"
+            }
+          ],
+          "taskId": "ConfirmBadgePhoto"
+        },
+        {
+          "id": "CompleteBadge",
+          "taskId": "CompleteBadge"
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "Home",
+      "routingPattern": "/",
+      "page": {
+        "id": "UploadBadgePhoto"
+      }
+    },
+    {
+      "id": "ReviewBadges",
+      "routingPattern": "/ReviewBadges",
+      "page": {
+        "id": "ReviewBadges"
+      }
+    },
+    {
+      "id": "ViewMyBadge",
+      "routingPattern": "/ViewMyBadge",
+      "page": {
+        "id": "ViewMyBadge"
+      }
+    },
+    {
+      "id": "CompleteBadge",
+      "routingPattern": "/CompleteBadge",
+      "page": {
+        "id": "CompleteBadge"
+      }
+    },
+    {
+      "id": "UploadBadgePhoto",
+      "routingPattern": "/UploadBadgePhoto",
+      "page": {
+        "id": "UploadBadgePhoto"
+      }
+    },
+    {
+      "id": "ConfirmBadgePhoto",
+      "routingPattern": "/ConfirmBadgePhoto",
+      "page": {
+        "id": "ConfirmBadgePhoto"
+      }
+    }
+  ],
+  "applicationId": "awsBadgeGenerator",
+  "dataProviders": [
+    {
+      "key": "orchestrate",
+      "value": "<% apiGatewayEndpoint + '/orchestrate/v1/apps/' + site.applicationId + '/orchestrations' %>"
+    },
+    {
+      "key": "app",
+      "value": "<% apiGatewayEndpoint + '/apps/' + site.applicationId + '/v1' %>"
+    },
+    {
+      "key": "workday-staffing",
+      "value": "<% apiGatewayEndpoint + '/staffing/v1' %>"
+    }
+  ]
+}

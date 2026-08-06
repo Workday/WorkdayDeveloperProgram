@@ -1,0 +1,232 @@
+{
+  "id": "recognitionSubmit",
+  "include": [
+    "safe.script"
+  ],
+  "securityDomains": [
+    "ManageEmployeeRecognition"
+  ],
+  "endPoints": [
+    {
+      "name": "selectedWorker",
+      "baseUrlType": "workday-common",
+      "url": "<% `/{{queryParams.workerId}}` %>",
+      "authType": "sso"
+    },
+    {
+      "name": "lastGiftCard",
+      "baseUrlType": "workday-wql",
+      "url": "/data",
+      "wqlQuery": {
+        "queryId": "lastGiftCard",
+        "parameters": {
+          "start_date": "<%
+ let end_date = date:getTodaysDateFormatted(date:getDateTimeZone(userTimeZone), 'yyyy-MM-dd');
+ 
+ date:parseDateString(end_date).minusYears(1).format('yyyy-MM-dd') 
+          
+%>",
+          "end_date": "<% date:getTodaysDateFormatted(date:getDateTimeZone(userTimeZone), 'yyyy-MM-dd') %>",
+          "workerId": "<% queryParams.workerId %>"
+        }
+      },
+      "authType": "sso"
+    }
+  ],
+  "onLoad": "<% pageVariables.existingGiftCard = lastGiftCard['data'] != []; %>",
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "anytimeFeedback",
+        "url": "<% `/workers/{{selectedWorker.id}}/anytimeFeedbackEvents` %>",
+        "baseUrlType": "workday-performance-enablement",
+        "authType": "sso",
+        "httpMethod": "POST",
+        "values": [
+          {
+            "outboundPath": "comment",
+            "value": "<% comment.value %>"
+          },
+          {
+            "outboundPath": "feedbackGivenDate",
+            "value": "<% date:getTodaysDateFormatted(date:getDateTimeZone(userTimeZone), 'yyyy-MM-dd')%>"
+          },
+          {
+            "outboundPath": "badge.id",
+            "value": "<% queryParams.feedbackBadgeId %>"
+          },
+          {
+            "outboundPath": "badge.descriptor",
+            "value": "<% queryParams.category %>"
+          },
+          {
+            "outboundPath": "comment",
+            "value": "<% comment.value %>"
+          },
+          {
+            "outboundPath": "hiddenFromManager",
+            "value": "<% false %>"
+          },
+          {
+            "outboundPath": "showFeedbackProviderName",
+            "value": "<% true %>"
+          }
+        ]
+      },
+      {
+        "name": "transitionOutboundVars",
+        "type": "outboundVariable",
+        "variableScope": "flow",
+        "values": [
+          {
+            "outboundPath": "withGiftcard",
+            "value": "<% queryParams.payment == '1' && !pageVariables.existingGiftCard %>"
+          },
+          {
+            "outboundPath": "workerId",
+            "value": "<% queryParams.workerId %>"
+          }
+        ]
+      },
+      {
+        "name": "oneTimePayment",
+        "url": "<% `/workers/{{selectedWorker.id}}/requestOneTimePayment` %>",
+        "exclude": "<% pageVariables.existingGiftCard %>",
+        "baseUrlType": "workday-compensation",
+        "authType": "sso",
+        "httpMethod": "POST",
+        "values": [
+          {
+            "outboundPath": "effectiveDate",
+            "value": "<% date:getTodaysDateFormatted(date:getDateTimeZone(userTimeZone), 'yyyy-MM-dd') %>"
+          },
+          {
+            "outboundPath": "oneTimePayments[0].oneTimePaymentPlan.id",
+            "_comment": "Gift card",
+            "value": "27e0426346184fcc93e11ff21bcce203"
+          },
+          {
+            "outboundPath": "oneTimePayments[0].oneTimePaymentPlan.descriptor",
+            "value": "Gift Card"
+          },
+          {
+            "outboundPath": "oneTimePayments[0].paymentCurrency.descriptor",
+            "value": "USD"
+          },
+          {
+            "outboundPath": "oneTimePayments[0].paymentCurrency.id",
+            "_comment": "USD",
+            "value": "9e996ffdd3e14da0ba7275d5400bafd4"
+          },
+          {
+            "outboundPath": "oneTimePayments[0].scheduledPaymentDate",
+            "value": "<% date:getTodaysDateFormatted(date:getDateTimeZone(userTimeZone), 'yyyy-MM-dd') %>"
+          },
+          {
+            "outboundPath": "oneTimePayments[0].sendToPayroll",
+            "value": "<% true %>"
+          }
+        ]
+      }
+    ],
+    "responseErrorDetail": {
+      "errorSummary": "<% error %>",
+      "errors": "<% list:mapAttribute(errors, 'error') %>"
+    }
+  },
+  "presentation": {
+    "micro": "true",
+    "headerSize": "HIDDEN",
+    "body": {
+      "type": "fieldSet",
+      "children": [
+        {
+          "type": "textArea",
+          "id": "queryparams",
+          "enabled": "false",
+          "render": "false",
+          "value": "<% `<h1>{{queryParams}}</h1>` %>"
+        },
+        {
+          "type": "richText",
+          "id": "employee",
+          "enabled": "false",
+          "value": "<% `<h1>{{queryParams.category}}</h1>`%>"
+        },
+        {
+          "type": "readOnlyText",
+          "label": "Name",
+          "id": "name",
+          "required": "true",
+          "value": "<% selectedWorker.descriptor %>",
+          "valueOutBinding": "name"
+        },
+        {
+          "type": "textArea",
+          "id": "comment",
+          "required": "true",
+          "label": "Feedback"
+        },
+        {
+          "type": "checkBox",
+          "label": "Would you like to include a gift card?",
+          "id": "withGiftCard",
+          "value": "<% false %>",
+          "onChange": "<%
+          expenseInfoFieldSet.setVisible(withGiftCard.value);
+        %>"
+        },
+        {
+          "type": "fieldSet",
+          "id": "expenseInfoFieldSet",
+          "title": "Selected Expense Info",
+          "visible": "<% withGiftCard.value %>",
+          "children": [
+            {
+              "type": "richText",
+              "id": "noteligible",
+              "enabled": "<% false %>",
+              "visible": "<% pageVariables.existingGiftCard %>",
+              "value": "<span style='color: red; font-size: 16px;'>Employee is not currently eligible for a gift card.</span>"
+            },
+            {
+              "type": "text",
+              "enabled": "false",
+              "visible": "<% pageVariables.existingGiftCard %>",
+              "value": "<% `Last reward: {{pageVariables.existingGiftCard ? lastGiftCard['data'][0]['Event'].effectiveDate : ''}} ` %>"
+            },
+            {
+              "type": "dropdown",
+              "selectedValues": "<% list:toList('$25') %>",
+              "label": "Amount",
+              "id": "amount",
+              "instanceList": [
+                {
+                  "id": "25",
+                  "descriptor": "$25"
+                },
+                {
+                  "id": "50",
+                  "descriptor": "$50"
+                }
+              ],
+              "required": "<% !pageVariables.existingGiftCard && withGiftCard.value == true %>",
+              "visible": "<% !pageVariables.existingGiftCard %>",
+              "valueOutBinding": "oneTimePayment.oneTimePayments[0].paymentAmount.value"
+            }
+          ]
+        },
+        {
+          "type": "editButtonBar",
+          "editButtons": [
+            {
+              "type": "editButton",
+              "buttonType": "PRIMARY",
+              "label": "Submit"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

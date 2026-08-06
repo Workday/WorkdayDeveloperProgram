@@ -1,0 +1,27 @@
+{
+  "appProperties": [ ],
+  "tasks": [
+    {
+      "id": "queryBuild",
+      "routingPattern": "/",
+      "page": {
+        "id": "queryBuild"
+      }
+    }
+  ],
+  "applicationId": "generateWQL",
+  "dataProviders": [
+    {
+      "key": "workday-common",
+      "value" : "<% `{{apiGatewayEndpoint}}/common/v1/` %>"
+    },
+    {
+      "key": "workday-wql",
+      "value" : "<% `{{apiGatewayEndpoint}}/wql/v1/` %>"
+    },
+    {
+      "key": "workday-dataQuery",
+      "value" : "<% `{{apiGatewayEndpoint}}/ml/dataQuery/v1/`  %>"
+    }
+  ]
+}

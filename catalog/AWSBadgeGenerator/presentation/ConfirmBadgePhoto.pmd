@@ -1,0 +1,109 @@
+{
+  "id": "ConfirmBadgePhoto",
+  "endPoints": [
+    {
+      "name": "workerSelf",
+      "baseUrlType": "workday-staffing",
+      "url": "/workers/me",
+      "authType": "sso",
+      "httpMethod": "GET"
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "createBadgeObject",
+        "baseUrlType": "app",
+        "url": "/badges",
+        "authType": "sso",
+        "httpMethod": "POST",
+        "onSend": "<% 
+          self.data = {
+            'worker': {
+              'id': workerSelf.id
+            }
+          };
+          self.data;
+        %>"
+      },
+      {
+        "name": "generateBadge",
+        "baseUrlType": "orchestrate",
+        "authType": "sso",
+        "url": "/generateBadge/launch",
+        "httpMethod": "POST",
+        "values": [
+          {
+            "outboundPath": "badge_id",
+            "value": "<% createBadgeObject.id %>"
+          },
+          {
+            "outboundPath": "selfie_id",
+            "value": "<% flowVariables.selfie %>"
+          }
+        ]
+      }
+    ]
+  },
+  "presentation": {
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "Review your Photo"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "richText",
+          "id": "hello",
+          "value": "<%
+              var validations = flowVariables.validationResult.validations;
+              var isValid = flowVariables.validationResult.valid;
+
+              var validationMessage = 'Great photo!';
+              var hasWarning = false;
+              
+              if (validations.sunglasses == true) {
+                validationMessage = 'Please remove your sunglasses and retake the photo if possible.';
+                hasWarning = true;
+              } else if (validations.missing_face == true) {
+                validationMessage = 'We didn\\'t recognize a face in this photo. Please upload a photo with your face visible.';
+                hasWarning = true;
+              } else if (validations.eyes_closed == true) {
+                validationMessage = 'It looks like your eyes might be closed in this photo.';
+                hasWarning = true;
+              } else if (validations.multiple_faces == true) {
+                validationMessage = 'It looks like there might be multiple people in this photo. Please upload a photo of just yourself.';
+                hasWarning = true;
+              } else if (validations.poor_quality == true) {
+                validationMessage = 'The image quality is poor. Please upload a better quality photo if possible.';
+                hasWarning = true;
+              } else if (validations.smiling == false) {
+                validationMessage += ' It looks like you aren\\'t smiling. That\\'s okay though!';
+              }
+              
+              if (isValid && !hasWarning) {
+                validationMessage += ' Press OK to request your new badge.';
+              } else if (isValid) {
+                validationMessage += ' Your photo didn\\'t pass our verification but you can still request a manual approval instead.';
+              }
+              
+              return '<span style=\"font-size: 12pt\">' + validationMessage + '</span>';
+            %>",
+          "enabled": "false"
+        },
+        {
+          "type": "image",
+          "sizingHint": "INLINE",
+          "endPoint": {
+            "baseUrlType": "app",
+            "authType": "sso",
+            "url": "<% '/selfies/' + flowVariables.selfie %>"
+          }
+        }
+      ]
+    }
+  }
+}

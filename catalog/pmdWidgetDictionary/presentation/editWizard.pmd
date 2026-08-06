@@ -1,0 +1,49 @@
+{
+  "id": "editWizard",
+  "endPoints": [ ],
+  "presentation": {
+    "body": {
+      "type": "editWizard",
+      "title": "Job Application",
+      "subtitle": "Software Engineer P2",
+      "summarySettings": {
+        "enabled": true,
+        "label": "Review Label (Custom!)"
+      },
+      "editTasks": [
+        {
+          "label": "Personal Information",
+          "task": {
+            "taskId": "personalInformation"
+          }
+        },
+        {
+          "label": "Internal Hire Details",
+          "render": "<% queryParams.isInternalApplicant ?: false %>",
+          "_addnullhandle": "true",
+          "task": {
+            "taskId": "internalHireDetails"
+          }
+        },
+        {
+          "label": "Resume & Cover Letter",
+          "task": {
+            "taskId": "resume"
+          }
+        },
+        {
+          "label": "Education & Employment History",
+          "task": {
+            "taskId": "educationAndEmployment"
+          }
+        },
+        {
+          "label": "References",
+          "task": {
+            "taskId": "references"
+          }
+        }
+      ]
+    }
+  }
+}

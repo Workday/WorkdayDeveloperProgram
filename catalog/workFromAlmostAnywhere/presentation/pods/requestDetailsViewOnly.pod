@@ -1,0 +1,50 @@
+{
+    "podId": "requestDetailsViewOnly",
+    "seed": {
+      "parameters": [],
+      "template": {
+              "type": "fieldSet",
+              "id": "viewOnlyDetails",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "name",
+                  "label": "Request Name",
+                  "value": "<% request.name %>",
+                  "enabled": false
+                },
+                {
+                  "type": "text",
+                  "id": "location",
+                  "label": "Requested Location",
+                  "value": "<% request.location %>",
+                  "enabled": false
+                },
+                {
+                  "type": "date",
+                  "id": "startdate",
+                  "dateFormat": "yyyy-MM-dd",
+                  "label": "Start Date of Event",
+                  "value": "<% request.startDate %>",
+                  "enabled": false
+                },
+                {
+                  "type": "date",
+                  "id": "enddate",
+                  "dateFormat": "yyyy-MM-dd",
+                  "label": "End Date of Event",
+                  "value": "<% request.endDate %>",
+                  "enabled": false
+                },
+                {
+                  "type": "text",
+                  "id": "rightToWork",
+                  "label": "Do you have a legal right to work in the selected country?",
+                  "value": "<% request.rightToWork %>",
+                  "helpText": "You must have a legal right to work in the country you selected. Workday cannot sponsor work visas.",
+                  "enabled": false
+                }
+              ]
+            }
+    }
+  }

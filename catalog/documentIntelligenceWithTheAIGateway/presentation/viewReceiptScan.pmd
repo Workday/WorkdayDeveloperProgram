@@ -1,0 +1,77 @@
+{
+  "id": "viewReceiptScan",
+  "endPoints": [ ],
+  "securityDomains": [
+    "SelfServiceScanDocuments"
+  ],
+  "onLoad": "<%
+     pageVariables.parsedResultAsArray = flowVariables.orchestrationResponse.scannedDocument.attachment.scanProperties;
+   %>",
+  "presentation": {
+    "pageType": "confirm",
+    "title": {
+      "type": "title",
+      "label": "View Receipt Scan Results"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "grid",
+          "rows": "<% pageVariables.parsedResultAsArray %>",
+          "rowVariableName": "line",
+          "label": "Receipt Field Values",
+          "doNotAdd": true,
+          "doNotRemove": true,
+          "columns": [
+            {
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% line.type.id %>",
+                "enabled": "false"
+              },
+              "columnId": "fieldName",
+              "label": "Field Name",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% line.value %>",
+                "enabled": "false"
+              },
+              "columnId": "Value",
+              "label": "Value",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "number",
+                "value": "<% line.confidence %>",
+                "enabled": "false"
+              },
+              "columnId": "confidence",
+              "label": "Confidence",
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "rawResponse",
+          "label": "Raw Response",
+          "value": "<% pageVariables.parsedResultAsArray.toString() %>"
+        },
+        {
+          "type": "button",
+          "action": "AUXILIARY",
+          "label": "Scan Another Document",
+          "taskReference": {
+            "taskId": "scanDocument"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,523 @@
+{
+  "id": "CapitalPlanningRequestCreateBPApprove",
+  "endPoints": [
+    {
+      "name": "businessProcessEvent",
+      "baseUrlType": "BUSINESS-OBJECT",
+      "url": "<% '/createCapitalProjectRequestEvents/' + routeParams.eventId//+'0a1198e93b409001ea6b8bdb9f7d0000' %>"
+    },
+    {
+      "name": "requestGET",
+      "baseUrlType": "BUSINESS-OBJECT",
+      "url": "<% '/capitalProjectRequests/' +businessProcessEvent.businessProcessTarget.id %>"
+    },
+    {
+      "baseUrlType": "BUSINESS-OBJECT",
+      "name": "headerGET",
+      "url": "<% '/capitalProjectRequestHeaders/'+ requestGET.requestHeader.id %>"
+    },
+    {
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+string:pathEncode('SELECT workdayID, explanation, isAligned, strategicPillarCategory{workdayID,strategicPillarCategoryName, active,displayOrder } FROM '+site.applicationId+'_strategicPillarAlignments WHERE capitalProjectRequest =\"'+requestGET.id+'\" ') %>",
+      "name": "stratCatsGET"
+    },
+    {
+      "name": "serviceCatsGET",
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+string:pathEncode('SELECT workdayID, serviceCategoryName FROM '+site.applicationId+'_servicesCategories ORDER BY displayOrder asc') %>"
+    },
+    {
+      "name": "requestedServicesGET",
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+string:pathEncode('SELECT workdayID,isRequired, explanation, comment,service{workdayID, serviceName, serviceCategory, active, displayOrder }  FROM '+site.applicationId+'_requestedServices  WHERE capitalProjectRequest =\"'+requestGET.id+'\" ') %>"
+    },
+    {
+      "name": "requestedFundsGET",
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+string:pathEncode('SELECT workdayID, itemDescription, supplier, service,totalCost,quantity, unitPrice, isNew, fundingType{workdayID, fundingTypeName}  FROM '+site.applicationId+'_requestedFunds  WHERE capitalProjectRequest =\"'+requestGET.id+'\" ') %>"
+    },
+    {
+      "name": "addnlDataGET",
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+string:pathEncode('SELECT workdayID, label, data FROM '+site.applicationId+'_additionalData  WHERE capitalProjectRequest =\"'+requestGET.id+'\" ') %>"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Capital Project Planing Request - Approval Required"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "horizontal": true,
+          "type": "fieldSet",
+          "children": [
+            {
+              "type": "fieldSet",
+              "children": [
+                {
+                  "type": "text",
+                  "label": "Title",
+                  "value": "<% headerGET.requestTitle %>"
+                },
+                {
+                  "type": "textArea",
+                  "label": "Summary",
+                  "value": "<% headerGET.summary %>"
+                }
+              ]
+            },
+            {
+              "type": "fieldSet",
+              "children": [
+                {
+                  "type": "text",
+                  "label": "Request ID",
+                  "value": "<% requestGET.requestID %>"
+                },
+                {
+                  "type": "date",
+                  "label": "Requested On",
+                  "value": "<% headerGET.requestDate %>"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "horizontal": true,
+          "type": "fieldSet",
+          "children": [
+            {
+              "type": "fieldSet",
+              "id": "fldRequestorLeft",
+              "children": [
+                {
+                  "type": "text",
+                  "label": "Requested By",
+                  "value": "<% requestGET.requestedBy ? requestGET.requestedBy.descriptor : '' %>"
+                },
+                {
+                  "type": "text",
+                  "label": "Cost Center",
+                  "value": "<% requestGET.costCenter ? requestGET.costCenter.descriptor : '' %>"
+                }
+              ]
+            },
+            {
+              "type": "fieldSet",
+              "id": "fldRequestorRight",
+              "children": [
+                {
+                  "type": "text",
+                  "label": "Company",
+                  "value": "<% requestGET.company ? requestGET.company.descriptor : '' %>"
+                },
+                {
+                  "type": "text",
+                  "label": "Sponsor",
+                  "value": "<% headerGET.sponsor ? headerGET.sponsor.descriptor : '' %>"
+                }
+              ]
+            }
+          ],
+          "id": "fldRequestorMain",
+          "title": "Requestor Details"
+        },
+        {
+          "collapsible": true,
+          "initializeCollapsed": true,
+          "type": "fieldSet",
+          "id": "fldOverviewMain",
+          "title": "Overview",
+          "children": [
+            {
+              "horizontal": true,
+              "type": "fieldSet",
+              "id": "fldSubMain",
+              "children": [
+                {
+                  "type": "fieldSet",
+                  "id": "fldOverviewLeft",
+                  "children": [
+                    {
+                      "value": "<% requestGET.newProcedures %>",
+                      "type": "checkBox",
+                      "label": "Allows new services or procedures?",
+                      "falseLabel": "No",
+                      "trueLabel": "Yes"
+                    },
+                    {
+                      "type": "text",
+                      "label": "Details of Cost Savings",
+                      "value": "<% requestGET.costSavingDetail %>"
+                    }
+                  ]
+                },
+                {
+                  "type": "fieldSet",
+                  "id": "fldOverviewRight",
+                  "children": [
+                    {
+                      "value": "<% requestGET.newRevenueOrCostSaving %>",
+                      "type": "checkBox",
+                      "label": "Provides new revenue or cost savings?",
+                      "falseLabel": "No",
+                      "trueLabel": "Yes"
+                    },
+                    {
+                      "type": "number",
+                      "label": "Estimated Useful Life",
+                      "value": "<% requestGET.estimatedUsefulLifeInYears %>"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "fieldSet",
+              "id": "fldPurpose",
+              "children": [
+                {
+                  "type": "richText",
+                  "label": "Purpose",
+                  "value": "<% requestGET.purpose %>"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "collapsible": true,
+          "horizontal": true,
+          "initializeCollapsed": true,
+          "type": "fieldSet",
+          "id": "fldTiming",
+          "title": "Timing",
+          "children": [
+            {
+              "type": "fieldSet",
+              "id": "fltTimingLeft",
+              "children": [
+                {
+                  "type": "date",
+                  "label": "When will this project start?",
+                  "value": "<% requestGET.projectStart %>"
+                },
+                {
+                  "type": "date",
+                  "label": "When will this project go into service?",
+                  "value": "<% requestGET.inServiceDate %>"
+                }
+              ]
+            },
+            {
+              "type": "fieldSet",
+              "id": "fldRight",
+              "children": [
+                {
+                  "type": "date",
+                  "label": "When will this project end?",
+                  "value": "<% requestGET.projectEnd %>"
+                },
+                {
+                  "type": "text",
+                  "label": "Why is it important to pursue at this time?",
+                  "value": "<% requestGET.timingJustification %>"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "collapsible": true,
+          "initializeCollapsed": true,
+          "type": "fieldSet",
+          "id": "fldAlignmentMain",
+          "title": "Alignment/Categorization",
+          "children": [
+            {
+              "type": "text",
+              "label": "Agency",
+              "value": "<% requestGET.agency ? requestGET.agency.descriptor : '' %>"
+            },
+            {
+              "doNotAdd": true,
+              "doNotRemove": true,
+              "type": "panelList",
+              "indexVariableName": "idx",
+              "panelName": "stratCat",
+              "panels": "<% pageVariables.stratCats %>",
+              "children": [
+                {
+                  "horizontal": true,
+                  "type": "fieldSet",
+                  "children": [
+                    {
+                      "type": "fieldSet",
+                      "id": "fldStratCatPnlLeft",
+                      "children": [
+                        {
+                          "value": "<% stratCat.isAligned %>",
+                          "type": "checkBox",
+                          "label": "<% stratCat.strategicPillarCategory.strategicPillarCategoryName %>",
+                          "falseLabel": "No",
+                          "trueLabel": "Yes"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "fieldSet",
+                      "id": "fldStratCatPlnRight",
+                      "children": [
+                        {
+                          "type": "text",
+                          "label": "Explanation",
+                          "value": "<% stratCat.explanation %>"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "collapsible": true,
+          "initializeCollapsed": true,
+          "type": "fieldSet",
+          "id": "fldServices",
+          "title": "Services",
+          "children": [
+            {
+              "visible": false,
+              "type": "readOnlyText",
+              "value": "Placeholder"
+            },
+            {
+              "doNotAdd": true,
+              "doNotRemove": true,
+              "type": "panelList",
+              "panelName": "serviceCat",
+              "panels": "<% serviceCatsGET.data %>",
+              "children": [
+                {
+                  "type": "fieldSet",
+                  "title": "<% serviceCat.serviceCategoryName %>",
+                  "children": [
+                    {
+                      "type": "loop",
+                      "as": "reqServ",
+                      "on": "<% pageVariables.reqServices.filter(serv => {serv.service.serviceCategory.id == serviceCat.workdayID}) %>",
+                      "children": [
+                        {
+                          "horizontal": true,
+                          "type": "fieldSet",
+                          "id": "fldreqServTop",
+                          "children": [
+                            {
+                              "value": "<% reqServ.isRequired %>",
+                              "type": "checkBox",
+                              "label": "<% reqServ.service.serviceName %>",
+                              "falseLabel": "No",
+                              "trueLabel": "Yes"
+                            },
+                            {
+                              "horizontal": true,
+                              "type": "fieldSet",
+                              "label": "fldReqServMain",
+                              "children": [
+                                {
+                                  "type": "fieldSet",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "label": "Explanation",
+                                      "value": "<% reqServ.explanation %>"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "fieldSet",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "label": "Comments",
+                                      "value": "<% reqServ.explanation %>"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "collapsible": true,
+          "initializeCollapsed": true,
+          "type": "fieldSet",
+          "id": "fldFundsMain",
+          "title": "Funds",
+          "children": [
+            {
+              "type": "loop",
+              "as": "fundType",
+              "on": "<% pageVariables.reqFundTypes %>",
+              "children": [
+                {
+                  "type": "fieldSet",
+                  "title": "<% fundType.fundType %>",
+                  "children": [
+                    {
+                      "type": "grid",
+                      "rows": "<% requestedFundsGET.data.filter( fund => {fund.fundingType.workdayID == fundType.workdayID}) %>",
+                      "rowVariableName": "fund",
+                      "columns": [
+                        {
+                          "type": "column",
+                          "label": "Quantity",
+                          "cellTemplate": {
+                            "type": "number",
+                            "value": "<% fund.quantity %>",
+                            "fractionDigits": "0"
+                          },
+                          "columnId": "fQuantity"
+                        },
+                        {
+                          "type": "column",
+                          "label": "Item Description",
+                          "cellTemplate": {
+                            "type": "text",
+                            "value": "<% fund.itemDescription %>"
+                          },
+                          "columnId": "fItemDescriptor"
+                        },
+                        {
+                          "type": "column",
+                          "label": "Unit Price",
+                          "cellTemplate": {
+                            "type": "currency",
+                            "value": "<% fund.unitPrice.value %>",
+                            "fractionDigits": "2"
+                          },
+                          "columnId": "fUnitPrice"
+                        },
+                        {
+                          "type": "column",
+                          "label": "Total Cost",
+                          "cellTemplate": {
+                            "type": "currency",
+                            "value": "<% fund.totalCost.value %>"
+                          },
+                          "columnId": "fTotalCost"
+                        },
+                        {
+                          "type": "column",
+                          "label": "Is New?",
+                          "cellTemplate": {
+                            "value": "<% fund.isNew %>",
+                            "type": "checkBox",
+                            "falseLabel": "No",
+                            "trueLabel": "Yes"
+                          },
+                          "columnId": "fIsNew"
+                        },
+                        {
+                          "type": "column",
+                          "id": "fService",
+                          "label": "Service",
+                          "cellTemplate": {
+                            "type": "text",
+                            "value": "<% fund.service ? fund.service.descriptor : '' %>"
+                          },
+                          "columnId": "fService"
+                        },
+                        {
+                          "type": "column",
+                          "label": "Supplier",
+                          "cellTemplate": {
+                            "type": "text",
+                            "value": "<% fund.supplier ? fund.supplier.descriptor : '' %>"
+                          },
+                          "columnId": "fSupplier"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "collapsible": true,
+          "initializeCollapsed": true,
+          "type": "fieldSet",
+          "title": "Additional Info",
+          "label": "Additional Info",
+          "children": [
+            {
+              "visible": false,
+              "type": "readOnlyText",
+              "value": "Placeholder or the panels don't show"
+            },
+            {
+              "doNotAdd": true,
+              "doNotRemove": true,
+              "initializeFirstPanel": true,
+              "type": "panelList",
+              "panelName": "panel",
+              "panels": "<% addnlDataGET.data %>",
+              "children": [
+                {
+                  "type": "text",
+                  "label": "Label",
+                  "value": "<% panel.label %>"
+                },
+                {
+                  "type": "richText",
+                  "value": "<% panel.data %>",
+                  "label": "Data"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer"
+    },
+    "pageType": "VIEW"
+  },
+  "onLoad": "<%
+                pageVariables.stratCats = stratCatsGET.data.filter(item => item.strategicPillarCategory.active ? item.strategicPillarCategory.active : false).sort((a, b) => a.strategicPillarCategory.displayOrder - b.strategicPillarCategory.displayOrder);
+                
+                pageVariables.reqFundTypes = requestedFundsGET.data.map(ft =>{{
+                'workdayID' : ft.fundingType.workdayID,
+                'fundType' : ft.fundingType.fundingTypeName
+                }}).distinct();
+                
+                
+                pageVariables.reqServices = requestedServicesGET.data.filter(service =>{
+                   service.service.active == true
+                }).sort(service =>{
+                   service.service.displayOrder
+                });
+               %>",
+  "securityDomains": [
+    "CapitalProjectPlanning",
+    "CapitalProjectPlanningAdministrator"
+  ]
+}

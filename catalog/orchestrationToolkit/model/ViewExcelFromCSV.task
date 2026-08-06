@@ -1,0 +1,9 @@
+{
+  "id": 2,
+  "name": "ViewExcelFromCSV",
+  "label": "View Excel From CSV",
+  "securityDomains": [
+    "ManageExcelFiles"
+  ],
+  "routePath": "/excelFilesView"
+}

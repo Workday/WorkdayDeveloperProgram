@@ -1,0 +1,55 @@
+{
+  "id": "projectHome",
+  "endPoints": [ ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Project Home"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "section",
+          "horizontal": true,
+          "columnWidthRatios": [
+            0.7,
+            0.3
+          ],
+          "children": [
+            {
+              "type": "section",
+              "title": "Overview",
+              "children": [
+                {
+                  "type": "richText",
+                  "value": "<p style=\"font-size: 24px;\">Home page for a demo project. This application is built to act both as a project tracker and team informational team. This is a pretend project tracking application, so we won't add too many details.</p>"
+                },
+                {
+                  "type": "video",
+                  "mediaId": "3cef68364c3101781a0445a172123100"
+                }
+              ]
+            },
+            {
+              "type": "section",
+              "title": "Helpful Materials",
+              "children": [
+                {
+                  "type": "cardContainer",
+                  "layout": "MASONRY",
+                  "cards": [
+                    {
+                      "type": "card",
+                      "cardId": "pill"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

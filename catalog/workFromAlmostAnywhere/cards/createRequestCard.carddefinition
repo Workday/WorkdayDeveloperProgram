@@ -1,0 +1,36 @@
+{
+  "id": "createRequestCard",
+  "presentation": {
+    "type": "inlineCard",
+    "header": {
+      "type": "cardHeader",
+      "title": "Work from Almost Anywhere",
+      "subtitle": "<% 'Primary Location:' + worker.primaryJob.location.descriptor %>",
+      "indicator": {
+        "label": "New App!",
+        "color": "GREEN"
+      },
+      "icon": "WorkdayWThumbnail.jpeg"
+    },
+    "body": {
+      "type": "simpleCard",
+      "value": "Request to work remotely, review your remote work calendar and manage remote work requests."
+    },
+    "footer": [
+      {
+        "label": "Request Remote Work ",
+        "taskReference": {
+          "taskId": "createRequest"
+        }
+      }
+    ]
+  },
+  "endPoints": [
+    {
+      "name": "worker",
+      "baseUrlType": "workday-staffing",
+      "url": "/workers/me",
+      "authType": "sso"
+    }
+  ]
+}

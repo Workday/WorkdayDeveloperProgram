@@ -1,0 +1,67 @@
+{
+  "id": "errorPage",
+  "securityDomains": [
+    "ManageVehicles"
+  ],
+  "endPoints": [ ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Whoops!"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "image",
+          "imageUri": ""
+        },
+        {
+          "type": "text",
+          "id": "errorSummary401",
+          "visible": "<% errorCode == '401' %>",
+          "label": "Error Message",
+          "value": "We couldn't verify your identity, or you don't have access to this page. Try again."
+        },
+        {
+          "type": "text",
+          "id": "errorSummary404",
+          "visible": "<% errorCode == '404' %>",
+          "label": "Error Message",
+          "value": "We couldn't find the page you're looking for."
+        },
+        {
+          "type": "text",
+          "id": "errorSummary408",
+          "visible": "<% errorCode == '408' %>",
+          "label": "Error Message",
+          "value": "We fell asleep! The data you're requesting on this page is taking too long to retrieve. Try again."
+        },
+        {
+          "type": "text",
+          "id": "errorSummary500",
+          "visible": "<% errorCode == '500' %>",
+          "label": "Error Message",
+          "value": "Whoops! Something broke on our end. This error can occur if one of the custom reports this app uses has it's name changed. Please reach out to your Extend Developer to look into this issue.  Please be sure to include the URL from this page."
+        },
+        {
+          "type": "text",
+          "id": "errorDetails",
+          "label": "HTTP Error code: <% errorCode %>",
+          "value": "<% errorMessage %>"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend 🚙"
+        }
+      ]
+    }
+  }
+}

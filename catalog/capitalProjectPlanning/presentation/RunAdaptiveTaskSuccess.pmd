@@ -1,0 +1,35 @@
+{
+  "id": "RunAdaptiveTaskSuccess",
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Workday Extend"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "text",
+          "id": "hello",
+          "label": "Task Run Status",
+          "value": "Task Run Successful"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    },
+    "microConclusion": true
+  },
+  "securityDomains": [
+    "CapitalProjectPlanningAdministrator"
+  ]
+}

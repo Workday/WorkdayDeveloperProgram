@@ -1,0 +1,116 @@
+{
+  "appProperties": [ ],
+  "flowDefinitions": [
+    {
+      "id": "confirmationFlow",
+      "flowSteps": [
+        {
+          "id": "findWorker",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "home",
+              "condition": "true"
+            }
+          ],
+          "taskId": "findWorker"
+        },
+        {
+          "id": "home",
+          "transitions": [
+            {
+              "order": "b",
+              "value": "confirmation",
+              "condition": "true"
+            }
+          ],
+          "taskId": "home"
+        },
+        {
+          "id": "confirmationTask",
+          "transitions": [
+            {
+              "order": "b",
+              "value": "confirmation",
+              "condition": "true"
+            }
+          ],
+          "taskId": "recognitionSubmit",
+          "name": "recognitionSubmit"
+        },
+        {
+          "id": "confirmation",
+          "taskId": "confirmation",
+          "name": "confirm"
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "findWorker",
+      "routingPattern": "/",
+      "page": {
+        "id": "findWorker"
+      }
+    },
+    {
+      "id": "home",
+      "routingPattern": "home/{workerId}",
+      "page": {
+        "id": "home"
+      }
+    },
+    {
+      "id": "recognitionSubmit",
+      "routingPattern": "recognitionSubmit",
+      "page": {
+        "id": "recognitionSubmit"
+      }
+    },
+    {
+      "id": "confirmation",
+      "routingPattern": "confirmation",
+      "page": {
+        "id": "confirmation"
+      }
+    },
+    {
+      "id": "createRecognitionCard",
+      "routingPattern": "/createRecognitionCard",
+      "page": {
+        "id": "createRecognitionCard"
+      }
+    },
+    {
+      "id": "viewCreateRecognitionCard",
+      "routingPattern": "/viewCreateRecognitionCard",
+      "page": {
+        "id": "viewCreateRecognitionCard"
+      }
+    }
+  ],
+  "applicationId": "employeeRecognition",
+  "dataProviders": [
+    {
+      "key": "workday-performance-enablement",
+     "value": "<% `{{apiGatewayEndpoint}}/performanceEnablement/v5` %>"
+    },
+    {
+      "key": "workday-common",
+      "value": "<% `{{apiGatewayEndpoint}}/common/v1/workers` %>"
+    },
+    {
+      "key": "workday-staffing",
+      "value": "<% `{{apiGatewayEndpoint}}/staffing/v7/` %>"
+    },
+    {
+      "key": "workday-compensation",
+      "value": "<% `{{apiGatewayEndpoint}}/compensation/v1/` %>"
+    },
+    {
+      "key": "workday-wql",
+      "value": "<% `{{apiGatewayEndpoint}}/wql/v1` %>"
+    }
+  ]
+}

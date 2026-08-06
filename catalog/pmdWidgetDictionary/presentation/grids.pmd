@@ -1,0 +1,119 @@
+{
+  "id": "grids",
+  "endPoints": [
+    {
+      "name": "countries",
+      "baseUrlType": "wdayRef",
+      "url": "/country/vers/latest/items?pageLimit=20",
+      "authType": "sso",
+      "bestEffort": "true"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "grids"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "sorted": false,
+      "children": [
+        {
+          "type": "pod",
+          "podId": "header"
+        },
+        {
+          "type": "text",
+          "id": "intro",
+          "label": "Grids",
+          "value": "A sample grid is below. This grid is generated using the Workday reference data API, to pull back countries. A sample re-direction button has also been added, which passes the countries id to a simple action:"
+        },
+        {
+          "type": "grid",
+          "id": "Countries",
+          "rows": "<% countries.items %>",
+          "rowVariableName": "country",
+          "columns": [
+            {
+              "type": "column",
+              "id": "country0",
+              "columnId": "country0",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% country.name %>"
+              },
+              "label": "Country Name"
+            },
+            {
+              "type": "column",
+              "id": "country1",
+              "columnId": "country1",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% country['ISO_3166_1_Alpha_2_Code'] %>"
+              },
+              "label": "ISO Alpha 2 Code"
+            },
+            {
+              "type": "column",
+              "id": "country2",
+              "columnId": "country2",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% country['ISO_3166_1_Alpha_3_Code'] %>"
+              },
+              "label": "ISO Alpha 3 Coder"
+            },
+            {
+              "type": "column",
+              "id": "country3",
+              "columnId": "country3",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% country['ISO_3166_1_Numeric_3_Code'] %>"
+              },
+              "label": "Numeric 3 Code"
+            },
+            {
+              "type": "column",
+              "id": "country4",
+              "columnId": "country4",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% country.defaultCurrency %>"
+              },
+              "label": "Currency"
+            },
+            {
+              "type": "column",
+              "id": "action",
+              "columnId": "action",
+              "label": "Sample Redirect with Query Parameter",
+              "cellTemplate": {
+                "type": "button",
+                "label": "Go",
+                "action": "PRIMARY",
+                "taskReference": {
+                  "taskId": "redirectQuery",
+                  "parameterBindings": {
+                    "id": "<% country['ISO_3166_1_Alpha_3_Code'] %>"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "pod",
+          "podId": "footer"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+    "id": "orchLink",
+    "parameters": ["title", "body", "orchID"],
+    "header": {
+        "title": "<% title %>"
+    },
+    "body": {
+        "type": "simpleCard",
+        "value": "<% body %>"
+    },
+    "footer": [
+        {
+            "label": "<% title %>",
+            "taskReference": {
+                "taskId": "triggerOrchestration",
+                "parameterBindings": {
+                  "orchID": "<% orchID %>",
+                  "info": "<% body %>"
+                }
+            }
+        }
+    ]
+}

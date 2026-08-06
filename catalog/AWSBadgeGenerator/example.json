@@ -1,0 +1,20 @@
+{
+  "title": "Employee Badge Provisioning with Amazon Web Services",
+  "description": "Allow employees to get a photo badge with AI-powered face detection and image generation with Amazon Web Services (AWS). Now featuring Event Bridge for logic routing.",
+  "type": "Extend App",
+  "components": [
+    "Presentation",
+    "Model",
+    "Orchestration",
+    "AWS Integration",
+    "3rd-Party Technology"
+  ],
+  "products": [
+    "Workday Extend",
+    "Workday Orchestrate",
+    "Workday HCM"
+  ],
+  "authors": [],
+  "tutorial": "https://forum.developer.workday.com/t/new-devcon-2025-reference-app-badge-generator/24279",
+  "source": "workday"
+}

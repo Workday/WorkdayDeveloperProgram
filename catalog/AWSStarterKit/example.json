@@ -1,0 +1,18 @@
+{
+  "title": "AWS Starter Kit with Amazon Web Services and Amazon Translate",
+  "description": "Jumpstart your AWS app with the AWS starter kit examples.",
+  "type": "Extend App",
+  "components": [
+    "Presentation",
+    "Orchestration",
+    "AWS Integration",
+    "3rd-Party Technology"
+  ],
+  "products": [
+    "Workday Extend",
+    "Workday Orchestrate"
+  ],
+  "authors": [],
+  "tutorial": "https://forum.developer.workday.com/t/app-catalog-app-aws-starter-kit/14617",
+  "source": "workday"
+}

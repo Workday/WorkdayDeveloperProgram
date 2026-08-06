@@ -1,0 +1,76 @@
+{
+  "id": "tmpBPTroubleshooting",
+  "endPoints": [
+    {
+      "baseUrlType": "BUSINESS-PROCESS",
+      "url": "<% '/eventSteps/'+queryParams.eventStepId %>",
+      "name": "bpEventStepGET"
+    },
+    {
+      "exclude": "<% empty queryParams.eventStepId %>",
+      "name": "eventInfoGET",
+      "baseUrlType": "BUSINESS-PROCESS",
+      "url": "<% '/events/'+ bpEventStepGET.event.id %>"
+    },
+    {
+      "exclude": "<% empty queryParams.eventStepId || bpEventStepGET.descriptor!='Request Services' %>",
+      "name": "mainServiceCatGET",
+      "baseUrlType": "BUSINESS-OBJECT",
+      "url": "<% '/requestedServiceCategories/'+eventInfoGET.for.id %>"
+    },
+    {
+      "name": "capProj",
+      "baseUrlType": "ORCHESTRATE",
+      "url": "<%
+               if(!empty bpEventStepGET && bpEventStepGET.descriptor=='Request Services'){
+               \treturn '/GetCapitalProjectRequest/launch?requestWID='+mainServiceCatGET.capitalProjectRequest.id ;
+               }else{
+               \tif(!empty queryParams.eventStepId){
+               \t\treturn '/GetCapitalProjectRequest/launch?requestWID='+eventInfoGET.for.id;
+               \t}else{
+               \t\treturn '/GetCapitalProjectRequest/launch?headerWID='+queryParams.headerWID+'&edit=true';
+               \t}
+               }
+              %>"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Workday Extend"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "text",
+          "id": "hello",
+          "label": "Hello World!",
+          "value": "<%
+                     if(!empty bpEventStepGET && bpEventStepGET.descriptor=='Request Services'){
+                     \treturn '/GetCapitalProjectRequest/launch?requestWID='+mainServiceCatGET.capitalProjectRequest.id ;
+                     }else{
+                     \tif(!empty queryParams.eventStepId){
+                     \t\treturn '/GetCapitalProjectRequest/launch?requestWID='+eventInfoGET.for.id;
+                     \t}else{
+                     \t\treturn '/GetCapitalProjectRequest/launch?headerWID='+queryParams.headerWID+'&edit=true';
+                     \t}
+                     }
+                    %>"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    },
+    "pageType": "EDIT"
+  }
+}

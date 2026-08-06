@@ -1,0 +1,76 @@
+{
+  "id": 2,
+  "name": "ProtectedCaseEntries",
+  "label": "Protected Case Entries",
+  "defaultSecurityDomains": [
+    "ManageProtectedCases"
+  ],
+  "defaultCollection": {
+    "name": "protectedCaseEntryBO",
+    "label": "Protected Case Entry"
+  },
+  "fields": [
+    {
+      "target": "ProtectedCases",
+      "type": "SINGLE_INSTANCE",
+      "label": "Case",
+      "name": "case",
+      "id": 1
+    },
+    {
+      "id": 3,
+      "name": "entryComment",
+      "label": "Entry Comment",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": false
+    },
+    {
+      "id": 4,
+      "name": "createdDate",
+      "label": "Date Created",
+      "type": "DATE",
+      "precision": "MILLISECOND"
+    },
+    {
+      "id": 5,
+      "name": "createdBy",
+      "label": "Created By",
+      "type": "SINGLE_INSTANCE",
+      "target": "WORKER"
+    },
+    {
+      "id": 6,
+      "name": "personTagging",
+      "label": "Person Tagging",
+      "type": "SINGLE_INSTANCE",
+      "target": "ProtectedCaseConnections"
+    },
+    {
+      "id": 7,
+      "name": "lastUpdatedDate",
+      "label": "Last Updated Date",
+      "type": "DATE",
+      "precision": "MILLISECOND"
+    },
+    {
+      "id": 8,
+      "name": "lastUpdatedBy",
+      "label": "Last Updated By",
+      "type": "SINGLE_INSTANCE",
+      "target": "WORKER"
+    },
+    {
+      "id": 9,
+      "name": "hideComment",
+      "label": "Hide Comment",
+      "type": "BOOLEAN"
+    },
+    {
+      "id": 10,
+      "name": "hideCommentReason",
+      "label": "Hide Comment Reason",
+      "type": "TEXT"
+    }
+  ]
+}

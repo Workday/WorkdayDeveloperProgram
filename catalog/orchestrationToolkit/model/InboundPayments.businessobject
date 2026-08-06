@@ -1,0 +1,46 @@
+{
+  "id": 2,
+  "name": "InboundPayments",
+  "label": "Inbound Payments",
+  "defaultSecurityDomains": [
+    "ManagePaymentsAndErrors"
+  ],
+  "defaultCollection": {
+    "name": "inboundPaymentses",
+    "label": "Inbound Paymentses", 
+    "description": "Displays inbound payments"
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "payee",
+      "label": "Payee",
+      "type": "TEXT", 
+      "description": "Displays payee of the inbound payment"
+    },
+    {
+      "id": 2,
+      "name": "paymentAmount",
+      "label": "Amount",
+      "type": "DECIMAL",
+      "decimals": 2, 
+      "description": "Displays payment amount"
+    },
+    {
+      "id": 3,
+      "name": "payMemo",
+      "label": "Payment Memo",
+      "type": "TEXT", 
+      "description": "Displays payment memo"
+    },
+    {
+      "id": 4,
+      "name": "paymentID",
+      "label": "Payment ID",
+      "type": "TEXT",
+      "isReferenceId": true,
+      "useForDisplay": false, 
+      "description": "Displays payment ID"
+    }
+  ]
+}

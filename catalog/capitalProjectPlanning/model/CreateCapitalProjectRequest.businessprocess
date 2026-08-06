@@ -1,0 +1,25 @@
+{
+  "id": 1,
+  "label": "Create Capital Project Request",
+  "description": "Business Process for the approval of a Capital Project Request",
+  "useForOrchestrate": false,
+  "allowsCancel": false,
+  "approvalStep": {
+    "actions": [
+      "APPROVE",
+      "DENY",
+      "SEND_BACK"
+    ],
+    "pageRoute": "/CapitalProjectRequestCreateBPApprove/{eventId}"
+  },
+  "actionSteps": [],
+  "securityDomains": [
+    "CapitalProjectPlanning"
+  ],
+  "targetBusinessObject": "CapitalProjectRequest",
+  "details": {
+    "pageRoute": "/CapitalProjectRequestCreateBPApprove/{eventId}"
+  },
+  "name": "CreateCapitalProjectRequest",
+  "revisePageRoute": "/CapitalPlanningRequestEdit/{eventStepId}"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "charitableDonationsWithSentimentAnalysis",
+  "languages": [
+    {
+      "code": "en-US",
+      "description": "English"
+    }
+  ],
+  "siteAuth": {
+    "authTypes": [
+      {
+        "scheme": "SSO",
+        "id": "sso"
+      }
+    ]
+  },
+  "siteId": "charitableDonationsWithSentimentAnalysis",
+  "cdnEnabled": true,
+  "siteProperties": [ ],
+  "applicationId": "charitableDonationsWithSentimentAnalysis"
+}

@@ -1,0 +1,38 @@
+{
+  "id": "ticket",
+  "parameters": [
+    "ticket"
+  ],
+  "header": {
+    "title": "<% ticket.name %>",
+    "subtitle": "<% ticket.status %>",
+    "icon": "wd-accent-universal",
+    "indicator": {
+      "label": "<% ticket.type %>",
+      "color": "<%   if (ticket.type == 'Bug') {
+                      return 'red'
+                    } else if (ticket.type == 'Spike') {
+                      return 'blue'
+                    } else if (ticket.type == 'Story') {
+                      return 'green'
+                    } else {
+                      return 'gray'
+                    } %>"
+    }
+  },
+  "body": {
+    "type": "simpleCard",
+    "value": "<% ticket.blurb %>"
+  },
+  "footer": [
+    {
+      "label": "Update Ticket",
+      "taskReference": {
+        "taskId": "ticketManage",
+        "parameterBindings": {
+          "ticketId": "<% ticket.id %>"
+        }
+      }
+    }
+  ]
+}

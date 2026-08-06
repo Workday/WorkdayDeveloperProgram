@@ -1,0 +1,101 @@
+var getFeaturePriorities = function() {
+  var featurePriorities = [
+    {
+      "feature": "Feature A",
+      "featureType": "Bug Fix",
+      "avgRanking": 3.4
+    },
+    {
+      "feature": "Feature B",
+      "featureType": "Performance Enhancement",
+      "avgRanking": 1.7
+    },
+    {
+      "feature": "Feature C",
+      "featureType": "New Feature",
+      "avgRanking": 4.8
+    },
+    {
+      "feature": "Feature D",
+      "featureType": "New Feature",
+      "avgRanking": 2.5
+    },
+    {
+      "feature": "Feature E",
+      "featureType": "Bug Fix",
+      "avgRanking": 4.9
+    }
+  ]
+  return featurePriorities
+}
+
+var getUsageMetrics = function() {
+  var usageMetricsData = [
+    {
+      "time": "Week 1",
+      "usageFeatureA": 55,
+      "usageFeatureB": 0,
+      "usageFeatureC": 12
+    },
+    {
+      "time": "Week 2",
+      "usageFeatureA": 95,
+      "usageFeatureB": 29,
+      "usageFeatureC": 34
+    },
+    {
+      "time": "Week 3",
+      "usageFeatureA": 70,
+      "usageFeatureB": 35,
+      "usageFeatureC": 32
+    },
+    {
+      "time": "Week 4",
+      "usageFeatureA": 60,
+      "usageFeatureB": 45,
+      "usageFeatureC": 56
+    },
+    {
+      "time": "Week 5",
+      "usageFeatureA": 75,
+      "usageFeatureB": 55,
+      "usageFeatureC": 95
+    }
+  ]
+  return usageMetricsData
+}
+
+var getSurveyResults = function() {
+  return [
+    {
+      "desire": "High",
+      "featureX": 55,
+      "featureY": 24,
+      "featureZ": 62
+    },
+    {
+      "desire": "Medium",
+      "featureX": 22,
+      "featureY": 97,
+      "featureZ": 89
+    },
+    {
+      "desire": "Low",
+      "featureX": 9,
+      "featureY": 74,
+      "featureZ": 46
+    },
+    {
+      "desire": "None",
+      "featureX": 11,
+      "featureY": 17,
+      "featureZ": 27
+    }
+  ]
+}
+
+{
+  "getFeaturePriorities": getFeaturePriorities,
+  "getUsageMetrics": getUsageMetrics,
+  "getSurveyResults": getSurveyResults
+}

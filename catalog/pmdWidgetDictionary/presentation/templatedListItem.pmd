@@ -1,0 +1,49 @@
+{
+  "id": "templatedListItem",
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "templatedListItem"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "pod",
+          "podId": "header"
+        },
+        {
+          "type": "templatedListItem",
+          "id": "templatedListItemPageLink",
+          "title": {
+            "type": "instanceList",
+            "taskReference": {
+              "taskId": "home"
+            },
+            "instanceList": [
+              {
+                "type": "instance",
+                "descriptor": "PMD Widget Dictionary Home"
+              }
+            ]
+          },
+          "subtitles": [
+            "PMD Widget Dictionary",
+            "Get to know a wide variety of Presentation Components tags"
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "id": "popup",
+  "endPoints": [ ],
+  "presentation": {
+    "pageType": "edit",
+    "micro": true,
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "text",
+          "value": "<% queryParams.startDate %>"
+        },
+        {
+          "type": "text",
+          "value": "<% queryParams.endDate %>"
+        },
+        {
+          "type": "text",
+          "value": "<% queryParams.title %>"
+        },
+        {
+          "type": "text",
+          "value": "<% queryParams.style %>"
+        }
+      ]
+    }
+  }
+}

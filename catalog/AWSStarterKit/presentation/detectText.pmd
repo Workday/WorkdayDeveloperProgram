@@ -1,0 +1,65 @@
+{
+  "id": "detectText",
+  "endPoints": [ ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "uploadImage",
+        "baseUrlType": "orchestration",
+        "url": "detectDocumentText/launch",
+        "authType": "sso",
+        "httpMethod": "POST"
+      },
+      {
+        "type": "outboundVariable",
+        "name": "uploadVariables",
+        "variableScope": "flow",
+        "values": [
+          {
+            "outboundPath": "uploadResult",
+            "value": "<% uploadImage %>"
+          }
+        ]
+      }
+    ]
+  },
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Text Detection Testing"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "action": "LINK",
+          "type": "button",
+          "id": "home",
+          "label": "← Home",
+          "taskReference": {
+            "taskId": "home"
+          }
+        },
+        {
+          "singular": true,
+          "type": "fileUploader",
+          "id": "imageUploader",
+          "valueOutBinding": "uploadImage",
+          "fileTypes": "jpg,jpeg,png"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    },
+    "pageType": "EDIT"
+  }
+}

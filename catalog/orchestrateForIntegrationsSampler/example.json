@@ -1,0 +1,15 @@
+{
+  "title": "Workday Orchestrate Sampler",
+  "description": "Take advantage of reusable patterns and reference orchestrations for many different integration use cases.",
+  "type": "Reference",
+  "components": [
+    "Orchestration",
+    "WQL"
+  ],
+  "products": [
+    "Workday Orchestrate"
+  ],
+  "authors": [],
+  "tutorial": "https://forum.developer.workday.com/t/app-catalog-app-workday-orchestrate-sampler/36145",
+  "source": "workday"
+}

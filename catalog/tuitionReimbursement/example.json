@@ -1,0 +1,20 @@
+{
+  "title": "Tuition Reimbursement",
+  "description": "Create a Tuition Reimbursement Request app using Model Components and an Orchestration to submit a One Time Payment.",
+  "type": "Extend App",
+  "components": [
+    "Presentation",
+    "Model",
+    "Orchestration",
+    "Business Process",
+    "WQL"
+  ],
+  "products": [
+    "Workday Extend",
+    "Workday Orchestrate",
+    "Workday Payroll"
+  ],
+  "authors": [],
+  "tutorial": "",
+  "source": "workday"
+}

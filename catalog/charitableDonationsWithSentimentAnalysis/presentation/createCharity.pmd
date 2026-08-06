@@ -1,0 +1,272 @@
+{
+  "id": "createCharity",
+  "securityDomains": [
+    "ManageCharities"
+  ],
+  "endPoints": [
+    {
+      "name": "worker",
+      "baseUrlType": "workday-staffing",
+      "url": "workers/me",
+      "authType": "sso"
+    },
+    {
+      "name": "workerSearch",
+      "baseUrlType": "workday-staffing",
+      "url": "<% 'workers?search=' + instanceListQuery %>",
+      "exclude": "<% empty(instanceListQuery) %>",
+      "authType": "sso",
+      "deferred": "true"
+    },
+    {
+      "name" : "analyzeText",
+      "baseUrlType" : "workday-ml",
+      "authType" : "sso",
+      "httpMethod" : "POST",
+      "url" : "predict",
+      "exclude" : "<% empty description.getValue() %>",
+      "deferred" : true,
+      "onSend" : "<%
+        self.data = {:};
+        self.data.input_queries = [description.getValue()];
+        self.data.return_aspects = 'True';
+        console.info(json:asJSON(self.data));
+        return self.data;
+      %>",
+      "responseErrorDetail": {
+        "errorSummary": "<% error %>",
+        "errors": "<% errors.map(item => { item.error }); %>"
+      }
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "charity",
+        "baseUrlType": "app",
+        "url": "charities",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "onSend": "<% self.data.put('createdBy',{'id':worker.id}); //add createdBy object 
+          console.info('new charity payload is ' + json:asJSON(self.data)); return self.data; %>"
+      },
+      {
+        "name": "createCharityEvent",
+        "baseUrlType": "app",
+        "url": "createCharityEvents",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "values": [
+          {
+            "outboundPath": "businessProcessTarget.id",
+            "value": "<% charity.id %>"
+          }
+        ]
+      },
+      {
+        "name": "createCharityFiles",
+        "baseUrlType": "app",
+        "url": "<% 'charityFilesCollection' //using the Collection endpoint to let us use onMultiPartSend() and to upload multiple files at once
+       %>",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "exclude": "<% empty(imageFileUploader.children) %>",
+        "onMultiPartSend": "<%
+          for (var file : self.data.metadata.charityFiles) { //loop through as many files as were uploaded
+            //Put an uploadedBy object with an id field to the JSON part.
+            file.put('uploadedBy',{'id': worker.id}); //put the new uploadedBy map in the metadata. This captures the WID of the uploader.
+            //Put uploadedDate field to the JSON part.
+            file.uploadedDate = date:getTodaysDate(date:getDateTimeZone(userTimeZone)); //put the uploadedDate field in the metadata
+            file.put('charity',{'id': charity.id}); //link the file with the charity
+            console.info('metadata is ' + json:asJSON(self.data)); //log the metadata being passed in for debugging purposes
+          }
+          self.data;
+    %>"
+      },
+      {
+        "exclude": "<% //This exclude statement checks whether a file was uploaded successfully
+                  empty uploadCharityLogo.children %>",
+        "name": "createCharityLogo",
+        "baseUrlType": "app",
+        "url": "<% 'charityLogosCollection' //Attachment API URL needs to have 'Collection' to use onMultiPartSend()
+              %>",
+        "authType": "sso",
+        "onMultiPartSend": "<%
+                          for (var file : self.data.metadata.charityLogos) { //loop through as many files as were uploaded
+                            //Put an uploadedBy object with an id field to the JSON part.
+                            var uploadData = {'id': worker.id};
+                            file.put('uploadedBy',uploadData); //put the new uploadedBy map in the metadata. This captures the WID of the uploader.
+                            //Put uploadedDate field to the JSON part.
+                            file.uploadedDate = date:getTodaysDate(date:getDateTimeZone(userTimeZone)); //put the uploadedDate field in the metadata
+                            console.info('metadata is ' + json:asJSON(self.data)); //log the metadata being passed in for debugging purposes
+                          }
+                          self.data;
+                          %>",
+        "failOnStatusCodes": [
+          {
+            "code": "400"
+          }
+        ]
+      },
+      {
+        "name": "updateCharity",
+        "baseUrlType": "app",
+        "url": "<% //Set the newly created Charity logo on the charity since the relationship did not previously exist.
+                'charities/' + charity.id %>",
+        "authType": "sso",
+        "httpMethod": "PATCH",
+        "exclude": "<% //This exclude statement checks whether a file was uploaded successfully, so the current picture is always the one set on the charity
+                    empty createCharityLogo.charityLogos[0].id
+                     %>",
+        "values": [
+          {
+            "outboundPath": "logo.id",
+            "value": "<% //Set Charity Logo relationship with ID returned by createCharityLogo endpoint
+                      createCharityLogo.charityLogos[0].id %>"
+          }
+        ]
+      }
+    ],
+    "responseErrorDetail": {
+      "errorSummary": "<% error %>",
+      "errors": "<% errors.map(item => { item.error }); %>"
+    }
+  },
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Create Charity"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": true,
+      "sorted": false,
+      "children": [
+        {
+          "type": "section",
+          "horizontal": false,
+          "sorted": false,
+          "children": [
+            {
+              "type": "text",
+              "id": "name",
+              "label": "Name",
+              "required": "<% true %>",
+              "valueOutBinding": "charity.name"
+            },
+            
+            {
+              "type": "textArea",
+              "id": "description",
+              "label": "Description",
+              "valueOutBinding": "charity.description",
+              "required": true,
+              "onChange":  "<% 
+                  self.clearError();
+                  if (!empty(self.value)) { 
+                    if (description.value?.length() > 1000) {
+                      description.setError('Description must be less than 1000 characters.');
+                    } else if (string:split(description.value, '\\s+').size() > 512) {
+                      description.setError('Description must be less than 512 words.');
+                    } else {
+                      description.clearError();
+                    }
+                  } 
+              %>"
+
+            },
+            {
+              "type": "pod",
+              "podId": "pageActionButtonRating"
+            },
+            {
+              "type": "checkBox",
+              "id": "matchDonations",
+              "label": "Match Donations",
+              "value": "<% true %>",
+              "valueOutBinding": "charity.matchDonations"
+            },
+            {
+              "type": "instanceList",
+              "searchEndPoint": "<% endpoints.workerSearch %>",
+              "multiSelect": "false",
+              "id": "instanceListWorkerSearch",
+              "label": "Relationship Manager",
+              "searchResultValues": "<% workerSearch.data %>",
+              "required": "<% true %>",
+              "values": "<% [worker] %>",
+              "selectedValues": "<% [worker] %>",
+              "valueOutBinding": "charity.relationshipManager.id",
+              "_comment": "Set default value at page load to the current worker. They can search for a different worker by typing in the instanceList and hitting Enter."
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "horizontal": false,
+          "sorted": false,
+          "children": [
+            
+            {
+              "type": "fileUploader",
+              "id": "uploadCharityLogo",
+              "label": "Upload Charity Logo",
+              "metadata": "<%
+                {
+                  'uploadedBy': {
+                    // worker.id is the id field from an endpoint named worker.
+                    'id': worker.id
+                  },
+                  'uploadedDate': date:getTodaysDate(date:getDateTimeZone(userTimeZone))
+                }
+              %>",
+              "valueOutBinding": "createCharityLogo:charityLogos",
+              "compact": "<% true %>",
+              "maxImageDimension": 1024,
+              "fileTypes": "png,jpeg,jpg"
+            },
+            {
+              "type": "fileUploader",
+              "label": "Attach Files Related to the Charity",
+              "id": "imageFileUploader",
+              "maxImageDimension": "1024",
+              "maxFileSize": "5242880",
+              "compact": "<% true %>",
+              "required": "<% false %>",
+              "fileTypes": "*",
+              "valueOutBinding": "<% 'createCharityFiles:charityFiles' //outbound endpoint name : attachment obect API URL
+          %> ",
+              "metadata": "<%
+              {:} //need at least an empty map in a metadata tag for onMultiPartSend() to have metadata to work with!
+              %>"
+            }
+          ]
+        },
+        {
+          "type" : "section",
+          "children" : [ {
+            "type" : "dynamicSection",
+            "id" : "ratingDynamicSection",
+            "data" : "<% null %>",
+            "dataVariableName" : "dynamicData",
+            "children" : [ {
+              "type" : "cardContainer",
+              "cards" : [ {
+                "type" : "card",
+                "cardId" : "Rating",
+                "parameters" : "<%
+                  {
+                    'title': dynamicData[0].sentiment,
+                    'label': 'Charity Description Rating',
+                    'confidence': dynamicData[0].confidence
+                 }
+              %>"
+              } ],
+              "render" : "<% ! empty dynamicData  %>"
+            } ]
+          } ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "title": "PMD Scripting",
+  "description": "See some of the most common uses of PMD Scripting in action.",
+  "type": "Reference",
+  "components": [
+    "Presentation"
+  ],
+  "products": [
+    "Workday Extend"
+  ],
+  "authors": [],
+  "tutorial": "",
+  "source": "workday"
+}

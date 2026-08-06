@@ -1,0 +1,24 @@
+{
+  "mappings": [
+   { 
+      "location": { 
+        "pmdId": "UploadBadgePhoto",
+        "endPointName": "validatePhoto" 
+      },  
+      "mockId": "validatePhotoMock" 
+   },
+   { 
+      "location": { 
+        "pmdId": "UploadBadgePhoto",
+        "endPointName": "storeSelfie" 
+      },  
+      "mockId": "storeSelfieMock" 
+   },
+   { 
+      "location": { 
+        "pmdId": "UploadBadgePhoto",
+        "endPointName": "workerSelf" 
+      },  
+      "mockId": "workerSelfMock" 
+   }]
+}

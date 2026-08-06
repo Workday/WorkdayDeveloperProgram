@@ -1,0 +1,99 @@
+{
+  "id": "commissionHome",
+  "endPoints": [
+    {
+      "baseUrlType": "orchestrate",
+      "name": "checkDctStatus",
+      "authType": "sso",
+      "httpMethod": "GET",
+      "url": "<%  'checkDataChangeStatus/launch'  %>"
+    },
+    {
+      "name": "getInFlightTransactions",
+      "baseUrlType": "workday-wql",
+      "authType": "sso",
+      "httpMethod": "GET",
+      "exclude" : "<% empty checkDctStatus.status %>",
+      "url": "<% 
+              var WQLstring = `SELECT dataChangeTask, workdayID, correctionsToProcess{amount} FROM {{site.applicationId}}_transactionsToProcesses`; 
+             return 'data?query=' + string:urlEncode(WQLstring);
+             %>"
+    }
+  ],
+  "include": [
+    "dctCardGenerator.script"
+  ],
+  "presentation": {
+    "headerSize": "STANDARD",
+    "title": {
+      "type": "title",
+      "label": "Prism + Extend - Edit Grids with A Lot of Data"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "section",
+          "horizontal": true,
+          "columnWidthRatios": [
+            0.7,
+            0.3
+          ],
+          "children": [
+            {
+              "type": "section",
+              "title": "Overview",
+              "children": [
+                {
+                  "type": "richText",
+                  "value": "<p>This app highlights the importance for designing scalable pages when interacting with large data sets. It also highlights a single threaded pattern for for triggering Prism Data Change Tasks (DCT) that reduce the risk of queuing up Prism transformations. </p> </br><p>There are generally two schools of thought when trying to work with potentially large data sets and grids: <ul><li>Limit the number of instances displayed.</li><li>Use pagination which is available on View pages.</li></ul>"
+                },
+                {
+                  "type": "cardContainer",
+                  "layout": "MASONRY",
+                  "cards": [
+                    {
+                      "type": "card",
+                      "cardId": "NavPill",
+                      "id": "editGridPatterns"
+                    },
+                    {
+                      "type": "card",
+                      "cardId": "infoCard",
+                      "parameters": "<% dctCardGenerator.generateInfo(checkStatus()) %>",
+                      "id": "DCToptions"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By<br/><b>Workday Extend</b>"
+        }
+      ]
+    }
+  },
+  "script": "<%
+                
+                let checkStatus = function(){
+                if (checkDctStatus.status == 'locked' ) {
+                return 'dctProcessing';
+                } else if (empty 
+                getInFlightTransactions.data[0]?.correctionsToProcess){
+                return 'noDataToProcess';
+                } else {
+                return 'DCTavailable';
+                }
+                }
+               %>"
+}

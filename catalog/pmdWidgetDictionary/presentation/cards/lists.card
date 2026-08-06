@@ -1,0 +1,43 @@
+{
+  "id": "lists",
+  "parameters": [],
+  "header": {
+    "title": "<% 'Lists' %>",
+    "icon": "wd-accent-checkmarked-page"
+  },
+  "body": {
+    "type": "pillCard",
+    "pills": [
+      {
+        "label": "Related Action",
+        "taskReference": {
+          "taskId": "relatedAction"
+        }
+      },
+      {
+        "label": "instance",
+        "taskReference": {
+          "taskId": "instanceList"
+        }
+      },
+      {
+        "label": "Multi-Select (instanceList)",
+        "taskReference": {
+          "taskId": "instanceList"
+        }
+      },
+      {
+        "label": "Loops",
+        "taskReference": {
+          "taskId": "loops"
+        }
+      },
+      {
+        "label": "Moniker Level",
+        "taskReference": {
+          "taskId": "monikerLevel"
+        }
+      }
+    ]
+  }
+}

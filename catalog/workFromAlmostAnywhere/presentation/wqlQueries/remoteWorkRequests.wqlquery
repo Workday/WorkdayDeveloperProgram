@@ -1,0 +1,10 @@
+{
+  "id": "remoteWorkRequests",
+  "parameters": ["applicationId"],
+  "query": "
+    SELECT name, workdayID AS id, location, startDate, endDate, rightToWork, createdBy 
+    FROM <% applicationId + '_workFromAnywhereRequests' %>
+    ORDER BY startDate DESC
+  ",
+  "limit": "100"
+}

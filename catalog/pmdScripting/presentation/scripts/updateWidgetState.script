@@ -1,0 +1,60 @@
+var emptyList = function() {
+  return [];
+}
+
+// Invoke input and build a params string with arguments
+var invokeEndpoint = function() {
+  if (! empty(datePeriod.value)) {
+    if (datePeriod.value[0] == '1') {
+      dates.visible = false;
+
+        var params = {:};
+        if (! empty(expenseEntryStatus.value)) {
+          params.expenseEntryStatus = expenseEntryStatus.value[0];
+        }
+        if (! empty(entryType.value)) {
+          params.entryType = entryType.value[0];
+        }
+
+        var pairs = [];
+        params.forEach((key, value) => { pairs.add(key + '=' + value); });
+        params = pairs.join('&');
+
+        var expensesData = expenses.invoke({'params': params});
+        var sortedExpensesData = expensesData.data.sort(item => {item.date});
+        dataGrid.setRows(sortedExpensesData);
+
+    } else if (datePeriod.value[0] == '2') {
+      dates.visible = true;
+
+        var params = {:};
+        if (!empty(expenseEntryStatus.value[0])) {
+          params.expenseEntryStatus = expenseEntryStatus.value[0];
+        }
+        if (!empty(entryType.value[0])) {
+          params.entryType = entryType.value[0];
+        }
+        if (!empty(fromDate.value)) {
+          params.fromDate = date:format(fromDate.value, 'yyyy-MM-dd');
+        }
+        if (!empty(toDate.value)) {
+          params.toDate = date:format(toDate.value, 'yyyy-MM-dd');
+        }
+        var pairs = [];
+        params.forEach((key, value) => { pairs.add(key + '=' + value); });
+        params = pairs.join('&');
+
+        var expensesData = expenses.invoke({'params': params});
+        dataGrid.setRows(expensesData.data);
+    }
+  } else {
+    dates.visible = false;
+      dataGrid.setRows(emptyList());
+  }
+};
+
+/* Export all functions */
+{
+  "invokeEndpoint": invokeEndpoint,
+  "emptyList": emptyList
+}

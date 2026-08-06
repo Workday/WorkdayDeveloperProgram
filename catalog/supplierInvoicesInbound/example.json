@@ -1,0 +1,16 @@
+{
+  "title": "Supplier Invoices Inbound",
+  "description": "Use Orchestrate for Integrations to import supplier invoices.",
+  "type": "Integration App",
+  "components": [
+    "Orchestration"
+  ],
+  "products": [
+    "Workday Orchestrate",
+    "Workday Financials",
+    "Workday SOAP API"
+  ],
+  "authors": [],
+  "tutorial": "https://forum.developer.workday.com/t/supplier-invoices-inbound/9927",
+  "source": "workday"
+}

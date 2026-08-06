@@ -1,0 +1,43 @@
+{
+  "id": "pageLayout",
+  "parameters": [],
+  "header": {
+    "title": "<% 'Page Layout' %>",
+    "icon": "wd-accent-calendar"
+  },
+  "body": {
+    "type": "pillCard",
+    "pills": [
+      {
+        "label": "Sections",
+        "taskReference": {
+          "taskId": "sections"
+        }
+      },
+      {
+        "label": "Micro Pop-up",
+        "taskReference": {
+          "taskId": "micro"
+        }
+      },
+      {
+        "label": "Tabs",
+        "taskReference": {
+          "taskId": "tabs"
+        }
+      },
+      {
+        "label": "Area Layout",
+        "taskReference": {
+          "taskId": "areaLayout"
+        }
+      },
+      {
+        "label": "Basic Form Layout",
+        "taskReference": {
+          "taskId": "basicFormLayout"
+        }
+      }
+    ]
+  }
+}

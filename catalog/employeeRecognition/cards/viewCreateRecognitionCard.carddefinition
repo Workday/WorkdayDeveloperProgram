@@ -1,0 +1,61 @@
+{
+  "id": "viewCreateRecognitionCard",
+  "presentation": {
+    "type": "inlineCard",
+    "header": {
+      "type": "cardHeader",
+      "title": "Employee Recognition",
+      "subtitle": "View and Recognize Employees",
+      "indicator": {
+        "label": "New Recognition Card!",
+        "color": "BLUE"
+      },
+      "icon": "wd-accent-handshake"
+    },
+    "body": {
+      "type": "listCard",
+      "title": "Recognitions Received",
+      "subtitle": "From and Date",
+      "on": "<% feedback.data %>",
+      "as": "currFeedback",
+      "template": {
+        "label": "<% 'From : ' + currFeedback.from1 %>",
+        "value": "<% //Code to convert RichText to Text
+                     const richString = currFeedback.comments[0].comment;
+                     // This returns a list
+                     const regexSplit = richString.splitByRegex('<[^>]*>');
+                     // filter out the empty values in the list, while still preserving spaces
+                     const textList = regexSplit.filter(x => !empty x);
+                     //Use Join to convert to a flat string
+                     textList.join('');
+                 %>",
+        "secondaryValue": "<% currFeedback.date %>",
+        "secondaryValueWidth": "MEDIUM"
+      }
+    },
+    "footer": [
+      {
+        "label": "Create Recognition for your Team",
+        "taskReference": {
+          "taskId": "findWorker"
+        }
+      }
+    ]
+  },
+  "endPoints": [
+    {
+      "name": "currWorker",
+      "baseUrlType": "workday-staffing",
+      "url": "/workers/me",
+      "authType": "sso"
+    },
+    {
+      "name": "feedback",
+      "baseUrlType": "workday-wql",
+      "url": "<% var query = 'SELECT date, from1, comments{comment} as comments FROM feedbackReceived (worker = ' + currWorker.id + ') ORDER BY date DESC';
+               console.info('requests query is ' + query);
+               return 'data?limit=10&query=' + query.urlEncode(); %>",
+      "authType": "sso"
+    }
+  ]
+}

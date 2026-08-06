@@ -1,0 +1,44 @@
+{
+  "id": "daysChart",
+  "parameters": [
+    "dataSet", "daysUsed", "daysLeft", "timeZone"
+  ],
+  "header": {
+    "title": "WFAA Requests by Location and Trip Length",
+    "subtitle": "Trips Ending This Calendar Year",
+    "icon": "wd-accent-globe-earth",
+    "indicator": {
+      "label": "<% if (daysLeft > 0) {'Looking Good!'} else {'Needs Attention'} %>",
+      "color": "<% if (daysLeft > 0) {'green'} else {'orange'} %>"
+    }
+  },
+  "body": {
+    "type": "chartCard",
+    "chart": {
+      "type": "donutChart2",
+      "id": "donutExample",
+      "data": "<% !empty(dataSet) ? dataSet.filter(request => {date:parse(request.endDate).year() == date:extractValue('YEAR', date:now(timeZone))}) : [] %>",
+      "dataVariableName": "request",
+      "sliceSizeDataSet": {
+        "name": "Trip Length",
+        "value": "<% (date:parse(request.startDate)).between(date:parse(request.endDate), 'DAY') + 1 %>"
+      },
+      "sliceColorDataSet": {
+        "name": "Location",
+        "value": "<% request.location %>"
+      },
+      "title": "<% daysUsed + ' Days Used' %>",
+      "subtitle": "<% '' %>",
+      "showLabelLines": true,
+      "showPercentLabels": true
+    }
+  },
+  "footer": [
+    {
+      "label": "Remote Work Calendar",
+      "taskReference": {
+        "taskId": "calendarRemoteWork"
+      }
+    }
+  ]
+}

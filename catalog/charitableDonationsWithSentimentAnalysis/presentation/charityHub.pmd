@@ -1,0 +1,66 @@
+{
+  "id": "charityHub",
+  "securityDomains": [
+    "ManageCharities"
+  ],
+  "presentation": {
+    "body": {
+      "type": "hub",
+      "label": "Charitable Donations",
+      "icon": "wd-accent-handshake",
+      "initialTask": {
+        "taskId": "home"
+      },
+      "navigationTasks": [
+        {
+          "type": "item",
+          "icon": "wd-icon-timeline-milestone",
+          "label": "About",
+          "task": {
+            "taskId": "home"
+          }
+        },
+        {
+          "type": "item",
+          "icon": "wd-icon-user",
+          "label": "My Charitable Donations",
+          "task": {
+            "taskId": "manageMyDonations"
+          }
+        },
+        {
+          "type": "item",
+          "icon": "wd-icon-checkboxes",
+          "label": "Manage Charities",
+          "task": {
+            "taskId": "manageCharities"
+          }
+        }
+      ],
+      "additionalLinks": {
+        "title": "Additional Links",
+        "links": [
+          {
+            "type": "task",
+            "label": "Create Charity",
+            "task": {
+              "taskId": "createCharityWizard"
+            }
+          },
+          {
+            "type": "task",
+            "label": "Donate to a Charity",
+            "task": {
+              "taskId": "charitiesListDetail"
+            }
+          },
+          {
+            "type": "external",
+            "label": "Developer Forum",
+            "url": "https://forum.developer.workday.com/"
+          }
+        ]
+      }
+    }
+  }
+}

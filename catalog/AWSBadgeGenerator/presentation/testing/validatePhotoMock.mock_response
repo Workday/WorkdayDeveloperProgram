@@ -1,0 +1,5 @@
+{ 
+  "id": "validatePhotoMock",
+  "responseCode": 200, 
+  "responseBody": {} 
+}

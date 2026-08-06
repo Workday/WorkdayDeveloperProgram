@@ -1,0 +1,37 @@
+{
+    "id": "updateVehicle",
+    "_comment": "Make sure to replace this app's 'vehicleRegistration20241_nkzjqw' with YOUR app's ID. Keep in mind the Input type after $updateVehicle_Input needs to be capitalized!",
+    "query": "
+        mutation vehicleRegistration20241_nkzjqw_updateVehicle($updateVehicle_input: VehicleRegistration20241_nkzjqw_VehiclesSummary_UpdateInput!, $updateVehicle_vehicleId: IdentifierInput!) {
+  vehicleRegistration20241_nkzjqw_updateVehicle(
+    input: $updateVehicle_input
+    vehiclesId: $updateVehicle_vehicleId
+  ) {
+    color
+    compact
+    descriptor
+    workdayID {
+      id
+    }
+    licensePlate
+    location {
+      descriptor
+      workdayID {
+        id
+      }
+    }
+    longDescription
+    make
+    model
+    owner {
+      descriptor
+      workdayID {
+        id
+      }
+    }
+    registrationDate
+    year
+  }
+}
+    "
+}

@@ -1,0 +1,29 @@
+{
+    "podId": "pageActionButtonRating",
+    "seed": {
+      "parameters": [],
+      "template": {
+              "type" : "pageActionButton",
+              "id" : "rateDescription",
+              "visible": true,
+              "label" : "Analyze Description",
+              "onClick" : "<%
+                    if (empty(description.value)) {
+                      description.setError('Enter a description to analyze and rate.')
+                    } else {
+                    // load data from deferred endpoint, then update dynamic section 
+                      description.clearError();
+                      pageVariables.mlResult = analyzeText.invoke();
+                      console.info('pageVariables.mlResult is ' + json:asJSON(pageVariables.mlResult));
+                      if (empty(pageVariables.mlResult['Value error'])) { //if there is no error code thrown
+                          ratingDynamicSection.data = pageVariables.mlResult;
+                      } else {
+                        description.setError('Error returned from API: ' + pageVariables.mlResult.responseHeaders.statusCode + ': ' + pageVariables.mlResult['Value error']);
+                        ratingDynamicSection.data = null;
+                        
+                      } 
+                    }                  
+              %>"
+            }
+    }
+  }

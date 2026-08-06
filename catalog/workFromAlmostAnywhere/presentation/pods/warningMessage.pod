@@ -1,0 +1,12 @@
+{
+    "podId": "warningMessage",
+    "seed": {
+      "parameters": [],
+      "template": {
+              "type": "richText",
+              "enabled": false,
+              "render": "<% pageVariables.daysLeft == 0 %>",
+              "value": "<p style=\"text-align:left\"><span style=\"font-size:16px; color:black;\">⚠️ You have used up the alotted remote work days for this calendar year. Any additional submissions may not be approved.</span></p>"
+      }
+    }
+  }

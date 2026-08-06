@@ -1,0 +1,37 @@
+{
+  "id": "congratulationsPopup",
+  "endPoints": [],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "congratulationsPopup"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "congratulationsPopup",
+          "id": "CONGRATULATIONS!",
+          "label": "CONGRATULATIONS!",
+          "textCongrats": "CONGRATULATIONS!",
+          "textSubmitted": "You have looked at all the widgets!"
+        },
+        {
+          "type": "text",
+          "value": "Congratulations from Workday Extend!"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

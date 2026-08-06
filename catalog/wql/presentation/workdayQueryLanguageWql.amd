@@ -1,0 +1,30 @@
+{
+  "appProperties": [ ],
+  "tasks": [
+    {
+      "id": "queryBuildAsRoot",
+      "routingPattern": "/",
+      "page": {
+        "id": "queryBuild"
+      }
+    },
+    {
+      "id": "queryBuild",
+      "routingPattern": "/queryBuild",
+      "page": {
+        "id": "queryBuild"
+      }
+    }
+  ],
+  "applicationId": "workdayQueryLanguageWql",
+  "dataProviders": [
+    {
+      "key": "workday-common",
+      "value": "https://api.workday.com/common/v1/"
+    },
+    {
+      "key": "workday-wql",
+      "value": "https://api.workday.com/wql/v1/"
+    }
+  ]
+}

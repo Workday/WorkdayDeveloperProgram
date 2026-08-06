@@ -1,0 +1,132 @@
+{
+  "id": 11,
+  "name": "RequestedFund",
+  "label": "Requested Fund",
+  "defaultSecurityDomains": [
+    "CapitalProjectPlanning",
+    "CapitalProjectPlanningAdministrator"
+  ],
+  "defaultCollection": {
+    "name": "requestedFunds",
+    "label": "Requested Funds"
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "fundingType",
+      "type": "SINGLE_INSTANCE",
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "target": "FundingType",
+      "secureByTarget": false,
+      "enableReportingFromTarget": false
+    },
+    {
+      "id": 2,
+      "name": "capitalProjectRequest",
+      "type": "SINGLE_INSTANCE",
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "target": "CapitalProjectRequest",
+      "secureByTarget": true,
+      "enableReportingFromTarget": false
+    },
+    {
+      "id": 3,
+      "name": "itemDescription",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": true,
+      "isPurgeable": false,
+      "enableIndex": false,
+      "enableSearch": false,
+      "description": ""
+    },
+    {
+      "id": 4,
+      "name": "quantity",
+      "type": "DECIMAL",
+      "isPurgeable": false,
+      "enableIndex": false,
+      "decimals": 2
+    },
+    {
+      "enableIndex": false,
+      "isPurgeable": false,
+      "type": "CURRENCY",
+      "name": "unitPrice",
+      "id": 5
+    },
+    {
+      "enableIndex": false,
+      "isPurgeable": false,
+      "type": "CURRENCY",
+      "name": "totalCost",
+      "id": 6
+    },
+    {
+      "precision": "DAY",
+      "enableIndex": false,
+      "isPurgeable": false,
+      "type": "DATE",
+      "name": "inServiceDate",
+      "id": 7
+    },
+    {
+      "precision": "DAY",
+      "enableIndex": false,
+      "isPurgeable": false,
+      "type": "DATE",
+      "name": "dateOfPurchase",
+      "id": 8
+    },
+    {
+      "enableIndex": false,
+      "isPurgeable": false,
+      "type": "BOOLEAN",
+      "name": "isNew",
+      "id": 9
+    },
+    {
+      "enableReportingFromTarget": false,
+      "secureByTarget": false,
+      "target": "SUPPLIER",
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "type": "SINGLE_INSTANCE",
+      "name": "supplier",
+      "id": 10
+    },
+    {
+      "enableReportingFromTarget": false,
+      "secureByTarget": false,
+      "target": "Services",
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "type": "SINGLE_INSTANCE",
+      "name": "service",
+      "id": 11
+    },
+    {
+      "enableReportingFromTarget": false,
+      "secureByTarget": true,
+      "target": "COST_CENTER",
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "type": "SINGLE_INSTANCE",
+      "name": "costCenter",
+      "id": 12
+    }
+  ],
+  "derivedFields": [
+    {
+      "id": 1,
+      "name": "totalCostCalc",
+      "type": "DECIMAL",
+      "expression": "quantity*unitPrice",
+      "description": "",
+      "decimals": 2,
+      "label": "Calculated Total Cost"
+    }
+  ]
+}

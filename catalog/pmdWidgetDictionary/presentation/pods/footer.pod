@@ -1,0 +1,10 @@
+{
+  "podId": "footer",
+  "seed": {
+    "template": {
+      "type": "richText",
+      "enabled": "false",
+      "value": "Powered By<br><b>Workday Extend</b>"
+    }
+  }
+}

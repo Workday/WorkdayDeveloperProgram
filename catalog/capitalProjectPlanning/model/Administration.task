@@ -1,0 +1,9 @@
+{
+  "id": 2,
+  "name": "Administration",
+  "label": "Configure Capital Project Planning",
+  "securityDomains": [
+    "CapitalProjectPlanningAdministrator"
+  ],
+  "routePath": "/ApplicationConfigEdit"
+}

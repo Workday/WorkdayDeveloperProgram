@@ -1,0 +1,93 @@
+var getCookieData = function() {
+  var chartData = [
+    {
+      'cookieType': 'Thin Mints',
+      'sellerName': 'Cindy',
+      'actualSales': 53,
+      'salesGoal': 20,
+      'troopAverage': 45
+    },
+    {
+      'cookieType': 'Lemonades',
+      'sellerName': 'Cindy',
+      'actualSales': 18,
+      'salesGoal': 30,
+      'troopAverage': 65
+    },
+    {
+      'cookieType': 'Shortbreads',
+      'sellerName': 'Cindy',
+      'actualSales': 45,
+      'salesGoal': 40,
+      'troopAverage': 22
+    },
+    {
+      'cookieType': 'Caramel De Lites',
+      'sellerName': 'Cindy',
+      'actualSales': 65,
+      'salesGoal': 20,
+      'troopAverage': 50
+    }
+  ]
+  return chartData
+}
+
+var getSellerCookieData = function() {
+  var chartData = [
+    {
+      'cookieType': 'Thin Mints',
+      'sellerName': 'Cindy',
+      'actualSales': 53,
+      'salesGoal': 20
+    },
+    {
+      'cookieType': 'Lemonades',
+      'sellerName': 'Cindy',
+      'actualSales': 18,
+      'salesGoal': 30
+    },
+    {
+      'cookieType': 'Shortbreads',
+      'sellerName': 'Cindy',
+      'actualSales': 45,
+      'salesGoal': 40
+    },
+    {
+      'cookieType': 'Caramel De Lites',
+      'sellerName': 'Cindy',
+      'actualSales': 65,
+      'salesGoal': 20
+    },
+    {
+      'cookieType': 'Thin Mints',
+      'sellerName': 'Betty',
+      'actualSales': 56,
+      'salesGoal': 15
+    },
+    {
+      'cookieType': 'Lemonades',
+      'sellerName': 'Betty',
+      'actualSales': 27,
+      'salesGoal': 50
+    },
+    {
+      'cookieType': 'Shortbreads',
+      'sellerName': 'Betty',
+      'actualSales': 30,
+      'salesGoal': 35
+    },  
+    {
+      'cookieType': 'Caramel De Lites',
+      'sellerName': 'Betty',
+      'actualSales': 52,
+      'salesGoal': 25
+    }
+  ]
+  return chartData
+}
+
+
+{
+  "getCookieData": getCookieData,
+  "getSellerCookieData": getSellerCookieData
+}

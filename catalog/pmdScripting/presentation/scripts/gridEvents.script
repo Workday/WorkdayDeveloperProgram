@@ -1,0 +1,26 @@
+// Event onRowSelect called on grid.
+var selectRow = function() {
+  if (!reqGrid.selectedRows.isEmpty()) {
+    detailsSection.visible = true;
+      var id = reqGrid.selectedRows[0].childrenMap.idColumn.value;
+      var detailList = requisition.invoke({'id': id});
+      requester.value = detailList.requester.descriptor;
+      requisitionDate.value = detailList.requisitionDate;
+      status.value = detailList.status.descriptor;
+  } else {
+    detailsSection.visible = false;
+  }
+}
+
+// Event onChange called from grid column
+var changeCost = function() {
+  var quantity = reqGrid.selectedRows[0].childrenMap.quantityColumn.value
+  var unitCost = reqGrid.selectedRows[0].childrenMap.unitCostColumn.value;
+  reqGrid.selectedRows[0].childrenMap.totalCostColumn.value = quantity * unitCost;
+}
+
+  /* Export all functions */
+{
+  "changeCost": changeCost,
+  "selectRow": selectRow
+}

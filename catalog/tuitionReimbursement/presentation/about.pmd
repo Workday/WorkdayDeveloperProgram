@@ -1,0 +1,63 @@
+{
+  "id": "about",
+  "endPoints": [ ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Tuition Reimbursement: About Page"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "section",
+          "horizontal": true,
+          "sorted": false,
+          "children": [
+            {
+              "type": "fieldSet",
+              "title": "About",
+              "horizontal": false,
+              "collapsible": true,
+              "initializeCollapsed": false,
+              "sorted": false,
+              "children": [
+                {
+                  "type": "richText",
+                  "label": "Information",
+                  "value": "<h1>Design Considerations</h1><p><span>When approaching a tuition reimbursement app, it&#39;s important to consider what user you are targeting for your app. This app catalog submission is targeted at the self service transaction for an employee to submit data to quickly facilitate entering a transaction and submitting it. ​</span></p><p></p><p><span>Other variations of reimbursement apps may actually focus on budgetary planning. This means that that the flow of the transactional data would likely need to be split further to ensure that the business can forecast better the upcoming spend for tuition reimbursement. Another driving use case for a reimbursement app could be to drive better compliance with IRS limits in the US. It&#39;s also possible that all these are a driving reason for your application. D</span><span>ue to the complexity of handling these scenarios, this app is scoped to just facilitating data entry by a self-service employee with a corresponding business process. </span></p>"
+                }
+              ]
+            },
+            {
+              "type": "fieldSet",
+              "title": "Process Information",
+              "horizontal": false,
+              "collapsible": true,
+              "initializeCollapsed": false,
+              "sorted": false,
+              "children": [
+                {
+                  "type": "richText",
+                  "label": "Information",
+                  "value": "<h1>Backend Processes</h1><p>There are at least three functional ways to reimburse an employee for tuition reimbursement:</p><ul><li>One Time Payment</li><li>Expense Payment</li><li>Payroll Input</li></ul><p>Of the three options, one time payment (OTP) is the simplest to implement for this catalog application.</p>"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

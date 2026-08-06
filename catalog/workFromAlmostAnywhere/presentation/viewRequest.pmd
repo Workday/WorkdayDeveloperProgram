@@ -1,0 +1,67 @@
+{
+  "id": "viewRequest",
+  "include": [
+    "fileTypes.script"
+  ],
+  "endPoints": [
+    {
+      "name": "me",
+      "baseUrlType": "workday-staffing",
+      "url": "workers/me",
+      "authType": "sso"
+    },
+    {
+      "baseUrlType": "location",
+      "name": "countries",
+      "authType": "sso",
+      "url": "countries",
+      "isCollection": "true"
+    },
+    {
+      "name": "request",
+      "baseUrlType": "app",
+      "url": "<% /*remember that queryParams.requestId is taking in the parameterBinding from the taskReference tag on the page
+      that sent the user here. This happens to be called 'requestId' in manageEvents.pmd but it could be called whatever the developer chooses*/
+              'workFromAnywhereRequests/' + (queryParams.requestId ?? flowVariables.currentEvent) %>",
+      "authType": "sso"
+    },
+    {
+      "name": "getAttachments",
+      "baseUrlType": "app",
+      "url": "<% 'rightToWorkVerifications?workRequest=' + (flowVariables.currentEvent ?? queryParams.requestId)  %>",
+      "authType": "sso"
+    }
+  ],
+  "onLoad": "<% 
+  pageVariables.initialCountry = countries.data.find(x => {x.descriptor == request.location});
+  console.info('initial country is ' + pageVariables.initialCountry);
+  %>",
+  "presentation": {
+    "micro": "true",
+    "title": {
+      "type": "title",
+      "label": "View Remote Work Request"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": true,
+      "children": [
+        {
+          "type": "pod",
+          "podId": "requestDetailsViewOnly"
+        },
+        {
+          "type": "section",
+          "id": "rightside",
+          "children": [
+            {
+              "type": "pod",
+              "podId": "previouslyAttachedFiles",
+              "_podComment": "loads a fileUploader that returns all relevant attached files for the request"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

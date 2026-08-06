@@ -1,0 +1,36 @@
+{
+  "id": 1,
+  "name": "RightToWorkVerification",
+  "label": "Right To Work Verification",
+  "defaultSecurityDomains": [
+    "RemoteWorkSelfService"
+  ],
+  "defaultCollection": {
+    "name": "rightToWorkVerifications",
+    "label": "Right To Work Verifications"
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "uploadedBy",
+      "type": "SINGLE_INSTANCE",
+      "target": "WORKER"
+    },
+    {
+      "id": 2,
+      "name": "uploadedDate",
+      "type": "DATE",
+      "label": "Date",
+      "precision": "DAY"
+    },
+    {
+      "useForDisplay": false,
+      "secureByTarget": false,
+      "target": "WorkFromAnywhereRequest",
+      "type": "SINGLE_INSTANCE",
+      "label": "Work Request",
+      "name": "workRequest",
+      "id": 3
+    }
+  ]
+}

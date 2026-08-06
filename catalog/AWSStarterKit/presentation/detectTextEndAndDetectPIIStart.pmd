@@ -1,0 +1,66 @@
+{
+  "id": "detectTextEndAndDetectPIIStart",
+  "endPoints": [ ],
+
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "detectPIIOrch",
+        "baseUrlType": "orchestration",
+        "url": "detectPII/launch",
+        "authType": "sso",
+        "httpMethod": "POST",
+        "onSend": "<% return json:parse(flowVariables.uploadResult.body); %>"
+      },
+      {
+        "type": "outboundVariable",
+        "name": "uploadVariables",
+        "variableScope": "flow",
+        "values": [
+          {
+            "outboundPath": "uploadResult",
+            "value": "<% detectPIIOrch %>"
+          }
+        ]
+      }
+    ]
+  },
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Detect Text Response"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "action": "LINK",
+          "type": "button",
+          "id": "home",
+          "label": "← Home",
+          "taskReference": {
+            "taskId": "home"
+          }
+        },
+        {
+          "type": "textArea",
+          "id": "debug",
+          "label": "Lambda Output",
+          "value": "<% flowVariables.uploadResult %>"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    },
+    "pageType": "EDIT"
+  }
+}

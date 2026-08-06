@@ -1,0 +1,61 @@
+{
+  "id": "sidebarInfo",
+  "presentation": {
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "text",
+          "label": "Title",
+          "value": "<% queryParams.businessTitle %>",
+          "enabled": false
+        },
+        {
+          "type": "text",
+          "label": "Primary Office Location",
+          "value": "<% queryParams.primaryLocation %>",
+          "enabled": false
+        },
+        {
+          "type": "number",
+          "label": "Total Remote Work Days Requested:",
+          "value": "<% queryParams.daysUsed %>"
+        },
+        {
+          "type": "number",
+          "label": "Total Remote Work Days Left:",
+          "value": "<% queryParams.daysLeft %>"
+        },
+        {
+          "type": "text",
+          "label": "Balance Will Reset On:",
+          "value": "<% queryParams.resetDate %>"
+        },
+        {
+          "type": "readOnlyText",
+          "value": "
+          
+          ",
+          "enabled": false
+        },
+        {
+          "type": "button",
+          "id": "home",
+          "label": "Return to the Home Page",
+          "taskReference": {
+            "type": "taskReference",
+            "taskId": "requestHub"
+          },
+          "action": "AUXILIARY"
+        },
+        {
+          "type": "readOnlyText",
+          "value": "
+          
+          ",
+          "enabled": false
+        }
+      ]
+    }
+  }
+}

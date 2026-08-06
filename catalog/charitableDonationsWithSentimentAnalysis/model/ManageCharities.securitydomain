@@ -1,0 +1,6 @@
+{
+  "id": 1,
+  "name": "ManageCharities",
+  "label": "Manage: Charities",
+  "enabledForPageSecurity": true
+}

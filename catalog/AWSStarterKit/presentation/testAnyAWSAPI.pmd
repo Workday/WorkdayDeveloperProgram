@@ -1,0 +1,253 @@
+{
+  "id": "testAnyAWSAPI",
+  "endPoints": [
+    {
+      "httpMethod": "POST",
+      "name": "callAnyAWS",
+      "url": "callAnyAWS/launch",
+      "authType": "sso",
+      "baseUrlType": "orchestration",
+      "deferred": true,
+      "onSend": "<%
+        self.data = {
+          'request': request.value,
+          'awsAPI': pageVariables.api,
+          'awsMethod': pageVariables.method
+        };
+        console.info(self.data);
+        return self.data;
+        %>",
+      "failOnStatusCodes": [
+        "400",
+        "403"
+      ]
+    }
+  ],
+  "script": "<%
+      var hideAll = function() {
+      awsComprehendMethod.visible = false;
+      awsEventsMethod.visible = false;
+      awsTextractMethod.visible = false;
+      awsRekognitionMethod.visible = false;
+      awsTranslateMethod.visible = false;
+      }; 
+  
+  %>",
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "AWS API Tester"
+    },
+    "body": {
+      "type": "areaLayout",
+      "layout": "left",
+      "primaryArea": [
+        {
+          "type": "readOnlyText",
+          "id": "awsMethod",
+          "value": "To show the guildes, click the ? on the top right of the banner, below your profile logo.
+To Hide the guides, click on the X on the top right of the banner."
+        },
+        {
+          "type": "fieldSet",
+          "title": "Select AWS Method",
+          "initializeCollapsed": false,
+          "collapsible": false,
+          "children": [
+            {
+              "type": "dropdown",
+              "id": "api",
+              "label": "Select API",
+              "onChange": "<% 
+              pageVariables.api = api.getSelectedEntries()[0].id;
+              if(api.getSelectedEntries()[0].id == 'Comprehend'){
+                    hideAll();
+                    awsComprehendMethod.visible = true;
+                    pageVariables.method = awsComprehendMethod.value;
+              }
+              if(api.getSelectedEntries()[0].id == 'EventBridge'){
+                    hideAll();
+                    awsEventsMethod.visible = true;
+                    pageVariables.method = awsEventsMethod.value;
+              }
+              if(api.getSelectedEntries()[0].id == 'Textract'){
+                    hideAll();
+                    awsTextractMethod.visible = true;
+                    pageVariables.method = awsTextractMethod.value;
+              }
+              if(api.getSelectedEntries()[0].id == 'Rekognition'){
+                    hideAll();
+                    awsRekognitionMethod.visible = true;
+                    pageVariables.method = awsRekognitionMethod.value;
+              }
+              if(api.getSelectedEntries()[0].id == 'Translate'){
+                    hideAll();
+                    awsTranslateMethod.visible = true;
+                    pageVariables.method = awsTranslateMethod.value;
+              }
+              
+                %>",
+              "instanceList": [
+                {
+                  "id": "Comprehend",
+                  "descriptor": "Comprehend"
+                },
+                {
+                  "id": "EventBridge",
+                  "descriptor": "EventBridge"
+                },
+                {
+                  "id": "Rekognition",
+                  "descriptor": "Rekognition"
+                },
+                {
+                  "id": "Textract",
+                  "descriptor": "Textract"
+                },
+                {
+                  "id": "Translate",
+                  "descriptor": "Translate"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "awsComprehendMethod",
+              "label": "AWS Comprehend Method",
+              "visible": false,
+              "value": "contains_pii_entities",
+              "helpText": "Enter a method that matches the Python SDK(check the guided tour)",
+              "guide": {
+                "type": "guide",
+                "id": "guideTextComprehendTag",
+                "title": "Comprehend Documentation.",
+                "text": "Ensure you are inputing the proper syntax for the method you want to use",
+                "linkText": "Comprehend API Docs",
+                "linkUrl": "https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/comprehend.html"
+              },
+              "onChange": "<% pageVariables.method = awsComprehendMethod.value %>"
+            },
+            {
+              "type": "text",
+              "id": "awsTextractMethod",
+              "label": "AWS Textract Method",
+              "visible": false,
+              "value": "analyze_document",
+              "helpText": "Enter a method that matches the Python SDK(check the guided tour)",
+              "guide": {
+                "type": "guide",
+                "id": "guideTextTextractTag",
+                "title": "Textract Documentation.",
+                "text": "Ensure you are inputing the proper syntax for the method you want to use",
+                "linkText": "Textract API Docs",
+                "linkUrl": "https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/textract.html"
+              },
+              "onChange": "<% pageVariables.method = awsTextractMethod.value %>"
+            },
+            {
+              "type": "text",
+              "id": "awsTranslateMethod",
+              "label": "AWS Translate Method",
+              "visible": false,
+              "value": "can_paginate",
+              "helpText": "Enter a method that matches the Python SDK(check the guided tour)",
+              "guide": {
+                "type": "guide",
+                "id": "guideTextTranslateTag",
+                "title": "Translate Documentation.",
+                "text": "Ensure you are inputing the proper syntax for the method you want to use",
+                "linkText": "Translate API Docs",
+                "linkUrl": "https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/translate.html"
+              },
+              "onChange": "<% pageVariables.method = awsTranslateMethod.value %>"
+            },
+            {
+              "type": "text",
+              "id": "awsEventsMethod",
+              "label": "AWS Events Method",
+              "visible": false,
+              "value": "activate_event_source",
+              "helpText": "Enter a method that matches the Python SDK(check the guided tour)",
+              "guide": {
+                "type": "guide",
+                "id": "guideTextEventsTag",
+                "title": "Event Bridge Documentation.",
+                "text": "Ensure you are inputing the proper syntax for the method you want to use",
+                "linkText": "Event Bridge API Docs",
+                "linkUrl": "https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/events.html"
+              },
+              "onChange": "<% pageVariables.method = awsEventsMethod.value %>"
+            },
+            {
+              "type": "text",
+              "id": "awsRekognitionMethod",
+              "label": "AWS Rekognition Method",
+              "visible": false,
+              "value": "associate_faces",
+              "helpText": "Enter a method that matches the Python SDK(check the guided tour)",
+              "guide": {
+                "type": "guide",
+                "id": "guideTextTag",
+                "title": "Rekognition Documentation.",
+                "text": "Ensure you are inputing the proper syntax for the method you want to use",
+                "linkText": "Rekognition API Docs",
+                "linkUrl": "https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rekognition.html"
+              },
+              "onChange": "<% pageVariables.method = awsRekognitionMethod.value %>"
+            }
+          ]
+        },
+        {
+          "type": "textArea",
+          "label": "AWS Request",
+          "id": "request",
+          "value": ""
+        },
+        {
+          "type": "pageActionButton",
+          "id": "test",
+          "label": "Send Request",
+          "onClick": "<% response.value = callAnyAWS.invoke({:}) %>"
+        }
+      ],
+      "secondaryArea": [
+        {
+          "type": "textArea",
+          "label": "AWS Response",
+          "id": "response",
+          "value": ""
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "action": "LINK",
+          "type": "button",
+          "id": "home",
+          "label": "← Home",
+          "taskReference": {
+            "taskId": "home"
+          }
+         } ,
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    },
+    "pageType": "EDIT",
+    "standardEditButtonsHidden": true,
+    "tabs": [
+      {
+        "type": "section"
+      }
+    ]
+  },
+  "onLoad": "<%
+                pageVariables.method = '';
+                pageVariables.api = '';
+               %>"
+}

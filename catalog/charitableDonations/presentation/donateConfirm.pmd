@@ -1,0 +1,46 @@
+{
+  "id": "donateConfirm",
+  "securityDomains": [
+    "ManageCharities"
+  ],
+  "endPoints": [ ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Donate to Charity"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "sorted": false,
+      "children": [
+        {
+          "type": "text",
+          "value": "Your Donation has been created."
+        },
+        {
+          "type": "section",
+          "horizontal": true,
+          "children": [
+            {
+              "type": "button",
+              "action": "PRIMARY",
+              "label": "My Charitable Donations",
+              "taskReference": {
+                "taskId": "manageMyDonations"
+              }
+            },
+            {
+              "type": "button",
+              "action": "AUXILIARY",
+              "label": "<% 'Return to ' + site.appProperties.appName %>",
+              "taskReference": {
+                "taskId": "home"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

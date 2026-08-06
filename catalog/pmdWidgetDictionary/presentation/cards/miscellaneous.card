@@ -1,0 +1,55 @@
+{
+  "id": "miscellaneous",
+  "parameters": [],
+  "header": {
+    "title": "<% 'Miscellaneous' %>",
+    "icon": "wd-accent-tools"
+  },
+  "body": {
+    "type": "pillCard",
+    "pills": [
+      {
+        "label": "editWizard",
+        "taskReference": {
+          "taskId": "editWizard"
+        }
+      },
+      {
+        "label": "templatedListItem",
+        "taskReference": {
+          "taskId": "templatedListItem"
+        }
+      },
+      {
+        "label": "progressIndicator",
+        "taskReference": {
+          "taskId": "progressIndicator"
+        }
+      },
+      {
+        "label": "superEdit",
+        "taskReference": {
+          "taskId": "superEdit"
+        }
+      },
+      {
+        "label": "congratulationsPopup",
+        "taskReference": {
+          "taskId": "congratulationsPopup"
+        }
+      },
+      {
+        "label": "bpExtender",
+        "taskReference": {
+          "taskId": "bpExtender"
+        }
+      },
+      {
+        "label": "Link to Delivered Task & Reports",
+        "taskReference": {
+          "taskId": "linkToDelivered"
+        }
+      }
+    ]
+  }
+}

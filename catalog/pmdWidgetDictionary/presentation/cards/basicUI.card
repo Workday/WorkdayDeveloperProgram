@@ -1,0 +1,61 @@
+{
+  "id": "basicUI",
+  "parameters": [],
+  "header": {
+    "title": "<% 'Basic UI Widgets' %>",
+    "icon": "wd-accent-resources"
+  },
+  "body": {
+    "type": "pillCard",
+    "pills": [
+      {
+        "label": "Simple Types (text, textArea, checkbox...)",
+        "taskReference": {
+          "taskId": "simpleTypes"
+        }
+      },
+      {
+        "label": "Buttons and Links",
+        "taskReference": {
+          "taskId": "buttons"
+        }
+      },
+      {
+        "label": "Dropdowns",
+        "taskReference": {
+          "taskId": "dropdown"
+        }
+      },
+      {
+        "label": "Calendar",
+        "taskReference": {
+          "taskId": "calendar"
+        }
+      },
+      {
+        "label": "labeledThumbnail",
+        "taskReference": {
+          "taskId": "labeledThumbnail"
+        }
+      },
+      {
+        "label": "guide",
+        "taskReference": {
+          "taskId": "queryBuild"
+        }
+      },
+      {
+        "label": "dynamicSection",
+        "taskReference": {
+          "taskId": "queryBuild"
+        }
+      },
+      {
+        "label": "snapSlider",
+        "taskReference": {
+          "taskId": "snapSlider"
+        }
+      }
+    ]
+  }
+}

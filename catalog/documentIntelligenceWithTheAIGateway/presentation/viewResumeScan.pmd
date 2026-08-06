@@ -1,0 +1,236 @@
+{
+  "id": "viewResumeScan",
+  "endPoints": [ ],
+  "securityDomains": [
+    "SelfServiceScanDocuments"
+  ],
+  "onLoad": "<%
+     pageVariables.parsedResume = flowVariables.orchestrationResponse.scannedDocument.ResDoc.resume[0];
+     pageVariables.City = flowVariables.orchestrationResponse.scannedDocument.ResDoc.resume[0].contact[0].address[0].city[0] ?: null;
+     pageVariables.State = flowVariables.orchestrationResponse.scannedDocument.ResDoc.resume[0].contact[0].address[0].state[0] ?: null;
+     pageVariables.Zip = flowVariables.orchestrationResponse.scannedDocument.ResDoc.resume[0].contact[0].address[0].postalcode[0] ?: null;
+     pageVariables.parsedCommonSkills = flowVariables.orchestrationResponse.skillsGapAnalysis.common_skills ?: null;
+     pageVariables.parsed_in_a_not_b = flowVariables.orchestrationResponse.skillsGapAnalysis.skills_in_a_not_b ?: null;
+     pageVariables.parsed_in_b_not_a = flowVariables.orchestrationResponse.skillsGapAnalysis.skills_in_b_not_a ?: null;
+     pageVariables.parsedPlacesAsArray = flowVariables.orchestrationResponse.scannedDocument.ResDoc.resume[0].experience[0].job;
+   %>",
+  "presentation": {
+    "pageType": "confirm",
+    "title": {
+      "type": "title",
+      "label": "Resume Skills Gap Analysis"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": true,
+      "children": [
+        {
+          "type": "section",
+          "horizontal": false,
+          "children": [
+            {
+              "type": "text",
+              "label": "Applicant: ",
+              "id": "name",
+              "value": "<% pageVariables.parsedResume.contact[0].name[0].surname[0] + ', ' +  pageVariables.parsedResume.contact[0].name[0].givenname[0] %>"
+            },
+            {
+              "type": "text",
+              "label": "Phone: ",
+              "id": "phone",
+              "value": "<% !empty(pageVariables.parsedResume.contact[0].phone[0]) ? pageVariables.parsedResume.contact[0].phone[0].value.toString() : 'Not Found' %>"
+            },
+            {
+              "type": "text",
+              "id": "location",
+              "label": "Location: ",
+              "value": "<% !empty(pageVariables.City) ? pageVariables.City : 'City Not Found' %>"
+            },
+            {
+              "type": "text",
+              "id": "state",
+              "value": "<% !empty(pageVariables.State) ? pageVariables.State.value  : 'State Not Found' %>"
+            },
+            {
+              "type": "text",
+              "id": "zip",
+              "value": "<% !empty(pageVariables.Zip) ? pageVariables.Zip.toString() : 'Zipcode Not Found' %>"
+            },
+            {
+              "type": "button",
+              "action": "AUXILIARY",
+              "label": "Scan Another Document",
+              "taskReference": {
+                "taskId": "scanDocument"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "horizontal": true,
+          "children": [
+            {
+              "type": "donutChart2",
+              "id": "donutExample1",
+              "title": "<% 'Skills Gap Analysis' %>",
+              "subtitle": "<% 'Resume & Job Profile' %>",
+              "legendPosition": "BOTTOM",
+              "data": "<% [{'set': 'Applicant Matching Skills','count': pageVariables.parsedCommonSkills.size()},
+            {'set': 'Applicant Extra Skills','count': pageVariables.parsed_in_b_not_a.size()},
+            {'set': 'Applicant Missing Skills','count': pageVariables.parsed_in_a_not_b.size()}];
+            %>",
+              "dataVariableName": "data",
+              "sliceSizeDataSet": {
+                "name": "Count ",
+                "value": "<% data.count %>"
+              },
+              "sliceColorDataSet": {
+                "name": "Perspective",
+                "value": "<% data.set %>"
+              },
+              "showLabelLines": true,
+              "showOutline": true,
+              "colors": "<% ['green', 'orange', 'red'] %>"
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "horizontal": true,
+          "children": [
+            {
+              "type": "grid",
+              "rows": "<% pageVariables.parsedPlacesAsArray %>",
+              "rowVariableName": "places",
+              "label": "Employment History",
+              "doNotAdd": true,
+              "doNotRemove": true,
+              "columns": [
+                {
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% !empty(places.employer[0]) ? places.employer[0] : 'Not Found' %>",
+                    "enabled": "false"
+                  },
+                  "columnId": "employer",
+                  "label": "Employer",
+                  "type": "column"
+                },
+                {
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% places.span %>",
+                    "enabled": "false"
+                  },
+                  "columnId": "years",
+                  "label": "Years",
+                  "type": "column"
+                },
+                {
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% !empty(places.title.join()) ? places.title.join().remove('/').remove(',').remove('*').remove('-') : ''%>",
+                    "enabled": "false"
+                  },
+                  "columnId": "title",
+                  "label": "Title",
+                  "type": "column"
+                },
+                {
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% !empty(places.daterange[0].end[0].iso8601) ? places.daterange[0].end[0].iso8601 : 'Not Found' %>",
+                    "enabled": "false"
+                  },
+                  "columnId": "enddate",
+                  "label": "End Date",
+                  "type": "column"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "horizontal": false,
+          "children": [
+            {
+              "type": "grid",
+              "rows": "<% pageVariables.parsedCommonSkills.sort(c => { c.name }) %>",
+              "rowVariableName": "commonSkills",
+              "label": "Applicant Matching Skills",
+              "doNotAdd": true,
+              "doNotRemove": true,
+              "columns": [
+                {
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% commonSkills.name %>",
+                    "enabled": "false"
+                  },
+                  "columnId": "skillName",
+                  "sortableAndFilterable": "true",
+                  "label": "Skill Name",
+                  "type": "column"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "children": [
+            {
+              "type": "grid",
+              "rows": "<% pageVariables.parsed_in_b_not_a.sort(c => { c.name }) %>",
+              "rowVariableName": "inBSkills",
+              "label": "Applicant Additional Skills",
+              "doNotAdd": true,
+              "doNotRemove": true,
+              "columns": [
+                {
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% inBSkills.name %>",
+                    "enabled": "false"
+                  },
+                  "columnId": "skillName",
+                  "sortableAndFilterable": "true",
+                  "label": "Skill Name",
+                  "type": "column"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "children": [
+            {
+              "type": "grid",
+              "rows": "<% pageVariables.parsed_in_a_not_b.sort(c => { c.name }) %>",
+              "rowVariableName": "inASkills",
+              "label": "Applicant Missing Skills",
+              "doNotAdd": true,
+              "doNotRemove": true,
+              "columns": [
+                {
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% inASkills.name %>",
+                    "enabled": "false"
+                  },
+                  "columnId": "skillName",
+                  "sortableAndFilterable": "true",
+                  "label": "Skill Name",
+                  "type": "column"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

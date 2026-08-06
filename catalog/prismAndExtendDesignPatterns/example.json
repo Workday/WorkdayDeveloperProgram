@@ -1,0 +1,18 @@
+{
+  "title": "Prism And Extend Design Patterns",
+  "description": "This app highlights the importance for designing scalable pages when interacting with large data sets. It also highlights a single threaded pattern for triggering Prism Data Change Tasks (DCT).",
+  "type": "Extend App",
+  "components": [
+    "Presentation",
+    "Model",
+    "Orchestration"
+  ],
+  "products": [
+    "Workday Extend",
+    "Workday Orchestrate",
+    "Workday Prism Analytics"
+  ],
+  "authors": [],
+  "tutorial": "https://forum.developer.workday.com/t/app-catalog-app-prism-and-extend-design-pattern/27367",
+  "source": "workday"
+}

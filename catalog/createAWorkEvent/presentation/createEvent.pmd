@@ -1,0 +1,216 @@
+{
+  "id": "createEvent",
+  "securityDomains": [
+    "ManageCreateAnEvent"
+  ],
+  "endPoints": [
+    {
+      "name": "me",
+      "baseUrlType": "workday-staffing",
+      "url": "workers/me",
+      "authType": "sso"
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "createEvent",
+        "baseUrlType": "app",
+        "url": "workEvents",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "onSend": "<% //Outbound endpoint that submits the BO
+                   //self.data is the payload as it exists coming into this onSend event
+                   self.data.put('createdBy',{'id':me.id}); //add createdBy object
+                   self.data.internalOnly = internalOnlyRadioGroup.value[0] == 'yes' ? true : false; //convert internalOnly radio group response from String to Boolean
+                   console.info('new event payload is ' + json:asJSON(self.data)); return self.data; %>"
+      },
+      {
+        "name": "createWorkEventEvents",
+        "baseUrlType": "app",
+        "url": "createWorkEventEvents",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "onSend": "<%
+                   //Kicks off BP. Pass in ID of the Work Event business object and when it is successfully created will trigger BP. Name element is the name of the BP in lower camel case + 'Events' from the .businessprocess file
+                   console.info(json:asJSON(self.data));
+                   return self.data;
+                   %>",
+        "values": [
+          {
+            "outboundPath": "businessProcessTarget.id",
+            "value": "<% //value must match name of the outbound endpoint that submits the BO, here 'createEvent' and 'id' is the WID of that BO
+                      createEvent.id %>"
+          }
+        ]
+      },
+      {
+        "name": "eventAttachments",
+        "baseUrlType": "app",
+        "url": "<% 'attachedFilesCollection' //using the Collection endpoint to let us use onMultiPartSend() and to upload multiple files at once
+       %>",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "exclude": "<% empty(attachmentFileUploader.children) %>",
+        "onMultiPartSend": "<%
+          for (var file : self.data.metadata.attachedFiles) { //loop through as many files as were uploaded
+            //Put an uploadedBy object with an id field to the JSON part.
+            file.put('uploadedBy',{'id': me.id}); //put the new uploadedBy map in the metadata. This captures the WID of the uploader.
+            //Put uploadedDate field to the JSON part.
+            file.uploadedDate = date:getTodaysDate(date:getDateTimeZone(userTimeZone)); //put the uploadedDate field in the metadata
+            file.put('event',{'id': createEvent.id}); //link the file with the work event
+            console.info('metadata is ' + json:asJSON(self.data)); //log the metadata being passed in for debugging purposes
+          }
+          self.data;
+    %>"
+      }
+    ]
+  },
+  "presentation": {
+    "headerSize": "VPS_DEFAULT",
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "Create a Work Event",
+      "enabled": false
+    },
+    "body": {
+      "type": "section",
+      "horizontal": true,
+      "children": [
+        {
+          "type": "section",
+          "horizontal": false,
+          "children": [
+            {
+              "type": "text",
+              "id": "name",
+              "label": "Name of Event",
+              "required": "<% true %>",
+              "valueOutBinding": "createEvent.name"
+            },
+            {
+              "type": "text",
+              "id": "location",
+              "label": "Proposed Event Location (free text)",
+              "required": "<% true %>",
+              "valueOutBinding": "createEvent.location"
+            },
+            {
+              "type": "richText",
+              "id": "description",
+              "label": "Description",
+              "required": "<% true %>",
+              "valueOutBinding": "createEvent.description",
+              "validations": [
+                {
+                  "regex": "^.{0,1000}",
+                  "errorMessage": "Maximum character count (including markup) reached: 1000"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "sponsor",
+              "label": "Event Sponsor",
+              "valueOutBinding": "createEvent.sponsor",
+              "guide": {
+                "type": "guide",
+                "id": "guideName",
+                "title": "Sponsor Name",
+                "text": " Enter the Event Sponsors name:"
+              }
+            },
+            {
+              "type": "date",
+              "id": "startdate",
+              "label": "Start Date of Event",
+              "valueOutBinding": "createEvent.startDate",
+              "required": true
+            },
+            {
+              "type": "date",
+              "id": "enddate",
+              "label": "End Date of Event",
+              "valueOutBinding": "createEvent.endDate",
+              "required": true
+            },
+            {
+              "type": "text",
+              "id": "contactInfo",
+              "label": "Contact Info/Email",
+              "valueOutBinding": "createEvent.contactInfo"
+            },
+            {
+              "type": "currency",
+              "currencyCode": "USD",
+              "id": "cost",
+              "label": "Fee, if any (USD)",
+              "fractionDigits": 2,
+              "valuesOut": [
+                {
+                  "value": "USD",
+                  "valueOutBinding": "createEvent.cost.currency"
+                },
+                {
+                  "value": "<% cost.value %>",
+                  "valueOutBinding": "createEvent.cost.value"
+                }
+              ]
+            },
+            {
+              "type": "radioGroup",
+              "id": "internalOnlyRadioGroup",
+              "label": "Is this an internal only event?",
+              "hideDisplayOption": "true",
+              "required": "true",
+              "selectedValues": "<% ! empty internalOnlyRadioGroup.value ? (internalOnlyRadioGroup.value ? ['yes'] : ['no'] ) : ['no']  %>",
+              "instanceList": [
+                {
+                  "id": "yes",
+                  "descriptor": "Yes"
+                },
+                {
+                  "id": "no",
+                  "descriptor": "No"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "horizontal": false,
+          "sorted": false,
+          "children": [
+            {
+              "type": "fileUploader",
+              "label": "Attach Files Related to the Event",
+              "id": "attachmentFileUploader",
+              "maxImageDimension": "1024",
+              "maxFileSize": "5242880",
+              "compact": "<% true %>",
+              "required": "<% false %>",
+              "fileTypes": "*",
+              "valueOutBinding": "<% 'eventAttachments:attachedFiles' //outbound endpoint name : attachment obect API URL
+          %> ",
+              "metadata": "<%
+              {:} //need at least an empty map in a metadata tag for onMultiPartSend() to have metadata to work with!
+              %>"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "footer": {
+    "type": "footer",
+    "children": [
+      {
+        "type": "richText",
+        "enabled": false,
+        "value": "Powered By<br/><b>Workday Extend 🎟️</b>"
+      }
+    ]
+  }
+}

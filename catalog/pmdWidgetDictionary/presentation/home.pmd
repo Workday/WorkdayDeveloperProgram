@@ -1,0 +1,71 @@
+{
+  "id": "home",
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "PMD Widget Dictionary"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "section",
+          "columnWidthRatios": [ 
+            0.3,
+            0.3,
+            0.3
+          ],
+          "horizontal": true,
+          "children": [
+            {
+              "type": "cardContainer",
+              "cards": [
+                {
+                  "type": "card",
+                  "cardId": "pageLayout"
+                },
+                {
+                  "type": "card",
+                  "cardId": "basicUI"
+                },
+                {
+                  "type": "card",
+                  "cardId": "grids"
+                },
+                {
+                  "type": "card",
+                  "cardId": "lists"
+                },
+                {
+                  "type": "card",
+                  "cardId": "filesAndDocuments"
+                },
+                {
+                  "type": "card",
+                  "cardId": "images"
+                },
+                {
+                  "type": "card",
+                  "cardId": "hubsCardsAndVideo"
+                },
+                {
+                  "type": "card",
+                  "cardId": "miscellaneous"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "pod",
+          "podId": "footer"
+        }
+      ]
+    }
+  }
+}

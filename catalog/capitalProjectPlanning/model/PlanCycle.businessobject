@@ -1,0 +1,55 @@
+{
+  "id": 17,
+  "name": "PlanCycle",
+  "label": "Plan Cycle",
+  "defaultSecurityDomains": [
+    "CapitalProjectPlanning",
+    "CapitalProjectPlanningAdministrator",
+    "CapitalProjectPlanningCommon"
+  ],
+  "defaultCollection": {
+    "name": "planCycles",
+    "label": "Plan Cycles"
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "name",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": true,
+      "isPurgeable": false,
+      "enableIndex": false,
+      "enableSearch": false
+    },
+    {
+      "id": 2,
+      "name": "status",
+      "type": "SINGLE_INSTANCE",
+      "description": "",
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "target": "ReferenceData",
+      "secureByTarget": false,
+      "enableReportingFromTarget": false
+    },
+    {
+      "id": 3,
+      "name": "startDate",
+      "type": "DATE",
+      "description": "",
+      "isPurgeable": false,
+      "enableIndex": false,
+      "precision": "DAY"
+    },
+    {
+      "id": 4,
+      "name": "endDate",
+      "type": "DATE",
+      "description": "",
+      "isPurgeable": false,
+      "enableIndex": false,
+      "precision": "DAY"
+    }
+  ]
+}

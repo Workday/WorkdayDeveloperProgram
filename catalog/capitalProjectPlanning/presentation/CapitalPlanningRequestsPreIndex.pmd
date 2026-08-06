@@ -1,0 +1,105 @@
+{
+  "id": "CapitalPlanningRequestsPreIndex",
+  "endPoints": [
+    {
+      "name": "planCyclesGET",
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+string:pathEncode('SELECT workdayID, name, status{name,code} FROM '+site.applicationId+'_planCycles ORDER BY startDate DESC') %>"
+    },
+    {
+      "name": "approvalStatusesGET",
+      "baseUrlType": "BUSINESS-OBJECT",
+      "url": "/approvalStatuses"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Find Capital Project Planning Requests"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "fieldSet",
+          "id": "Main",
+          "children": [
+            {
+              "required": true,
+              "type": "instanceList",
+              "values": "<% pageVariables.planCycles %>",
+              "label": "Planning Cycle",
+              "id": "planCyclesWidget",
+              "selectedValuesAndDescriptors": "<% pmdSessionVariables.planCycle %>"
+            },
+            {
+              "multiSelect": true,
+              "type": "instanceList",
+              "label": "Approval Status",
+              "displayKey": "status",
+              "idKey": "id",
+              "values": "<% approvalStatusesGET.data %>",
+              "id": "approvalStatusesWidget",
+              "selectedValuesAndDescriptors": "<%
+                                                if (!empty pmdSessionVariables.approvalStatuses){
+                                                pmdSessionVariables.approvalStatuses.map(ast=>{
+                                                 'id':ast.id,
+                                                 'status':ast.descriptor
+                                                })
+                                                }
+                                               %>"
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer"
+    },
+    "pageType": "EDIT",
+    "micro": true,
+    "microFirstPageOnly": true
+  },
+  "onLoad": "<%
+                pageVariables.planCycles = planCyclesGET.data.map(pc =>{{
+                'id' : pc.workdayID + '|' + pc.status.code, 
+                'descriptor' : pc.name + ' (' + pc.status.name + ')'
+                }});
+               %>",
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "type": "outboundVariable",
+        "values": [
+          {
+            "outboundPath": "planCycleWID",
+            "value": "<% planCyclesWidget.value[0].split('|')[0] %>"
+          },
+          {
+            "outboundPath": "planCycleStatus",
+            "value": "<% planCyclesWidget.value[0].split('|')[1] %>"
+          },
+          {
+            "outboundPath": "approvalStatusesWQL",
+            "value": "<% !empty approvalStatusesWidget.value ? ' AND approvalStatus IN ('+ approvalStatusesWidget.value.join()+')' : '' %>"
+          },
+          {
+            "outboundPath": "approvalStatuses",
+            "value": "<% approvalStatusesWidget.selectedEntries %>"
+          },
+          {
+            "outboundPath": "planCycle",
+            "value": "<% planCyclesWidget.selectedEntries %>"
+          }
+        ],
+        "name": "searchParams",
+        "variableScope": "SESSION"
+      }
+    ]
+  },
+  "securityDomains": [
+    "CapitalProjectPlanning",
+    "CapitalProjectPlanningAdministrator"
+  ]
+}

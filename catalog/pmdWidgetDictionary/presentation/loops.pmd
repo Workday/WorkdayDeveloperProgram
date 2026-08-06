@@ -1,0 +1,75 @@
+{
+  "id": "loops",
+  "endPoints": [
+    {
+      "baseUrlType": "workday-staffing",
+      "name": "workers",
+      "authType": "sso",
+      "url": "<% '/workers?limit=10' %>"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "loop, instanceLoop"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "pod",
+          "podId": "header"
+        },
+        {
+          "type": "richText",
+          "value": "loop and instanceLoop widgets - See visual or code mode to see how the widgets are implemented into the app"
+        },
+        {
+          "type": "fieldSet",
+          "title": "Update the email address",
+          "children": [
+            {
+              "type": "loop",
+              "label": "Loop",
+              "on": "<% workers.data %>",
+              "as": "objectToLoopOn",
+              "children": [
+                {
+                  "type": "text",
+                  "label": "<% objectToLoopOn.descriptor %>",
+                  "value": "<% objectToLoopOn.person.email %>"
+                }
+              ]
+            },  
+            {
+            "id": "workerInstanceList",
+            "type": "instanceList",
+            "label": "Hover on these instances to see their related actions menus.",
+            "instanceListLoopTag": {
+              "type": "instanceLoop",
+              "templateInstance": {
+              "id": "<% workerInstance.id %>",
+              "descriptor": "<% workerInstance.descriptor %>",
+              "wid": "<% workerInstance.id %>"
+            },
+            "on": "<% workers.data %>",
+            "as": "workerInstance"
+            }
+           } 
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

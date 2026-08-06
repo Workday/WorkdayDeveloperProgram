@@ -1,0 +1,76 @@
+{
+  "id": "ticketView",
+  "include": [
+    "tickets.script"
+  ],
+  "endPoints": [ ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Ticket - <% tickets.getTicket(queryParams.ticketId).name %>"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": true,
+      "columnWidthRatios": [
+        0.6,
+        0.4
+      ],
+      "children": [
+        {
+          "type": "fieldSet",
+          "title": "Ticket Details",
+          "children": [
+            {
+              "type": "button",
+              "label": "Edit Ticket",
+              "action": "PRIMARY",
+              "taskReference": {
+                "taskId": "ticketManage",
+                "parameterBindings": {
+                  "ticketId": "<% queryParams.ticketId %>"
+                }
+              }
+            },
+            {
+              "type": "text",
+              "label": "Identifier",
+              "enabled": false,
+              "value": "<% tickets.getTicket(queryParams.ticketId).id %>"
+            },
+            {
+              "type": "text",
+              "label": "Name",
+              "value": "<% tickets.getTicket(queryParams.ticketId).name %>"
+            },
+            {
+              "type": "dropdown",
+              "enabled": false,
+              "values": "<% tickets.getAllStatuses() %>",
+              "selectedValues": "<% [tickets.getTicket(queryParams.ticketId).status] %>",
+              "label": "Status"
+            },
+            {
+              "type": "textArea",
+              "value": "<% tickets.getTicket(queryParams.ticketId).blurb ?? '' %>",
+              "label": "Blurb"
+            }
+          ]
+        },
+        {
+          "type": "cardContainer",
+          "cards": [
+            {
+              "type": "card",
+              "cardId": "ticketStatusChart",
+              "parameters": "<% {
+                  'ticket': tickets.getTicket(queryParams.ticketId),
+                  'ticketStatusData': tickets.getTicketStatusData()
+              } %>"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

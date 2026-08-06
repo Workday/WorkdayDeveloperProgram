@@ -1,0 +1,104 @@
+{
+  "id": "translateTextToSpanish",
+  "endPoints": [
+    {
+      "httpMethod": "POST",
+      "name": "callAWSTranslate",
+      "url": "callAWSTranslate/launch",
+      "authType": "sso",
+      "baseUrlType": "orchestration",
+      "deferred": true,
+      "onSend": "<%
+        self.data = {
+          'text': textToTranslate.value,
+          'translateFrom':'en',
+          'translateTo':'es'
+        };
+        console.info(self.data);
+        return self.data;
+        %>",
+      "failOnStatusCodes": [
+        "400",
+        "403"
+      ]
+    }
+  ],
+  "onLoad": "<% 
+      //REUSE THIS BLOCK FOR TRANSLATIONS
+      pageVariables.labels = {
+        'label1': 'Text to Translate',
+        'label2': 'Translated Text'
+      };
+     %>",
+  "script": "<%
+        //REUSE THIS BLOCK FOR TRANSLATIONS
+        var fBulkTranslate = function() {
+          //invoke orchestrate, add lambda output to a map
+          pageVariables.AWSLabels = translate_Lambda_Bulk.invoke({'translatedText': pageVariables.labels});
+          console.info('AWS LABELS',pageVariables.AWSLabels);
+        }; 
+      %>",
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Translate Text to Spanish"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "action": "LINK",
+          "type": "button",
+          "id": "home",
+          "label": "← Home",
+          "taskReference": {
+            "taskId": "home"
+          }
+         } ,
+        {
+          "type": "pod",
+          "podId": "translatePod"
+        },
+        {
+          "type": "dynamicSection",
+          "id": "ds",
+          "data": "<% pageVariables.labels %>",
+          "dataVariableName": "labels",
+          "children": [
+            {
+              "type": "textArea",
+              "id": "textToTranslate",
+              "label": "<% labels.label1 %>",
+              "value": ""
+            },
+            {
+              "type": "textArea",
+              "id": "translatedText",
+              "label": "<% labels.label2 %>",
+              "value": ""
+            },
+            {
+              "type": "pageActionButton",
+              "id": "Translate",
+              "label": "Translate",
+              "onClick": "<% translatedText.value = callAWSTranslate.invoke({'text': textToTranslate.value}).value %>"
+            }
+          ]
+        }
+      ]
+    },
+    "pageType": "EDIT",
+    "standardEditButtonsHidden": true,
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

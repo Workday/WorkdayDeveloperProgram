@@ -1,0 +1,169 @@
+{
+  "id": "tabs",
+  "endPoints": [
+    {
+      "name": "countries",
+      "baseUrlType": "wdayRef",
+      "url": "/country/vers/latest/items?pageLimit=20",
+      "authType": "sso",
+      "bestEffort": true
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "tabs"
+    },
+    "tabs": [
+      {
+        "type": "section",
+        "label": "Tab 1",
+        "children": [
+          {
+            "type": "section",
+            "children": [
+              {
+                "type": "section",
+                "columnWidthRatios": [
+                  0.25,
+                  0.75
+                ],
+                "horizontal": true,
+                "children": [
+                  {
+                    "type": "section",
+                    "columnWidthRatios": [
+                      0.5,
+                      0.5
+                    ],
+                    "title": "Sample Text",
+                    "children": [
+                      {
+                        "type": "richText",
+                        "value": "Welcome to the <b>Tab 1</b>!  Tabs are a tag on the presentation layer, which allow you to stack multiple views on top of one another.  For the tabs function to work, you must have two tabs.   One tab will break the template.  Also be careful as to which tags you use when tabs are in play.   Certain tags might break the tab functionality<br/><br/>  This is an example of a main page with a grid, and a sample chart on the second tab."
+                      }
+                    ]
+                  },
+                  {
+                    "type": "section",
+                    "children": [
+                      {
+                        "type": "grid",
+                        "gridType": "LIST",
+                        "id": "sampleGrid",
+                        "rows": "<% countries.items %>",
+                        "rowVariableName": "country",
+                        "columns": [
+                          {
+                            "type": "column",
+                            "id": "country0",
+                            "columnId": "country0",
+                            "cellTemplate": {
+                              "type": "text",
+                              "value": "<% country.name %>"
+                            },
+                            "label": "Country Name"
+                          },
+                          {
+                            "type": "column",
+                            "id": "country1",
+                            "columnId": "country1",
+                            "cellTemplate": {
+                              "type": "text",
+                              "value": "<% country['ISO_3166_1_Alpha_2_Code'] %>"
+                            },
+                            "label": "ISO Alpha 2 Code"
+                          },
+                          {
+                            "type": "column",
+                            "id": "country2",
+                            "columnId": "country2",
+                            "cellTemplate": {
+                              "type": "text",
+                              "value": "<% country['ISO_3166_1_Alpha_3_Code'] %>"
+                            },
+                            "label": "ISO Alpha 3 Coder"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "label": "Tab 2",
+        "_comment": "This is the section for the second tab.  It uses the numeric ISO code for county as the number",
+        "children": [
+          {
+            "type": "text",
+            "value": "Here is a sample graph"
+          },
+          {
+            "type": "clusteredColumnChart",
+            "rowVariableName": "row",
+            "rows": "<% countries.items %>",
+            "horizontalAxisLabels": {
+              "type": "chartDimension",
+              "label": "Country",
+              "binding": "<% row.name %>"
+            },
+            "metrics": [
+              {
+                "type": "chartMetric",
+                "label": "ISO_3166_1_Numeric_3_Code",
+                "binding": "<% row['ISO_3166_1_Numeric_3_Code'] %>"
+              }
+            ],
+            "verticalAxisTitle": "ISO Code",
+            "comparisonLinePosition": 1000,
+            "comparisonLineLabel": "Grand Total",
+            "verticalAxisIncrementValue": {
+              "type": "chartAxisProperty",
+              "useAxisValue": true,
+              "axisValue": 100
+            },
+            "verticalAxisMinimumValue": {
+              "type": "chartAxisProperty",
+              "useAxisValue": true,
+              "axisValue": 0
+            }
+          }
+        ]
+      }
+    ],
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "section",
+          "horizontal": true,
+          "children": [
+            {
+              "type": "pod",
+              "podId": "header"
+            },
+            {
+              "type": "text",
+              "label": "tabs",
+              "value": "When using tabs, a body tag (this white box) is always required. There must be at least one element within the body tag or the tabs may not display properly. Note that the body will appear above the tabs, regardless of order in the PMD."
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "pod",
+          "podId": "footer"
+        }
+      ]
+    }
+  }
+}

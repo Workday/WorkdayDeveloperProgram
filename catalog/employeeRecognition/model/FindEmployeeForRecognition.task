@@ -1,0 +1,9 @@
+{
+  "id": 3,
+  "name": "GiveEmployeeRecognition",
+  "label": "Give Employee Recognition",
+  "routePath": "/",
+  "securityDomains": [
+    "ManageEmployeeRecognition"
+  ]
+}

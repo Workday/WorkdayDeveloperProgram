@@ -1,0 +1,48 @@
+{
+  "id": 1,
+  "name": "WorkFromAnywhereRequestReport",
+  "businessObject": "WorkFromAnywhereRequest",
+  "defaultSecurityDomains": [
+    "ManageWorkFromAnywhere",
+    "RemoteWorkSelfService"
+  ],
+  "sortConfigs": [],
+  "columns": [
+    {
+      "order": "a",
+      "name": "Created By",
+      "field": "createdBy",
+      "id": 5
+    },
+    {
+      "order": "b",
+      "name": "Location",
+      "field": "location",
+      "id": 1
+    },
+    {
+      "order": "c",
+      "name": "Start Date",
+      "field": "startDate",
+      "id": 2
+    },
+    {
+      "order": "d",
+      "name": "End Date",
+      "field": "endDate",
+      "id": 3
+    },
+    {
+      "order": "e",
+      "name": "Right to Work",
+      "field": "rightToWork",
+      "id": 4
+    },
+    {
+      "order": "f",
+      "name": "Right to Work Verification",
+      "field": "rightToWorkVerification",
+      "id": 6
+    }
+  ]
+}

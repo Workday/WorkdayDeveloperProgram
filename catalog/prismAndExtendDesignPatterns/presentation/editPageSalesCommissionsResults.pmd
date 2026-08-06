@@ -1,0 +1,170 @@
+{
+  "id": "editPageSalesCommissionsResults",
+  "include": ["parameterResolver.script"],
+  "endPoints": [
+    {
+      "name": "queryResults",
+      "baseUrlType": "workday-wql",
+      "authType": "sso",
+      "httpMethod": "GET",
+      "url": "<% var queryString = 'SELECT agentId, amount, transactionDate, transactionId, type FROM cds_sales_Commission_TBL'; //begin constructing a query string
+              var numRows = parameterResolver.resolveParameter(queryParams?.rowCount, flowVariables?.numberOfRows);
+
+             return 'data?limit=' + numRows + '&query=' + queryString.urlEncode();
+             %>"
+    }
+  ],
+
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "bulkPost",
+        "baseUrlType": "orchestrate",
+        "url": "<% 'bulkSaveProcessing/launch' %>",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "onSend": "<%
+                  var batchPost = [];
+                  var loopCounter = 0;
+                  var todaysDate = date:getTodaysDate(date:getDateTimeZone('UTC'));
+                  while (loopCounter < queryResultsGrid.rows.size()) {
+                    var gridRow = queryResultsGrid.rows[loopCounter];
+                        batchPost.add({
+                          'transactionId': gridRow.childrenMap.transIdCol.value,
+                          'agentId': gridRow.childrenMap.agentIdCol.value,
+                          'type': gridRow.childrenMap.typeIdCol.value,
+                          'amount': gridRow.childrenMap.amountCol.value,
+                          'transactionDate': date:format(gridRow.childrenMap.transDateColId.value, 'yyyy-MM-dd'),
+                          'inProgress': true
+                        });            
+                    loopCounter = loopCounter + 1;
+                  }
+                  return {'data': batchPost};
+             %>"
+      }
+    ]
+  },
+  "onLoad": "<%          
+            %>",
+  "presentation": {
+    "headerSize": "STANDARD",
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "High Volume Problems"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "button",
+          "id": "detailsButtonx",
+          "label": "Commission Data Hub",
+          "action": "PRIMARY",
+          "taskReference": {
+            "taskId": "home"
+          }
+        },
+        {
+          "type": "fieldSet",
+          "id": "correctionFieldSet",
+          "title": "Data Available to Be Corrected",
+          "children": [
+            {
+              "type": "readOnlyText",
+              "render": false,
+              "label": "Information",
+              "value": "Add instructions here."
+            },
+            {
+              "id": "queryResultsGrid",
+              "type": "grid",
+              "label": "Results",
+              "render": "<% !empty queryResults.data %>",
+              "rows": "<% queryResults.data %>",
+              "rowVariableName": "row",
+              "doNotAdd": true,
+              "doNotRemove": true,
+              "enabled": "true",
+              "columns": [
+                {
+                  "cellTemplate": {
+                    "type": "text",
+                    "id": "transactionId",
+                    "value": "<% row.transactionId %>",
+                    "enabled": false
+                  },
+                  "label": "Transaction ID",
+                  "columnId": "transIdCol",
+                  "_sortableAndFilterable": "true",
+                  "type": "column"
+                },
+                {
+                  "cellTemplate": {
+                    "type": "text",
+                    "id": "agentId",
+                    "value": "<% row.agentId %>",
+                    "enabled": false
+                  },
+                  "label": "Agent Id",
+                  "columnId": "agentIdCol",
+                  "_sortableAndFilterable": "true",
+                  "type": "column"
+                },
+                {
+                  "cellTemplate": {
+                    "type": "text",
+                    "id": "rowType",
+                    "value": "<% row.type %>",
+                    "enabled": false
+                  },
+                  "label": "Type",
+                  "columnId": "typeIdCol",
+                  "_sortableAndFilterable": "true",
+                  "type": "column"
+                },
+                {
+                  "cellTemplate": {
+                    "type": "number",
+                    "fractionDigits": 2,
+                    "id": "amount",
+                    "minimumValue": -1000000000,
+                    "maximumValue": 1000000000,
+                    "value": "<%row.amount%>",
+                    "enabled": true
+                  },
+                  "label": "Amount",
+                  "columnId": "amountCol",
+                  "_sortableAndFilterable": "true",
+                  "type": "column"
+                },
+                {
+                  "type": "column",
+                  "id": "transDate",
+                  "label": "Transaction Date",
+                  "cellTemplate": {
+                    "type": "date",
+                    "value": "<% row.transactionDate %>",
+                    "enabled": false
+                  },
+                  "columnId": "transDateColId"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By<br/><b>Workday Extend</b>"
+        }
+      ]
+    }
+  }
+}

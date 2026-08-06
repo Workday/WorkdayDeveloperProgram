@@ -1,0 +1,9 @@
+{
+  "id": 1,
+  "name": "DataQueryBuilderwiththeAIGateway",
+  "label": "WQL Data Query Builder with the AI Gateway",
+  "securityDomains": [
+    "ExtendAppViewDataQueryBuilder"
+  ],
+  "routePath": "/"
+}

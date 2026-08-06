@@ -1,0 +1,16 @@
+{
+  "title": "Update Service Date Boomerang",
+  "description": "Update service date based on a certain condition",
+  "type": "Integration App",
+  "components": [
+    "Orchestration"
+  ],
+  "products": [
+    "Workday Orchestrate",
+    "Workday RaaS",
+    "Workday HCM"
+  ],
+  "authors": [],
+  "tutorial": "https://forum.developer.workday.com/t/update-service-dates-boomerang/19516",
+  "source": "workday"
+}

@@ -1,0 +1,80 @@
+var getData = function() {
+  return [
+  {
+      "start": "2023-11-01",
+      "typeOfDate": "ISO_LOCAL_DATE",
+      "label": "PMD Script will set endDate as startDate",
+      "style": "DEFAULT",
+      "enabled": true
+    },
+  {
+      "start": "2023-11-01T10:15:30",
+      "end": "2023-11-02T10:15:30",
+      "typeOfDate": "ISO_DATE",
+      "label": "PMD Script will set style as default",
+      "enabled": true
+    },
+  {
+      "start": "2023-11-01T10:15:30+01:00[Europe/Paris]",
+      "end": "2023-11-03T10:15:30+01:00[Europe/Paris]",
+      "typeOfDate": "ISO_DATE_TIME",
+      "label": "Default Style",
+      "style": "DEFAULT",
+      "enabled": true
+    },
+  {
+      "start": "2023-11-06T10:15:30+01:00",
+      "end": "2023-11-06T10:15:30+01:00[Europe/Paris]",
+      "typeOfDate": "ISO_DATE_TIME",
+      "label": "PMD Script will set enabled to false",
+      "style": "HOLIDAY",
+      "enabled": true
+    },
+  {
+      "start": "2023-11-07",
+      "end": "2023-11-07",
+      "label": "Approved Style",
+      "style": "APPROVED",
+      "enabled": false
+    },
+  {
+      "start": "2023-11-08",
+      "end": "2023-11-08",
+      "label": "Submitted Style",
+      "style": "SUBMITTED",
+      "enabled": false
+    },
+  {
+      "start": "2023-11-09",
+      "end": "2023-11-09",
+      "label": "Not Submitted Style",
+      "style": "NOT_SUBMITTED",
+      "enabled": false
+    },
+  {
+      "start": "2023-11-10",
+      "end": "2023-11-10",
+      "label": "Denied Style",
+      "style": "DENIED",
+      "enabled": false
+    },
+  {
+      "start": "2023-11-13",
+      "end": "2023-11-13",
+      "label": "Conflict Style",
+      "style": "CONFLICT",
+      "enabled": false
+    },
+  {
+      "start": "2023-11-14",
+      "end": "2023-11-14",
+      "label": "Needs Attention Style",
+      "style": "NEEDS_ATTENTION",
+      "enabled": false
+    }
+  ]
+};
+
+{
+  "getData": getData
+}

@@ -1,0 +1,7 @@
+[
+    {
+        "name": "bucket",
+        "type": "string",
+        "alias": "bucket"
+    }
+]

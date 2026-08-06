@@ -1,0 +1,166 @@
+{
+  "podId": "resultsGrid",
+  "seed": {
+    "parameters": [
+      "gridId"
+    ],
+    "template": {
+      "type": "dynamicSection",
+      "id": "<% @@gridId@@ %>",
+      "data": "<% [] %>",
+      "dataVariableName": "data",
+      "children": [
+        {
+          "type": "textArea",
+          "label": "Error",
+          "render": "<% !(empty data.wqlResultsError) %>",
+          "enabled": "false",
+          "value": "<% data.wqlResultsError.join('\\r\\n') %>"
+        },
+        {
+          "type": "grid",
+          "label": "Results",
+          "id": "queryResultsGrid",
+          "render": "<% !empty data.wqlResult %>",
+          "enabled": "false",
+          "columns": [
+            {
+              "type": "column",
+              "label": "<% map:getKeys(data.wqlResult[0]).get(0) %>",
+              "id": "col0",
+              "render": "<% map:getKeys(data.wqlResult[0]).size() > 0 %>",
+              "columnId": "0",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% queryResult[map:getKeys(data.wqlResult[0]).get(0)] %>"
+              }
+            },
+            {
+              "type": "column",
+              "label": "<% map:getKeys(data.wqlResult[0]).get(1) %>",
+              "id": "col1",
+              "render": "<% map:getKeys(data.wqlResult[0]).size() > 1 %>",
+              "columnId": "1",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% queryResult[map:getKeys(data.wqlResult[0]).get(1)] %>"
+              }
+            },
+            {
+              "type": "column",
+              "label": "<% map:getKeys(data.wqlResult[0]).get(2) %>",
+              "id": "col2",
+              "render": "<% map:getKeys(data.wqlResult[0]).size() > 2 %>",
+              "columnId": "2",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% queryResult[map:getKeys(data.wqlResult[0]).get(2)] %>"
+              }
+            },
+            {
+              "type": "column",
+              "label": "<% map:getKeys(data.wqlResult[0]).get(3) %>",
+              "id": "col3",
+              "render": "<% map:getKeys(data.wqlResult[0]).size() > 3 %>",
+              "columnId": "3",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% queryResult[map:getKeys(data.wqlResult[0]).get(3)] %>"
+              }
+            },
+            {
+              "type": "column",
+              "label": "<% map:getKeys(data.wqlResult[0]).get(4) %>",
+              "id": "col4",
+              "render": "<% map:getKeys(data.wqlResult[0]).size() > 4 %>",
+              "columnId": "4",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% queryResult[map:getKeys(data.wqlResult[0]).get(4)] %>"
+              }
+            },
+            {
+              "type": "column",
+              "label": "<% map:getKeys(data.wqlResult[0]).get(5) %>",
+              "id": "col5",
+              "render": "<% map:getKeys(data.wqlResult[0]).size() > 5 %>",
+              "columnId": "5",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% queryResult[map:getKeys(data.wqlResult[0]).get(5)] %>"
+              }
+            },
+            {
+              "type": "column",
+              "label": "<% map:getKeys(data.wqlResult[0]).get(6) %>",
+              "id": "col6",
+              "render": "<% map:getKeys(data.wqlResult[0]).size() > 6 %>",
+              "columnId": "6",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% queryResult[map:getKeys(data.wqlResult[0]).get(6)] %>"
+              }
+            },
+            {
+              "type": "column",
+              "label": "<% map:getKeys(data.wqlResult[0]).get(7) %>",
+              "id": "col7",
+              "render": "<% map:getKeys(data.wqlResult[0]).size() > 7 %>",
+              "columnId": "7",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% queryResult[map:getKeys(data.wqlResult[0]).get(7)] %>"
+              }
+            },
+            {
+              "type": "column",
+              "label": "<% map:getKeys(data.wqlResult[0]).get(8) %>",
+              "id": "col8",
+              "render": "<% map:getKeys(data.wqlResult[0]).size() > 8 %>",
+              "columnId": "8",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% queryResult[map:getKeys(data.wqlResult[0]).get(8)] %>"
+              }
+            },
+            {
+              "type": "column",
+              "label": "<% map:getKeys(data.wqlResult[0]).get(9) %>",
+              "id": "col9",
+              "render": "<% map:getKeys(data.wqlResult[0]).size() > 9 %>",
+              "columnId": "9",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% queryResult[map:getKeys(data.wqlResult[0]).get(9)] %>"
+              }
+            },
+            {
+              "type": "column",
+              "label": "<% data.fieldList.get(10) %>",
+              "id": "col10",
+              "render": "<% map:getKeys(data.wqlResult[0]).size() > 10 %>",
+              "columnId": "10",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% queryResult[data.fieldList[10]] %>"
+              }
+            }
+          ],
+          "rows": "<% data.wqlResult %>",
+          "rowVariableName": "queryResult",
+          "doNotAdd": "true",
+          "doNotRemove": "true",
+          "doNotPutInTab": true,
+          "configurable": true,
+          "selectionEnabled": "false"
+        },
+        {
+          "type": "textArea",
+          "label": "Raw Results",
+          "enabled": "false",
+          "value": "<% !(empty data.wqlResult) ? json:asJSON(data.wqlResult) : 'No Results Returned' %>"
+        }
+      ]
+    }
+  }
+}

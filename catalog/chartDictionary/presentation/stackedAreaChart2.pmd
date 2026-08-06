@@ -1,0 +1,164 @@
+{
+  "id": "stackedAreaChart2",
+  "include": [
+    "cookieData.script"
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Stacked Area Charts"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "section",
+          "title": "Stacked Area Chart - multiple measurements, single category",
+          "children": [
+            {
+              "type": "stackedAreaChart2",
+              "id": "chart1",
+              "data": "<% cookieData.getCookieData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Num Boxes Sold",
+                  "value": "<% data['actualSales'] %>"
+                },
+                {
+                  "name": "Sales Goal",
+                  "value": "<% data['salesGoal'] %>"
+                },
+                {
+                  "name": "Troop Avg.",
+                  "value": "<% data['troopAverage'] %>"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Cookie Type",
+                "value": "<% data['cookieType'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Stacked Area Chart - single measurement, extra category",
+          "children": [
+            {
+              "type": "stackedAreaChart2",
+              "id": "chart2",
+              "data": "<% cookieData.getSellerCookieData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Num Boxes Sold",
+                  "value": "<% data['actualSales'] %>"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Cookie Type",
+                "value": "<% data['cookieType'] %>"
+              },
+              "secondaryCategory": {
+                "name": "Seller",
+                "value": "<% data['sellerName'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Stacked Area Chart - single measurement, swap primary and secondary categories",
+          "children": [
+            {
+              "type": "stackedAreaChart2",
+              "id": "chart3",
+              "data": "<% cookieData.getSellerCookieData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Num Boxes Sold",
+                  "value": "<% data['actualSales'] %>"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Seller",
+                "value": "<% data['sellerName'] %>"
+              },
+              "secondaryCategory": {
+                "name": "Cookie Type",
+                "value": "<% data['cookieType'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Stacked Area Chart - Accessibility Mode",
+          "children": [
+            {
+              "type": "stackedAreaChart2",
+              "id": "chart4",
+              "data": "<% cookieData.getCookieData() %>",
+              "dataVariableName": "data",
+              "accessibilityMode": true,
+              "measurementDataSets": [
+                {
+                  "name": "Num Boxes Sold",
+                  "value": "<% data['actualSales'] %>"
+                },
+                {
+                  "name": "Sales Goal",
+                  "value": "<% data['salesGoal'] %>"
+                },
+                {
+                  "name": "Troop Avg.",
+                  "value": "<% data['troopAverage'] %>"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Cookie Type",
+                "value": "<% data['cookieType'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Stacked Area Chart - Comparison Line",
+          "children": [
+            {
+              "type": "stackedAreaChart2",
+              "id": "chart5",
+              "data": "<% cookieData.getCookieData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Num Boxes Sold",
+                  "value": "<% data['actualSales'] %>"
+                },
+                {
+                  "name": "Sales Goal",
+                  "value": "<% data['salesGoal'] %>"
+                },
+                {
+                  "name": "Troop Avg.",
+                  "value": "<% data['troopAverage'] %>"
+                }
+              ],
+              "measurementAxisOptions": {
+                "comparisonLineValue": "<% 50 %>",
+                "comparisonLineLabel": "<% 'Troop Goal' %>"
+              },
+              "categoryDataSet": {
+                "name": "Cookie Type",
+                "value": "<% data['cookieType'] %>"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

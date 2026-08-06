@@ -1,0 +1,35 @@
+{
+  "id": 1,
+  "name": "CapitalRequestAttachment",
+  "label": "Capital Request Attachment",
+  "defaultSecurityDomains": [
+    "CapitalProjectPlanning",
+    "CapitalProjectPlanningAdministrator"
+  ],
+  "defaultCollection": {
+    "name": "capitalRequestAttachments",
+    "label": "Capital Request Attachments"
+  },
+  "fields": [
+    {
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": true,
+      "isReferenceId": false,
+      "type": "TEXT",
+      "name": "description",
+      "id": 1
+    },
+    {
+      "enableReportingFromTarget": false,
+      "secureByTarget": true,
+      "target": "CapitalProjectRequest",
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "type": "SINGLE_INSTANCE",
+      "name": "request",
+      "id": 2
+    }
+  ]
+}

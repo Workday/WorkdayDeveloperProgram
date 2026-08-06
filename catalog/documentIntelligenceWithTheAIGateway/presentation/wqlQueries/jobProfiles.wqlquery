@@ -1,0 +1,7 @@
+{
+  "id": "jobProfiles",
+  "parameters": [],
+  "query": "
+    SELECT jobProfile FROM allJobProfiles
+  "
+}

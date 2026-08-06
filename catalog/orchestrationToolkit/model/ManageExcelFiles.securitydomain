@@ -1,0 +1,7 @@
+{
+  "id": 5,
+  "name": "ManageExcelFiles",
+  "enabledForPageSecurity": false,
+  "enabledForOrchestrationSecurity": false,
+  "label": "Manage: Excel Files"
+}

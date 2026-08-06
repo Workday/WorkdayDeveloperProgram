@@ -1,0 +1,231 @@
+{
+  "appProperties": [ ],
+  "flowDefinitions": [
+    {
+      "id": "calendarSubmitMicroFlow",
+      "flowSteps": [
+        {
+          "id": "startCalendarSubmitMicro",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "concludeCalendarSubmitMicro",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "quickAddRemoteWorkRequest"
+        },
+        {
+          "id": "concludeCalendarSubmitMicro",
+          "endsFlow": true,
+          "taskId": "microConfirm"
+        }
+      ]
+    },
+    {
+      "id": "editRequestAttachmentFlow",
+      "flowSteps": [
+        {
+          "id": "start",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "deleteAttachmentFlowStep",
+              "condition": "<% flowVariables.deleteClicked %>"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "editRequest"
+        },
+        {
+          "id": "deleteAttachmentFlowStep",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "editRequestFlowStep",
+              "condition": "<% flowVariables.deleteClicked %>"
+            }
+          ],
+          "taskId": "deleteAttachments"
+        },
+        {
+          "id": "editRequestFlowStep",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "concludeEditMicro",
+              "condition": "true"
+            }
+          ],
+          "taskId": "editRequest"
+        },
+        {
+          "id": "concludeEditMicro",
+          "endsFlow": true,
+          "taskId": "microConfirm"
+        }
+      ],
+      "cancelOutOfFlow": true
+    }
+  ],
+  "tasks": [
+    {
+      "id": "home",
+      "routingPattern": "/home",
+      "page": {
+        "id": "home"
+      }
+    },
+    {
+      "id": "createRequest",
+      "routingPattern": "/createRequest",
+      "page": {
+        "id": "createRequest"
+      }
+    },
+    {
+      "id": "viewRequestByEventID",
+      "routingPattern": "/details/{eventId}",
+      "page": {
+        "id": "viewRequestByEventID"
+      }
+    },
+    {
+      "id": "approve",
+      "routingPattern": "/approve/{eventId}",
+      "page": {
+        "id": "approve"
+      }
+    },
+    {
+      "id": "revise",
+      "routingPattern": "/revise/{eventStepId}",
+      "page": {
+        "id": "revise"
+      }
+    },
+    {
+      "id": "review",
+      "routingPattern": "/review/{eventStepId}",
+      "page": {
+        "id": "review"
+      }
+    },
+    {
+      "id": "createRequestWizard",
+      "routingPattern": "/createRequestWizard",
+      "page": {
+        "id": "createRequestWizard"
+      }
+    },
+    {
+      "id": "calendarRemoteWork",
+      "routingPattern": "/calendarRemoteWork",
+      "page": {
+        "id": "calendarRemoteWork"
+      }
+    },
+    {
+      "id": "requestHub",
+      "routingPattern": "/",
+      "page": {
+        "id": "requestHub"
+      }
+    },
+    {
+      "id": "manageRequests",
+      "routingPattern": "/manageRequests",
+      "page": {
+        "id": "manageRequests"
+      }
+    },
+    {
+      "id": "sidebarInfo",
+      "routingPattern": "/sidebarInfo",
+      "page": {
+        "id": "sidebarInfo"
+      }
+    },
+    {
+      "id": "quickAddRemoteWorkRequest",
+      "routingPattern": "/quickAddRemoteWorkRequest",
+      "page": {
+        "id": "quickAddRemoteWorkRequest"
+      }
+    },
+    {
+      "id": "editRequest",
+      "routingPattern": "/editRequest",
+      "page": {
+        "id": "editRequest"
+      }
+    },
+    {
+      "id": "microConfirm",
+      "routingPattern": "/microConfirm",
+      "page": {
+        "id": "microConfirm"
+      }
+    },
+    {
+      "id": "deleteAttachments",
+      "routingPattern": "/deleteAttachments",
+      "page": {
+        "id": "deleteAttachments"
+      }
+    },
+    {
+      "id": "viewRequest",
+      "routingPattern": "/viewRequest",
+      "page": {
+        "id": "viewRequest"
+      }
+    },
+    {
+      "id": "createRequestCard",
+      "routingPattern": "/createRequestCard",
+      "page": {
+        "id": "createRequestCard"
+      }
+    },
+    {
+      "id": "manageRequestsCard",
+      "routingPattern": "/manageRequestsCard",
+      "page": {
+        "id": "manageRequestsCard"
+      }
+    }
+  ],
+  "applicationId": "workFromAlmostAnywhere",
+  "dataProviders": [
+    {
+      "key": "workday-staffing",
+      "value": "<% apiGatewayEndpoint + '/staffing/v1/' %>"
+    },
+    {
+      "key": "location",
+      "value": "<% apiGatewayEndpoint + '/person/v4/' %>"
+    },
+    {
+      "key": "app",
+      "value": "<% apiGatewayEndpoint + '/apps/' + site.applicationId + '/v1/' %>"
+    },
+    {
+      "key": "workday-bp",
+      "value": "<% apiGatewayEndpoint + '/businessProcess/v1/' %>"
+    },
+    {
+      "key": "workday-common",
+      "value": "<% apiGatewayEndpoint + '/common/v1/' %>"
+    },
+    {
+      "key": "workday-orchestration",
+      "value": "<% apiGatewayEndpoint + '/orchestrate/v1/apps/' + site.applicationId + '/orchestrations/' %>"
+    },
+    {
+      "key": "workday-wql",
+      "value": "<% apiGatewayEndpoint + '/wql/v1/' %>"
+    }
+  ]
+}

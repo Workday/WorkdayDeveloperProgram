@@ -1,0 +1,198 @@
+{
+  "id": "scanDocument",
+  "securityDomains": [
+    "SelfServiceScanDocuments"
+  ],
+  "endPoints": [
+    {
+      "bestEffort": "true",
+      "baseUrlType": "workday-wql",
+      "name": "jobProfiles",
+      "authType": "sso",
+      "url": "data",
+      "wqlQuery": {
+        "queryId": "jobProfiles"
+      }
+    },
+    {
+      "name": "worker",
+      "baseUrlType": "workday-staffing",
+      "url": "workers/me",
+      "authType": "sso"
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "document",
+        "baseUrlType": "workday-app",
+        "url": "documents",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "exclude": "<% empty documentFileUploader.children %>",
+        "multiPartFileLast": true
+      },
+      {
+        "name": "launchScanDocumentOrchestration",
+        "baseUrlType": "workday-orchestrate",
+        "url": "<% site.applicationId + '/orchestrations/ScanDocumentOrchestration/launch' %>",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "values": [
+          {
+            "outboundPath": "document.id",
+            "value": "<% document.id %>"
+          },
+          {
+            "outboundPath": "jobProfile.id",
+            "value": "<% !empty(jobProfile.selectedEntries[0]) ? jobProfile.selectedEntries[0].id : '1' %>"
+          }
+        ],
+        "responseErrorDetail": {
+          "errorSummary": "<% error %>",
+          "errors": "<% errors.map(item => { item.error }); %>"
+        }
+      },
+      {
+        "name": "orchestrationResults",
+        "type": "outboundVariable",
+        "variableScope": "flow",
+        "values": [
+          {
+            "outboundPath": "scanType",
+            "value": "<% scanType.value[0] %>"
+          },
+          {
+            "outboundPath": "orchestrationResponse",
+            "value": "<% launchScanDocumentOrchestration %>"
+          }
+        ]
+      }
+    ],
+    "responseErrorDetail": {
+      "errorSummary": "<% error %>",
+      "errors": "<% list:mapAttribute(errors, 'error') %>"
+    }
+  },
+  "presentation": {
+    "standardEditButtonsHidden": false,
+    "title": {
+      "type": "title",
+      "label": "Scan Document with the AI Gateway"
+    },
+    "enableFullScreen": false,
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "sorted": false,
+      "children": [
+        {
+          "type": "section",
+          "horizontal": false,
+          "sorted": false,
+          "children": [
+            {
+              "type": "textArea",
+              "enabled": false,
+              "id": "instructionsText",
+              "label": "Overview",
+              "value": "This application uses Workday's Optical Character Recognition (OCR) technology for text recognition and can parse Resumes, Receipts, and Images with Text. Resume, Receipt and Text scanning will show you the output from these ML APIs so you understand how you can use them in future applications. "
+            }
+          ]
+        },
+        {
+          "id": "scanType",
+          "type": "dropdown",
+          "required": true,
+          "label": "Please select one of the following options to be scanned:",
+          "instanceList": [
+            {
+              "id": "resume",
+              "descriptor": "Resume "
+            },
+            {
+              "id": "receipt",
+              "descriptor": "Receipt"
+            },
+            {
+              "id": "doc",
+              "descriptor": "Image with Text"
+            }
+          ],
+          "onChange": "<% if ( self.selectedEntries[0].id == 'resume') {
+                              jobProfile.setVisible(true);
+                              resumeFiles.setVisible(true);
+                              nonResumeFiles.setVisible(false);
+                            } else { 
+                              jobProfile.setVisible(false);
+                              jobProfile.setValue(null);  
+                              resumeFiles.setVisible(false);
+                              nonResumeFiles.setVisible(true);
+                              } %>",
+          "valuesOut": [
+            {
+              "value": "<% self.value[0] %>",
+              "valueOutBinding": "document:data:scanType"
+            }
+          ]
+        },
+        {
+          "type": "hidden",
+          "value": "<% worker.id %>",
+          "valueOutBinding": "document:data:uploadedBy.id"
+        },
+        {
+          "type": "hidden",
+          "value": "<% date:getTodaysDate(null) %>",
+          "valueOutBinding": "document:data:uploadedDate"
+        },
+        {
+          "type": "hidden",
+          "value": "cid:document",
+          "valueOutBinding": "document:data:file"
+        },
+        {
+          "type": "fileUploader",
+          "label": "Please upload an image:",
+          "id": "documentFileUploader",
+          "singular": true,
+          "compact": true,
+          "required": true,
+          "fileTypes": "doc, docx, jpg, jpeg, pdf",
+          "valueOutBinding": "document:document"
+        },
+        {
+          "type": "fieldSet",
+          "id": "fieldSet",
+          "children": [
+            {
+              "type": "text",
+              "enabled": false,
+              "visible": false,
+              "id": "nonResumeFiles",
+              "value": "Supported upload file types: .JPG, .JPEG, .PDF"
+            },
+            {
+              "type": "text",
+              "enabled": false,
+              "id": "resumeFiles",
+              "visible": false,
+              "value": "Supported upload file types: .DOCX, .DOC, and non-image based PDF"
+            },
+            {
+              "type": "instanceList",
+              "displayKey": "descriptor",
+              "id": "jobProfile",
+              "helpText": "Find job profile by entering a search string",
+              "label": "Job Profile - Select for Skills Applicability Comparison",
+              "idKey": "id",
+              "visible": false,
+              "multiSelect": false,
+              "values": "<% list:mapAttribute(list:excludeEmptyAttribute(jobProfiles.data,'jobProfile'),'jobProfile') %>"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

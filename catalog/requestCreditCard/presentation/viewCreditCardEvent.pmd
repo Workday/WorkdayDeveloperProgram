@@ -1,0 +1,52 @@
+{
+  "id": "viewCreditCardEvent",
+  "endPoints": [
+    {
+      "name": "event",
+      "baseUrlType": "workday-bp",
+      "url": "<% `events/{{queryParams.eventId }}` %>",
+      "authType": "sso"
+    },
+    {
+      "name": "creditCardRequest",
+      "baseUrlType": "app",
+      "url": "<% 'creditCardRequests/' + event['for'].id %>",
+      "authType": "sso"
+    }
+  ],
+  "presentation": {
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "sorted": false,
+      "children": [
+        {
+          "type": "instanceList",
+          "label": "Card Assignee",
+          "id": "cardAssignee",
+          "instanceList": [
+            {
+              "id": "<% creditCardRequest.cardAssignee.id %>",
+              "descriptor": "<% creditCardRequest.cardAssignee.descriptor %>",
+              "wid": "<% creditCardRequest.cardAssignee.id %>"
+            }
+          ]
+        },
+        {
+          "type": "number",
+          "label": "Requested Credit Limit",
+          "id": "creditLimit",
+          "fractionDigits": 2,
+          "value": "<% creditCardRequest.creditLimit %>",
+          "format": "#,###.00"
+        },
+        {
+          "type": "text",
+          "label": "Business Reason",
+          "id": "businessReason",
+          "value": "<% creditCardRequest.businessReason %>"
+        }
+      ]
+    }
+  }
+}

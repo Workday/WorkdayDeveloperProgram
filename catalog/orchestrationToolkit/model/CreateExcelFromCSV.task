@@ -1,0 +1,9 @@
+{
+  "id": 1,
+  "name": "CreateExcelFromCSV",
+  "label": "Create Excel From CSV",
+  "securityDomains": [
+    "ManageExcelFiles"
+  ],
+  "routePath": "/excelFileCreate"
+}

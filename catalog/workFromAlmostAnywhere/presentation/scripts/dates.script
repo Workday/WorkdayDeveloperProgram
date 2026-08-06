@@ -1,0 +1,48 @@
+var validateDates = function(startDate, endDate, maxRemoteEvents) {
+    const requestLength = startDate.value.between(endDate.value, 'DAY') + 1;
+    const todayDate = date:parse(date:getTodaysDate(null));
+    const endOfNextYear = todayDate.withMonth(12).withDayOfMonth(31).withYear(todayDate.year()+1);
+    endDate.clearError();
+    startDate.clearError();
+     if (endDate.value < startDate.value){
+      endDate.setError('Select an end date after the start date.');
+     } else if(startDate.value < date:getTodaysDate(null)){ 
+         startDate.setError('Select a date in the future.');
+     } else if(endDate.value < date:getTodaysDate(null)){
+      endDate.setError('Select a date in the future.');
+     } else if ((endDate.value > endOfNextYear) || (startDate.value > endOfNextYear)){
+        endDate.setError('Select a date before the end of next year.');
+     } else if (requestLength > maxRemoteEvents) {
+      endDate.setError('Trip length cannot exceed ' + maxRemoteEvents + ' days (max allowable for the year)');
+     } else {
+      startDate.clearError();
+      endDate.clearError();
+     }
+   }
+
+var calculateRemainingDays = function(remoteWorkRequests, timeZone) {
+  var numRemoteDays = 0;
+    for (let i = 0; i < remoteWorkRequests.data.size(); i++){
+      const thisEvent = remoteWorkRequests.data[i];
+      const thisStartDate = date:parse(thisEvent.startDate);
+      const thisEndDate = date:parse(thisEvent.endDate ?? thisEvent.startDate);
+      if (thisEndDate.year() == date:extractValue('YEAR', date:now(timeZone))) { //only count against the balance if it is a current year request
+        numRemoteDays += thisStartDate.between(thisEndDate, 'DAY') + 1 ;
+      }
+    }
+  return numRemoteDays;
+};
+
+var getResetDate = function(timeZone) {
+    let today = date:parse(date:getTodaysDate(date:getDateTimeZone(timeZone)));
+    let thisYear = date:extractValue('YEAR', today);
+    let resetDate = today.withMonth(1).withDayOfMonth(1).withYear(thisYear + 1);
+    let resetDateString = date:format(resetDate,'d MMM yyyy');
+    return resetDateString;
+};
+
+{
+  "calculateRemainingDays": calculateRemainingDays,
+  "getResetDate": getResetDate,
+  "validateDates": validateDates
+}

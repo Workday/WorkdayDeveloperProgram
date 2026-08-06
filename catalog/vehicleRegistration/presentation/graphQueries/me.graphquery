@@ -1,0 +1,4 @@
+{
+    "id": "me",
+    "query": "query { worker(dataSource:{ processingWorker:{}}) { data { workdayID {id} primaryJob { location { workdayID { id}}} }}}"
+}

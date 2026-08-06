@@ -1,0 +1,32 @@
+{
+  "id": 3,
+  "name": "LunchAccount",
+  "label": "Lunch Account",
+  "defaultSecurityDomains": [
+    "LunchAccountManagement"
+  ],
+  "defaultCollection": {
+    "name": "lunchAccounts",
+    "label": "Lunch Accounts", 
+    "description": "Displays all lunch accounts"
+  },
+  "fields": [
+    {
+      "type": "TEXT",
+      "label": "Account ID",
+      "name": "accountID",
+      "id": 1,
+      "isReferenceId": true,
+      "useForDisplay": true, 
+      "description": "Displays accountID"
+    },
+    {
+      "id": 2,
+      "name": "lunchBalance",
+      "label": "LunchBalance",
+      "type": "DECIMAL",
+      "decimals": 2, 
+      "description": "Displays lunch balance amount"
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "id": "addAttachment",
+  "endPoints": [
+    {
+      "name": "me",
+      "baseUrlType": "WORKDAY-COMMON",
+      "url": "/workers/me",
+      "authType": "sso"
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "postAttachment",
+        "url": "verifications",
+        "authType": "sso",
+        "baseUrlType": "app",
+        "multiPartFileLast": "true"
+      }
+    ],
+    "responseErrorDetail": {
+      "errorSummary": "<% error %>",
+      "errors": "<% list:mapAttribute(errors, 'error') %>"
+    }
+  },
+  "presentation": {
+    "micro": "true",
+    "body": {
+      "type": "section",
+      "title": "Attachments",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "text",
+          "enabled": false
+        },
+        {
+          "type": "hidden",
+          "value": "cid:filedata",
+          "valueOutBinding": "postAttachment:data:file"
+        },
+        {
+          "type": "hidden",
+          "value": "<% me.id %>",
+          "valueOutBinding": "postAttachment:data:uploadedBy.id"
+        },
+        {
+          "type": "hidden",
+          "value": "<% date:getTodaysDateFormatted(date:getDateTimeZone('America/Toronto'), 'yyyy-MM-dd HH:mm:ss') %>",
+          "valueOutBinding": "postAttachment:data:uploadedDate"
+        },
+        {
+          "type": "hidden",
+          "value": "<% queryParams.id%>",
+          "valueOutBinding": "postAttachment:data:tuitionReimbursementRequest.id"
+        },
+        {
+          "type": "fileUploader",
+          "id": "multiFileUploader",
+          "valueOutBinding": "postAttachment:filedata:",
+          "fileTypes": "txt,jpg,jpeg,png,ppt,pptx,pdf,doc,docx,xlsx,xls",
+          "singular": true
+        }
+      ]
+    }
+  }
+}

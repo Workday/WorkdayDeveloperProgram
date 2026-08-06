@@ -1,0 +1,22 @@
+var selectCompany = function(company) {
+  var employees = [];
+  if (company == 'Workday') {
+    employees = [{'name': 'Logan Mcneil'}, {'name': 'Steve Morgan'}];
+  }
+    else if (company == 'Google') {
+    employees = [{'name': 'Betty Liu'}, {'name': 'Steve Kerr'}, {'name': 'Tom Taylor'}, {'name': 'John Thomas'}];
+  }
+  employeeGrid.rows = employees;
+};
+
+var getSelectedEmployees = function() {
+  return employeeGrid.selectedRows.map(row => {
+    row.childrenMap.name.value
+  });
+};
+
+/* Export all functions */
+{
+  "selectCompany": selectCompany,
+  "getSelectedEmployees": getSelectedEmployees
+}

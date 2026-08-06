@@ -1,0 +1,18 @@
+{
+  "id": 1,
+  "name": "RequestCreditCard",
+  "label": "Request Credit Card",
+  "description": "Manage Credit Card requests.",
+  "targetBusinessObject": "CreditCardRequest",
+  "useForWorkflow": true,
+  "approvalStep": {
+    "actions": [
+      "APPROVE",
+      "DENY"
+    ],
+    "pageRoute": "/cardEvent/{eventId}"
+  },
+  "details": {
+    "pageRoute": "/cardEvent/{eventId}"
+  }
+}

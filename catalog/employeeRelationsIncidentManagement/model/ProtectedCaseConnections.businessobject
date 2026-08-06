@@ -1,0 +1,72 @@
+{
+  "id": 7,
+  "name": "ProtectedCaseConnections",
+  "label": "Protected Case Connections",
+  "defaultSecurityDomains": [
+    "ManageProtectedCases"
+  ],
+  "defaultCollection": {
+    "name": "protectedCaseConnectionsBO",
+    "label": "Protected Case Connections"
+  },
+  "fields": [
+    {
+      "target": "ProtectedCases",
+      "type": "SINGLE_INSTANCE",
+      "label": "Case",
+      "name": "case",
+      "id": 1
+    },
+    {
+      "id": 2,
+      "name": "connectionType",
+      "label": "Connection Type",
+      "type": "TEXT"
+    },
+    {
+      "id": 3,
+      "name": "connectionValue",
+      "label": "Connection Value",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": true
+    },
+    {
+      "id": 4,
+      "name": "connectionID",
+      "label": "Connection ID",
+      "type": "TEXT"
+    },
+    {
+      "id": 5,
+      "name": "connectionComment",
+      "label": "Connection Comment",
+      "type": "TEXT"
+    },
+    {
+      "id": 6,
+      "name": "linkContact",
+      "label": "Link Contact",
+      "type": "TEXT"
+    },
+    {
+      "id": 7,
+      "name": "contactPhone",
+      "label": "Contact Phone",
+      "type": "TEXT"
+    },
+    {
+      "id": 8,
+      "name": "contactEmail",
+      "label": "Contact Email",
+      "type": "TEXT"
+    },
+    {
+      "id": 9,
+      "name": "worker",
+      "label": "Worker",
+      "type": "SINGLE_INSTANCE",
+      "target" : "WORKER"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "grids",
+  "parameters": [],
+  "header": {
+    "title": "<% 'Grids' %>",
+    "icon": "wd-accent-worksheets"
+  },
+  "body": {
+    "type": "pillCard",
+    "pills": [
+
+      {
+        "label": "Grids - View Page",
+        "taskReference": {
+          "taskId": "gridsView"
+        }
+      },
+      {
+        "label": "Grids - Edit Page",
+        "taskReference": {
+          "taskId": "gridsEdit"
+        }
+      }
+    ]
+  }
+}

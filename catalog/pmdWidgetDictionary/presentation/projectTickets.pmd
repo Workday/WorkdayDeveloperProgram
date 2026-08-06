@@ -1,0 +1,55 @@
+{
+  "id": "projectTickets",
+  "include": [
+    "tickets.script"
+  ],
+  "endPoints": [ ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Tickets"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "cardContainer",
+          "layout": "MASONRY",
+          "_comment": "Given a known limit of cards, it is possible to render a dynamic set of cards as shown here. The Cards system is not specifically designed for this use-case quite yet, but the Extend team is always thinking about how best to serve developers.",
+          "cards": [
+            {
+              "type": "card",
+              "cardId": "ticket",
+              "parameters": "<% {
+                  'ticket': tickets.getAllTickets()[0] }
+                             %>"
+            },
+            {
+              "type": "card",
+              "cardId": "ticket",
+              "parameters": "<% {
+                  'ticket': tickets.getAllTickets()[1] }
+                             %>"
+            },
+            {
+              "type": "card",
+              "cardId": "ticket",
+              "parameters": "<% {
+                  'ticket': tickets.getAllTickets()[2] }
+                             %>"
+            }
+          ]
+        },
+        {
+          "type": "button",
+          "action": "PRIMARY",
+          "label": "Create Ticket",
+          "taskReference": {
+            "type": "taskReference",
+            "taskId": "ticketCreate"
+          }
+        }
+      ]
+    }
+  }
+}

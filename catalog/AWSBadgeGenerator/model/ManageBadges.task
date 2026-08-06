@@ -1,0 +1,9 @@
+{
+  "id": 3,
+  "name": "ManageBadges",
+  "label": "Manage Badges",
+  "securityDomains": [
+    "AwsOnboardingApp"
+  ],
+  "routePath": "/ReviewBadges"
+}

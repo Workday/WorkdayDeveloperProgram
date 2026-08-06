@@ -1,0 +1,31 @@
+{
+  "id": "images",
+  "parameters": [],
+  "header": {
+    "title": "<% 'Images' %>",
+    "icon": "wd-accent-resources"
+  },
+  "body": {
+    "type": "pillCard",
+    "pills": [
+      {
+        "label": "Images",
+        "taskReference": {
+          "taskId": "images"
+        }
+      },
+      {
+        "label": "Icons (labeledImage)",
+        "taskReference": {
+          "taskId": "labeledImage"
+        }
+      },
+      {
+        "label": "imageCard",
+        "taskReference": {
+          "taskId": "imageCardExample"
+        }
+      }
+    ]
+  }
+}

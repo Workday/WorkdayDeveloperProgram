@@ -1,0 +1,22 @@
+{
+  "id": "CompleteBadge",
+  "endPoints": [ ],
+  "presentation": {
+    "pageType": "confirm",
+    "title": {
+      "type": "title",
+      "label": "Badge Request Submitted"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "richText",
+          "id": "hello",
+          "value": "<span style='font-size:12pt'>You'll be notified as soon as your new badge is ready!</span>"
+        }
+      ]
+    }
+  }
+}

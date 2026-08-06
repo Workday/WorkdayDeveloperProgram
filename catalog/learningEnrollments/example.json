@@ -1,0 +1,16 @@
+{
+  "title": "Learning Enrollments",
+  "description": "This is a sample app that demonstrates fetching the workers that meet a certain condition and enrolling them in a course. In the example case, Workers who are not enrolled in the ‘Test Content’ course are being fetched and enrolled.",
+  "type": "Integration App",
+  "components": [
+    "Orchestration"
+  ],
+  "products": [
+    "Workday Orchestrate",
+    "Workday RaaS",
+    "Workday HCM"
+  ],
+  "authors": [],
+  "tutorial": "",
+  "source": "workday"
+}

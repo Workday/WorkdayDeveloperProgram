@@ -1,0 +1,32 @@
+{
+  "id": "launchDCTConfirm",
+  "endPoints": [],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Launch Data Change Task"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "richText",
+          "enabled" : false,
+          "value": "<% `The Data Change Task did not launch. <br> <br> {{flowVariables.response.message ?? '' }}`%>"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+           "value": "Powered By<br/><b>Workday Extend</b>"
+        }
+      ]
+    },
+    "pageType": "CONFIRM"
+  }
+}

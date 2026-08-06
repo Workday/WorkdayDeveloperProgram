@@ -1,0 +1,11 @@
+{
+  "id": 1,
+  "name": "EmployeeRecognition",
+  "label": "Employee Recognition",
+  "secured": true,
+  "businessObject": "WORKER",
+  "routePath": "home/{taskObjectId}",
+  "securityDomains": [
+    "ManageEmployeeRecognition"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "id": "resume",
+  "endPoints": [ ],
+  "presentation": {
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "Upload Resume & Optional Cover Letter"
+    },
+    "body": {
+      "type": "section",
+      "label": "Resume",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "fileUploader",
+          "id": "resume",
+          "fileTypes": "pdf,doc,rtf,txt,html,htm,docx",
+          "validations": [
+            {
+              "errorMessage": "Upload either a pdf, doc, rtf, txt, html, htm, or docx file."
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

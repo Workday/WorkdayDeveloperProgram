@@ -1,0 +1,9 @@
+{
+  "id": 3,
+  "name": "WorkFromAlmostAnywhere",
+  "label": "Work From Almost Anywhere",
+  "securityDomains": [
+    "RemoteWorkSelfService"
+  ],
+  "routePath": "/"
+}

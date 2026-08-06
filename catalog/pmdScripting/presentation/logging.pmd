@@ -1,0 +1,75 @@
+{
+  "id": "logging",
+  "include": [
+    "logging.script"
+  ],
+  "endPoints": [
+    {
+      "name": "workers",
+      "baseUrlType": "workday-common",
+      "url": "/workers",
+      "authType": "sso"
+    }
+  ],
+  "presentation": {
+    "pageType": "edit",
+    "standardEditButtonsHidden": true,
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "fieldSet",
+          "title": "Instructions",
+          "children": [
+            {
+              "type": "richText",
+              "enabled": false,
+              "value": "Select a console method to trigger the logging of the results of calling the <i>workers</i> endpoint. <br>The message will be logged in the <i>Analytics > Logs</i> section of the Workday Developer Site. "
+            },
+            {
+              "type": "readOnlyText",
+              "id": "description",
+              "label": "Workers Data",
+              "value": "<% workers.data[0] %>"
+            },
+            {
+              "type": "dropdown",
+              "id": "methods",
+              "label": "Console Method",
+              "required": true,
+              "instanceList": [
+                {
+                  "id": "debug",
+                  "descriptor": "debug"
+                },
+                {
+                  "id": "error",
+                  "descriptor": "error"
+                },
+                {
+                  "id": "info",
+                  "descriptor": "info"
+                },
+                {
+                  "id": "warn",
+                  "descriptor": "warn"
+                }
+              ],
+              "onChange": "<% logging.logData(self.value) %>"
+            },
+            {
+              "type": "richText",
+              "enabled": false,
+              "id": "message"
+            }
+          ]
+        },
+        {
+          "type": "pod",
+          "podId": "doneButton"
+        }
+      ]
+    }
+  }
+}

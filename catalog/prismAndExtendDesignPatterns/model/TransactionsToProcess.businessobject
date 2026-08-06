@@ -1,0 +1,31 @@
+{
+  "id": 4,
+  "name": "TransactionsToProcess",
+  "label": "Transactions To Process",
+  "defaultSecurityDomains": [
+    "DataCorrection"
+  ],
+  "defaultCollection": {
+    "name": "transactionsToProcesses",
+    "label": "Transactions To Processes"
+  },
+  "fields": [
+    {
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "isReferenceId": false,
+      "type": "TEXT",
+      "name": "dataChangeTask",
+      "id": 1
+    },
+    {
+      "target": "CommissionCorrection",
+      "isPurgeable": false,
+      "type": "MULTI_INSTANCE",
+      "name": "correctionsToProcess",
+      "id": 2
+    }
+  ]
+}

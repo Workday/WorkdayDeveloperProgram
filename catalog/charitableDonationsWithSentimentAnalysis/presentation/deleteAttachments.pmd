@@ -1,0 +1,118 @@
+{
+  "id": "deleteAttachments",
+  "include": [
+    "fileTypes.script"
+  ],
+  "endPoints": [
+    {
+      "name": "getAttachments",
+      "baseUrlType": "app",
+      "url": "<% 'charityFiles?charity=' + flowVariables.currentCharity  //'instance filter' checks for files that have a 'charity' matching the current charity
+    %>",
+      "authType": "sso"
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "deleteAttachment",
+        "url": "charityFiles/<% fileId.value %>",
+        "authType": "sso",
+        "baseUrlType": "app",
+        "httpMethod": "DELETE",
+        "failOnStatusCodes": [
+          "400",
+          "403"
+        ],
+        "exclude": "<%!fileSelector.value%>"
+      }
+    ],
+    "responseErrorDetail": {
+      "errorSummary": "<%error%>",
+      "errors": "<%list:mapAttribute(errors, 'error')%>"
+    }
+  },
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "<% 'Delete Documents via Selections (File download support)' %>"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "readOnlyText",
+          "label": "Information",
+          "value": "This page executes delete requests sequentially."
+        },
+        {
+          "type": "grid",
+          "id": "gridAttachments",
+          "rows": "<% getAttachments.data %>",
+          "doNotAdd": true,
+          "doNotRemove": true,
+          "rowVariableName": "file",
+          "columns": [
+            {
+              "type": "column",
+              "id": "col0",
+              "columnId": "col0",
+              "cellTemplate": {
+                "type": "checkBox",
+                "id": "fileSelector",
+                "value": "<% false %>"
+              },
+              "label": "Select"
+            },
+            {
+              "type": "column",
+              "id": "col1",
+              "columnId": "col1",
+              "cellTemplate": {
+                "type": "section",
+                "children": [
+                  {
+                    "type": "fileUploader",
+                    "id": "multiFileUploader",
+                    "enabled": "false",
+                    "singular": false,
+                    "children": [
+                      {
+                        "type": "fileUploaderRow",
+                        "render": "<% !(empty file.fileName) %>",
+                        "attachment": {
+                          "type": "attachmentList",
+                          "attachmentURL": "https://api.workday.com/apps/<% site.applicationId %>/v1/charityFiles/<% file.id %>",
+                          "attachmentAuth": "sso",
+                          "attachmentName": "<% file.fileName %>",
+                          "attachmentUriTemplate": "[Target]",
+                          "instanceList": [
+                            {
+                              "action": "attachment",
+                              "descriptor": "<% file.fileName%>"
+                            }
+                          ]
+                        },
+                        "fileName": "<% file.fileName%>",
+                        "fileType": "<% fileTypes.getMimeTypeIDbyContentType(file.contentType.id) %>"
+                      }
+                    ],
+                    "fileUploaderRowTemplate": [ ]
+                  },
+                  {
+                    "type": "hidden",
+                    "id": "fileId",
+                    "value": "<% file.id %>",
+                    "valueOutBinding": "deleteAttachment.id"
+                  }
+                ]
+              },
+              "label": "File Name"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

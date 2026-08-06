@@ -1,0 +1,122 @@
+{
+  "id": "translateLabelsEditPages",
+  "onLoad": "<% 
+      //REUSE THIS BLOCK FOR TRANSLATIONS
+      pageVariables.labels = {
+          'label1': 'License Number',
+          'label2': 'First Name',
+          'label3': 'Last Name',
+          'label4': 'Date of Birth',
+          'label5': 'Issue Date',
+          'label6': 'Expiry Date',
+          'label7': 'Address',
+          'label8': 'Anything Else to Add?',
+          'value1': 'Please add a comment here'
+      };
+    %>",
+  "script": "<%
+      //REUSE THIS BLOCK FOR TRANSLATIONS
+      var fBulkTranslate = function() {
+        //invoke orchestrate, add lambda output to a map
+        pageVariables.AWSLabels = translate_Lambda_Bulk.invoke({'translatedText': pageVariables.labels});
+        console.info('AWS LABELS',pageVariables.AWSLabels);
+      }; 
+    %>",
+  "presentation": {
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "Translate Labels and AWS"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "action": "LINK",
+          "type": "button",
+          "id": "home",
+          "label": "← Home",
+          "taskReference": {
+            "taskId": "home"
+          }
+         } ,
+        {
+          "type": "pod",
+          "podId": "translatePod"
+        },
+        {
+          "type": "dynamicSection",
+          "id": "ds",
+          "data": "<% pageVariables.labels %>",
+          "dataVariableName": "labels",
+          "children": [
+            {
+              "type": "readOnlyText",
+              "id": "text1",
+              "label": "<% labels.label1 %>",
+              "value": "Test 1"
+            },
+            {
+              "type": "readOnlyText",
+              "id": "text2",
+              "label": "<% labels.label2 %>",
+              "value": "Test 2"
+            },
+            {
+              "type": "readOnlyText",
+              "id": "text3",
+              "label": "<% labels.label3 %>",
+              "value": "Test 3"
+            },
+            {
+              "type": "readOnlyText",
+              "id": "text4",
+              "label": "<% labels.label4 %>",
+              "value": "Test 4"
+            },
+            {
+              "type": "readOnlyText",
+              "id": "text5",
+              "label": "<% labels.label5 %>",
+              "value": "Test 5"
+            },
+            {
+              "type": "readOnlyText",
+              "id": "text6",
+              "label": "<% labels.label6 %>",
+              "value": "Test 6"
+            },
+            {
+              "type": "readOnlyText",
+              "id": "text7",
+              "label": "<% labels.label7 %>",
+              "value": "Test 7"
+            },
+            {
+              "type": "text",
+              "id": "text8",
+              "label": "<% labels.label8 %>",
+              "value": "<% labels.value1 %>",
+              "onChange": "<% 
+                            pageVariables.labels.value1 = self.value;
+                            %>"
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "id": "footer",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    },
+    "standardEditButtonsHidden": true
+  }
+}

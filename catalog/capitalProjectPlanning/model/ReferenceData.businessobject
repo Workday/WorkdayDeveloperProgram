@@ -1,0 +1,50 @@
+{
+  "id": 16,
+  "name": "ReferenceData",
+  "label": "Reference Data",
+  "defaultSecurityDomains": [
+    "CapitalProjectPlanning",
+    "CapitalProjectPlanningAdministrator",
+    "CapitalProjectPlanningCommon"
+  ],
+  "defaultCollection": {
+    "description": "This object contains references required for the Capital Project Planning process. The names / values can be updated through the Configure Capital Project Planning task",
+    "name": "referenceData",
+    "label": "Reference Data"
+  },
+  "fields": [
+    {
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": true,
+      "isReferenceId": false,
+      "description": "",
+      "type": "TEXT",
+      "name": "name",
+      "id": 1
+    },
+    {
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "isReferenceId": true,
+      "description": "",
+      "type": "TEXT",
+      "name": "code",
+      "id": 2
+    },
+    {
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "isReferenceId": false,
+      "description": "",
+      "type": "TEXT",
+      "name": "type",
+      "id": 3
+    }
+  ]
+}

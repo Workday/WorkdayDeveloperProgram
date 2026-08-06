@@ -1,0 +1,64 @@
+{
+  "id": 1,
+  "name": "CreditCardRequest",
+  "label": "Credit Card Request",
+  "defaultSecurityDomains": [
+    "ManageCreditCardRequests"
+  ],
+  "defaultCollection": {
+    "name": "creditCardRequests",
+    "label": "All Credit Card Requests", 
+    "description": "Displays all credit card requests"
+    
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "cardAssignee",
+      "label": "Card Assignee",
+      "type": "SINGLE_INSTANCE",
+      "target": "WORKER",
+      "secureByTarget": true,
+      "useForDisplay": true, 
+      "description": "Card assignee"
+    },
+    {
+      "id": 2,
+      "name": "creditLimit",
+      "label": "Credit Limit",
+      "type": "DECIMAL",
+      "decimals": 2, 
+      "description": "Credit limit of the credit card"
+    },
+    {
+      "id": 3,
+      "name": "businessReason",
+      "label": "Business Reason",
+      "type": "TEXT", 
+      "description": "Business reason for needing credit card"
+    },
+    {
+      "id": 4,
+      "name": "last4Digits",
+      "label": "Last 4 Digits",
+      "type": "TEXT", 
+      "description": "Last 4 digits of the credit card"
+    },
+    {
+      "id": 5,
+      "name": "expirationMonth",
+      "label": "Expiration Month",
+      "type": "DECIMAL",
+      "decimals": 1, 
+      "description": "Credit card expiration month"
+    },
+    {
+      "id": 6,
+      "name": "expirationYear",
+      "label": "Expiration Year",
+      "type": "DECIMAL",
+      "decimals": 1, 
+      "description": "Credit card expiration year"
+    }
+  ]
+}

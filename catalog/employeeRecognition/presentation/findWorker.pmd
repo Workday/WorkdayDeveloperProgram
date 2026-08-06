@@ -1,0 +1,96 @@
+{
+  "id": "findWorker",
+  "endPoints": [
+    {
+      "name": "me",
+      "baseUrlType": "workday-staffing",
+      "url": "workers/me",
+      "authType": "sso"
+    },
+    {
+      "name": "employeeSearch",
+      "baseUrlType": "workday-wql",
+      "url": "/data",
+      "authType": "sso",
+      "wqlQuery": {
+        "queryId": "employeeSearch",
+        "parameters": {
+          "manager": "<% me.id %>"
+        }
+      }
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "type": "outboundVariable",
+        "name": "workerId",
+        "variableScope": "flow",
+        "values": [
+          {
+            "outboundPath": "workerId",
+            "value": "<% selectedEmployeeList.value[0] %>"
+          }
+        ]
+      },
+      {
+        "type": "outboundVariable",
+        "name": "payment",
+        "variableScope": "flow",
+        "values": [
+          {
+            "outboundPath": "payment",
+            "value": "<% '0' %>"
+          }
+        ]
+      },
+      {
+        "type": "outboundVariable",
+        "name": "giftcard",
+        "variableScope": "flow",
+        "values": [
+          {
+            "outboundPath": "giftcard",
+            "value": "<% 'false' %>"
+          }
+        ]
+      }
+    ]
+  },
+  "presentation": {
+    "headerSize": "VPS_DEFAULT",
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "Select Direct Report for Employee Recognition",
+      "enabled": false
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "text",
+          "label": "Use the drop-down below to find an employee for recognition",
+          "enabled": false
+        },
+        {
+          "type": "dropdown",
+          "label": "Select an Employee",
+          "id": "selectedEmployeeList",
+          "values": "<% (employeeSearch.data ?? []).map(x => {{'id' : x.id, 'descriptor' : x.descriptor}}) %>"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

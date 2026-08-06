@@ -1,0 +1,5 @@
+{ 
+  "id": "workerSelfMock",
+  "responseCode": 200, 
+  "responseBody": {} 
+}

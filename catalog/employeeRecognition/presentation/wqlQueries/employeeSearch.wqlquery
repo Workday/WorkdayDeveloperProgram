@@ -1,0 +1,9 @@
+{
+  "id": "employeeSearch",
+  "parameters": ["manager"],
+  "query": "
+    SELECT fullLegalName AS descriptor, workdayID AS id
+    FROM workersForHCMReporting (dataSourceFilter = allActiveWorkers) 
+    WHERE (activeStatus = true AND manager_Level01 in (<% manager %>))
+  "
+}

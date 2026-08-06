@@ -1,0 +1,19 @@
+{
+    "id": "landingActionDeliveredTask",
+    "parameters": ["title", "WID",  "body"],
+    "header": {
+        "title": "<% title %>"
+    },
+    "body": {
+        "type": "simpleCard",
+        "value": "<% body %>"
+    },
+    "footer": [
+        {
+            "label": "<% title %>",
+            "workdayTaskReference": {
+                "wid": "<% WID %>"
+            }
+        }
+    ]
+}

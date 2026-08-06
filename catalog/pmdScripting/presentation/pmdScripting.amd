@@ -1,0 +1,110 @@
+{
+  "appProperties": [ ],
+  "flowDefinitions": [
+    {
+      "id": "pageEventsFlow",
+      "flowSteps": [
+        {
+          "id": "pageEvents",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "summary",
+              "condition": "true"
+            }
+          ],
+          "taskId": "pageEvents"
+        },
+        {
+          "id": "summary",
+          "taskId": "pageEventsSummary"
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "home",
+      "routingPattern": "/",
+      "page": {
+        "id": "home"
+      }
+    },
+    {
+      "id": "dataManipulation",
+      "routingPattern": "/dataManipulation",
+      "page": {
+        "id": "dataManipulation"
+      }
+    },
+    {
+      "id": "invokingEndpoints",
+      "routingPattern": "/invokingEndpoints",
+      "page": {
+        "id": "invokingEndpoints"
+      }
+    },
+    {
+      "id": "updateWidgetState",
+      "routingPattern": "/updateWidgetState",
+      "page": {
+        "id": "updateWidgetState"
+      }
+    },
+    {
+      "id": "gridEvents",
+      "routingPattern": "/gridEvents",
+      "page": {
+        "id": "gridEvents"
+      }
+    },
+    {
+      "id": "dateCalculations",
+      "routingPattern": "/dateCalculations",
+      "page": {
+        "id": "dateCalculations"
+      }
+    },
+    {
+      "id": "pageEvents",
+      "routingPattern": "/pageEvents",
+      "page": {
+        "id": "pageEvents"
+      }
+    },
+    {
+      "id": "pageEventsSummary",
+      "routingPattern": "/pageEventsSummary",
+      "page": {
+        "id": "pageEventsSummary"
+      }
+    },
+    {
+      "id": "logging",
+      "routingPattern": "/logging",
+      "page": {
+        "id": "logging"
+      }
+    }
+  ],
+  "applicationId": "pmdScripting",
+  "dataProviders": [
+    {
+      "key": "workday-common",
+      "value": "<% apiGatewayEndpoint + '/common/v1' %>"
+    },
+    {
+      "key": "workday-holiday",
+      "value": "<% apiGatewayEndpoint + '/holiday/v1' %>"
+    },
+    {
+      "key": "workday-requisitions",
+      "value": "<% apiGatewayEndpoint + '/procurement/v1' %>"
+    },
+    {
+      "key": "workday-expenses",
+      "value": "<% apiGatewayEndpoint + '/expense/v1' %>"
+    }
+  ],
+  "universalFooterPodId": "footer"
+}

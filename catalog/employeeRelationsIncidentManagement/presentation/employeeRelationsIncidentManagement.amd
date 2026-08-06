@@ -1,0 +1,256 @@
+{
+  "appProperties": [ ],
+  "flowDefinitions": [
+    {
+      "id": "caseFlow",
+      "name": "caseFlow",
+      "flowSteps": [
+        {
+          "id": "viewProtectedCaseStep",
+          "taskId": "viewProtectedCase"
+        },
+        {
+          "id": "addProtectedCommentStep",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "viewProtectedCaseStep",
+              "condition": "true"
+            }
+          ],
+          "taskId": "addProtectedComment"
+        },
+        {
+          "id": "protectedCase_NewStep",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "protectedCase_EditStep",
+              "condition": "true"
+            }
+          ],
+          "taskId": "protectedCase_New"
+        },
+        {
+          "id": "protectedCase_EditStep",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "viewProtectedCaseStep",
+              "condition": "true"
+            }
+          ],
+          "taskId": "protectedCase_Edit"
+        },
+        {
+          "id": "editProtectedCommentStep",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "viewProtectedCaseStep",
+              "condition": "true"
+            }
+          ],
+          "taskId": "editProtectedComment"
+        }
+      ]
+    },
+    {
+      "id": "deleteFlow",
+      "name": "deleteFlow",
+      "flowSteps": [
+        {
+          "id": "deleteFlowStep1",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "deleteFlowStep2",
+              "condition": "true"
+            }
+          ],
+          "taskId": "deleteProtectedCases"
+        },
+        {
+          "id": "deleteFlowStep2",
+          "taskId": "deleteProtectedCases_Confirm"
+        }
+      ]
+    },
+    {
+      "id": "exportFlow",
+      "name": "exportFlow",
+      "flowSteps": [
+        {
+          "id": "exportFlowStep1",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "exportFlowStep2",
+              "condition": "true"
+            }
+          ],
+          "taskId": "exportMicroPopup"
+        },
+        {
+          "id": "exportFlowStep2",
+          "taskId": "viewProtectedCase"
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "root",
+      "routingPattern": "/",
+      "page": {
+        "id": "home"
+      }
+    },
+    {
+      "id": "viewProtectedCases",
+      "routingPattern": "/viewProtectedCases",
+      "page": {
+        "id": "viewProtectedCases"
+      }
+    },
+    {
+      "id": "viewProtectedCase",
+      "routingPattern": "/viewProtectedCase/{caseID}",
+      "page": {
+        "id": "viewProtectedCase"
+      }
+    },
+    {
+      "id": "addProtectedComment",
+      "routingPattern": "/addProtectedComment",
+      "page": {
+        "id": "addProtectedComment"
+      }
+    },
+    {
+      "id": "updateUserPreferences",
+      "routingPattern": "/updateUserPreferences",
+      "page": {
+        "id": "updateUserPreferences"
+      }
+    },
+    {
+      "id": "protectedCase_Edit",
+      "routingPattern": "/protectedCase_Edit",
+      "page": {
+        "id": "protectedCase_Edit"
+      }
+    },
+    {
+      "id": "editConfigValues",
+      "routingPattern": "/editConfigValues",
+      "page": {
+        "id": "editConfigValues"
+      }
+    },
+    {
+      "id": "viewConfiguration",
+      "routingPattern": "/viewConfiguration",
+      "page": {
+        "id": "viewConfiguration"
+      }
+    },
+    {
+      "id": "editCaseTemplateGrid",
+      "routingPattern": "/editCaseTemplateGrid",
+      "page": {
+        "id": "editCaseTemplateGrid"
+      }
+    },
+    {
+      "id": "deleteProtectedCases",
+      "routingPattern": "/deleteProtectedCases",
+      "page": {
+        "id": "deleteProtectedCases"
+      }
+    },
+    {
+      "id": "deleteProtectedCases_Confirm",
+      "routingPattern": "/deleteProtectedCases_Confirm",
+      "page": {
+        "id": "deleteProtectedCases_Confirm"
+      }
+    },
+    {
+      "id": "editProtectedComment",
+      "routingPattern": "/editProtectedComment",
+      "page": {
+        "id": "editProtectedComment"
+      }
+    },
+    {
+      "id": "exportMicroPopup",
+      "routingPattern": "exportMicroPopup",
+      "page": {
+        "id": "exportMicroPopup"
+      }
+    },
+    {
+      "id": "microConclusion",
+      "routingPattern": "microConclusion",
+      "page": {
+        "id": "microConclusion"
+      }
+    },
+    {
+      "id": "editCaseStatuses",
+      "routingPattern": "editCaseStatuses",
+      "page": {
+        "id": "editCaseStatuses"
+      }
+    },
+    {
+      "id": "unlinkedHelpCases",
+      "routingPattern": "unlinkedHelpCases",
+      "page": {
+        "id": "unlinkedHelpCases"
+      }
+    },
+    {
+      "id": "reportReference",
+      "routingPattern": "/reportReference",
+      "page": {
+        "id": "reportReference"
+      }
+    },
+    {
+      "id": "protectedCase_New",
+      "routingPattern": "/protectedCase_New",
+      "page": {
+        "id": "protectedCase_New"
+      }
+    }
+  ],
+  "applicationId": "employeeRelationsIncidentManagement",
+  "dataProviders": [
+    {
+      "key": "app",
+      "value" : "<% `{{apiGatewayEndpoint}}/apps/{{site.applicationId}}/v1/` %>"
+    },
+    {
+      "key": "wql",
+      "value" : "<% `{{apiGatewayEndpoint}}/wql/v1/` %>"
+    },
+    {
+      "key": "general",
+      "value" : "<% `{{apiGatewayEndpoint}}/` %>"
+    },
+    {
+      "key": "orchestration",
+      "value": "<% `{{apiGatewayEndpoint}}/orchestrate/v1/apps/` %>"
+    },
+    {
+      "key": "workday-workerPhoto",
+      "value" : "<% `{{apiGatewayEndpoint}}/common/v1/workerRawPhotoData` %>"
+    },
+    {
+      "key": "raas",
+      "value" : "<% `{{apiGatewayEndpoint}}/raas/` %>"
+    }
+  ]
+}

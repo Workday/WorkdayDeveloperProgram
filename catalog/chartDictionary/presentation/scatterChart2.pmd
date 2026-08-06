@@ -1,0 +1,142 @@
+{
+  "id": "scatterChart2",
+  "include": [
+    "scatterData.script",
+    "pokemonData.script"
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Scatter Charts"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "section",
+          "title": "Simple Scatter Chart",
+          "children": [
+            {
+              "type": "scatterChart2",
+              "id": "chart1",
+              "data": "<% scatterData.getScatterData() %>",
+              "dataVariableName": "data",
+              "horizontalAxisPositions": {
+                "name": "X Positions",
+                "value": "<% data.x %>"
+              },
+              "verticalAxisPositions": {
+                "name": "Y Positions",
+                "value": "<% data.y %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Scatter Chart - with regression line",
+          "children": [
+            {
+              "type": "scatterChart2",
+              "id": "chart2",
+              "data": "<% scatterData.getScatterData() %>",
+              "dataVariableName": "data",
+              "horizontalAxisPositions": {
+                "name": "X Positions",
+                "value": "<% data.x %>"
+              },
+              "verticalAxisPositions": {
+                "name": "Y Positions",
+                "value": "<% data.y %>"
+              },
+              "showRegressionLine": true
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Scatter Chart - with bubbleColorDataSet",
+          "children": [
+            {
+              "type": "scatterChart2",
+              "id": "chart3",
+              "data": "<% scatterData.getScatterData() %>",
+              "dataVariableName": "data",
+              "horizontalAxisPositions": {
+                "name": "X Positions",
+                "value": "<% data.x %>"
+              },
+              "verticalAxisPositions": {
+                "name": "Y Positions",
+                "value": "<% data.y %>"
+              },
+              "bubbleColorDataSet": {
+                "name": "Rating",
+                "value": "<% data.rating %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Scatter Chart - with bubbleColorDataSet, bubbleSizeDataSet, and chartMarkLabel",
+          "children": [
+            {
+              "type": "scatterChart2",
+              "id": "chart4",
+              "data": "<% scatterData.getScatterData() %>",
+              "dataVariableName": "data",
+              "chartMarkLabel": "<% data.label %>",
+              "horizontalAxisPositions": {
+                "name": "X Positions",
+                "value": "<% data.x %>"
+              },
+              "verticalAxisPositions": {
+                "name": "Y Positions",
+                "value": "<% data.y %>"
+              },
+              "bubbleColorDataSet": {
+                "name": "Rating",
+                "value": "<% data.rating %>"
+              },
+              "bubbleSizeDataSet": {
+                "name": "Size",
+                "value": "<% data.size %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Scatter Chart - with quadrantOptions",
+          "children": [
+            {
+              "type": "scatterChart2",
+              "id": "chart5",
+              "data": "<% scatterData.getScatterData() %>",
+              "dataVariableName": "data",
+              "chartMarkLabel": "<% data.label %>",
+              "horizontalAxisPositions": {
+                "name": "X Positions",
+                "value": "<% data.x %>"
+              },
+              "verticalAxisPositions": {
+                "name": "Y Positions",
+                "value": "<% data.y %>"
+              },
+              "quadrantOptions": {
+                "horizontalOriginPosition": "<% 40 %>",
+                "verticalOriginPosition": "<% 50 %>",
+                "upperRightQuadrantColor": "POSITIVE",
+                "upperLeftQuadrantColor": "POSITIVE",
+                "lowerLeftQuadrantColor": "NEUTRAL",
+                "lowerRightQuadrantColor": "NEGATIVE"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

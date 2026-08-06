@@ -1,0 +1,26 @@
+{
+  "id": "CharityLogo",
+  "parameters": ["title", "subtitle", "imageURL"],
+  "header": {
+    "title": "<% title %>",
+    "subtitle": "<% subtitle %>"
+  },
+
+  "body": {
+    "type": "imageCard",
+    "endPoint": {
+      "name": "imageEndPointName",
+      "url" : "<% imageURL %>",
+      "authType" : "sso"
+    }
+  },
+
+  "footer": [
+    {
+      "label": "View All Charities",
+      "taskReference": {
+        "taskId": "charitiesListDetail"
+      }
+    }
+  ]
+}

@@ -1,0 +1,326 @@
+{
+  "id": "gridsEdit",
+  "endPoints": [
+    {
+      "name": "countries",
+      "baseUrlType": "wdayRef",
+      "url": "/country/vers/latest/items?pageLimit=100",
+      "authType": "sso",
+      "bestEffort": "true",
+      "isCollection": true
+    },
+    {
+      "baseUrlType": "workday-staffing",
+      "name": "workers",
+      "authType": "sso",
+      "url": "<%
+              var limit = pagingVariables.limit ?: 30;
+              var offset = pagingVariables.offset ?: 0;
+              '/workers?limit=' + limit + '&offset=' + offset;
+              %>"
+    }
+  ],
+  "presentation": {
+    "pageType": "EDIT",
+    "title": {
+      "type": "title",
+      "label": "Grids - Edit Page"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "pod",
+          "podId": "header"
+        },
+        {
+          "type": "richText",
+          "enabled" : false,
+          "value": "Various grid configurations on an edit page. Use tabs to navigate to the different grid configurations."
+        }
+      ]
+    },
+    "_footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "text",
+          "value": "A sample grid is below. This grid is generated using the Workday reference data API, to pull back countries. A sample re-direction button has also been added, which passes the countries id to a simple action:"
+        }
+      ]
+    },
+    "tabs": [
+            {
+        "type": "section",
+        "label": "Grid",
+        "children": [
+          {
+            "type": "text",
+            "enabled" : "grid",
+            "value": "A sample edit grid is below. This grid is generated using the Workday reference data API, to pull back countries."
+          },
+          {
+            "type": "grid",
+            "id": "Countries",
+            "rows": "<% countries.items %>",
+            "rowVariableName": "country",
+            "columns": [
+              {
+                "type": "column",
+                "id": "country0",
+                "columnId": "country0",
+                "cellTemplate": {
+                  "type": "text",
+                  "value": "<% country.name %>"
+                },
+                "label": "Country Name"
+              },
+              {
+                "type": "column",
+                "id": "country1",
+                "columnId": "country1",
+                "cellTemplate": {
+                  "type": "text",
+                  "value": "<% country['ISO_3166_1_Alpha_2_Code'] %>"
+                },
+                "label": "ISO Alpha 2 Code"
+              },
+              {
+                "type": "column",
+                "id": "country2",
+                "columnId": "country2",
+                "cellTemplate": {
+                  "type": "text",
+                  "value": "<% country['ISO_3166_1_Alpha_3_Code'] %>"
+                },
+                "label": "ISO Alpha 3 Coder"
+              },
+              {
+                "type": "column",
+                "id": "country3",
+                "columnId": "country3",
+                "cellTemplate": {
+                  "type": "text",
+                  "value": "<% country['ISO_3166_1_Numeric_3_Code'] %>"
+                },
+                "label": "Numeric 3 Code"
+              },
+              {
+                "type": "column",
+                "id": "country4",
+                "columnId": "country4",
+                "cellTemplate": {
+                  "type": "text",
+                  "value": "<% country.defaultCurrency %>"
+                },
+                "label": "Currency"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "label" : "Selection Grid",
+        "children": [
+         {
+          "type": "richText",
+          "value": "Edit grid with selection enabled.",
+          "enabled" : false
+        },
+          {
+            "type": "grid",
+            "label": "Items",
+            "id": "grid",
+            "gridType": "LIST",
+            "rows": "<% [{'itemId': 'A101', 'itemDescription' : 'Ergonomic Wireless Mouse', 'itemPrice' : 25.99 }, {'itemId': 'B205', 'itemDescription' : '10ft USB-C Charging Cable', 'itemPrice' : 12.50 }, {'itemId': 'C303', 'itemDescription' : 'Premium Noise-Cancelling Headphones', 'itemPrice' : 199.99 }, {'itemId': 'D410', 'itemDescription' : 'Portable Bluetooth Speaker (Blue)', 'itemPrice' : 45.00 }, {'itemId': 'E550', 'itemDescription' : '1TB External Solid State Drive (SSD)', 'itemPrice' : 89.95 }  ] %>",
+            "rowVariableName": "item",
+            "doNotAdd": "true",
+            "doNotRemove": "true",
+            "selectionEnabled": true,
+            "columns": [
+              {
+                "type": "column",
+                "columnId": "itemCol",
+                "label": "Item",
+                "cellTemplate": {
+                  "type": "text",
+                  "value": "<% item.itemId ?? '' %>",
+                  "enabled": false
+                }
+              },
+              {
+                "type": "column",
+                "columnId": "descriptionCol",
+                "label": "Decription",
+                "cellTemplate": {
+                  "type": "richText",
+                  "value": "<% item.itemDescription ?? '' %>",
+                  "enabled": false
+                }
+              },
+              {
+                "type": "column",
+                "columnId": "priceCol",
+                "label": "Price",
+                "cellTemplate": {
+                  "type": "currency",
+                  "value": "<% item.itemPrice %>",
+                  "currencyCode": "USD",
+                  "enabled": false
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "label": "Sortable & Filterable Grid",
+        "children": [
+          {
+            "type": "text",
+            "enabled" : false,
+            "value": "A sample grid that is configured with sortable and filterable columns"
+          },
+          {
+            "type": "grid",
+            "id": "Countries",
+            "rows": "<% countries.items %>",
+            "rowVariableName": "country",
+            "columns": [
+              {
+                "type": "column",
+                "id": "country0",
+                "columnId": "country0_filter",
+                "sortableAndFilterable": true,
+                "cellTemplate": {
+                  "type": "text",
+                  "value": "<% country.name %>"
+                },
+                "label": "Country Name"
+              },
+              {
+                "type": "column",
+                "id": "country1",
+                "columnId": "country1_filter",
+                "sortableAndFilterable": true,
+                "cellTemplate": {
+                  "type": "text",
+                  "value": "<% country['ISO_3166_1_Alpha_2_Code'] %>"
+                },
+                "label": "ISO Alpha 2 Code"
+              },
+              {
+                "type": "column",
+                "id": "country2",
+                "columnId": "country2_filter",
+                "sortableAndFilterable": true,
+                "cellTemplate": {
+                  "type": "text",
+                  "value": "<% country['ISO_3166_1_Alpha_3_Code'] %>"
+                },
+                "label": "ISO Alpha 3 Coder"
+              },
+              {
+                "type": "column",
+                "id": "country3",
+                "columnId": "country3_filter",
+                "sortableAndFilterable": true,
+                "cellTemplate": {
+                  "type": "text",
+                  "value": "<% country['ISO_3166_1_Numeric_3_Code'] %>"
+                },
+                "label": "Numeric 3 Code"
+              },
+              {
+                "type": "column",
+                "id": "country4",
+                "columnId": "country4",
+                "sortableAndFilterable": true,
+                "cellTemplate": {
+                  "type": "text",
+                  "value": "<% country.defaultCurrency %>"
+                },
+                "label": "Currency"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "label": "Row Mover",
+        "children": [
+          {
+            "type": "text",
+            "enabled" : false,
+            "value": "You can configure an edit grid to enable row mover functionaltiy."
+          },
+          {
+            "type": "grid",
+            "label": "Steps",
+            "rows": "<% [{'id': '01', 'descriptor' : 'Initialize System', 'helpText' : 'Check that <b>all peripheral devices</b> are connected and powered on before proceeding. Refer to the hardware setup guide for details.', 'priority' : 'high'}, {'id': '02', 'descriptor' : 'Configure Network Settings', 'helpText' : 'Enter the following values:<br><br>Static IP Address<br>Subnet Mask<br>', 'priority' : 'medium'}] %>",
+            "rowVariableName": "step",
+            "showRowMover" : true,
+            "columns": [
+              {
+                "type": "column",
+                "label": "Step ID",
+                "columnId": "stepId",
+                "cellTemplate": {
+                  "type": "text",
+                  "value": "<% step.id ?? '' %>"
+                }
+              },
+              {
+                "type": "column",
+                "label": "Step Descriptor",
+                "columnId": "stepDescriptor",
+                "cellTemplate": {
+                  "type": "text",
+                  "value": "<% step.descriptor ?? '' %>"
+                }
+              },
+              {
+                "type": "column",
+                "label": "Help Text",
+                "columnId": "stepHepText",
+                "cellTemplate": {
+                  "type": "richText",
+                  "value": "<%  step.helpText ?? '' %>"
+                }
+              },
+              {
+                "type": "column",
+                "label": "Priority",
+                "columnId": "priorityCol",
+                "cellTemplate": {
+                  "type": "dropdown",
+                  "label" : "Priority",
+                  "instanceList" : [
+                    {
+                      "id" : "low",
+                      "descriptor" : "Low"
+                    },
+                    {
+                      "id" : "medium",
+                      "descriptor" : "Medium"
+                    },
+                   {
+                      "id" : "high",
+                      "descriptor" : "High"
+                    }
+                  ],
+                  "selectedValues" : "<% empty step.priority ? [] : [step.priority] %>"
+          
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,243 @@
+{
+  "id": "home",
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Chart 2.0 Dictionary"
+    },
+    "body": {
+      "type": "fieldSet",
+      "horizontal": true,
+      "children": [
+        {
+          "type": "fieldSet",
+          "title": "By Chart Type",
+          "children": [
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Combo Charts",
+              "taskReference": {
+                "taskId": "comboChart2"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Combo Charts - Podium-style Example",
+              "taskReference": {
+                "taskId": "podiumChart"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Clustered Bar Charts",
+              "taskReference": {
+                "taskId": "clusteredBarChart2"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Stacked Bar Charts",
+              "taskReference": {
+                "taskId": "stackedBarChart2"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Percent Bar Charts",
+              "taskReference": {
+                "taskId": "percentBarChart2"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Overlaid Area Charts",
+              "taskReference": {
+                "taskId": "overlaidAreaChart2"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Stacked Area Charts",
+              "taskReference": {
+                "taskId": "stackedAreaChart2"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Percent Area Charts",
+              "taskReference": {
+                "taskId": "percentAreaChart2"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Scatter Charts",
+              "taskReference": {
+                "taskId": "scatterChart2"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Bubble Charts",
+              "taskReference": {
+                "taskId": "bubbleChart2"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Donut Charts",
+              "taskReference": {
+                "taskId": "donutChart2"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Line Charts",
+              "taskReference": {
+                "taskId": "lineChart2"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Dual Axis Charts",
+              "taskReference": {
+                "taskId": "dualAxisChart2"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Waterfall Charts",
+              "taskReference": {
+                "taskId": "waterfallChart2"
+              }
+            }
+          ]
+        },
+        {
+          "type": "fieldSet",
+          "title": "By Chart Feature",
+          "children": [
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Extra Category Dimension",
+              "taskReference": {
+                "taskId": "featureSecondaryCategory"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Axis Options",
+              "taskReference": {
+                "taskId": "featureAxisOptions"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Chart Mark Labels",
+              "taskReference": {
+                "taskId": "featureChartMarkLabels"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Tooltip Configuration",
+              "taskReference": {
+                "taskId": "featureTooltip"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Accessibility Mode",
+              "taskReference": {
+                "taskId": "featureAccessibilityMode"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Animate and Outline",
+              "taskReference": {
+                "taskId": "featureAnimateAndOutline"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Legend Positions",
+              "taskReference": {
+                "taskId": "featureLegendPosition"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Chart Controls",
+              "taskReference": {
+                "taskId": "featureChartControls"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Comparison Lines and Target Lines",
+              "taskReference": {
+                "taskId": "featureComparisonAndTargetLines"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Layouts",
+              "taskReference": {
+                "taskId": "featureLayouts"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Number Formatting",
+              "taskReference": {
+                "taskId": "featureNumberFormatting"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Empty State",
+              "taskReference": {
+                "taskId": "featureEmptyState"
+              }
+            },
+            {
+              "type": "button",
+              "action": "LINK",
+              "label": "Charts on Edit Page",
+              "taskReference": {
+                "taskId": "featureEditPage"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

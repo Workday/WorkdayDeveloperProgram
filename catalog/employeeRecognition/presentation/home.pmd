@@ -1,0 +1,135 @@
+{
+  "id" : "home",
+  "include" : [ "safe.script" ],
+  "securityDomains" : [ "ManageEmployeeRecognition" ],
+  "endPoints" : [ {
+    "name" : "selectedWorker",
+    "baseUrlType" : "workday-common",
+    "url" : "<%`/{{queryParams.workerId ?? flowVariables.workerId}}` %>",
+    "authType" : "sso"
+  }, {
+    "name" : "badges",
+    "baseUrlType" : "workday-performance-enablement",
+    "url" : "/feedbackBadges?limit=50",
+    "authType" : "sso"
+  }, {
+    "name" : "feedback",
+    "baseUrlType" : "workday-performance-enablement",
+    "url" : "<% `/workers/{{(queryParams.workerId ?? flowVariables.workerId)  + '/anytimeFeedbackEvents'}}`%>",
+    "authType" : "sso"
+  } ],
+  "onLoad" : "<%
+        var innovation_badge_search = badges.data.find(badge => { badge.name == 'Innovation' });  //returns the first match where an entry has this name
+  pageVariables.innovation_badge = innovation_badge_search.workdayID; //grab the WID from that entry
+
+  var integrity_badge_search = badges.data.find(badge => { badge.name == 'Integrity' });  //returns the first match where an entry has this name
+  pageVariables.integrity_badge = integrity_badge_search.workdayID; //grab the WID from that entry
+
+  var customer_service_badge_search = badges.data.find(badge => { badge.name == 'Customer Service' }); //returns the first match where an entry has this name
+  pageVariables.customer_service_badge = customer_service_badge_search.workdayID; //grab the WID from that entry
+    %>",
+  "presentation" : {
+    "headerSize" : "VPS_DEFAULT",
+    "title" : {
+      "type" : "title",
+      "label" : "<% `Employee Recognition for {{selectedWorker.descriptor}}` %>"
+    },
+    "body" : {
+      "type" : "section",
+      "children" : [ {
+        "type" : "cardContainer",
+        "layout" : "MASONRY",
+        "cards" : [ {
+          "type" : "card",
+          "cardId" : "FeedbackOption",
+          "parameters" : "<% {
+                  'category': 'Innovation',
+                  'blurb': 'We aim for innovation not only in our development organization, but also in the way we approach all aspects of our business.',
+                  'color': 'Green',
+                  'icon': 'wd-accent-lightbulb',
+                  'recipient': queryParams.workerId ?? flowVariables.workerId,
+                  'payment': queryParams.payment ?? flowVariables.payment,
+                  'feedbackBadgeId': pageVariables.innovation_badge
+              } %>"
+        }, {
+          "type" : "card",
+          "cardId" : "FeedbackOption",
+          "parameters" : "<% {
+                  'category': 'Integrity',
+                  'blurb': 'We say what we mean, and mean what we say. We stick to our commitments, treat everyone equitably, and communicate openly and honestly.',
+                  'color': 'Green',
+                  'icon': 'wd-accent-target',
+                  'recipient': queryParams.workerId ?? flowVariables.workerId,
+                  'payment': queryParams.payment ?? flowVariables.payment,
+                  'feedbackBadgeId': pageVariables.integrity_badge
+              } %>"
+        }, {
+          "type" : "card",
+          "cardId" : "FeedbackOption",
+          "parameters" : "<% {
+                  'category': 'Customer Service',
+                  'blurb': 'Every investment and decision we make has our customers in mind, and we pull out all stops to make the satisfaction of our customers paramount.',
+                  'color': 'Green',
+                  'icon': 'wd-accent-handshake',
+                  'recipient': queryParams.workerId ?? flowVariables.workerId,
+                  'payment': queryParams.payment ?? flowVariables.payment,
+                  'feedbackBadgeId': pageVariables.customer_service_badge
+              } %>"
+        } ]
+      }, 
+      {
+        "type" : "text",
+        "visible" : false,
+        "value" : "<% pageVariables.integrity_badge %>"
+      }, {
+        "id" : "feedbackGrid",
+        "label" : "<% `Past Feedback for {{selectedWorker.descriptor}}`%>",
+        "type" : "grid",
+        "render" : "<% !empty(feedback.data) %>",
+        "rows" : "<% feedback.data %>",
+        "rowVariableName" : "pastfeedback",
+        "columns" : [ {
+          "cellTemplate" : {
+            "type" : "instanceList",
+            "instanceList" : [ {
+              "id" : "<% pastfeedback.fromWorker.id %>",
+              "descriptor" : "<% //here we use a ternary or Elvis expression to tell the page to check for null
+                                   pastfeedback.fromWorker.descriptor ?: '' %>"
+            } ]
+          },
+          "label" : "From",
+          "columnId" : "from",
+          "type" : "column"
+        }, {
+          "cellTemplate" : {
+            "type" : "text",
+            "value" : "<% pastfeedback.badge.descriptor ?? '' %>"
+          },
+          "label" : "Category",
+          "sortableAndFilterable" : true,
+          "columnId" : "Category",
+          "type" : "column"
+        }, {
+          "cellTemplate" : {
+            "type" : "date",
+            "datePrecision" : "DAY",
+            "dateFormat" : "yyyy-MM-dd",
+            "value" : "<% pastfeedback.feedbackGivenDate ?? '' %>"
+          },
+          "label" : "Date",
+          "sortableAndFilterable" : true,
+          "columnId" : "Date",
+          "type" : "column"
+        }, {
+          "cellTemplate" : {
+            "type" : "richText",
+            "value" : "<% pastfeedback.comment ?? '' %>"
+          },
+          "label" : "comment",
+          "columnId" : "Comment",
+          "type" : "column"
+        } ]
+      } ]
+    }
+  }
+}

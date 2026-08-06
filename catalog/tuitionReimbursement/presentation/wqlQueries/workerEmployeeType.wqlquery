@@ -1,0 +1,9 @@
+{
+  "id": "workerEmployeeType",
+  "parameters": ["workerID"],
+  "query": "<%
+    `SELECT employeeType_PrimaryPosition
+    FROM allActiveEmployees
+    WHERE workdayID='{{workerID}}'`
+  %>"
+}

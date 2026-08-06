@@ -1,0 +1,95 @@
+{
+  "_pagePurpose1": "This page will create MyTeamData objects.",
+  "_pagePurpose2": "It is only intended to support the teamDataBulkDelete page, and subsequently the DeleteModelData Orchestration.",
+  "id": "teamDataCreate",
+  "endPoints": [
+    {
+      "name": "myDirectReports",
+      "authType": "sso",
+      "baseUrlType": "workday-wql",
+      "url": "data",
+      "wqlQuery": {
+        "queryId": "myDirectReports"
+      }
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "createEntry",
+        "authType": "sso",
+        "httpMethod": "POST",
+        "baseUrlType": "workday-app",
+        "url": "myTeamDatas"
+      }
+    ]
+  },
+  "presentation": {
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "Create Bulk Data",
+      "enabled": false
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "section",
+          "id": "mainBody",
+          "label": "Main",
+          "children": [
+            {
+              "type": "readOnlyText",
+              "id": "instructions",
+              "label": "Instructions",
+              "value": "Create a few rows of data (you don't need more than 2, honestly!) in order to support testing the bulk delete process via Orchestrate."
+            },
+            {
+              "type": "grid",
+              "id": "bulkDataGrid",
+              "label": "Create Bulk Data",
+              "rows": "<% [] %>",
+              "columns": [
+                {
+                  "type": "column",
+                  "columnId": "workerColumn",
+                  "label": "Worker",
+                  "cellTemplate": {
+                    "type": "instanceList",
+                    "id": "worker",
+                    "idKey": "worker.id",
+                    "displayKey": "worker.descriptor",
+                    "values": "<% myDirectReports.data ?? [] %>",
+                    "valueOutBinding": "createEntry.teamMember.id"
+                  }
+                },
+                {
+                  "type": "column",
+                  "columnId": "dataColumn",
+                  "label": "Some Data",
+                  "cellTemplate": {
+                    "type": "text",
+                    "id": "someData",
+                    "valueOutBinding": "createEntry.actualEntry"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

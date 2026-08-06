@@ -1,0 +1,261 @@
+{
+  "id": "viewConfiguration",
+  "endPoints": [
+    {
+      "name": "configValueData",
+      "baseUrlType": "app",
+      "authType": "sso",
+      "url": "configValuesBO"
+    },
+    {
+      "name": "caseTemplateData",
+      "baseUrlType": "app",
+      "authType": "sso",
+      "url": "caseTemplatesBO"
+    },
+    {
+      "name": "getStatuses",
+      "baseUrlType": "app",
+      "authType": "sso",
+      "url": "protectedCaseStatuses?limit=100"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Protected Case Management - View Configuration"
+    },
+    "tabs": [
+      {
+        "type": "section",
+        "label": "Configuration Values",
+        "children": [
+          {
+            "type": "section",
+            "horizontal": true,
+            "children": [
+              {
+                "type": "section",
+                "children": [
+                  {
+                    "type": "button",
+                    "action": "PRIMARY",
+                    "label": "Edit Config Values",
+                    "taskReference": {
+                      "taskId": "editConfigValues"
+                    }
+                  },
+                  {
+                    "type": "grid",
+                    "label": "Config Values",
+                    "rows": "<% configValueData.data %>",
+                    "rowVariableName": "configValueGridRow",
+                    "columns": [
+                      {
+                        "type": "column",
+                        "columnId": "col1",
+                        "label": "Config Type",
+                        "cellTemplate": {
+                          "type": "text",
+                          "value": "<% configValueGridRow.configType %>"
+                        }
+                      },
+                      {
+                        "type": "column",
+                        "columnId": "col2",
+                        "label": "Config Value",
+                        "cellTemplate": {
+                          "type": "text",
+                          "value": "<% configValueGridRow.configValue %>"
+                        }
+                      },
+                      {
+                        "type": "column",
+                        "columnId": "col3",
+                        "label": "Config Order",
+                        "cellTemplate": {
+                          "type": "text",
+                          "value": "<% configValueGridRow.configOrder %>"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "richText",
+                    "label": "Configuration Values Guidance",
+                    "value": "<%
+                      '<b>Case Type: </b>Define any number of case tags to be selectable on the case<br>' +
+                      '<b>Workday Help Type Filter: </b>Specify WIDs of case types to be filtered for when referencing Workday Help cases via this app';
+                      %>"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "label": "Case Templates",
+        "children": [
+          {
+            "type": "button",
+            "action": "PRIMARY",
+            "label": "Add Case Template",
+            "taskReference": {
+              "taskId": "editCaseTemplateGrid",
+              "parameterBindings": {
+                "type": "Add"
+              }
+            }
+          },
+          {
+            "type": "grid",
+            "id": "caseTemplateGrid",
+            "label": "Case Templates",
+            "rows": "<% caseTemplateData.data %>",
+            "rowVariableName": "templateGridRow",
+            "columns": [
+              {
+                "type": "column",
+                "columnId": "col1",
+                "label": "Template Name",
+                "cellTemplate": {
+                  "type": "text",
+                  "value": "<% templateGridRow.templateName %>"
+                }
+              },
+              {
+                "type": "column",
+                "columnId": "colEdit",
+                "cellTemplate": {
+                  "type": "button",
+                  "action": "AUXILIARY",
+                  "label": "Edit",
+                  "taskReference": {
+                    "taskId": "editCaseTemplateGrid",
+                    "parameterBindings": {
+                      "type": "Edit",
+                      "rowWID": "<% templateGridRow.id %>"
+                    }
+                  }
+                }
+              },
+              {
+                "type": "column",
+                "columnId": "colDelete",
+                "cellTemplate": {
+                  "type": "button",
+                  "action": "AUXILIARY",
+                  "label": "Delete",
+                  "taskReference": {
+                    "taskId": "editCaseTemplateGrid",
+                    "parameterBindings": {
+                      "type": "Delete",
+                      "rowWID": "<% templateGridRow.id %>"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "label": "Case Statuses",
+        "children": [
+          {
+            "type": "section",
+            "horizontal": true,
+            "children": [
+              {
+                "type": "section",
+                "children": [
+                  {
+                    "type": "button",
+                    "action": "PRIMARY",
+                    "label": "Edit Case Statuses",
+                    "taskReference": {
+                      "taskId": "editCaseStatuses"
+                    }
+                  },
+                  {
+                    "type": "grid",
+                    "label": "Config Values",
+                    "rows": "<% list:sort(getStatuses.data,'statusOrder',true) %>",
+                    "rowVariableName": "statusRow",
+                    "columns": [
+                      {
+                        "type": "column",
+                        "columnId": "col1",
+                        "label": "Description",
+                        "cellTemplate": {
+                          "type": "text",
+                          "value": "<% statusRow.description %>"
+                        }
+                      },
+                      {
+                        "type": "column",
+                        "columnId": "col2",
+                        "label": "Code",
+                        "cellTemplate": {
+                          "type": "text",
+                          "value": "<% statusRow.code%>"
+                        }
+                      },
+                      {
+                        "type": "column",
+                        "columnId": "col4",
+                        "label": "Resolved",
+                        "cellTemplate": {
+                          "type": "checkBox",
+                          "value": "<% statusRow.resolved %>",
+                          "trueLabel": "true",
+                          "falseLabel": "false"
+                        }
+                      },
+                      {
+                        "type": "column",
+                        "columnId": "col5",
+                        "label": "Initial",
+                        "cellTemplate": {
+                          "type": "checkBox",
+                          "value": "<% statusRow.initial %>",
+                          "trueLabel": "true",
+                          "falseLabel": "false"
+                        }
+                      },
+                      {
+                        "type": "column",
+                        "columnId": "col3",
+                        "label": "Status Order",
+                        "cellTemplate": {
+                          "type": "text",
+                          "value": "<% statusRow.statusOrder %>"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "button",
+          "action": "AUXILIARY",
+          "label": "Home",
+          "taskReference": {
+            "taskId": "root"
+          }
+        }
+      ]
+    }
+  }
+}

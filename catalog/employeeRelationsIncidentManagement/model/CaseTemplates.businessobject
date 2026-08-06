@@ -1,0 +1,22 @@
+{
+  "id": 5,
+  "name": "CaseTemplates",
+  "label": "Case Templates",
+  "defaultSecurityDomains": [
+    "ManageProtectedCases"
+  ],
+  "defaultCollection": {
+    "name": "caseTemplatesBO",
+    "label": "Case Templates"
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "templateName",
+      "label": "Template Name",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": true
+    }
+  ]
+}

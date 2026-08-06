@@ -1,0 +1,34 @@
+{
+  "id": 1,
+  "name": "WorkFromAnywhereRequest",
+  "label": "Work From Anywhere Request",
+  "description": "Business Process Type for Work From Anywhere Request",
+  "useForOrchestrate": false,
+  "allowsCancel": true,
+  "approvalStep": {
+    "pageRoute": "/approve/{eventId}",
+    "actions": [
+      "APPROVE",
+      "DENY",
+      "SEND_BACK"
+    ]
+  },
+  "actionSteps": [
+    {
+      "id": 1,
+      "name": "RightToWorkVerification",
+      "label": "Right To Work Verification",
+      "pageRoute": "/review/{eventStepId}"
+    }
+  ],
+  "targetBusinessObject": "WorkFromAnywhereRequest",
+  "securityDomains": [
+    "ManageWorkFromAnywhere",
+    "RemoteWorkSelfService"
+  ],
+  "details": {
+    "pageRoute": "/details/{eventId}"
+  },
+  "allowsManualSendBack": true,
+  "revisePageRoute": "/revise/{eventStepId}"
+}

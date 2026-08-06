@@ -1,0 +1,33 @@
+{
+  "id": 3,
+  "name": "UserPreferences",
+  "label": "User Preferences",
+  "defaultSecurityDomains": [
+    "ManageProtectedCases"
+  ],
+  "defaultCollection": {
+    "name": "userPreferencesBO",
+    "label": "User Preferences"
+  },
+  "fields": [
+    {
+      "type": "SINGLE_INSTANCE",
+      "label": "Worker",
+      "name": "worker",
+      "id": 1,
+      "target": "WORKER"
+    },
+    {
+      "id": 2,
+      "name": "includeLinkedComments",
+      "label": "Include Linked Comments",
+      "type": "BOOLEAN"
+    },
+    {
+      "id": 3,
+      "name": "sortComments",
+      "label": "Sort Comments",
+      "type": "TEXT"
+    }
+  ]
+}

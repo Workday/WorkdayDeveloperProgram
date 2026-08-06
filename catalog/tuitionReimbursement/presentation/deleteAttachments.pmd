@@ -1,0 +1,81 @@
+{
+  "id": "deleteAttachments",
+  "endPoints": [
+    {
+      "name": "getAttachments",
+      "url": "<% `verifications?tuitionReimbursementRequest={{queryParams.id}}` %>",
+      "authType": "sso",
+      "baseUrlType": "app"
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "deleteAttachment",
+        "url": "<% `verifications/{{fileId.value}}`%>",
+        "authType": "sso",
+        "baseUrlType": "app",
+        "httpMethod": "DELETE",
+        "exclude": "<% !fileSelector.value %>"
+      }
+    ],
+    "responseErrorDetail": {
+      "errorSummary": "<% error %>",
+      "errors": "<% list:mapAttribute(errors, 'error') %>"
+    }
+  },
+  "presentation": {
+    "micro": true,
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "title": "Attachments",
+      "children": [
+        {
+          "type": "grid",
+          "id": "gridAttachments",
+          "rows": "<% getAttachments.data %>",
+          "doNotAdd": true,
+          "doNotRemove": true,
+          "_render": false,
+          "rowVariableName": "file",
+          "columns": [
+            {
+              "type": "column",
+              "id": "col0",
+              "columnId": "col0",
+              "cellTemplate": {
+                "type": "checkBox",
+                "id": "fileSelector",
+                "value": "<% false %>"
+              },
+              "label": ""
+            },
+            {
+              "type": "column",
+              "id": "col1",
+              "columnId": "col1",
+              "cellTemplate": {
+                "type": "section",
+                "children": [
+                  {
+                    "type": "text",
+                    "value": "<% file.fileName %>",
+                    "enabled": false
+                  },
+                  {
+                    "type": "hidden",
+                    "id": "fileId",
+                    "value": "<% file.id %>",
+                    "valueOutBinding": "deleteAttachment.id"
+                  }
+                ]
+              },
+              "label": "File Name"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

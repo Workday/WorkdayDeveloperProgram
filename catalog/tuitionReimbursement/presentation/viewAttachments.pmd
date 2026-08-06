@@ -1,0 +1,108 @@
+{
+  "id": "viewAttachments",
+  "endPoints": [
+    {
+      "baseUrlType": "app",
+      "name": "attachments",
+      "authType": "sso",
+      "url": "verifications"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Workday Extend"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "children": [
+            {
+              "as": "attachment",
+              "children": [
+                {
+                  "fileName": "<% attachment.file_name %>",
+                  "contentArea": [
+                    {
+                      "children": [
+                        {
+                          "label": "Uploaded Date",
+                          "type": "readOnlyText",
+                          "value": "<% attachment.uploadedDate %>"
+                        },
+                        {
+                          "type": "readOnlyText",
+                          "label": "Content Type",
+                          "value": "<% attachment.contentType.descriptor.substringBefore(' ') %>"
+                        }
+                      ],
+                      "type": "fieldSet",
+                      "title": "Details",
+                      "initializeCollapsed": true,
+                      "collapsible": true
+                    }
+                  ],
+                  "attachment": {
+                    "attachmentURL": "<% `{{apiGatewayEndpoint}}/apps/{{site.applicationId}}/v1/verifications/{{attachment.id }}` %>",
+                    "attachmentAuth": "sso",
+                    "instanceList": [
+                      {
+                        "action": "attachment"
+                      }
+                    ],
+                    "attachmentUriTemplate": "[Target]",
+                    "attachmentName": "<% attachment.fileName %>",
+                    "type": "attachmentList"
+                  },
+                  "allowRemove": false,
+                  "type": "fileUploaderRow",
+                  "fileType": "<% attachment.contentType.descriptor.substringBefore(' ') %>"
+                }
+              ],
+              "type": "loop",
+              "on": "<% attachments.data %>"
+            }
+          ],
+          "type": "fileUploader",
+          "enabled": false,
+          "render": true,
+          "fileTypes": "txt,jpg,jpeg,png,pdf,doc,docx,xlsx,xls"
+        },
+        {
+          "as": "attachmentView",
+          "children": [
+            {
+              "type": "attachmentList",
+              "label": "<%  attachmentView.fileName   %>",
+              "instanceList": [
+                {
+                  "descriptor": "<%  'Download'  %>",
+                  "action": "attachment",
+                  "mimeType": "<%  fileType:getFileType(attachmentView.fileName);  %>"
+                }
+              ],
+              "attachmentUriTemplate": "[Target]",
+              "attachmentURL": "<% `{{apiGatewayEndpoint}}/apps/{{site.applicationId}}/v1/verifications/{{attachmentView.id}}` %>",
+              "attachmentName": "<%  attachmentView.fileName  %>",
+              "attachmentAuth": "sso"
+            }
+          ],
+          "type": "loop",
+          "on": "<% attachments.data %>"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

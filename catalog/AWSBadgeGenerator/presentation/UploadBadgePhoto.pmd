@@ -1,0 +1,130 @@
+{
+  "id": "UploadBadgePhoto",
+  "endPoints": [
+    {
+      "name": "workerSelf",
+      "baseUrlType": "workday-staffing",
+      "url": "/workers/me",
+      "authType": "sso",
+      "httpMethod": "GET"
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "storeSelfie",
+        "baseUrlType": "app",
+        "url": "<% '/selfiesCollection' %>",
+        "authType": "sso",
+        "httpMethod": "POST"
+      },
+      {
+        "name": "validatePhoto",
+        "baseUrlType": "orchestrate",
+        "url": "<% '/validatePhoto/launch?badge_id=' + storeSelfie.selfies[0].id %>",
+        "authType": "sso",
+        "httpMethod": "POST",
+        "values": [
+          {
+            "outboundPath": "selfie",
+            "value": "<% storeSelfie.selfies[0].id %>"
+          }
+        ]
+      },
+      {
+        "type": "outboundVariable",
+        "name": "badgeVariables",
+        "variableScope": "flow",
+        "values": [
+          {
+            "outboundPath": "validationResult",
+            "value": "<% validatePhoto %>"
+          },
+          {
+            "outboundPath": "selfie",
+            "value": "<% storeSelfie.selfies[0].id %>"
+          }
+        ]
+      }
+    ]
+  },
+  "presentation": {
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "Pick your Badge Photo"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "text",
+          "id": "hello",
+          "value": "<%
+          'Welcome to Workday! Everyone needs a badge and to get yours, just upload your favorite ' +
+          'photo of yourself. We\\'ll take care of the rest.'
+         %>",
+          "enabled": "false"
+        },
+        {
+          "type": "richText",
+          "id": "requirements",
+          "label": "Requirements for auto-approval",
+          "value": "<p>Following these rules will expedite your badge automatically!&nbsp;If for any reason we cannot verify the photo automatically, don&#39;t worry - we&#39;ll manually review it.</p><ul>
+            <li>Your face must be visible</li>
+            <li>Your eyes should be open</li>
+            <li>You should be the only person in the photo</li>
+            <li>Photo must be of a good quality and not blurry</li>
+            <li>No sunglasses</li>
+          </ul>
+        ",
+          "enabled": "false"
+        },
+        {
+          "type": "fileUploader",
+          "id": "imageUploader",
+          "valueOutBinding": "storeSelfie:selfies",
+          "fileTypes": "png,jpg",
+          "required": "true",
+          "singular": "false",
+          "validations": [
+            {
+              "errorMessage": "Upload an image (jpg,png)."
+            }
+          ],
+          "metadata": "<% 
+          {
+            'worker': {
+              'id': workerSelf.id
+            }
+          }
+        %>"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend & AWS"
+        }
+      ]
+    },
+    "applicationExceptions": [
+      {
+        "type": "applicationException",
+        "severity": "ERROR",
+        "message": "We couldn't recognize a face in the photo. Please try a different one.",
+        "render": "<% pageVariables.invalidPhoto %>"
+      }
+    ]
+  },
+  "onLoad": "<% 
+    pageVariables.invalidPhoto =
+      !empty(flowVariables.validationResult) &&
+          !flowVariables.validationResult.valid;
+  %>"
+}

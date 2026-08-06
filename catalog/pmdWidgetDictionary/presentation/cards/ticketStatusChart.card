@@ -1,0 +1,28 @@
+{
+  "id": "ticketStatusChart",
+  "parameters": [
+    "ticket",
+    "ticketStatusData"
+  ],
+  "header": {
+    "title": "<% ticket.name %>",
+    "subtitle": "<% 'Subtickets' %>"
+  },
+  "body": {
+    "type": "chartCard",
+    "chart": {
+      "type": "donutChart2",
+      "data": "<% ticketStatusData %>",
+      "dataVariableName": "data",
+      "sliceSizeDataSet": {
+        "name": "Number of Tickets",
+        "value": "<% data.numTickets %>"
+      },
+      "sliceColorDataSet": {
+        "name": "Ticket Status",
+        "value": "<% data.ticketStatus %>"
+      },
+      "showPercentLabels": true
+    }
+  }
+}

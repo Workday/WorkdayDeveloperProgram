@@ -1,0 +1,195 @@
+{
+  "id": "viewLocations",
+  "securityDomains": [ ],
+  "script": "",
+  "endPoints": [
+    {
+      "name": "getVehicles",
+      "baseUrlType": "workday-graph",
+      "graphQuery": {
+        "queryId": "vehiclesByLocation",
+        "parameters": {
+          "id": "<% id %>"
+        }
+      },
+      "httpMethod": "POST",
+      "authType": "SSO",
+      "deferred": true,
+      "failOnStatusCodes": [
+        {
+          "code": 400
+        }
+      ]
+    },
+    {
+      "name": "distinctLocations",
+      "baseUrlType": "workday-graph",
+      "httpMethod": "POST",
+      "graphQuery": {
+        "queryId": "distinctLocations"
+      },
+      "failOnStatusCodes": [
+        {
+          "code": 400
+        }
+      ]
+    }
+  ],
+  "presentation": {
+    "standardEditButtonsHidden": true,
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "id": "title",
+      "label": "View Vehicles by Location"
+    },
+    "body": {
+      "type": "section",
+      "id": "bodySection",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": false,
+          "value": "<i>This page is powered by Workday Graph API Advanced Filtering and a Dynamic Section</i>"
+        },
+        {
+          "type": "instanceList",
+          "id": "locationList",
+          "values": "<% distinctLocations.data.locations.data.distinct().map(x => {{
+           'id': x.location.workdayID.id,
+           'descriptor': x.location.descriptor
+         }}) %>",
+          "onChange": "<%
+          if(!empty self.value[0]){ //if a value is selected in the instanceList
+            ds.data = getVehicles.invoke({'id': self.value[0]}); //then invoke the query with that value as a param
+           console.info('ds.data is now ' + getVehicles.invoke({'id': self.value[0]}));
+          }
+          %>"
+        },
+        {
+          "type": "dynamicSection",
+          "id": "ds",
+          "data": "<% [] %>",
+          "dataVariableName": "dynamicData",
+          "children": [
+            {
+              "type": "grid",
+              "label": "View All",
+              "enabled": false,
+              "id": "viewAllGrid",
+              "rows": "<% dynamicData.data.vehiclesByLocation.data ?? []  %>",
+              "rowVariableName": "vehicle",
+              "doNotAdd": true,
+              "doNotRemove": true,
+              "columns": [
+                {
+                  "type": "column",
+                  "id": "columnLicensePlate",
+                  "columnId": "columnLicensePlate",
+                  "label": "<% presentationLabels.LicensePlateNumber %>",
+                  "cellTemplate": {
+                    "type": "externalLink",
+                    "descriptor": "<% vehicle.licensePlate %>",
+                    "url": "<% '/' + tenant + '/d/wday/app/' + site.applicationId  + '/' + site.applicationId  + '/viewRegistration.htmld?vehicleId=' + vehicle.workdayID.id %>"
+                  }
+                },
+                {
+                  "type": "column",
+                  "id": "columnYear",
+                  "columnId": "columnYear",
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% vehicle.year %>"
+                  },
+                  "label": "<% presentationLabels.Year %>"
+                },
+                {
+                  "type": "column",
+                  "id": "columnMake",
+                  "columnId": "columnMake",
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% vehicle.make %>"
+                  },
+                  "label": "<% presentationLabels.Make %>"
+                },
+                {
+                  "type": "column",
+                  "id": "columnModel",
+                  "columnId": "columnModel",
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% vehicle.model %>"
+                  },
+                  "label": "<% presentationLabels.Model %>"
+                },
+                {
+                  "type": "column",
+                  "id": "columnColor",
+                  "columnId": "columnColor",
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% vehicle.color %>"
+                  },
+                  "label": "<% presentationLabels.Color %>"
+                },
+                {
+                  "type": "column",
+                  "id": "columnRegistrationDate",
+                  "columnId": "columnRegistrationDate",
+                  "cellTemplate": {
+                    "type": "text",
+                    "enabled": false,
+                    "value": "<% vehicle.registrationDate %>"
+                  },
+                  "label": "<% presentationLabels.DateOfRegistration %>"
+                },
+                {
+                  "type": "column",
+                  "id": "columnCompact",
+                  "columnId": "columnCompact",
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% vehicle.compact %>"
+                  },
+                  "label": "<% presentationLabels.IsCompact %>"
+                },
+                {
+                  "type": "column",
+                  "id": "columnId",
+                  "columnId": "columnId",
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% vehicle.workdayID.id %>"
+                  },
+                  "label": "<% presentationLabels.VehicleID %>"
+                },
+                {
+                  "type": "column",
+                  "id": "columnLocation",
+                  "columnId": "columnLocation",
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% vehicle.location.descriptor %>"
+                  },
+                  "label": "<% presentationLabels.Location %>"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "cardContainer",
+          "layout": "MASONRY",
+          "cards": [
+            {
+              "type": "card",
+              "cardId": "AppLinks",
+              "parameters": "<% {'title': presentationLabels.KeyTasks, 'Register': presentationLabels.RegisterVehicle, 'Locations': presentationLabels.ViewLocations, 'ViewRegistrations': presentationLabels.ViewRegistrations} %>"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "id": "home",
+  "securityDomains": [
+    "ManageCharities"
+  ],
+  "endPoints": [
+    {
+      "baseUrlType": "workday-staffing",
+      "name": "me",
+      "authType": "sso",
+      "url": "workers/me"
+    },
+    {
+      "name": "payInputs",
+      "baseUrlType": "workday-payroll",
+      "url": "<% 'payrollInputs?worker=' + me.id + '&payComponent=Deduction_Code=' + site.appProperties.deductionCode %>",
+      "httpMethod": "GET",
+      "authType": "sso"
+    }
+  ],
+  "presentation": {
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "section",
+          
+          "children": [
+            {
+              "type": "section",
+              "title": "Overview",
+              "children": [
+                {
+                  "type": "richText",
+                  "value": "<p style=\"font-size: 24px;\">Do you want to have a positive impact in the world? Our volunteer and charitable giving programs can help you make a difference in your community to help make the world shine. Take some time to give back today. </p>"
+                },
+                {
+                  "type": "video",
+                  "mediaId": "3cef68364c3101781a0445a172123100"
+                }
+              ]
+            },
+            {
+              "type": "section",
+              "horizontal": true,
+              "children": [
+                {
+                  "type": "section",
+                  "title": "Get Started",
+                  "children": [
+                    {
+                      "type": "cardContainer",
+                      "layout": "MASONRY",
+                      "cards": [
+                        {
+                          "type": "card",
+                          "cardId": "AppLinks",
+                          "parameters": "<% {'title': 'Key Tasks'} %>"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "title": "Your Donation Breakdown",
+                  "children": [
+                    {
+                      "type": "cardContainer",
+                      "layout": "MASONRY",
+                      "cards": [
+                        {
+                          "type": "card",
+                          "cardId": "YourDonations",
+                          "parameters": "<%{
+                        'dataSet': (!empty payInputs.data ? payInputs.data.sort(input => { input.startDate }).reverse() : [])
+                      }%>"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

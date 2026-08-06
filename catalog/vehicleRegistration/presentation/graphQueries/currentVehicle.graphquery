@@ -1,0 +1,10 @@
+{
+    "id": "currentVehicle",
+    "parameters": ["vehicleId"],
+    "query": "
+       query getVehicles($vehicleId: ID!) { currentVehicle: vehicleRegistration20241_nkzjqw_Vehicle( dataSource: {vehicleRegistration20241_nkzjqw_vehicles: {}} where: {workdayID: {in: [{id: $vehicleId}]}} ) { data { color compact descriptor licensePlate location { workdayID { id } } longDescription make model owner { businessTitle } registrationDate workdayID { id } year } } }
+    ",
+    "variables": {
+          "vehicleId": "<% vehicleId %>"
+        }
+}

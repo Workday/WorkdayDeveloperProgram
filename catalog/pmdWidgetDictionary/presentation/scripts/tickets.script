@@ -1,0 +1,218 @@
+var getAllTickets = function() {
+  return [
+{
+    "id": "1",
+    "name": "Natural Language Integration",
+    "status": "Open",
+    "blurb": ("Users should be able to use natural language to interact with the application APIs. This would allow for " +
+      "users that are less technical to navigate and find tickets more easily."),
+      "type": "Spike",
+    "currentUserRequestData": [
+      {
+        "customerStatus": "current",
+        "desire": "High",
+        "count": 30
+      },
+      {
+        "customerStatus": "current",
+        "desire": "Low",
+        "count": 20
+      },
+      {
+        "customerStatus": "current",
+        "desire": "None",
+        "count": 50
+      }
+      ],
+      "prospectiveUserRequestData": [
+      {
+        "customerStatus": "prospective",
+        "desire": "High",
+        "count": 70
+      },
+      {
+        "customerStatus": "prospective",
+        "desire": "Low",
+        "count": 20
+      },
+      {
+        "customerStatus": "prospective",
+        "desire": "None",
+        "count": 10
+      }
+    ]
+  },
+{
+    "id": "2",
+    "name": "Worker Status API",
+    "status": "In Progress",
+    "blurb": "",
+     "type": "Story"
+  },
+{
+    "id": "3",
+    "name": "Home Page",
+    "status": "Completed", 
+    "blurb": "Create a home page experience for when the user loads the application.",
+    "type": "Story"
+  },
+{
+    "id": "4",
+    "name": "Login",
+    "status": "Completed",
+    "blurb": "TODO fill in description",
+    "type": "Story"
+  },
+  {
+    "id": "5",
+    "name": "Manage Account",
+    "status": "In Progress",
+    "blurb": "", 
+    "type": "Spike"
+  },
+  {
+    "id": "6",
+    "name": "Locale Bug",
+    "status": "Open",
+    "blurb": "TODO fill in description", 
+    "type": "Bug"
+  },
+  {
+    "id": "7",
+    "name": "Log Usage Metrics",
+    "status": "In Review",
+    "blurb": "TODO fill in description",
+    "type": "Bug"
+  }
+  ]
+};
+
+
+var getTicketCount = function() {
+  return 7;
+}
+
+var getTicket = function(ticketId) {
+  for (var ticket : getAllTickets()) {
+    if (ticket.id == ticketId) {
+      return ticket;
+    }
+  }
+}
+
+var getAllStatuses = function() {
+  return [
+{
+    "id": "Open",
+    "descriptor": "Open"
+  },
+{
+    "id": "In Progress",
+    "descriptor": "In Progress"
+  },
+{
+    "id": "In Review",
+    "descriptor": "In Review"
+  },
+{
+    "id": "Completed",
+    "descriptor": "Completed"
+  }
+  ]
+};
+
+var getAllTypes = function() {
+  return [
+{
+    "id": "Story",
+    "descriptor": "Story"
+  },
+{
+    "id": "Bug",
+    "descriptor": "Bug"
+  },
+{
+    "id": "Spike",
+    "descriptor": "Spike"
+  }
+  ]
+};
+
+
+var getTicketStatusData = function() {
+  var ticketStatusData = [
+{
+    'ticketStatus': 'Not Started',
+    'numTickets': 13
+  },
+{
+    'ticketStatus': 'Triage',
+    'numTickets': 1
+  },
+{
+    'ticketStatus': 'In Progress',
+    'numTickets': 4
+  },
+{
+    'ticketStatus': 'In Review',
+    'numTickets': 3
+  },
+{
+    'ticketStatus': 'Complete',
+    'numTickets': 10
+  }
+  ]
+  return ticketStatusData
+};
+
+var getBurndownData = function() {
+  var burndownData = [
+{
+    'date': 'start',
+    'numTicketsRemaining': 150
+  },
+{
+    'date': 'Week 1',
+    'numTicketsRemaining': 143
+  },
+{
+    'date': 'Week 2',
+    'numTicketsRemaining': 127
+  },
+{
+    'date': 'Week 3',
+    'numTicketsRemaining': 132
+  },
+{
+    'date': 'Week 4',
+    'numTicketsRemaining': 123
+  },
+{
+    'date': 'Week 5',
+    'numTicketsRemaining': 106
+  },
+{
+    'date': 'Week 6',
+    'numTicketsRemaining': 89
+  },
+{
+    'date': 'Week 7',
+    'numTicketsRemaining': 95
+  },
+{
+    'date': 'Week 8',
+    'numTicketsRemaining': 75
+  }
+  ]
+  return burndownData
+}
+
+{
+  "getAllTickets": getAllTickets,
+  "getBurndownData": getBurndownData,
+  "getTicketCount": getTicketCount,
+  "getTicket": getTicket,
+  "getTicketStatusData": getTicketStatusData,
+  "getAllStatuses": getAllStatuses,
+  "getAllTypes": getAllTypes
+}

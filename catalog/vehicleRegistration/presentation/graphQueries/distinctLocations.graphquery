@@ -1,0 +1,20 @@
+{
+    "id": "distinctLocations",
+    "query": "
+        query vehicleRegistration20241_nkzjqw_Vehicle {
+  locations: vehicleRegistration20241_nkzjqw_Vehicle(
+    dataSource: {vehicleRegistration20241_nkzjqw_vehicles: {}}
+  ) {
+    data {
+      location {
+        workdayID {
+          id
+        }
+        descriptor
+      }
+    }
+    total
+  }
+}
+    "
+}

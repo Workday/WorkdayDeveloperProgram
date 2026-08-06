@@ -1,0 +1,31 @@
+{
+  "id": 5,
+  "name": "MyTeamData",
+  "label": "My Team Data",
+  "defaultSecurityDomains": [
+    "MissedEntryDomain"
+  ],
+  "defaultCollection": {
+    "name": "myTeamDatas",
+    "label": "My Team Datas", 
+    "description": "Displays the team data"
+    
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "teamMember",
+      "label": "Team MEmber",
+      "type": "SINGLE_INSTANCE",
+      "target": "WORKER", 
+      "description": "Displays team member"
+    },
+    {
+      "id": 2,
+      "name": "actualEntry",
+      "label": "Actual Entry",
+      "type": "TEXT", 
+      "description": "Displays actual entry"
+    }
+  ]
+}

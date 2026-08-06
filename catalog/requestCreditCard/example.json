@@ -1,0 +1,21 @@
+{
+  "title": "Request Credit Card",
+  "description": "Create a Credit Card request using Workday Orchestrate.",
+  "type": "Extend App",
+  "components": [
+    "Presentation",
+    "Model",
+    "Orchestration",
+    "Business Process",
+    "WQL"
+  ],
+  "products": [
+    "Workday Extend",
+    "Workday Orchestrate",
+    "Workday Financials",
+    "Workday SOAP API"
+  ],
+  "authors": [],
+  "tutorial": "",
+  "source": "workday"
+}

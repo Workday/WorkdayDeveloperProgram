@@ -1,0 +1,15 @@
+{
+  "title": "Location Changes Outbound",
+  "description": "Post-process the output of Core Connector: Locations with Workday Orchestrate.",
+  "type": "Integration App",
+  "components": [
+    "Orchestration"
+  ],
+  "products": [
+    "Workday Orchestrate",
+    "Workday HCM"
+  ],
+  "authors": [],
+  "tutorial": "https://forum.developer.workday.com/t/app-catalog-app-location-changes-outbound/17239",
+  "source": "workday"
+}

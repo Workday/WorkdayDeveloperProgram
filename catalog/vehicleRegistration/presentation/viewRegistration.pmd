@@ -1,0 +1,116 @@
+{
+  "id": "viewRegistration",
+  "securityDomains": [
+    "ManageVehicles"
+  ],
+  "endPoints": [
+    {
+      "name": "currentVehicle",
+      "baseUrlType": "workday-graph",
+      "httpMethod": "POST",
+      "authType": "sso",
+      "exclude": "<% /*exclude statement prevents this endpoint from firing if there is no vehicleId being passed in. This way we can use the same PMD
+      for both 'create' and 'update' Vehicle Registration operations and the page will work, regardless of whether a Vehicle's ID is being passed in to it.*/
+                  empty(queryParams.vehicleId) %>",
+      "graphQuery": {
+        "queryId": "currentVehicle",
+        "parameters":{
+          "vehicleId":"<% queryParams.vehicleId %>"
+        }
+      },
+      "failOnStatusCodes": [
+        {
+          "code": 400
+        }
+      ]
+    }
+  ],
+  "presentation": {
+    "micro": "true",
+    "title": {
+      "type": "title",
+      "label": "<% presentationLabels.RegisterVehicle %>"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "section",
+          "horizontal": true,
+          "columnWidthRatios": [
+            0.3,
+            0.7
+          ],
+          "children": [
+            {
+              "type": "section",
+              "title": "<% presentationLabels.VehicleDetails %>",
+              "children": [
+                {
+                  "type": "richText",
+                  "label": "<% currentVehicle.data.currentVehicle.data[0].make + ' ' + currentVehicle.data.currentVehicle.data[0].model %>",
+                  "value": "<% presentationLabels.CarDescriptionYear + currentVehicle.data.currentVehicle.data[0].year + presentationLabels.CarDescriptionColor + currentVehicle.data.currentVehicle.data[0].color + presentationLabels.CarDescriptionLicensePlate + currentVehicle.data.currentVehicle.data[0].licensePlate %>",
+                  "render": "<% (!empty(currentVehicle)) %>",
+                  "enabled": false
+                },
+                {
+                  "type": "text",
+                  "id": "vehicleYear",
+                  "label": "<% presentationLabels.Year %>",
+                  "value": "<% !empty(currentVehicle.data.currentVehicle.data[0].year) ? list:toList(currentVehicle.data.currentVehicle.data[0].year) : null %>"
+                },
+                {
+                  "type": "text",
+                  "id": "vehicleMake",
+                  "label": "<% presentationLabels.Make %>",
+                  "value": "<% !empty(currentVehicle.data.currentVehicle.data[0].make) ? currentVehicle.data.currentVehicle.data[0].make : null %>"
+                },
+                {
+                  "type": "text",
+                  "id": "vehicleModel",
+                  "label": "<% presentationLabels.Model %>",
+                  "value": "<% !empty(currentVehicle.data.currentVehicle.data[0].model) ? currentVehicle.data.currentVehicle.data[0].model : null %>"
+                },
+                {
+                  "type": "checkBox",
+                  "id": "vehicleCompact",
+                  "label": "<% presentationLabels.IsCompact %>",
+                  "value": "<% !empty(currentVehicle.data.currentVehicle.data[0].compact) ? currentVehicle.data.currentVehicle.data[0].compact : false %>"
+                },
+                {
+                  "type": "text",
+                  "id": "vehicleColor",
+                  "label": "<% presentationLabels.Color %>",
+                  "value": "<% !empty(currentVehicle.data.currentVehicle.data[0].color) ? list:toList(currentVehicle.data.currentVehicle.data[0].color) : null %>"
+                },
+                {
+                  "type": "text",
+                  "id": "vehiclePlate",
+                  "label": "<% presentationLabels.LicensePlateNumber %>",
+                  "value": "<% !empty(currentVehicle.data.currentVehicle.data[0].licensePlate) ? currentVehicle.data.currentVehicle.data[0].licensePlate : null %>"
+                }
+              ]
+            },
+            {
+              "type": "section",
+              "children": [
+                {
+                  "type": "cardContainer",
+                  "layout": "MASONRY",
+                  "cards": [
+                    {
+                      "type": "card",
+                      "cardId": "AppLinks",
+                       "parameters": "<% {'title': presentationLabels.KeyTasks, 'Register': presentationLabels.RegisterVehicle, 'Locations': presentationLabels.ViewLocations, 'ViewRegistrations': presentationLabels.ViewRegistrations} %>"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

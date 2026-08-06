@@ -1,0 +1,125 @@
+{
+  "id": "sections",
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "section"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "sorted": false,
+      "children": [
+        {
+          "type": "pod",
+          "podId": "header"
+        },
+        {
+          "type": "fieldSet",
+          "title": "Sections - Horizontal No columnWidthRatios",
+          "horizontal": true,
+          "children": [
+            {
+              "type": "fieldSet",
+              "title": "Sample Text Box 1",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "Our core values give us a framework for leadership and daily decisions, and help us enjoy our time at work. Sounds so simple, but too often companies get caught up in politics, ivory-tower attitudes, and market mania instead of focusing on the things that probably made them successful in the first place. The following core values and beliefs define what's important to us at Workday"
+                }
+              ]
+            },
+            {
+              "type": "fieldSet",
+              "title": "Sample Text Box 2",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "Our core values give us a framework for leadership and daily decisions, and help us enjoy our time at work. Sounds so simple, but too often companies get caught up in politics, ivory-tower attitudes, and market mania instead of focusing on the things that probably made them successful in the first place. The following core values and beliefs define what's important to us at Workday"
+                }
+              ]
+            },
+            {
+              "type": "fieldSet",
+              "title": "Sample Text Box 3",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "Our core values give us a framework for leadership and daily decisions, and help us enjoy our time at work. Sounds so simple, but too often companies get caught up in politics, ivory-tower attitudes, and market mania instead of focusing on the things that probably made them successful in the first place. The following core values and beliefs define what's important to us at Workday"
+                }
+              ]
+            },
+            {
+              "type": "fieldSet",
+              "title": "Sample Text Box 4",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "Our core values give us a framework for leadership and daily decisions, and help us enjoy our time at work. Sounds so simple, but too often companies get caught up in politics, ivory-tower attitudes, and market mania instead of focusing on the things that probably made them successful in the first place. The following core values and beliefs define what's important to us at Workday"
+                },
+                {
+                  "type": "text",
+                  "value": "Our core values give us a framework for leadership and daily decisions, and help us enjoy our time at work. Sounds so simple, but too often companies get caught up in politics, ivory-tower attitudes, and market mania instead of focusing on the things that probably made them successful in the first place.  The following core values and beliefs define what's important to us at Workday}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "fieldSet",
+          "title": "Sections - Horizontal With columnWidthRatios (note: to use columnWidthRatios, a title cannot be used)"
+        },
+        {
+          "type": "section",
+          "horizontal": true,
+          "columnWidthRatios": [
+            0.5,
+            0.25,
+            0.25
+          ],
+          "children": [
+            {
+              "type": "fieldSet",
+              "title": "Sample Text Box 5",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "Workday serves around the globe. Looking to connect with Workday in your part of the world? Check out our worldwide office listing to find an office near you. Workday serves around the globe. Looking to connect with Workday in your part of the world? Check out our worldwide office listing to find an office near you. Workday serves around the globe. Looking to connect with Workday in your part of the world? Check out our worldwide office listing to find an office near you."
+                }
+              ]
+            },
+            {
+              "type": "fieldSet",
+              "title": "Sample Text Box 6",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "Our core values give us a framework for leadership and daily decisions, and help us enjoy our time at work. Sounds so simple, but too often companies get caught up in politics, ivory-tower attitudes, and market mania instead of focusing on the things that probably made them successful in the first place. The following core values and beliefs define what's important to us at Workday:"
+                }
+              ]
+            },
+            {
+              "type": "fieldSet",
+              "title": "Sample Text Box 7",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "Our core values give us a framework for leadership and daily decisions, and help us enjoy our time at work. Sounds so simple, but too often companies get caught up in politics, ivory-tower attitudes, and market mania instead of focusing on the things that probably made them successful in the first place. The following core values and beliefs define what's important to us at Workday:"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "pod",
+          "podId": "footer"
+        }
+      ]
+    }
+  }
+}

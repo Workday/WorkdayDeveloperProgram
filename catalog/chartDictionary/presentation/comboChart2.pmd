@@ -1,0 +1,334 @@
+{
+  "id": "comboChart2",
+  "include": [
+    "performanceData.script"
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Combo Charts"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "section",
+          "title": "Combo Chart with bars, lines, points",
+          "children": [
+            {
+              "type": "comboChart2",
+              "id": "chart1",
+              "data": "<% performanceData.getPerformanceData() %>",
+              "dataVariableName": "perfData",
+              "legendPosition": "BOTTOM",
+              "measurementDataSets": [
+                {
+                  "name": "Jim's Score",
+                  "value": "<% perfData.jim %>",
+                  "chartMarkType": "BAR"
+                },
+                {
+                  "name": "Dwight's Score",
+                  "value": "<% perfData.dwight %>",
+                  "chartMarkType": "BAR"
+                },
+                {
+                  "name": "Michael's Score",
+                  "value": "<% perfData.michael %>",
+                  "chartMarkType": "BAR"
+                },
+                {
+                  "name": "Target",
+                  "value": "<% perfData.target %>",
+                  "chartMarkType": "LINE"
+                },
+                {
+                  "name": "Previous Target",
+                  "value": "<% perfData.score %>",
+                  "chartMarkType": "LINE"
+                },
+                {
+                  "name": "Average",
+                  "value": "<% perfData.average %>",
+                  "chartMarkType": "POINT"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Competency",
+                "value": "<% perfData.competency %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Combo Chart with areas, lines, points",
+          "children": [
+            {
+              "type": "comboChart2",
+              "id": "chart2",
+              "data": "<% performanceData.getPerformanceData() %>",
+              "dataVariableName": "perfData",
+              "legendPosition": "BOTTOM",
+              "measurementDataSets": [
+                {
+                  "name": "Jim's Score",
+                  "value": "<% perfData.jim %>",
+                  "chartMarkType": "AREA"
+                },
+                {
+                  "name": "Dwight's Score",
+                  "value": "<% perfData.dwight %>",
+                  "chartMarkType": "AREA"
+                },
+                {
+                  "name": "Michael's Score",
+                  "value": "<% perfData.michael %>",
+                  "chartMarkType": "AREA"
+                },
+                {
+                  "name": "Target",
+                  "value": "<% perfData.target %>",
+                  "chartMarkType": "LINE"
+                },
+                {
+                  "name": "Previous Target",
+                  "value": "<% perfData.score %>",
+                  "chartMarkType": "LINE"
+                },
+                {
+                  "name": "Average",
+                  "value": "<% perfData.average %>",
+                  "chartMarkType": "POINT"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Competency",
+                "value": "<% perfData.competency %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Combo Chart in Accessibility Mode",
+          "children": [
+            {
+              "type": "comboChart2",
+              "id": "chart3",
+              "data": "<% performanceData.getPerformanceData() %>",
+              "dataVariableName": "perfData",
+              "accessibilityMode": true,
+              "legendPosition": "BOTTOM",
+              "measurementDataSets": [
+                {
+                  "name": "Jim's Score",
+                  "value": "<% perfData.jim %>",
+                  "chartMarkType": "BAR"
+                },
+                {
+                  "name": "Dwight's Score",
+                  "value": "<% perfData.dwight %>",
+                  "chartMarkType": "BAR"
+                },
+                {
+                  "name": "Michael's Score",
+                  "value": "<% perfData.michael %>",
+                  "chartMarkType": "BAR"
+                },
+                {
+                  "name": "Target",
+                  "value": "<% perfData.target %>",
+                  "chartMarkType": "LINE"
+                },
+                {
+                  "name": "Previous Target",
+                  "value": "<% perfData.score %>",
+                  "chartMarkType": "LINE"
+                },
+                {
+                  "name": "Average",
+                  "value": "<% perfData.average %>",
+                  "chartMarkType": "AREA"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Competency",
+                "value": "<% perfData.competency %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Combo Chart with Comparison Line",
+          "children": [
+            {
+              "type": "comboChart2",
+              "id": "chart4",
+              "data": "<% performanceData.getPerformanceData() %>",
+              "dataVariableName": "perfData",
+              "legendPosition": "BOTTOM",
+              "measurementDataSets": [
+                {
+                  "name": "Jim's Score",
+                  "value": "<% perfData.jim %>",
+                  "chartMarkType": "BAR"
+                },
+                {
+                  "name": "Dwight's Score",
+                  "value": "<% perfData.dwight %>",
+                  "chartMarkType": "BAR"
+                },
+                {
+                  "name": "Michael's Score",
+                  "value": "<% perfData.michael %>",
+                  "chartMarkType": "BAR"
+                },
+                {
+                  "name": "Target",
+                  "value": "<% perfData.target %>",
+                  "chartMarkType": "LINE"
+                },
+                {
+                  "name": "Previous Target",
+                  "value": "<% perfData.score %>",
+                  "chartMarkType": "LINE"
+                },
+                {
+                  "name": "Average",
+                  "value": "<% perfData.average %>",
+                  "chartMarkType": "AREA"
+                }
+              ],
+              "measurementAxisOptions": {
+                "comparisonLineValue": "<% 3.5 %>",
+                "comparisonLineLabel": "<% 'Comparison Line' %>"
+              },
+              "categoryDataSet": {
+                "name": "Competency",
+                "value": "<% perfData.competency %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Combo Chart with Axis Options - axis titles, min, max, increment, label orientation",
+          "children": [
+            {
+              "type": "comboChart2",
+              "id": "chart5",
+              "data": "<% performanceData.getPerformanceData() %>",
+              "dataVariableName": "perfData",
+              "legendPosition": "BOTTOM",
+              "measurementDataSets": [
+                {
+                  "name": "Jim's Score",
+                  "value": "<% perfData.jim %>",
+                  "chartMarkType": "BAR"
+                },
+                {
+                  "name": "Dwight's Score",
+                  "value": "<% perfData.dwight %>",
+                  "chartMarkType": "BAR"
+                },
+                {
+                  "name": "Michael's Score",
+                  "value": "<% perfData.michael %>",
+                  "chartMarkType": "BAR"
+                },
+                {
+                  "name": "Target",
+                  "value": "<% perfData.target %>",
+                  "chartMarkType": "LINE"
+                },
+                {
+                  "name": "Previous Target",
+                  "value": "<% perfData.score %>",
+                  "chartMarkType": "LINE"
+                },
+                {
+                  "name": "Average",
+                  "value": "<% perfData.average %>",
+                  "chartMarkType": "AREA"
+                }
+              ],
+              "measurementAxisOptions": {
+                "axisTitle": "Competency Scores",
+                "axisMinimum": -5,
+                "axisMaximum": 10,
+                "axisIncrement": 2.5
+              },
+              "categoryDataSet": {
+                "name": "Competency",
+                "value": "<% perfData.competency %>"
+              },
+              "categoryAxisOptions": {
+                "axisTitle": "Competency Data",
+                "axisValueOrientation": "VERTICAL"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Combo Chart with Axis Options - hide axis titles and values",
+          "children": [
+            {
+              "type": "comboChart2",
+              "id": "chart6",
+              "data": "<% performanceData.getPerformanceData() %>",
+              "dataVariableName": "perfData",
+              "legendPosition": "BOTTOM",
+              "measurementDataSets": [
+                {
+                  "name": "Jim's Score",
+                  "value": "<% perfData.jim %>",
+                  "chartMarkType": "BAR"
+                },
+                {
+                  "name": "Dwight's Score",
+                  "value": "<% perfData.dwight %>",
+                  "chartMarkType": "BAR"
+                },
+                {
+                  "name": "Michael's Score",
+                  "value": "<% perfData.michael %>",
+                  "chartMarkType": "BAR"
+                },
+                {
+                  "name": "Target",
+                  "value": "<% perfData.target %>",
+                  "chartMarkType": "LINE"
+                },
+                {
+                  "name": "Previous Target",
+                  "value": "<% perfData.score %>",
+                  "chartMarkType": "LINE"
+                },
+                {
+                  "name": "Average",
+                  "value": "<% perfData.average %>",
+                  "chartMarkType": "AREA"
+                }
+              ],
+              "measurementAxisOptions": {
+                "hideAxisTitle": true,
+                "hideAxisValues": true
+              },
+              "categoryDataSet": {
+                "name": "Competency",
+                "value": "<% perfData.competency %>"
+              },
+              "categoryAxisOptions": {
+                "hideAxisTitle": true,
+                "hideAxisValues": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

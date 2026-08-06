@@ -1,0 +1,255 @@
+{
+  "appProperties": [ ],
+  "flowDefinitions": [
+    {
+      "id": "editCommissionFlow",
+      "name": "editCommission",
+      "flowSteps": [
+        {
+          "id": "editCommission",
+          "transitions": [
+            {
+              "id": "editCommissionReturnToSearch",
+              "order": "a",
+              "value": "commissionResults",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "viewPageSalesCommissionsCorrectionMicro"
+        },
+        {
+          "id": "commissionResults",
+          "endsFlow": true,
+          "taskId": "viewPageSalesCommissionsResults"
+        }
+      ]
+    },
+    {
+      "id": "editPageDynamicRows",
+      "name": "editPageDynamicRowsFlow",
+      "flowSteps": [
+        {
+          "id": "editRowCountPromptPageFlow",
+          "transitions": [
+            {
+              "id": "goToEditPageFlow",
+              "order": "a",
+              "value": "goToEditPage",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "editPageSalesCommissionSearch"
+        },
+        {
+          "id": "goToEditPage",
+          "transitions": [
+            {
+              "id": "microConclusionFlow",
+              "order": "a",
+              "value": "microConclusionPage",
+              "condition": "true"
+            }
+          ],
+          "taskId": "editPageSalesCommissionsResults"
+        },
+        {
+          "id": "goToMicro",
+          "transitions": [
+            {
+              "id": "microConclusionFlowa",
+              "order": "a",
+              "value": "microConclusionPage",
+              "condition": "true"
+            }
+          ],
+          "taskId": "editPageSalesCommissionsResultsFlow"
+        },
+        {
+          "id": "microConclusionPage",
+          "endsFlow": true,
+          "taskId": "microConclusion"
+        }
+      ]
+    },
+    {
+      "id": "viewPageDynamicRows",
+      "name": "viewPageDynamicRowsFlow",
+      "flowSteps": [
+        {
+          "id": "viewRowCountPromptPageFlow",
+          "transitions": [
+            {
+              "id": "goToViewPageFlow",
+              "order": "a",
+              "value": "goToViewPage",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "viewPageSalesCommissionSearch"
+        },
+        {
+          "id": "goToViewPage",
+          "transitions": [
+            {
+              "id": "microConclusionFlow",
+              "order": "a",
+              "value": "microConclusionPageView",
+              "condition": "true"
+            }
+          ],
+          "taskId": "viewPageSalesCommissionsResults"
+        },
+        {
+          "id": "microConclusionPageView",
+          "endsFlow": true,
+          "taskId": "microConclusion"
+        }
+      ]
+    },
+    {
+      "id": "launchDCT",
+      "name": "launchDCTFlow",
+      "flowSteps": [
+        {
+          "id": "launchDCTStep1",
+          "transitions": [
+            {
+              "id": "goToLaunchDCTStep2",
+              "order": "a",
+              "value": "launchDCTStep2",
+              "condition": "<% flowVariables.success == false %>"
+            },
+            {
+              "id": "goToLaunchDCTStep3",
+              "order": "b",
+              "value": "launchDCTStep3",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "launchDCT"
+        },
+        {
+          "id": "launchDCTStep2",
+          "taskId": "launchDCTConfirm"
+        },
+        {
+          "id": "launchDCTStep3",
+          "taskId": "microConclusion"
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "home",
+      "routingPattern": "/",
+      "page": {
+        "id": "home"
+      }
+    },
+    {
+      "id": "commissionHome",
+      "routingPattern": "/commissionHome",
+      "page": {
+        "id": "commissionHome"
+      }
+    },
+    {
+      "id": "microConclusion",
+      "routingPattern": "/microConclusion",
+      "page": {
+        "id": "microConclusion"
+      }
+    },
+    {
+      "id": "editPageSalesCommissionSearch",
+      "routingPattern": "/editPageSalesCommissionSearch",
+      "page": {
+        "id": "editPageSalesCommissionSearch"
+      }
+    },
+    {
+      "id": "editPageSalesCommissionsResults",
+      "routingPattern": "/editPageSalesCommissionsResults",
+      "page": {
+        "id": "editPageSalesCommissionsResults"
+      }
+    },
+    {
+      "id": "editPageSalesCommissionsResultsFlow",
+      "routingPattern": "/editPageSalesCommissionsResults/{rowCount}",
+      "page": {
+        "id": "editPageSalesCommissionsResults"
+      }
+    },
+    {
+      "id": "viewPageSalesCommissionSearch",
+      "routingPattern": "/viewPageSalesCommissionSearch",
+      "page": {
+        "id": "viewPageSalesCommissionSearch"
+      }
+    },
+    {
+      "id": "viewPageSalesCommissionsResults",
+      "routingPattern": "/viewPageSalesCommissionsResults",
+      "page": {
+        "id": "viewPageSalesCommissionsResults"
+      }
+    },
+    {
+      "id": "viewPageSalesCommissionsCorrectionMicro",
+      "routingPattern": "/viewPageSalesCommissionsCorrectionMicro",
+      "page": {
+        "id": "viewPageSalesCommissionsCorrectionMicro"
+      }
+    },
+    {
+      "id": "launchDCT",
+      "routingPattern": "/launchDCT",
+      "page": {
+        "id": "launchDCT"
+      }
+    },
+    {
+      "id": "install",
+      "routingPattern": "/install",
+      "page": {
+        "id": "install"
+      }
+    },
+    {
+      "id": "launchDCTConfirm",
+      "routingPattern": "/launchDCTConfirm",
+      "page": {
+        "id": "launchDCTConfirm"
+      }
+    }
+  ],
+  "applicationId": "prismAndExtendDesignPatterns",
+  "dataProviders": [
+    {
+      "key": "app",
+      "value": "<% `{{apiGatewayEndpoint}}/apps/{{site.applicationId}}/v1/`%>"
+    },
+    {
+      "key": "workday-common",
+      "value": "<% `{{apiGatewayEndpoint}}/common/v1` %>"
+    },
+    {
+      "key": "workday-wql",
+      "value": "<% `{{apiGatewayEndpoint}}/wql/v1/` %>"
+    },
+    {
+      "key": "workday-bp",
+      "value": "<% `{{apiGatewayEndpoint}}/businessProcess/v1/` %>"
+    },
+    {
+      "key": "orchestrate",
+      "value": "<% `{{apiGatewayEndpoint}}/orchestrate/v1/apps/{{site.applicationId}}/orchestrations/`%>"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": 2,
+  "name": "ManageWorkFromAnywhereRequests",
+  "label": "Manage Work From Anywhere Requests",
+  "securityDomains": [
+    "RemoteWorkSelfService"
+  ],
+  "routePath": "/calendarRemoteWork"
+}

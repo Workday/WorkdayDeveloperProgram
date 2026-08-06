@@ -1,0 +1,45 @@
+{
+  "id": "home",
+  "endPoints": [],
+  "presentation": {
+    "headerSize": "STANDARD",
+    "title": {
+      "type": "title",
+      "label": "PRISM Data Correction Utility"
+    },
+    "body": {
+      "type": "hub",
+      "label": "Commission Data Hub",
+      "icon": "wd-accent-clipboard-checklist",
+      "initialTask": {
+        "taskId": "commissionHome"
+      },
+      "additionalLinks": {
+        "title": "Additional Link",
+        "links": [
+          {
+            "type": "external",
+            "label": "Developer Forum",
+            "url": "https://forum.developer.workday.com/"
+          },
+          {
+            "label": "Installation",
+            "task": {
+              "taskId": "install"
+            }
+          }
+        ]
+      }
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By<br/><b>Workday Extend</b>"
+        }
+      ]
+    }
+  }
+}

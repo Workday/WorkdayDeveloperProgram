@@ -1,0 +1,18 @@
+{
+  "title": "Create A Work Event",
+  "description": "Enable employees to propose and create work events, to register for events, and use a calendar view.",
+  "type": "Extend App",
+  "components": [
+    "Presentation",
+    "Model",
+    "Business Process",
+    "Graph API"
+  ],
+  "products": [
+    "Workday Extend",
+    "Workday HCM"
+  ],
+  "authors": [],
+  "tutorial": "https://forum.developer.workday.com/t/app-catalog-app-create-a-work-event/7301",
+  "source": "workday"
+}

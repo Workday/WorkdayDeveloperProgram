@@ -1,0 +1,475 @@
+{
+  "id": "queryBuild",
+  "endPoints": [
+    {
+      "name": "getDataSources",
+      "baseUrlType": "workday-wql",
+      "url": "dataSources?limit=100",
+      "authType": "sso"
+    },
+    {
+      "name": "getDataSourcesSearch",
+      "baseUrlType": "workday-wql",
+      "url": "<% `dataSources?searchString={{instanceListQuery}}&limit=100` %>",
+      "authType": "sso",
+      "deferred": true
+    },
+    {
+      "name": "getDataSourceFields",
+      "baseUrlType": "workday-wql",
+      "url": "<% `dataSources/{{dataSourceInstanceList.value[0]}}/fields?limit=100` %>",
+      "authType": "sso",
+      "deferred": true
+    },
+    {
+      "name": "getDataSourceFieldsSearch",
+      "baseUrlType": "workday-wql",
+      "url": "<% `dataSources/{{dataSourceInstanceList.value[0]}}/fields?searchString={{instanceListQuery}}&limit=100` %>",
+      "authType": "sso",
+      "deferred": true
+    },
+    {
+      "name": "getDataSourceFilters",
+      "baseUrlType": "workday-wql",
+      "url": "<% `dataSources/{{dataSourceInstanceList.value[0]}}/dataSourceFilters?limit=100` %>",
+      "authType": "sso",
+      "deferred": true
+    },
+    {
+      "name": "getQueryResults",
+      "baseUrlType": "workday-wql",
+      "authType": "sso",
+      "httpMethod": "POST",
+      "url": "data",
+      "exclude": "<% empty queryData %>",
+      "deferred": true,
+      "onSend": "<%
+          let postData = {:};
+
+          // queryData is passed in as a parameter when the endpoint is invoked
+          postData.query = queryData;
+
+          return postData;
+        %>"
+    },
+    {
+      "name": "getSupportedMlDataSources",
+      "baseUrlType": "workday-dataQuery",
+      "url": "supportedDataSources?limit=100",
+      "authType": "sso"
+    },
+    {
+      "name": "getWqlQueryFromMl",
+      "baseUrlType": "workday-dataQuery",
+      "url": "genWql",
+      "httpMethod": "POST",
+      "authType": "sso",
+      "deferred": true,
+      "onSend": "<%
+        {'query': queryData}
+      %>"
+    }
+  ],
+  "script": "<%
+    // Construct the WQL query. This will be called any time a field selection changes on the page.
+    const buildQuery = function() {
+      // Go ahead and clear out the query since we're rebuilding it
+      query.setValue('');
+
+      // Only rebuild if there is a data source selected from the instance list
+      if (!empty dataSourceInstanceList.selectedEntries) {
+        let queryString = 'SELECT ';
+
+        // Get selected fields, then add them to a map of values separated by commas
+        // Adding newlines for readability in the UI
+        queryString += fieldsInstanceList.selectedEntries.map(field => { field.descriptor }).join(', ') + '\\n'; 
+
+        // Add the From clause to the query. This will use the selected data source
+        queryString += 'FROM ' + dataSourceInstanceList.selectedEntries[0].descriptor + '\\n';
+            
+        // Limits are optional    
+        if(!empty limit.value) {
+          queryString += 'LIMIT ' + limit.value;
+        }
+        // Update the 'query' textArea widget to the resulting string that was built; the widget is enabled so that the user can still edit it if they want to!
+        query.setValue(queryString); 
+      }
+    }
+
+    const setDataSource = function() {
+      dataSourceInstanceList.clearWarning();
+
+      if (!empty dataSourceInstanceList.selectedEntries) {
+        // Look up the first 100 data source fields to populate the list. Users can still search for specific fields within the instanceList.
+        let allFields = getDataSourceFields.invoke();
+        fieldsInstanceList.setValues(allFields.data);
+        fieldsInstanceList.setEnabled(true);
+
+        // Look up any data source filters that may exist for the selected data source. Data source filtering is not supported by the apps dynamic WQL generation.
+        let allgetDataSourceFilters = getDataSourceFilters.invoke();
+        
+        if(!empty allgetDataSourceFilters.data) { 
+            dataSourceInstanceList.setWarning('This Data Source requires Data Source Filters, which are not supported by this app. You can manually add data source filters on the Generate WQL page.');
+        }
+      } else {
+        // When no data source is selected, clear and deactivate the field list
+        fieldsInstanceList.setEnabled(false);
+        fieldsInstanceList.setValues([]);
+      }
+    }
+  %>",
+  "presentation": {
+    "standardEditButtonsHidden": true,
+    "pageType": "edit",
+    "title": {
+      "label": "Create WQL Query (Powered by Workday Extend)",
+      "type": "title"
+    },
+    "tabs": [
+      {
+        "type": "section",
+        "label": "Generate WQL",
+        "horizontal": true,
+        "children": [
+          {
+            "type": "section",
+            "id": "leftSideGenAI",
+            "children": [
+              {
+                "type": "fieldSet",
+                "title": "Generative AI Request",
+                "children": [
+                  {
+                    "type": "fieldSet",
+                    "title": "Example Requests",
+                    "collapsible": true,
+                    "initializeCollapsed": true,
+                    "children": [
+                      {
+                        "type": "richText",
+                        "enabled": "false",
+                        "value": "<i><b><span style=\"color:#0875e1;\">How many active employees are there?</span></b><i>
+<b><span style=\"color:#5e6a75\">SELECT COUNT(DISTINCT employee) FROM allActiveAndTerminatedWorkers WHERE activeStatus = true</span></b>
+
+<i><b><span style=\"color:#0875e1;\">How many billable hours were there last month?</span></b><i>
+<b><span style=\"color:#5e6a75\">SELECT SUM(billableHours) FROM allTimeBlocks (dataSourceFilter = timeBlocksSecuredBySupervisoryOrganization) WHERE reportedDate >= '2023-02-01' AND reportedDate < '2023-03-01'</b>
+
+<i><b><span style=\"color:#0875e1;\">Break down the last months customer invoices by currency type</span></b><i>
+<b><span style=\"color:#5e6a75\">SELECT invoiceCurrency, COUNT() FROM customerInvoices (dataSourceFilter = customerInvoicesForCompanyFilter) WHERE invoiceDate >= '2022-12-01' AND invoiceDate < '2023-01-01' GROUP BY invoiceCurrency</span></b>
+
+<i><b><span style=\"color:#0875e1;\">What prospective candidates do we have with over 5 years of experience?</span></b><i>
+<b><span style=\"color:#5e6a75\">SELECT candidate FROM findCandidates (dataSourceFilter = internalAndExternalCandidates) WHERE totalYearsExperience > 5</span></b>
+
+<i><b><span style=\"color:#0875e1;\">What are the last 20 job applications created</span></b><i>
+<b><span style=\"color:#5e6a75\">SELECT jobApplication FROM jobApplications (dataSourceFilter = allJobApplications) ORDER BY jobApplicationEvent DESC LIMIT 20</span></b>
+
+<i><b><span style=\"color:#0875e1;\">How long does it take from opening a job posting to the first interview on average</span></b><i>
+<b><span style=\"color:#5e6a75\">SELECT AVG(timeToFirstInterview) FROM jobPosting (dataSourceFilter = approvedJobPostings)</span></b>
+
+<i><b><span style=\"color:#0875e1;\">Which piece of learning content is most helpful to workers?</span></b><i>
+<b><span style=\"color:#5e6a75\">SELECT learningContent, rating FROM learningContent ORDER BY rating DESC LIMIT 1</span></b>
+
+<i><b><span style=\"color:#0875e1;\">What date had the most learning enrollments last month?</span></b><i>
+<b><span style=\"color:#5e6a75\">SELECT learnersRegistrationDate, COUNT() FROM learningEnrollments WHERE learnersRegistrationDate >= '2023-02-01' AND learnersRegistrationDate < '2023-03-01' GROUP BY learnersRegistrationDate ORDER BY COUNT() DESC LIMIT 1</span></b>
+
+<i><b><span style=\"color:#0875e1;\">Find the old invoices from the suppliers that we haven't paid yet.</span></b><i>
+<b><span style=\"color:#5e6a75\">SELECT supplierInvoiceDocument FROM supplierInvoices (dataSourceFilter = supplierInvoicesFilter) WHERE paidInFullDate IS EMPTY</span></b>"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "fieldSet",
+                    "title": "Supported Data Sources",
+                    "collapsible": true,
+                    "initializeCollapsed": true,
+                    "children": [
+                      {
+                        "type": "richText",
+                        "enabled": "false",
+                        "value": "<% getSupportedMlDataSources.map(dataSource => {dataSource.dataSourceAlias}).join('<br />'); %>"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "fieldSet",
+                    "title": "Natural Language Request",
+                    "children": [
+                      {
+                        "type": "text",
+                        "enabled": "false",
+                        "value": "Enter in a request using natural language to produce a WQL query."
+                      },
+                      {
+                        "id": "genWql",
+                        "type": "textArea",
+                        "required": true
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "pageActionButton",
+                "id": "executeQueryButton",
+                "label": "Get WQL",
+                "onClick": "<%
+                  genWql.clearError();
+
+                  if(empty genWql.value){
+                    genWql.setError('Your request cannot be empty.');
+                  } else {
+                    const resp = getWqlQueryFromMl.invoke({'queryData': genWql.value});
+                    genWqlQuery.value = resp.wql ?? '';
+                  }
+                %>"
+              },
+              {
+                "type": "fieldSet",
+                "title": "Query",
+                "children": [
+                  {
+                    "type": "text",
+                    "enabled": "false",
+                    "value": "The generated query that will execute. You can manually adjust the query before executing."
+                  },
+                  {
+                    "id": "genWqlQuery",
+                    "type": "textArea",
+                    "required": true,
+                    "guide": {
+                      "type": "guide",
+                      "id": "guide1Query",
+                      "title": "WQL Query",
+                      "text": "The generated query that will execute. You can manually adjust the query before executing."
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "pageActionButton",
+                "id": "executeQueryButton",
+                "label": "Execute Query",
+                "onClick": "<%
+                  // Clicking the 'Execute Query' button will cause several changes on the page
+                  
+                  // queryResults.invoke() calls the endpoint and returns its response; save it to a variable
+                  const wqlEndpointData = getQueryResults.invoke({'queryData': genWqlQuery.value});  
+
+                  // Unhide the right side of the page with the results textArea widgets and the grid
+                  rightSideGenAIResult.setVisible(true); 
+                  
+                  let dataObj = {:};
+                  dataObj.wqlQuery = genWqlQuery.value; 
+
+                  // Set the value of a hidden wqlResults textArea widget to the WQL endpoint response var
+                  dataObj.wqlResult = wqlEndpointData.data; 
+                  dataObj.wqlResultsError = wqlEndpointData.errors;
+
+                  genAiQueryResultsGrid.setData(dataObj);
+                %>"
+              }
+            ]
+          },
+          {
+            "type": "section",
+            "id": "rightSideGenAIResult",
+            "title": "Results",
+            "visible": false,
+            "enabled": false,
+            "children": [
+              {
+                "type": "pod",
+                "podId": "resultsGrid",
+                "parameters": {
+                  "gridId": "genAiQueryResultsGrid"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "label": "Build WQL",
+        "horizontal": true,
+        "children": [
+          {
+            "type": "section",
+            "id": "leftSideQueryBuild",
+            "children": [
+              {
+                "type": "fieldSet",
+                "title": "Data Source",
+                "children": [
+                  {
+                    "type": "text",
+                    "enabled": "false",
+                    "value": "Find Data Sources by entering a search string."
+                  },
+                  {
+                    "type": "instanceList",
+                    "id": "dataSourceInstanceList",
+                    "label": "Data Source",
+                    "values": "<% list:sort(getDataSources.data, 'descriptor', true)%>",
+                    "searchEndPoint": "<% endpoints.getDataSourcesSearch %>",
+                    "searchResultValues": "<% getDataSourcesSearch.data %>",
+                    "idKey": "id",
+                    "displayKey": "alias",
+                    "required": true,
+                    "multiSelect": false,
+                    "onChange": "<% setDataSource(); buildQuery(); %>",
+                    "guide": {
+                      "type": "guide",
+                      "id": "guideDataSource",
+                      "title": "Data Source",
+                      "text": "Find Data Sources by entering a search string."
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "fieldSet",
+                "title": "Data Source Fields",
+                "children": [
+                  {
+                    "type": "text",
+                    "enabled": "false",
+                    "value": "<% 'Find Data Source Fields for your selected Data Source by entering a search string and/or selecting individual fields.' %>"
+                  },
+                  {
+                    "type": "instanceList",
+                    "id": "fieldsInstanceList",
+                    "label": "Data Source Fields",
+                    "values": "<% [] %>",
+                    "searchEndPoint": "<% endpoints.getDataSourceFieldsSearch %>",
+                    "searchResultValues": "<% getDataSourceFieldsSearch.data %>",
+                    "idKey": "id",
+                    "displayKey": "alias",
+                    "required": "true",
+                    "multiSelect": "true",
+                    "enabled": false,
+                    "onChange": "<% buildQuery() %>",
+                    "guide": {
+                      "type": "guide",
+                      "id": "guidegetDataSourceFields",
+                      "title": "Data Source Fields",
+                      "text": "Find Data Source Fields for your selected Data Source by entering a search string and/or selecting individual fields."
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "fieldSet",
+                "title": "Limit Parameter",
+                "children": [
+                  {
+                    "type": "text",
+                    "enabled": "false",
+                    "value": "<% 'The limit query parameter will limit the number of results returned for your query; defaults to 10. \\n Note that if you remove this parameter, all results will be returned and it may take a few moments for them to appear.' %>"
+                  },
+                  {
+                    "id": "limit",
+                    "type": "number",
+                    "label": "<% presentationLabels.SelectgetDataSourceFields %>",
+                    "value": "10",
+                    "minimumValue": 0,
+                    "maximumValue": 50000,
+                    "totalDigits": 3,
+                    "fractionDigits": 0,
+                    "onChange": "<% buildQuery() %>",
+                    "guide": {
+                      "type": "guide",
+                      "id": "guideLimit",
+                      "title": "Limit Parameter",
+                      "text": "The limit query parameter will limit the number of results returned for your query; defaults to 10. Note that if you remove this parameter, all results will be returned and it may take a few moments for them to appear."
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "fieldSet",
+                "title": "Query",
+                "children": [
+                  {
+                    "type": "text",
+                    "enabled": "false",
+                    "value": "<% 'The generated query that will execute. You can manually adjust the query before executing.' %>"
+                  },
+                  {
+                    "id": "query",
+                    "type": "textArea",
+                    "required": true,
+                    "guide": {
+                      "type": "guide",
+                      "id": "guideQuery",
+                      "title": "WQL Query",
+                      "text": "The generated query that will execute. You can manually adjust the query before executing."
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "pageActionButton",
+                "id": "executeQueryButton",
+                "label": "Execute Query",
+                "onClick": "<%
+                  // Clicking the 'Execute Query' button will cause several changes on the page
+                  const wqlEndpointData = getQueryResults.invoke({'queryData': query.value});  
+
+                  // Unhide the right side of the page with the results textArea widgets and the grid
+                  rightSideQueryResults.setVisible(true); 
+                  
+                  // Any fields the user clicked are added to a list, where each element is the field's descriptor
+                  let dataObj = {:};
+                  dataObj.fieldList = fieldsInstanceList.getSelectedEntries().map(f => { f.descriptor }); 
+                  dataObj.wqlQuery = query.value; 
+
+                  // Set the value of a hidden wqlResults textArea widget to the WQL endpoint response var
+                  dataObj.wqlResult = wqlEndpointData.data; 
+                  dataObj.wqlResultsError = wqlEndpointData.errors;
+
+                  queryResultsGridSection.setData(dataObj);
+                %>"
+              }
+            ]
+          },
+          {
+            "type": "section",
+            "id": "rightSideQueryResults",
+            "title": "Results",
+            "visible": false,
+            "children": [
+              {
+                "type": "pod",
+                "podId": "resultsGrid",
+                "parameters": {
+                  "gridId": "queryResultsGridSection"
+                }
+              }
+            ]
+          }
+        ]
+      }
+      
+    ],
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "fieldSet",
+          "title": "Instructions",
+          "collapsible": true,
+          "initializeCollapsed": true,
+          "children": [
+            {
+              "type": "richText",
+              "value": "Use the <b>Build WQL</b> tab to build out a WQL query using a specific data source, and subsequent fields.<br/><br/>Use the <b>Generate WQL</b> tab to use Generative AI with natural language to create a WQL query.",
+              "enabled": false
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

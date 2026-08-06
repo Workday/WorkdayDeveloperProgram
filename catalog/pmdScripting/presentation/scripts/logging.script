@@ -1,0 +1,20 @@
+var logData = function(method) {
+
+  if (method[0] == 'debug') {
+    console.debug('Debug the current value: ', description.value);
+  } else if (method[0] == 'error') {
+    console.error('Invalid value error: ', description.value);
+  } else if (method[0] == 'info') {
+    console.info('Informational value: ', description.value);
+  } else if (method[0] == 'warn') {
+    console.warn('Warning value: ', description.value);
+  }
+
+  message.value = 'A <b>' + method[0] + '</b> message was logged at ' + date:getTodaysDate(date:getDateTimeZone('America/Los_Angeles')) + '.<br>Check the <b><i>Analytics > Logs</i></b> section of the Workday Developer Site.<br>Add this filter <b><i>wd_category is console</i></b>';
+
+};
+
+/* Export all functions */
+{
+  "logData": logData
+}

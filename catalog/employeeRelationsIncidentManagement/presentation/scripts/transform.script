@@ -1,0 +1,28 @@
+var convertCSVtoList = function(stringToConvert) {
+  if (empty(stringToConvert)) {
+    return [];
+  } else {
+    return stringToConvert.replace(', ','|').split('|');
+  }
+};
+
+var convertListtoCSV = function(listToConvert) {
+  listToConvert.toString().removeStart('[').removeEnd(']');
+};
+
+var formatDateString = function(dateToFormat, timeZone) {
+  date:formatWithTimeZone(date:parseFormattedDateString(dateToFormat,'yyyy-MM-dd\'T\'HH:mm:ss.SSS'), 'yyyy-MM-dd HH:mm:ss', timeZone);
+}; 
+
+ var getTimestamp = function(timeZone) {
+    let format = 'yyyy-MM-dd\'T\'HH:mm:ss.SSSZ';
+    return date:now().formatWithTimeZone(format, timeZone);  
+ }
+
+
+{
+  "convertCSVtoList": convertCSVtoList,
+  "convertListtoCSV": convertListtoCSV,
+  "formatDateString": formatDateString,
+  "getTimestamp" : getTimestamp
+}

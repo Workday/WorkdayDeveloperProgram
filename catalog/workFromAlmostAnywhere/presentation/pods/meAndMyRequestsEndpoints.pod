@@ -1,0 +1,28 @@
+{
+    "podId": "meAndMyRequestsEndpoints",
+    "seed": {
+      "endPoints": [
+      {
+      "baseUrlType": "location",
+      "name": "countries",
+      "authType": "sso",
+      "url": "countries",
+      "isCollection": "true"
+    },
+    {
+      "name": "me",
+      "baseUrlType": "workday-staffing",
+      "url": "workers/me",
+      "authType": "sso"
+    },
+    {
+        "name": "remoteWorkRequests",
+        "baseUrlType": "app",
+        "url": "workFromAnywhereRequests?limit=<% pagingVariables.limit ?: 50 %>&offset=<% pagingVariables.offset ?: 0 %>",
+        "authType": "sso",
+        "httpMethod": "GET"
+      }
+    ],
+    "template": {"type": "hidden", "value": "dummy widget to let pod load" }
+    }
+  }

@@ -1,0 +1,21 @@
+{
+  "id": "prismAndExtendDesignPatterns",
+  "languages": [
+    {
+      "code": "en-US",
+      "description": "English"
+    }
+  ],
+  "siteAuth": {
+    "authTypes": [
+      {
+        "scheme": "SSO",
+        "id": "sso"
+      }
+    ]
+  },
+  "siteId": "prismAndExtendDesignPatterns",
+  "cdnEnabled": true,
+  "siteProperties": [ ],
+  "applicationId": "prismAndExtendDesignPatterns"
+}

@@ -1,0 +1,24 @@
+{
+  "id": "generateWQL",
+  "languages": [
+    {
+      "code": "en-US",
+      "description": "English"
+    }
+  ],
+  "siteAuth": {
+    "authTypes": [
+      {
+        "scheme": "SSO",
+        "id": "sso"
+      }
+    ]
+  },
+  "siteId": "generateWQL",
+  "auth": {
+    "type": "SSO"
+  },
+  "cdnEnabled": true,
+  "siteProperties": [ ],
+  "applicationId": "generateWQL"
+}

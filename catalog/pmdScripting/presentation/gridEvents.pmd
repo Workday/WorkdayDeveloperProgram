@@ -1,0 +1,160 @@
+{
+  "id": "gridEvents",
+  "include": [
+    "gridEvents.script"
+  ],
+  "endPoints": [
+    {
+      "name": "requisitions",
+      "baseUrlType": "workday-requisitions",
+      "url": "/requisitions?limit=3",
+      "authType": "sso",
+      "bestEffort": true
+    },
+    {
+      "name": "requisition",
+      "baseUrlType": "workday-requisitions",
+      "url": "<% '/requisitions/' + id %>",
+      "authType": "sso",
+      "deferred": true
+    }
+  ],
+  "presentation": {
+    "pageType": "edit",
+    "standardEditButtonsHidden": true,
+    "title": {
+      "type": "title",
+      "label": "PMD Scripting - Grid Events"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "fieldSet",
+          "title": "Instructions",
+          "children": [
+            {
+              "type": "richText",
+              "value": "1. Select a row (checkbox) in the grid below to trigger the <b>onRowSelect</b> event to fetch details about a specific <i>Requisition</i>.",
+              "enabled": false
+            },
+            {
+              "type": "richText",
+              "value": "2. Update the <b>Quantity</b> on a selected row to trigger <b>onChange</b> event and update the <b>Total Cost</b> column.",
+              "enabled": false
+            }
+          ]
+        },
+        {
+          "type": "grid",
+          "gridType": "LIST",
+          "id": "reqGrid",
+          "rows": "<% requisitions.data %>",
+          "rowVariableName": "row",
+          "doNotAdd": "true",
+          "doNotRemoveRow": "true",
+          "selectionEnabled": true,
+          "maxRowSelection": 1,
+          "onRowSelect": "<% gridEvents.selectRow(); %>",
+          "label": "Requisitions",
+          "columns": [
+            {
+              "type": "column",
+              "columnId": "companyColumn",
+              "label": "Company",
+              "cellTemplate": {
+                "type": "readOnlyText",
+                "value": "<% row.company.descriptor %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "currencyColumn",
+              "label": "Currency",
+              "cellTemplate": {
+                "type": "readOnlyText",
+                "value": "<% row.amount.currency %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "quantityColumn",
+              "label": "Quantity",
+              "cellTemplate": {
+                "type": "number",
+                "value": "1",
+                "fractionDigits": 2,
+                "onChange": "<% gridEvents.changeCost(); %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "unitCostColumn",
+              "label": "Unit Cost",
+              "cellTemplate": {
+                "type": "number",
+                "value": "<% row.amount.value %>",
+                "fractionDigits": 2,
+                "enabled": false
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "idColumn",
+              "cellTemplate": {
+                "type": "hidden",
+                "value": "<% row.id %>",
+                "visible": false
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "totalCostColumn",
+              "label": "Total Cost",
+              "cellTemplate": {
+                "type": "number",
+                "value": "<% row.amount.value %>",
+                "fractionDigits": 2,
+                "enabled": false
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "id": "detailsSection",
+          "visible": false,
+          "children": [
+            {
+              "type": "fieldSet",
+              "title": "Requisition Details",
+              "horizontal": true,
+              "children": [
+                {
+                  "type": "readOnlyText",
+                  "id": "requester",
+                  "label": "Requester"
+                },
+                {
+                  "type": "readOnlyText",
+                  "id": "requisitionDate",
+                  "label": "Date"
+                },
+                {
+                  "type": "readOnlyText",
+                  "id": "status",
+                  "label": "Status"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "pod",
+          "podId": "doneButton"
+        }
+      ]
+    }
+  }
+}

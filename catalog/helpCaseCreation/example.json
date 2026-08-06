@@ -1,0 +1,16 @@
+{
+  "title": "Help Case Creation",
+  "description": "Build a custom Workday UI to facilitate creation of Workday Help Cases.",
+  "type": "Extend App",
+  "components": [
+    "Presentation",
+    "Model"
+  ],
+  "products": [
+    "Workday Extend",
+    "Workday HCM"
+  ],
+  "authors": [],
+  "tutorial": "https://forum.developer.workday.com/t/getting-started-with-journeys-help/112",
+  "source": "workday"
+}

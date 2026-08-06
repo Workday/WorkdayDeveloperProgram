@@ -1,0 +1,288 @@
+{
+  "appProperties": [ ],
+  "flowDefinitions": [
+    {
+      "id": "createExcelFileFlow",
+      "flowSteps": [
+        {
+          "id": "excelFileCreateStep",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "excelFilesViewStep",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "excelFileCreate"
+        },
+        {
+          "id": "excelFilesViewStep",
+          "endsFlow": true,
+          "taskId": "excelFilesView"
+        }
+      ]
+    },
+    {
+      "id": "testPMDBulkErrorsFlow",
+      "flowSteps": [
+        {
+          "id": "testPMDBulkErrorsSTEP",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "testPMDBulkErrorsErrorSTEP",
+              "condition": "<% flowVariables.StatusFlagError %>"
+            },
+            {
+              "order": "b",
+              "value": "bulkResponseSTEP",
+              "condition": "true"
+            }
+          ],
+          "taskId": "testPMDBulkErrors"
+        },
+        {
+          "id": "testPMDBulkErrorsErrorSTEP",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "testPMDBulkErrorsSTEP",
+              "condition": "<% flowVariables.StatusFlagError %>"
+            },
+            {
+              "order": "a",
+              "value": "bulkResponseSTEP",
+              "condition": "true"
+            }
+          ],
+          "taskId": "testPMDBulkErrors"
+        },
+        {
+          "id": "bulkResponseSTEP",
+          "taskId": "bulkResponse"
+        }
+      ]
+    },
+    {
+      "id": "testOrchestrateBulkErrorsFlow",
+      "flowSteps": [
+        {
+          "id": "testOrchestrateBulkErrorsStep",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "testOrchestrateBulkErrorsSTEP2",
+              "condition": "<% flowVariables.StatusFlagError %>"
+            },
+            {
+              "order": "b",
+              "value": "testOrchestrateBulkNoErrorsSTEP",
+              "condition": "true"
+            }
+          ],
+          "taskId": "testOrchestrateBulkErrors"
+        },
+        {
+          "id": "testOrchestrateBulkErrorsSTEP2",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "testOrchestrateBulkErrorsStep",
+              "condition": "<% flowVariables.StatusFlagError %>"
+            },
+            {
+              "order": "b",
+              "value": "testOrchestrateBulkNoErrorsSTEP",
+              "condition": "true"
+            }
+          ],
+          "taskId": "testOrchestrateBulkErrors"
+        },
+        {
+          "id": "testOrchestrateBulkNoErrorsSTEP",
+          "taskId": "bulkResponse"
+        }
+      ]
+    },
+    {
+      "id": "submitFlowWithError",
+      "flowSteps": [
+        {
+          "id": "triggerOrch",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "myConfirm",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "triggerOrchestration"
+        },
+        {
+          "id": "myConfirm",
+          "endsFlow": true,
+          "taskId": "micro"
+        }
+      ]
+    },
+    {
+      "id": "bulkDeleteWithoutErrorFlow",
+      "flowSteps": [
+        {
+          "id": "teamDataCreateStep",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "teamDataBulkDeleteStep",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "teamDataCreate"
+        },
+        {
+          "id": "teamDataBulkDeleteStep",
+          "transitions": [
+            {
+              "order": "a",
+              "value": "homeTeamDataStep",
+              "condition": "true"
+            }
+          ],
+          "startsFlow": true,
+          "taskId": "teamDataBulkDelete"
+        },
+        {
+          "id": "homeTeamDataStep",
+          "endsFlow": true,
+          "taskId": "homeTeamData"
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "home",
+      "routingPattern": "/",
+      "page": {
+        "id": "home"
+      }
+    },
+    {
+      "id": "micro",
+      "routingPattern": "/micro",
+      "page": {
+        "id": "micro"
+      }
+    },
+    {
+      "id": "triggerOrchestration",
+      "routingPattern": "/triggerOrchestration",
+      "page": {
+        "id": "triggerOrchestration"
+      }
+    },
+    {
+      "id": "teamDataBulkDelete",
+      "routingPattern": "/teamDataBulkDelete",
+      "page": {
+        "id": "teamDataBulkDelete"
+      }
+    },
+    {
+      "id": "teamDataCreate",
+      "routingPattern": "/teamDataCreate",
+      "page": {
+        "id": "teamDataCreate"
+      }
+    },
+    {
+      "id": "homeTeamData",
+      "routingPattern": "/homeTeamData",
+      "page": {
+        "id": "homeTeamData"
+      }
+    },
+    {
+      "id": "homeBulkErrors",
+      "routingPattern": "/homeBulkErrors",
+      "page": {
+        "id": "homeBulkErrors"
+      }
+    },
+    {
+      "id": "testPMDBulkErrors",
+      "routingPattern": "/testPMDBulkErrors",
+      "page": {
+        "id": "testPMDBulkErrors"
+      }
+    },
+    {
+      "id": "bulkResponse",
+      "routingPattern": "/bulkResponse",
+      "page": {
+        "id": "bulkResponse"
+      }
+    },
+    {
+      "id": "testOrchestrateBulkErrors",
+      "routingPattern": "/testOrchestrateBulkErrors",
+      "page": {
+        "id": "testOrchestrateBulkErrors"
+      }
+    },
+    {
+      "id": "bulkWorkerDataView",
+      "routingPattern": "/GetBulkWorkerData",
+      "page": {
+        "id": "bulkWorkerDataView"
+      }
+    },
+    {
+      "id": "excelFileCreate",
+      "routingPattern": "/excelFileCreate",
+      "page": {
+        "id": "excelFileCreate"
+      }
+    },
+    {
+      "id": "excelFilesView",
+      "routingPattern": "/excelFilesView",
+      "page": {
+        "id": "excelFilesView"
+      }
+    },
+    {
+      "id": "excelFilesDelete",
+      "routingPattern": "/excelFilesDelete",
+      "page": {
+        "id": "excelFilesDelete"
+      }
+    }
+  ],
+  "applicationId": "OrchestrationToolkit",
+  "dataProviders": [
+    {
+      "key": "workday-app",
+      "value": "<% apiGatewayEndpoint + '/apps/' + site.applicationId + '/v1/' %>"
+    },
+    {
+      "key": "workday-common",
+      "value": "<% apiGatewayEndpoint + '/common/v1/' %>"
+    },
+    {
+      "key": "workday-wql",
+      "value": "<% apiGatewayEndpoint + '/wql/v1/' %>"
+    },
+    {
+      "key": "workday-bp",
+      "value": "<% apiGatewayEndpoint + '/businessProcess/v1/' %>"
+    },
+    {
+      "key": "workday-orchestration",
+      "value": "<% apiGatewayEndpoint + '/orchestrate/v1/apps/' + site.applicationId + '/orchestrations/' %>"
+    }
+  ]
+}

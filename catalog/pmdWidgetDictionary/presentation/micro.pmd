@@ -1,0 +1,20 @@
+{
+  "id": "micro",
+  "presentation": {
+    "micro": "true",
+    "title": {
+      "type": "title",
+      "label": "Micro Pop-up"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "text",
+          "label": "This is a little pop-up window",
+          "value": "with whatever content you want in it."
+        }
+      ]
+    }
+  }
+}

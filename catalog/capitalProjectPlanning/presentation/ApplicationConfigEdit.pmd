@@ -1,0 +1,1441 @@
+{
+  "id": "ApplicationConfigEdit",
+  "endPoints": [
+    {
+      "name": "agenciesGET",
+      "baseUrlType": "BUSINESS-OBJECT",
+      "url": "/agencies",
+      "authType": "sso"
+    },
+    {
+      "name": "fundingTypesGET",
+      "baseUrlType": "BUSINESS-OBJECT",
+      "url": "/fundingTypes",
+      "authType": "sso"
+    },
+    {
+      "name": "strategicPillarsGET",
+      "baseUrlType": "BUSINESS-OBJECT",
+      "url": "/strategicPillarCategories",
+      "authType": "sso"
+    },
+    {
+      "name": "servicesCategoriesGET",
+      "baseUrlType": "BUSINESS-OBJECT",
+      "url": "/servicesCategories",
+      "authType": "sso"
+    },
+    {
+      "name": "servicesGET",
+      "baseUrlType": "BUSINESS-OBJECT",
+      "url": "/services"
+    },
+    {
+      "name": "approvalStatusesGET",
+      "baseUrlType": "BUSINESS-OBJECT",
+      "url": "/approvalStatuses"
+    },
+    {
+      "name": "supOrgsGET",
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query=' + string:pathEncode('SELECT workdayID as id, name as descriptor FROM supervisoryOrganizations WHERE inactive=false')  %>",
+      "authType": "sso"
+    },
+    {
+      "name": "costCentersGET",
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+ string:pathEncode('SELECT workdayID as id, name as descriptor,inactive from costCenters WHERE inactive=false') %>"
+    },
+    {
+      "name": "planCycleStatusGET",
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+string:pathEncode('SELECT workdayID as id, name as descriptor FROM '+site.applicationId+'_referenceData WHERE type=\"planCycle\" ') %>"
+    },
+    {
+      "name": "referenceDataGET",
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+string:pathEncode('SELECT workdayID as id, name as descriptor, code, type FROM '+site.applicationId+'_referenceData') %>"
+    },
+    {
+      "name": "planCyclesGET",
+      "baseUrlType": "BUSINESS-OBJECT",
+      "url": "/planCycles"
+    },
+    {
+      "name": "planningTaskTriggersGET",
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+string:pathEncode('SELECT workdayID as id, name as descriptor, code FROM '+site.applicationId+'_referenceData WHERE type=\"planningTaskTrigger\" ORDER BY name') %>"
+    },
+    {
+      "name": "adaptiveSyncGET",
+      "baseUrlType": "BUSINESS-OBJECT",
+      "url": "/adaptiveSync"
+    },
+    {
+      "name": "adaptiveTasksGET",
+      "baseUrlType": "ORCHESTRATE",
+      "url": "/GetAdaptiveTasks/launch"
+    },
+    {
+      "baseUrlType": "ORCHESTRATE",
+      "url": "/GetAdaptiveTaskStatus/launch",
+      "name": "adaptiveTaskStatusGET"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Capital Project Planning Configuration"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "visible": "<%
+                       if (empty referenceDataGET.data){
+                         true;
+                       } else {
+                         false;
+                       }
+                      %>",
+          "type": "fieldSet",
+          "id": "bootstrapFlds",
+          "children": [
+            {
+              "type": "readOnlyText",
+              "id": "bootstrapTxt",
+              "label": "Application Initialization",
+              "value": "The application should be initialized immediately after installation, this will prepopulate the configuration with an initial set of values. The configuration should be reviewed and updated before using the application."
+            },
+            {
+              "type": "button",
+              "id": "bootstrapBtn",
+              "label": "Initialize Application",
+              "taskReference": {
+                "taskId": "RunApplicationBootstrap"
+              }
+            }
+          ],
+          "label": "Application Initialization"
+        },
+        {
+          "type": "readOnlyText",
+          "value": "The following sections allow for the Capital Project Planning settings to be configured to suit your needs."
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer"
+    },
+    "pageType": "EDIT",
+    "tabs": [
+      {
+        "type": "section",
+        "label": "Plan Cycles",
+        "children": [
+          {
+            "doNotRemove": true,
+            "type": "grid",
+            "id": "grdPlanCycles",
+            "rows": "<% planCyclesGET.data %>",
+            "rowVariableName": "planCycle",
+            "columns": [
+              {
+                "required": true,
+                "type": "column",
+                "id": "pcName",
+                "label": "Name",
+                "cellTemplate": {
+                  "type": "fieldSet",
+                  "children": [
+                    {
+                      "required": true,
+                      "type": "text",
+                      "value": "<% planCycle.name %>",
+                      "valuesOut": [
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "planCyclesPATCH.name"
+                        },
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "planCyclesPOST.name"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "hidden",
+                      "id": "pcWIDInner",
+                      "value": "<% planCycle.id %>"
+                    }
+                  ]
+                },
+                "columnId": "pcName"
+              },
+              {
+                "required": true,
+                "type": "column",
+                "id": "pcStatus",
+                "label": "Status",
+                "cellTemplate": {
+                  "required": true,
+                  "type": "instanceList",
+                  "selectedValuesAndDescriptors": "<% planCycle.status ? [planCycle.status] : []%>",
+                  "values": "<% planCycleStatusGET.data %>",
+                  "valuesOut": [
+                    {
+                      "value": "<% self.value[0] %>",
+                      "valueOutBinding": "planCyclesPATCH.status.id"
+                    },
+                    {
+                      "value": "<% self.value[0] %>",
+                      "valueOutBinding": "planCyclesPOST.status.id"
+                    }
+                  ]
+                },
+                "columnId": "pcStatus"
+              },
+              {
+                "required": true,
+                "type": "column",
+                "id": "pcStartDate",
+                "label": "Start Date",
+                "cellTemplate": {
+                  "required": true,
+                  "type": "date",
+                  "value": "<% planCycle.startDate %>",
+                  "valuesOut": [
+                    {
+                      "value": "<% self.value %>",
+                      "valueOutBinding": "planCyclesPOST.startDate"
+                    },
+                    {
+                      "value": "<% self.value %>",
+                      "valueOutBinding": "planCyclesPATCH.startDate"
+                    }
+                  ]
+                },
+                "columnId": "pcStartDate"
+              },
+              {
+                "required": true,
+                "type": "column",
+                "id": "pcEndDate",
+                "label": "End Date",
+                "cellTemplate": {
+                  "type": "date",
+                  "value": "<% planCycle.endDate %>",
+                  "valuesOut": [
+                    {
+                      "value": "<% self.value %>",
+                      "valueOutBinding": "planCyclesPOST.endDate"
+                    },
+                    {
+                      "value": "<% self.value %>",
+                      "valueOutBinding": "planCyclesPATCH.endDate"
+                    }
+                  ]
+                },
+                "columnId": "pcEndDate"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "label": "Reference Data",
+        "children": [
+          {
+            "doNotAdd": true,
+            "doNotRemove": true,
+            "doNotRemoveRow": true,
+            "type": "grid",
+            "id": "grdReferenceData",
+            "rows": "<% referenceDataGET.data %>",
+            "rowVariableName": "referenceData",
+            "columns": [
+              {
+                "required": true,
+                "type": "column",
+                "id": "refType",
+                "label": "Type",
+                "cellTemplate": {
+                  "type": "fieldSet",
+                  "children": [
+                    {
+                      "enabled": false,
+                      "required": true,
+                      "type": "text",
+                      "value": "<% referenceData.type %>",
+                      "valuesOut": [
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "referenceDataPATCH.type"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "hidden",
+                      "id": "refWIDInner",
+                      "value": "<% referenceData.id %>"
+                    }
+                  ]
+                },
+                "columnId": "refType"
+              },
+              {
+                "required": true,
+                "type": "column",
+                "id": "refCode",
+                "label": "Code",
+                "cellTemplate": {
+                  "type": "fieldSet",
+                  "children": [
+                    {
+                      "enabled": false,
+                      "required": true,
+                      "type": "text",
+                      "value": "<% referenceData.code %>",
+                      "valuesOut": [
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "referenceDataPATCH.code"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "columnId": "refCode"
+              },
+              {
+                "required": true,
+                "type": "column",
+                "id": "refName",
+                "label": "Name / Value",
+                "cellTemplate": {
+                  "type": "fieldSet",
+                  "children": [
+                    {
+                      "required": true,
+                      "type": "text",
+                      "value": "<% referenceData.descriptor %>",
+                      "valuesOut": [
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "referenceDataPATCH.name"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "columnId": "refName"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "label": "Approval Statuses",
+        "children": [
+          {
+            "doNotAdd": true,
+            "doNotRemove": true,
+            "doNotRemoveRow": true,
+            "type": "grid",
+            "id": "grdApprovalStatuses",
+            "rows": "<% approvalStatusesGET.data %>",
+            "rowVariableName": "approvalStatus",
+            "columns": [
+              {
+                "required": true,
+                "type": "column",
+                "id": "statusCode",
+                "label": "Code",
+                "cellTemplate": {
+                  "type": "fieldSet",
+                  "children": [
+                    {
+                      "enabled": false,
+                      "required": true,
+                      "type": "text",
+                      "value": "<% approvalStatus.statusCode %>",
+                      "valuesOut": [
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "approvalStatusPATCH.statusCode"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "hidden",
+                      "id": "approvalStatusWIDInner",
+                      "value": "<% approvalStatus.id %>"
+                    }
+                  ]
+                },
+                "columnId": "statusCode"
+              },
+              {
+                "required": true,
+                "type": "column",
+                "id": "statusName",
+                "label": "Name",
+                "cellTemplate": {
+                  "type": "fieldSet",
+                  "children": [
+                    {
+                      "required": true,
+                      "type": "text",
+                      "value": "<% approvalStatus.status %>",
+                      "valuesOut": [
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "approvalStatusPATCH.status"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "columnId": "statusName"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "label": "Funding Types",
+        "children": [
+          {
+            "doNotAdd": true,
+            "doNotRemove": true,
+            "type": "grid",
+            "rows": "<% fundingTypesGET.data %>",
+            "rowVariableName": "fundType",
+            "columns": [
+              {
+                "type": "column",
+                "label": "Funding Type",
+                "columnId": "fundingTypeColumn",
+                "cellTemplate": {
+                  "type": "fieldSet",
+                  "children": [
+                    {
+                      "required": true,
+                      "type": "text",
+                      "id": "fundingTypeNameWidget",
+                      "value": "<% fundType.fundingTypeName %>",
+                      "valueOutBinding": "fundingTypesPATCH.fundingTypeName"
+                    },
+                    {
+                      "type": "hidden",
+                      "id": "fundingTypeIdWidget",
+                      "value": "<% fundType.id %>",
+                      "valueOutBinding": "fundingTypesPATCH.id"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "column",
+                "label": "Is Capital?",
+                "columnId": "capitalColumn",
+                "cellTemplate": {
+                  "type": "fieldSet",
+                  "children": [
+                    {
+                      "value": "<% fundType.capital %>",
+                      "type": "checkBox",
+                      "id": "fundingTypeCapitalWidget",
+                      "valueOutBinding": "fundingTypesPATCH.capital"
+                    }
+                  ]
+                }
+              }
+            ],
+            "id": "fundingTypesGridWidget"
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "label": "Regulatory Agencies",
+        "children": [
+          {
+            "doNotRemove": true,
+            "type": "grid",
+            "id": "agenciesGridWidget",
+            "rows": "<% agenciesGET.data %>",
+            "columns": [
+              {
+                "type": "column",
+                "id": "agencyNameColumn",
+                "label": "Agency Name",
+                "columnId": "agencyNameColumn",
+                "cellTemplate": {
+                  "type": "fieldSet",
+                  "children": [
+                    {
+                      "required": true,
+                      "type": "text",
+                      "id": "agencyNameWidget",
+                      "value": "<% agency.agencyName %>",
+                      "valuesOut": [
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "agenciesPOST.agencyName"
+                        },
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "agenciesPATCH.agencyName"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "hidden",
+                      "id": "agencyIdWidget",
+                      "value": "<% agency.id %>",
+                      "valuesOut": [
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "agenciesPATCH.id"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            ],
+            "rowVariableName": "agency"
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "label": "Strategic Pillar Categories",
+        "children": [
+          {
+            "doNotRemove": true,
+            "type": "grid",
+            "rows": "<% strategicPillarsGET.data %>",
+            "id": "strategicPillarsGridWidget",
+            "rowVariableName": "pillar",
+            "columns": [
+              {
+                "type": "column",
+                "label": "Pillar Name",
+                "columnId": "pillarNameColumn",
+                "cellTemplate": {
+                  "type": "fieldSet",
+                  "children": [
+                    {
+                      "required": true,
+                      "type": "text",
+                      "id": "pillarNameWidget",
+                      "value": "<% pillar.strategicPillarCategoryName %>",
+                      "valuesOut": [
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "pillarPATCH.strategicPillarCategoryName"
+                        },
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "pillarPOST.strategicPillarCategoryName"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "hidden",
+                      "id": "pillarIdWidget",
+                      "value": "<% pillar.id %>",
+                      "valuesOut": [
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "pillarPATCH.id"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "column",
+                "label": "Definition",
+                "columnId": "definitonColumn",
+                "cellTemplate": {
+                  "type": "richText",
+                  "id": "pillarDefinitionWidet",
+                  "value": "<% pillar.categoryDefinition %>",
+                  "valuesOut": [
+                    {
+                      "value": "<% self.value %>",
+                      "valueOutBinding": "pillarPATCH.categoryDefinition"
+                    },
+                    {
+                      "value": "<% self.value %>",
+                      "valueOutBinding": "pillarPOST.categoryDefinition"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "column",
+                "label": "Order",
+                "columnId": "orderColumn",
+                "cellTemplate": {
+                  "type": "number",
+                  "id": "pillarOrderWidget",
+                  "value": "<% pillar.displayOrder %>",
+                  "fractionDigits": "0",
+                  "minimumValue": "1",
+                  "valuesOut": [
+                    {
+                      "value": "<% self.value %>",
+                      "valueOutBinding": "pillarPATCH.displayOrder"
+                    },
+                    {
+                      "value": "<% self.value %>",
+                      "valueOutBinding": "pillarPOST.displayOrder"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "column",
+                "label": "Active",
+                "columnId": "pillarActiveColumn",
+                "cellTemplate": {
+                  "value": "<% pillar.active %>",
+                  "type": "checkBox",
+                  "id": "pillarActiveWidget",
+                  "valuesOut": [
+                    {
+                      "value": "<% self.value %>",
+                      "valueOutBinding": "pillarPATCH.active"
+                    },
+                    {
+                      "value": "<% self.value %>",
+                      "valueOutBinding": "pillarPOST.active"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "label": "Service Categories",
+        "children": [
+          {
+            "doNotRemove": true,
+            "type": "grid",
+            "id": "serviceCatsGridWidget",
+            "rows": "<% servicesCategoriesGET.data %>",
+            "rowVariableName": "serviceCat",
+            "columns": [
+              {
+                "type": "column",
+                "label": "Service Category",
+                "columnId": "categoryNameColumn",
+                "cellTemplate": {
+                  "type": "fieldSet",
+                  "children": [
+                    {
+                      "required": true,
+                      "type": "text",
+                      "id": "serviceCatNameWidget",
+                      "value": "<% serviceCat.serviceCategoryName %>",
+                      "valuesOut": [
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "serviceCatsPATCH.serviceCategoryName"
+                        },
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "serviceCatsPOST.serviceCategoryName"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "hidden",
+                      "id": "serviceCatIdWidget",
+                      "value": "<% serviceCat.id %>",
+                      "valuesOut": [
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "serviceCatsPATCH.id"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "column",
+                "label": "Definition",
+                "columnId": "catDefinitionColumn",
+                "cellTemplate": {
+                  "type": "richText",
+                  "id": "serviceCatDefinitionWidget",
+                  "value": "<% serviceCat.categoryDefinition %>",
+                  "valuesOut": [
+                    {
+                      "value": "<% self.value %>",
+                      "valueOutBinding": "serviceCatsPATCH.categoryDefinition"
+                    },
+                    {
+                      "value": "<% self.value %>",
+                      "valueOutBinding": "serviceCatsPOST.categoryDefinition"
+                    }
+                  ]
+                }
+              },
+              {
+                "render": false,
+                "type": "column",
+                "label": "Approving Organization",
+                "columnId": "approvingOrgColumn",
+                "cellTemplate": {
+                  "type": "instanceList",
+                  "id": "supOrgWidget",
+                  "displayKey": "descriptor",
+                  "idKey": "id",
+                  "selectedValuesAndDescriptors": "<% serviceCat.approvingOrganization ? [{'id' : serviceCat.approvingOrganization.id,'descriptor' : serviceCat.approvingOrganization.descriptor} ] : [] %>",
+                  "values": "<% supOrgsGET.data  %>",
+                  "valuesOut": [
+                    {
+                      "value": "<% self.value[0] %>",
+                      "valueOutBinding": "serviceCatsPATCH.approvingOrganization.id"
+                    },
+                    {
+                      "value": "<% self.value[0] %>",
+                      "valueOutBinding": "serviceCatsPOST.approvingOrganization.id"
+                    }
+                  ]
+                }
+              },
+              {
+                "required": true,
+                "type": "column",
+                "label": "Approving Cost Center",
+                "cellTemplate": {
+                  "required": true,
+                  "type": "instanceList",
+                  "values": "<% costCentersGET.data %>",
+                  "displayKey": "descriptor",
+                  "idKey": "id",
+                  "selectedValuesAndDescriptors": "<% serviceCat.approvingCostCenter ? [{'id' : serviceCat.approvingCostCenter.id,'descriptor' : serviceCat.approvingCostCenter.descriptor} ]: [] %>",
+                  "valuesOut": [
+                    {
+                      "value": "<% self.value[0] %>",
+                      "valueOutBinding": "serviceCatsPATCH.approvingCostCenter.id"
+                    },
+                    {
+                      "value": "<% self.value[0] %>",
+                      "valueOutBinding": "serviceCatsPOST.approvingCostCenter.id"
+                    }
+                  ]
+                },
+                "columnId": "approvingCostCenter"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "label": "Services",
+        "children": [
+          {
+            "doNotRemove": true,
+            "type": "grid",
+            "id": "servicesGridWidget",
+            "rows": "<% servicesGET.data %>",
+            "rowVariableName": "service",
+            "columns": [
+              {
+                "required": true,
+                "type": "column",
+                "id": "serviceNameColumn",
+                "label": "Service Name",
+                "cellTemplate": {
+                  "type": "fieldSet",
+                  "children": [
+                    {
+                      "required": true,
+                      "type": "text",
+                      "value": "<% service.serviceName %>",
+                      "id": "serviceServiceNameWidget",
+                      "valuesOut": [
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "servicesPATCH.serviceName"
+                        },
+                        {
+                          "value": "<% self.value %>",
+                          "valueOutBinding": "servicesPOST.serviceName"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "hidden",
+                      "value": "<% service.id %>",
+                      "id": "serviceIDWidget"
+                    }
+                  ]
+                },
+                "columnId": "serviceNameColumn"
+              },
+              {
+                "required": true,
+                "type": "column",
+                "id": "serviceServiceCatColumn",
+                "label": "Service Category",
+                "cellTemplate": {
+                  "required": true,
+                  "type": "instanceList",
+                  "selectedValuesAndDescriptors": "<% service.serviceCategory ? [service.serviceCategory] : [] %>",
+                  "values": "<% servicesCategoriesGET.data %>",
+                  "id": "serviceServiceCategoryWidget",
+                  "valuesOut": [
+                    {
+                      "value": "<% self.value[0] %>",
+                      "valueOutBinding": "servicesPATCH.serviceCategory.id"
+                    },
+                    {
+                      "value": "<% self.value[0] %>",
+                      "valueOutBinding": "servicesPOST.serviceCategory.id"
+                    }
+                  ]
+                },
+                "columnId": "serviceServiceCatColumn"
+              },
+              {
+                "required": true,
+                "type": "column",
+                "id": "serviceDisplayOrderColumn",
+                "label": "Display Order",
+                "cellTemplate": {
+                  "required": true,
+                  "type": "number",
+                  "value": "<% service.displayOrder %>",
+                  "fractionDigits": "0",
+                  "minimumValue": "1",
+                  "id": "serviceDisplayOrderWidget",
+                  "valuesOut": [
+                    {
+                      "value": "<% self.value %>",
+                      "valueOutBinding": "servicesPOST.displayOrder"
+                    },
+                    {
+                      "value": "<% self.value %>",
+                      "valueOutBinding": "servicesPATCH.displayOrder"
+                    }
+                  ]
+                },
+                "columnId": "serviceDisplayOrderColumn"
+              },
+              {
+                "type": "column",
+                "id": "serviceActiveColumn",
+                "label": "Active",
+                "cellTemplate": {
+                  "value": "<% service.active %>",
+                  "type": "checkBox",
+                  "id": "serviceActiveWidget",
+                  "valuesOut": [
+                    {
+                      "value": "<% self.value %>",
+                      "valueOutBinding": "servicesPOST.active"
+                    },
+                    {
+                      "value": "<% self.value %>",
+                      "valueOutBinding": "servicesPATCH.active"
+                    }
+                  ]
+                },
+                "columnId": "serviceActiveColumn"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "label": "Adaptive Planning Sync",
+        "children": [
+          {
+            "horizontal": true,
+            "visible": "<%
+                       if(pageVariables.adaptiveTaskCodeValue=='ON_SCHEDULE'||empty adaptiveSyncGET.data){
+                          return false;    
+                       }else{
+                          return true;
+                       }
+                      %>",
+            "type": "fieldSet",
+            "title": "Status",
+            "children": [
+              {
+                "type": "fieldSet",
+                "id": "fldLeft",
+                "children": [
+                  {
+                    "datePrecision": "MINUTE",
+                    "enabled": false,
+                    "type": "date",
+                    "id": "runTimeWidget",
+                    "label": "Last Run Time",
+                    "value": "<% !empty adaptiveSyncGET.data ? adaptiveSyncGET.data[0].runTime : null %>",
+                    "dateFormat": "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+                    "inputTimeZone": "UTC"
+                  },
+                  {
+                    "visible": "<%
+                               if(empty adaptiveTasksGET || adaptiveTaskStatusGET.status =='Pending' || adaptiveTaskStatusGET.status =='InProgress'){
+                                   return false;
+                               }else{
+                                   return true;
+                               }
+                              %>",
+                    "type": "fieldSet",
+                    "id": "fldNewButton",
+                    "children": [
+                      {
+                        "type": "button",
+                        "label": "Run Integration Task",
+                        "taskReference": {
+                          "taskId": "RunAdaptiveTask"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "fieldSet",
+                "id": "fldRight",
+                "children": [
+                  {
+                    "type": "readOnlyText",
+                    "id": "lastRunStatusWidget",
+                    "label": "Last Run Status",
+                    "value": "<% adaptiveTaskStatusGET.status %>"
+                  }
+                ]
+              }
+            ],
+            "id": "fldTaskStatus"
+          },
+          {
+            "type": "fieldSet",
+            "title": "Configuration",
+            "children": [
+              {
+                "type": "fieldSet",
+                "id": "fldTaskTrigger",
+                "children": [
+                  {
+                    "required": true,
+                    "type": "instanceList",
+                    "label": "Planning Task Trigger",
+                    "selectedValuesAndDescriptors": "<% !empty pageVariables.adaptiveTaskTrigger ? [pageVariables.adaptiveTaskTrigger] : []; %>",
+                    "values": "<% planningTaskTriggersGET.data %>",
+                    "id": "taskTriggerWidget",
+                    "valuesOut": [
+                      {
+                        "value": "<% self.value[0] %>",
+                        "valueOutBinding": "adaptiveSyncPATCH.planningTaskTrigger.id"
+                      }
+                    ],
+                    "onChange": "<%
+                                if(self.value!=[]){
+                               
+                               var matchedRecord = planningTaskTriggersGET.data.find(record => record.id == self.value[0] );
+                               var adaptiveTaskCodeValue = matchedRecord ? matchedRecord.code : null;
+                               
+                               if(adaptiveTaskCodeValue == 'ON_SCHEDULE' || adaptiveTaskCodeValue == null){
+                                 fldMainConfigContainer.visible=false;
+                                 fldTaskStatus.visible=false;
+                               }else{
+                                 fldMainConfigContainer.visible=true;
+                                 fldTaskStatus.visible=true;
+                               }
+                               
+                               }else{
+                               fldMainConfigContainer.visible=false;
+                               fldTaskStatus.visible=false;
+                               }
+                               
+                               
+                               %>"
+                  }
+                ]
+              },
+              {
+                "visible": "<%
+                           if(pageVariables.adaptiveTaskCodeValue=='ON_SCHEDULE'){
+                              return false;    
+                           }else{
+                              return true;
+                           }
+                          %>",
+                "type": "fieldSet",
+                "id": "fldMainConfigContainer",
+                "children": [
+                  {
+                    "horizontal": true,
+                    "type": "fieldSet",
+                    "id": "fldAdaptiveMain",
+                    "children": [
+                      {
+                        "type": "fieldSet",
+                        "id": "fldAdaptiveLeft",
+                        "children": [
+                          {
+                            "type": "instanceList",
+                            "id": "adaptiveTaskWidget",
+                            "label": "Adaptive Task Name",
+                            "values": "<% adaptiveTasksGET ?: []  %>",
+                            "valuesOut": [
+                              {
+                                "value": "<% self.value!=[] ? self.value[0] : '' %>",
+                                "valueOutBinding": "adaptiveSyncPATCH.adaptiveTaskId"
+                              }
+                            ],
+                            "displayKey": "name",
+                            "idKey": "id",
+                            "selectedValuesAndDescriptors": "<% pageVariables.currentAdaptiveTask ? [pageVariables.currentAdaptiveTask]  : [] %>"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "fieldSet",
+                        "id": "fldAdaptiveRight",
+                        "children": [
+                          {
+                            "type": "text",
+                            "id": "adaptiveInstanceCodeWidget",
+                            "label": "Adaptive Instance Code",
+                            "value": "<% !empty adaptiveSyncGET.data ? adaptiveSyncGET.data[0].adaptiveInstance : ''%>",
+                            "valuesOut": [
+                              {
+                                "value": "<% self.value %>",
+                                "valueOutBinding": "adaptiveSyncPATCH.adaptiveInstance"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "value": "<% !empty adaptiveSyncGET.data ? adaptiveSyncGET.data[0].userSync : false %>",
+                    "type": "checkBox",
+                    "id": "userSyncWidget",
+                    "label": "User Sync Enabled",
+                    "valuesOut": [
+                      {
+                        "value": "<% self.value %>",
+                        "valueOutBinding": "adaptiveSyncPATCH.userSync"
+                      }
+                    ],
+                    "onChange": "<%
+                                fldToken.visible = self.value;
+                                fldUName.visible = !self.value;
+                               %>"
+                  },
+                  {
+                    "visible": "<% userSyncWidget.value ? adaptiveSyncGET.data[0].userSync : false %>",
+                    "type": "fieldSet",
+                    "id": "fldToken",
+                    "children": [
+                      {
+                        "horizontal": true,
+                        "type": "fieldSet",
+                        "id": "fldGatewayMain",
+                        "children": [
+                          {
+                            "type": "fieldSet",
+                            "id": "fldGatewayLeft",
+                            "children": [
+                              {
+                                "type": "text",
+                                "id": "gatewayWidget",
+                                "label": "Workday Gateway",
+                                "value": "<% !empty adaptiveSyncGET.data ? adaptiveSyncGET.data[0].gateway : '' %>",
+                                "valuesOut": [
+                                  {
+                                    "value": "<% self.value %>",
+                                    "valueOutBinding": "adaptiveSyncPATCH.gateway"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "fieldSet",
+                            "id": "fldGatewayRight",
+                            "children": [
+                              {
+                                "type": "text",
+                                "id": "tenantWidget",
+                                "label": "Workday Tenant",
+                                "value": "<% !empty adaptiveSyncGET.data ? adaptiveSyncGET.data[0].tenant : '' %>",
+                                "valuesOut": [
+                                  {
+                                    "value": "<% self.value %>",
+                                    "valueOutBinding": "adaptiveSyncPATCH.tenant"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "fieldSet",
+                        "id": "fldClientID",
+                        "children": [
+                          {
+                            "type": "text",
+                            "id": "clientIdWidget",
+                            "label": "Client ID",
+                            "value": "<% !empty adaptiveSyncGET.data ? adaptiveSyncGET.data[0].clientId : ''%>",
+                            "valuesOut": [
+                              {
+                                "value": "<% self.value %>",
+                                "valueOutBinding": "adaptiveSyncPATCH.clientId"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "horizontal": true,
+                        "type": "fieldSet",
+                        "id": "fldTokenButtons",
+                        "children": [
+                          {
+                            "type": "button",
+                            "label": "Set Client Secret",
+                            "taskReference": {
+                              "taskId": "AdaptiveSecretEdit",
+                              "parameterBindings": {
+                                "adaptiveSyncId": "<% !empty adaptiveSyncGET.data ? adaptiveSyncGET.data[0].id : ''%>",
+                                "pageType": "ClientSecret",
+                                "pageTitle": "Set Client Secret"
+                              }
+                            }
+                          },
+                          {
+                            "type": "button",
+                            "label": "Set Client Refresh Token",
+                            "taskReference": {
+                              "taskId": "AdaptiveSecretEdit",
+                              "parameterBindings": {
+                                "adaptiveSyncId": "<% !empty adaptiveSyncGET.data ? adaptiveSyncGET.data[0].id : '' %>",
+                                "pageType": "RefreshToken",
+                                "pageTitle": "Set Refresh Token"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "visible": "<% !empty adaptiveSyncGET.data ? !adaptiveSyncGET.data[0].userSync : true %>",
+                    "type": "fieldSet",
+                    "id": "fldUName",
+                    "children": [
+                      {
+                        "type": "text",
+                        "id": "adaptiveUserNameWidget",
+                        "label": "Adaptive User Name",
+                        "value": "<% !empty adaptiveSyncGET.data ? adaptiveSyncGET.data[0].adaptiveUserName : '' %>",
+                        "valuesOut": [
+                          {
+                            "value": "<% self.value %>",
+                            "valueOutBinding": "adaptiveSyncPATCH.adaptiveUserName"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "button",
+                        "id": "btnSetPassword",
+                        "label": "Set Adaptive Password",
+                        "taskReference": {
+                          "taskId": "AdaptiveSecretEdit",
+                          "parameterBindings": {
+                            "adaptiveSyncId": "<% !empty adaptiveSyncGET.data ? adaptiveSyncGET.data[0].id : '' %>",
+                            "pageType": "AdaptivePassword",
+                            "pageTitle": "Set Adaptive Password"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "exclude": "<% ! empty agencyIdWidget.value %>",
+        "baseUrlType": "BUSINESS-OBJECT",
+        "url": "/agencies",
+        "authType": "sso",
+        "name": "agenciesPOST",
+        "failOnStatusCodes": [
+          {
+            "code": "400"
+          },
+          {
+            "code": "401"
+          },
+          {
+            "code": "404"
+          },
+          {
+            "code": "500"
+          },
+          {
+            "code": "503"
+          }
+        ]
+      },
+      {
+        "exclude": "<% empty agencyIdWidget.value %>",
+        "httpMethod": "PATCH",
+        "baseUrlType": "BUSINESS-OBJECT",
+        "url": "<% '/agencies/'+ agencyIdWidget.value %>",
+        "name": "agenciesPATCH",
+        "authType": "sso",
+        "failOnStatusCodes": [
+          {
+            "code": "500"
+          },
+          {
+            "code": "503"
+          },
+          {
+            "code": "400"
+          },
+          {
+            "code": "404"
+          },
+          {
+            "code": "501"
+          }
+        ]
+      },
+      {
+        "httpMethod": "PATCH",
+        "baseUrlType": "BUSINESS-OBJECT",
+        "url": "<% '/fundingTypes/'+ fundingTypeIdWidget.value %>",
+        "authType": "sso",
+        "name": "fundingTypesPATCH",
+        "failOnStatusCodes": [
+          {
+            "code": "400"
+          },
+          {
+            "code": "404"
+          },
+          {
+            "code": "500"
+          },
+          {
+            "code": "501"
+          },
+          {
+            "code": "503"
+          }
+        ]
+      },
+      {
+        "exclude": "<% empty pillarIdWidget.value %>",
+        "httpMethod": "PATCH",
+        "baseUrlType": "BUSINESS-OBJECT",
+        "url": "<% '/strategicPillarCategories/'+ pillarIdWidget.value %>",
+        "authType": "sso",
+        "name": "pillarPATCH"
+      },
+      {
+        "exclude": "<% ! empty pillarIdWidget.value %>",
+        "name": "pillarPOST",
+        "baseUrlType": "BUSINESS-OBJECT",
+        "url": "/strategicPillarCategories",
+        "authType": "sso",
+        "failOnStatusCodes": [
+          {
+            "code": "400"
+          },
+          {
+            "code": "401"
+          },
+          {
+            "code": "404"
+          },
+          {
+            "code": "501"
+          },
+          {
+            "code": "500"
+          },
+          {
+            "code": "503"
+          }
+        ]
+      },
+      {
+        "exclude": "<% ! empty serviceCatIdWidget.value %>",
+        "name": "serviceCatsPOST",
+        "baseUrlType": "BUSINESS-OBJECT",
+        "url": "/servicesCategories",
+        "authType": "sso",
+        "failOnStatusCodes": [
+          {
+            "code": "400"
+          },
+          {
+            "code": "404"
+          },
+          {
+            "code": "500"
+          },
+          {
+            "code": "501"
+          },
+          {
+            "code": "503"
+          }
+        ]
+      },
+      {
+        "exclude": "<% empty serviceCatIdWidget.value %>",
+        "httpMethod": "PATCH",
+        "name": "serviceCatsPATCH",
+        "baseUrlType": "BUSINESS-OBJECT",
+        "url": "<% '/servicesCategories/' + serviceCatIdWidget.value %>",
+        "failOnStatusCodes": [
+          {
+            "code": "503"
+          },
+          {
+            "code": "500"
+          },
+          {
+            "code": "501"
+          },
+          {
+            "code": "404"
+          },
+          {
+            "code": "400"
+          }
+        ]
+      },
+      {
+        "exclude": "<% ! empty serviceIDWidget.value %>",
+        "name": "servicesPOST",
+        "baseUrlType": "BUSINESS-OBJECT",
+        "url": "/services"
+      },
+      {
+        "exclude": "<% empty serviceIDWidget.value %>",
+        "httpMethod": "PATCH",
+        "name": "servicesPATCH",
+        "baseUrlType": "BUSINESS-OBJECT",
+        "url": "<% '/services/' + serviceIDWidget.value %>"
+      },
+      {
+        "exclude": "<% ! empty pcWIDInner.value %>",
+        "name": "planCyclesPOST",
+        "baseUrlType": "BUSINESS-OBJECT",
+        "url": "/planCycles"
+      },
+      {
+        "exclude": "<% empty pcWIDInner.value %>",
+        "httpMethod": "PATCH",
+        "name": "planCyclesPATCH",
+        "baseUrlType": "BUSINESS-OBJECT",
+        "url": "<% '/planCycles/' + pcWIDInner.value %>",
+        "failOnStatusCodes": [
+          {
+            "code": "400"
+          },
+          {
+            "code": "401"
+          },
+          {
+            "code": "404"
+          },
+          {
+            "code": "500"
+          },
+          {
+            "code": "503"
+          }
+        ]
+      },
+      {
+        "exclude": "<% empty refWIDInner.value %>",
+        "httpMethod": "PATCH",
+        "name": "referenceDataPATCH",
+        "baseUrlType": "BUSINESS-OBJECT",
+        "url": "<% '/referenceData/' + refWIDInner.value %>"
+      },
+      {
+        "exclude": "<% empty approvalStatusWIDInner.value %>",
+        "httpMethod": "PATCH",
+        "name": "approvalStatusPATCH",
+        "baseUrlType": "BUSINESS-OBJECT",
+        "url": "<% '/approvalStatuses/' + approvalStatusWIDInner.value %>"
+      },
+      {
+        "httpMethod": "PATCH",
+        "name": "adaptiveSyncPATCH",
+        "baseUrlType": "BUSINESS-OBJECT",
+        "url": "<% '/adaptiveSync/'+adaptiveSyncGET.data[0].id %>"
+      }
+    ],
+    "responseErrorDetail": {
+      "errorSummary": "<% error %>",
+      "errors": "<% errors.map(item => {item.error}); %>"
+    }
+  },
+  "onLoad": "<%
+                if (!empty adaptiveSyncGET.data){
+                pageVariables.adaptiveTaskTrigger = adaptiveSyncGET.data[0].planningTaskTrigger ?: null;
+                var adaptiveTaskTriggerId = adaptiveSyncGET.data[0].planningTaskTrigger.id ?: '';
+                var matchedRecord = planningTaskTriggersGET.data.find(record => record.id == adaptiveTaskTriggerId );
+                
+                pageVariables.adaptiveTaskCodeValue = matchedRecord ? matchedRecord.code : null;
+                
+                
+                var adaptiveTaskId =  adaptiveSyncGET.data[0].adaptiveTaskId;
+                var matchedTask = adaptiveTasksGET.find(record => record.id == adaptiveTaskId );
+                
+                pageVariables.currentAdaptiveTask = matchedTask ? matchedTask : null;
+                }
+                //console.info(bootstrapData.allBootstrapData.toJson());
+               %>",
+  "securityDomains": [
+    "CapitalProjectPlanningAdministrator"
+  ],
+  "include": [
+    "bootstrapData.script"
+  ]
+}

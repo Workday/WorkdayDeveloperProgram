@@ -1,0 +1,152 @@
+{
+  "id": 18,
+  "name": "AdaptiveSync",
+  "label": "Adaptive Sync Data",
+  "defaultSecurityDomains": [
+    "CapitalProjectPlanningAdministrator"
+  ],
+  "defaultCollection": {
+    "description": "Adaptive Planning Sync configuration",
+    "name": "adaptiveSync",
+    "label": "Adaptive Sync Data"
+  },
+  "fields": [
+    {
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "isReferenceId": false,
+      "type": "TEXT",
+      "name": "adaptiveRunTaskId",
+      "id": 1
+    },
+    {
+      "precision": "MINUTE",
+      "enableIndex": false,
+      "isPurgeable": false,
+      "type": "DATE",
+      "name": "runTime",
+      "id": 2
+    },
+    {
+      "id": 3,
+      "name": "adaptiveInstance",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "enableIndex": false,
+      "enableSearch": false
+    },
+    {
+      "id": 4,
+      "name": "clientId",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "enableIndex": false,
+      "enableSearch": false
+    },
+    {
+      "securityDomains": [
+        "CapitalProjectPlanningRestricted"
+      ],
+      "id": 5,
+      "name": "clientSecret",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "enableIndex": false,
+      "enableSearch": false
+    },
+    {
+      "securityDomains": [
+        "CapitalProjectPlanningRestricted"
+      ],
+      "id": 6,
+      "name": "refreshToken",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "enableIndex": false,
+      "enableSearch": false
+    },
+    {
+      "id": 7,
+      "name": "planningTaskTrigger",
+      "type": "SINGLE_INSTANCE",
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "target": "ReferenceData",
+      "secureByTarget": false,
+      "enableReportingFromTarget": false
+    },
+    {
+      "id": 8,
+      "name": "adaptiveTaskId",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": true,
+      "isPurgeable": false,
+      "enableIndex": false,
+      "enableSearch": false
+    },
+    {
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "isReferenceId": false,
+      "type": "TEXT",
+      "name": "gateway",
+      "id": 9
+    },
+    {
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "isReferenceId": false,
+      "type": "TEXT",
+      "name": "tenant",
+      "id": 10
+    },
+    {
+      "securityDomains": [
+        "CapitalProjectPlanningRestricted"
+      ],
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "isReferenceId": false,
+      "type": "TEXT",
+      "name": "adaptiveUserName",
+      "id": 11
+    },
+    {
+      "securityDomains": [
+        "CapitalProjectPlanningRestricted"
+      ],
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "isReferenceId": false,
+      "type": "TEXT",
+      "name": "adaptiveCred",
+      "id": 12
+    },
+    {
+      "enableIndex": false,
+      "isPurgeable": false,
+      "type": "BOOLEAN",
+      "name": "userSync",
+      "id": 13
+    }
+  ]
+}

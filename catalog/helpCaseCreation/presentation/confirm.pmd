@@ -1,0 +1,107 @@
+{
+  "id": "confirm",
+  "securityDomains": [
+    "SelfServiceCreateCaseWithWorkdayExtend"
+  ],
+  "endPoints": [
+    {
+      "name": "myRecentCases",
+      "baseUrlType": "workday-help",
+      "authType": "sso",
+      "url": "/cases?myCases=true&desc=true"
+    }
+  ],
+  "presentation": {
+    "headerSize": "VPS_DEFAULT",
+    "title": {
+      "type": "title",
+      "label": "Help Case Created"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "text",
+          "id": "textConfirmMessage",
+          "value": "Your case has been created!"
+        },
+        {
+          "type": "fieldSet",
+          "title": "My Recent Cases",
+          "children": [
+            {
+              "id": "gridMyRecentCases",
+              "type": "grid",
+              "rows": "<% myRecentCases.data %>",
+              "label": "Cases",
+              "enabled": false,
+              "doNotAdd": true,
+              "doNotRemove": true,
+              "rowVariableName": "case",
+              "columns": [
+                {
+                  "cellTemplate": {
+                    "type": "externalLink",
+                    "descriptor": "<% case.caseID %>",
+                    "url": "<% case.caseLink %>"
+                  },
+                  "label": "Case ID",
+                  "columnId": "caseID",
+                  "type": "column"
+                },
+                {
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% case.status.descriptor %>"
+                  },
+                  "label": "Status",
+                  "columnId": "status",
+                  "type": "column"
+                },
+                {
+                  "cellTemplate": {
+                    "type": "text",
+                    "value": "<% case.title %>"
+                  },
+                  "label": "Title",
+                  "columnId": "title",
+                  "type": "column"
+                },
+                {
+                  "cellTemplate": {
+                    "type": "date",
+                    "value": "<% case.creationDate %>",
+                    "enabled": false
+                  },
+                  "label": "Creation Date",
+                  "columnId": "creationDate",
+                  "type": "column"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "button",
+          "label": "Create Another Case",
+          "taskReference": {
+            "type": "taskReference",
+            "taskId": "home"
+          },
+          "action": "AUXILIARY"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

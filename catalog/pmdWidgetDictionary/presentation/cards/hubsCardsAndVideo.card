@@ -1,0 +1,31 @@
+{
+  "id": "hubsCardsAndVideo",
+  "parameters": [],
+  "header": {
+    "title": "<% 'Hubs, Cards, and Video demo' %>",
+    "icon": "wd-accent-media-file"
+  },
+  "body": {
+    "type": "pillCard",
+    "pills": [
+      {
+        "label": "Splash Page Hub with Video",
+        "taskReference": {
+          "taskId": "splashPage"
+        }
+      },
+      {
+        "label": "Home Page Hub",
+        "taskReference": {
+          "taskId": "projectHub"
+        }
+      },
+      {
+        "label": "List Detail Hub",
+        "taskReference": {
+          "taskId": "ticketsListDetail"
+        }
+      }
+    ]
+  }
+}

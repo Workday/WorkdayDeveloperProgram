@@ -1,0 +1,51 @@
+{
+  "id": "manageRequestsCard",
+  "presentation": {
+    "type": "inlineCard",
+    "header": {
+      "type": "cardHeader",
+      "title": "Manage Remote Work Requests",
+      "subtitle": "All Requests",
+      "indicator": {
+        "label": "New App!",
+        "color": "GREEN"
+      },
+      "icon": "wd-accent-globe-earth"
+    },
+    "body": {
+      "type": "listCard",
+      "title": "Remote Work Requests",
+      "subtitle": "Location, Start Date and Total Days",
+      "on": "<% remoteWorkRequests.data %>",
+      "as": "request",
+      "template": {
+        "label": "<% request.location + ' for ' + request.createdBy.descriptor %>",
+        "value": "<% 'Start Date: ' + request.startDate + '\\n End Date: ' + request.endDate%>",
+        "secondaryValue": "<% ((date:parse(request.startDate)).between(date:parse(request.endDate), 'DAY') + 1) + ' Day(s)'  %>",
+        "secondaryValueWidth": "MEDIUM"
+      }
+    },
+    "footer": [
+      {
+        "taskReference": {
+          "taskId": "manageRequests"
+        },
+        "label": "Manage Remote Work Requests"
+      }
+    ]
+  },
+  "endPoints": [
+    {
+      "name": "remoteWorkRequests",
+      "baseUrlType": "workday-wql",
+      "authType": "sso",
+      "wqlQuery": {
+        "parameters": {
+          "applicationId": "<% site.applicationId %>"
+        },
+        "queryId": "remoteWorkRequests"
+      },
+      "url": "data"
+    }
+  ]
+}

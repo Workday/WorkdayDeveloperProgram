@@ -1,0 +1,140 @@
+{
+  "id": "donutChart2",
+  "include": [
+    "cookieData.script"
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Donut Charts"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "section",
+          "title": "Simple Donut Chart with default settings",
+          "children": [
+            {
+              "type": "donutChart2",
+              "id": "donutExample1",
+              "data": "<% cookieData.getCookieData() %>",
+              "dataVariableName": "data",
+              "sliceSizeDataSet": {
+                "name": "Sales",
+                "value": "<% data.actualSales %>"
+              },
+              "sliceColorDataSet": {
+                "name": "Cookie Type",
+                "value": "<% data.cookieType %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Simple Donut Chart - accessibility mode",
+          "children": [
+            {
+              "type": "donutChart2",
+              "id": "donutExample2",
+              "accessibilityMode": true,
+              "data": "<% cookieData.getCookieData() %>",
+              "dataVariableName": "data",
+              "sliceSizeDataSet": {
+                "name": "Sales",
+                "value": "<% data.actualSales %>"
+              },
+              "sliceColorDataSet": {
+                "name": "Cookie Type",
+                "value": "<% data.cookieType %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Donut Chart - title, subtitle, and detail data set (in tooltip)",
+          "children": [
+            {
+              "type": "donutChart2",
+              "id": "donutExample3",
+              "data": "<% cookieData.getCookieData() %>",
+              "dataVariableName": "data",
+              "sliceSizeDataSet": {
+                "name": "Sales",
+                "value": "<% data.actualSales %>"
+              },
+              "sliceColorDataSet": {
+                "name": "Cookie Type",
+                "value": "<% data.cookieType %>"
+              },
+              "sliceDetailDataSet": {
+                "name": "Troop Average",
+                "value": "<% data.troopAverage %>"
+              },
+              "title": "<% 'Cookie Sales' %>",
+              "subtitle": "<% 'Cindys cookie sales for 2021' %>"
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Donut Chart - hide labels",
+          "children": [
+            {
+              "type": "donutChart2",
+              "id": "donutExample4",
+              "data": "<% cookieData.getCookieData() %>",
+              "dataVariableName": "data",
+              "sliceSizeDataSet": {
+                "name": "Sales",
+                "value": "<% data.actualSales %>"
+              },
+              "sliceColorDataSet": {
+                "name": "Cookie Type",
+                "value": "<% data.cookieType %>"
+              },
+              "sliceDetailDataSet": {
+                "name": "Troop Average",
+                "value": "<% data.troopAverage %>"
+              },
+              "title": "<% 'Cookie Sales' %>",
+              "subtitle": "<% 'Cindys cookie sales for 2021' %>",
+              "hideLabels": true
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Donut Chart - show percent labels, show label lines",
+          "children": [
+            {
+              "type": "donutChart2",
+              "id": "donutExample5",
+              "data": "<% cookieData.getCookieData() %>",
+              "dataVariableName": "data",
+              "sliceSizeDataSet": {
+                "name": "Sales",
+                "value": "<% data.actualSales %>"
+              },
+              "sliceColorDataSet": {
+                "name": "Cookie Type",
+                "value": "<% data.cookieType %>"
+              },
+              "sliceDetailDataSet": {
+                "name": "Troop Average",
+                "value": "<% data.troopAverage %>"
+              },
+              "title": "<% 'Cookie Sales' %>",
+              "subtitle": "<% 'Cindys cookie sales for 2021' %>",
+              "showLabelLines": true,
+              "showPercentLabels": true
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

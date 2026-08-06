@@ -1,0 +1,9 @@
+{
+  "id": 1,
+  "name": "VehicleRegistration",
+  "label": "Vehicle Registration",
+  "routePath": "/",
+  "securityDomains": [
+    "ManageVehicles"
+  ]
+}

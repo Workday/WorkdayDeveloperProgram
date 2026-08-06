@@ -1,0 +1,36 @@
+{
+    "id": "createVehicle",
+    "_comment": "Make sure to replace this app's 'vehicleRegistration20241_nkzjqw_' with YOUR app's ID. Keep in mind the Input type after $createVehicle_Input needs to be capitalized!",
+    "query": 
+     "mutation vehicleRegistration20241_nkzjqw_createVehicle($createVehicle_input: VehicleRegistration20241_nkzjqw_VehiclesSummary_CreateInput!) {
+  vehicleRegistration20241_nkzjqw_createVehicle(
+    input: $createVehicle_input
+  ) {
+    color
+    compact
+    descriptor
+    workdayID {
+      id
+    }
+    licensePlate
+    location {
+      descriptor
+      workdayID {
+        id
+      }
+    }
+    longDescription
+    make
+    model
+    owner {
+      descriptor
+      workdayID {
+        id
+      }
+    }
+    registrationDate
+    year
+  }
+}
+    "
+}

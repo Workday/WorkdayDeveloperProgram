@@ -1,0 +1,56 @@
+{
+  "id": "sidebarInfo",
+  "presentation": {
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "readOnlyText",
+          "label": "Welcome!",
+          "value": "Use this calendar to plan for and view upcoming Work Events.",
+          "enabled": false
+        },
+        {
+          "type": "readOnlyText",
+          "label": "How to Use:",
+          "value": "Clicking dates on the calendar and hitting 'Create Work Event' will create a new event and will prompt you for event details, and the event can then be submitted for manager approval. Note that an HR Administrator will help select the final approved location.",
+          "enabled": false
+        },
+        {
+          "type": "readOnlyText",
+          "value": "Click into an existing event to register for an event. You can only register for an event once.",
+          "enabled": false
+        },
+        {
+          "type": "text",
+          "label": "Your Title",
+          "value": "<% queryParams.businessTitle %>",
+          "enabled": false
+        },
+        {
+          "type": "text",
+          "label": "Your Primary Office Location",
+          "value": "<% queryParams.primaryLocation %>",
+          "enabled": false
+        },
+        {
+          "type": "readOnlyText",
+          "value": "
+          
+          ",
+          "enabled": false
+        },
+        {
+          "type": "button",
+          "id": "home",
+          "label": "Return to the Home Page",
+          "taskReference": {
+            "type": "taskReference",
+            "taskId": "eventHub"
+          },
+          "action": "AUXILIARY"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+    "id": "updateWorkEventRegistrants",
+    "parameters": ["registrants", "event"],
+    "query": "mutation createAWorkEventMultiinstance_nkzjqw_updateWorkEvent($updateWorkEvent_input: CreateAWorkEventMultiinstance_nkzjqw_WorkEventsSummary_UpdateInput!, $updateWorkEvent_workEventsId: IdentifierInput!) {
+  createAWorkEventMultiinstance_nkzjqw_updateWorkEvent(
+    input: $updateWorkEvent_input
+    workEventsId: $updateWorkEvent_workEventsId
+  ) {
+    registrants {
+      descriptor
+      workdayID {
+        id
+      }
+    }
+    workdayID {
+      id
+    }
+  }
+}
+    ",
+    "variables": {
+        "updateWorkEvent_input": {
+    "registrants": "<% registrants %>"
+  },
+  "updateWorkEvent_workEventsId": {
+    "id": "<% event %>",
+    "type": "WID"
+  }
+    }
+}

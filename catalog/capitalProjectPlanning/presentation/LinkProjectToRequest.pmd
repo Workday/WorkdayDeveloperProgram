@@ -1,0 +1,136 @@
+{
+  "id": "LinkProjectToRequest",
+  "endPoints": [
+    {
+      "name": "projectHierarchiesGET",
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+string:pathEncode('SELECT workdayID as id, projectHierarchyName as descriptor FROM topLevelProjectHierarchies') %>",
+      "authType": "sso"
+    },
+    {
+      "deferred": true,
+      "name": "projectsGET",
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+string:pathEncode('SELECT workdayID as id, projectName as descriptor, projectState, inactive_Current as inactive FROM projects (dataSourceFilter=projectsByProjectsProjectHierarchiesFilter,projectsAndProjectHierarchies=\"'+ id +'\",includeSubordinateProjectHierarchies=true) WHERE inactive_Current=false') %>"
+    },
+    {
+      "deferred": true,
+      "name": "projectsSearchGET",
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+string:pathEncode('SELECT workdayID as id, projectName as descriptor, projectState, inactive_Current as inactive FROM projects (dataSourceFilter=projectsByProjectsProjectHierarchiesFilter,projectsAndProjectHierarchies=\"'+ projectHierarchy.value.first() +'\",includeSubordinateProjectHierarchies=true) WHERE inactive_Current=false AND projectName CONTAINS \"'+instanceListQuery+'\"') %>"
+    },
+    {
+      "name": "requestHeaderProjectGET",
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+string:pathEncode('SELECT project FROM '+site.applicationId+'_capitalProjectRequestHeaders WHERE workdayID=\"'+queryParams.headerWID +'\"') %>"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "<%
+                   var requestTitle = queryParams.headerTitle?queryParams.headerTitle:'';
+                   'Link Request ' +requestTitle+ ' to Project'
+                  %>"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "fieldSet",
+          "id": "Main",
+          "children": [
+            {
+              "type": "radioGroup",
+              "label": "Project Hierarchy",
+              "values": "<% projectHierarchiesGET.data %>",
+              "onChange": "<%
+                            unlinkProjectBtnFlds.setVisible(false);
+                            var hierarchyId= !empty projectHierarchy.selectedEntries ? projectHierarchy.selectedEntries.first().id : '';
+                            if (hierarchyId){
+                            \tprojectList.setEnabled(true);
+                            \tvar projects=projectsGET.invoke({'id': hierarchyId});
+                            \tprojectList.values=projects.data ?: [];
+                            } else {
+                            \tprojectList.setEnabled(false);
+                            \tprojectList.setValue(null);
+                            }
+                           %>",
+              "id": "projectHierarchy",
+              "helpText": "Project Hierarchy must be selected to update Project assignment"
+            },
+            {
+              "enabled": false,
+              "type": "instanceList",
+              "id": "projectList",
+              "values": "<% [] %>",
+              "selectedValuesAndDescriptors": "<% requestHeaderProjectGET.data ? requestHeaderProjectGET.data[0].project : {} %>",
+              "label": "Project",
+              "valuesOut": [
+                {
+                  "value": "<% [{'id':self.value[0]}] %>",
+                  "valueOutBinding": "requestHeaderProjectPATCH.project"
+                }
+              ],
+              "searchEndPoint": "<% endpoints.projectsSearchGET %>",
+              "searchResultValues": "<% projectsSearchGET.data %>"
+            },
+            {
+              "visible": "<%
+                          //false;
+                          if (!empty projectList.value) {
+                              true;
+                          } else {
+                              false;
+                          }
+                          %>",
+              "type": "fieldSet",
+              "children": [
+                {
+                  "type": "pageActionButton",
+                  "id": "unlinkProjectBtn",
+                  "onClick": "<%
+                              if (!empty projectList.value) {
+                                  projectList.value=[];
+                              }
+                              %>",
+                  "label": "Unlink Project"
+                }
+              ],
+              "id": "unlinkProjectBtnFlds"
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer"
+    },
+    "micro": true,
+    "microFirstPageOnly": true,
+    "pageType": "EDIT"
+  },
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "allowEmptyValue": true,
+        "httpMethod": "PATCH",
+        "baseUrlType": "BUSINESS-OBJECT",
+        "url": "<% '/capitalProjectRequestHeaders/' + queryParams.headerWID %>",
+        "name": "requestHeaderProjectPATCH",
+        "onSend": "<%
+                                                 if (empty projectList.value) {
+                                                   var project = {\"project\":[]}
+                                                   self.data=project;
+                                                 }
+                                                 self.data;
+                                                %>"
+      }
+    ]
+  },
+  "securityDomains": [
+    "CapitalProjectPlanning",
+    "CapitalProjectPlanningAdministrator"
+  ]
+}

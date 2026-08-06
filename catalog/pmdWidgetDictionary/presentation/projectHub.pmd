@@ -1,0 +1,75 @@
+{
+  "id": "projectHub",
+  "presentation": {
+    "body": {
+      "type": "hub",
+      "label": "Hack Project",
+      "initialTask": {
+        "taskId": "projectHome"
+      },
+      "navigationTasks": [
+        {
+          "type": "group",
+          "icon": "wd-icon-globe",
+          "label": "Project",
+          "items": [
+            {
+              "label": "About",
+              "task": {
+                "taskId": "projectHome"
+              }
+            },
+            {
+              "label": "Tickets",
+              "task": {
+                "taskId": "projectTickets"
+              }
+            },
+            {
+              "label": "Status",
+              "task": {
+                "taskId": "projectStatus"
+              }
+            },
+            {
+              "label": "Planning",
+              "task": {
+                "taskId": "projectPlanning"
+              }
+            },
+            {
+              "label": "User Feedback",
+              "task": {
+                "taskId": "projectUserFeedback"
+              }
+            }
+          ]
+        },
+        {
+          "icon": "wd-icon-contact-card-matrix-manager",
+          "label": "Meet the Team",
+          "task": {
+            "taskId": "projectTeam"
+          }
+        }
+      ],
+      "additionalLinks": {
+        "title": "Additional Links",
+        "links": [
+          {
+            "type": "task",
+            "label": "ListDetailHub Tickets",
+            "task": {
+              "taskId": "ticketsListDetail"
+            }
+          },
+          {
+            "type": "external",
+            "label": "Developer Forum",
+            "url": "https://forum.developer.workday.com/"
+          }
+        ]
+      }
+    }
+  }
+}

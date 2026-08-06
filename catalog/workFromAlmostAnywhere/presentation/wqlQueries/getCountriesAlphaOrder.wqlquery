@@ -1,0 +1,4 @@
+{
+  "id": "getCountriesAlphaOrder",
+  "query": "SELECT countryName FROM countries ORDER BY countryName"
+}

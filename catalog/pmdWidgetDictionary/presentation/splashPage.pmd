@@ -1,0 +1,120 @@
+{
+  "id": "splashPage",
+  "endPoints": [ ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "About This Application"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "richText",
+          "value": "<h1>Presentation Demonstration Application: Charts 2.0, Video, Cards and Hubs!</h1>
+This application demonstrates some of the new offerings from the Extend presentation product. Please use <b>any</b> and <b>everything</b> here; that's why this exists!
+In order to make it easy to see how each of the new tags functions, this application provides most of the data via simple script functions. In a real application, this would typically be driven by APIs."
+        },
+        {
+          "type": "section",
+          "horizontal": true,
+          "children": [
+            {
+              "type": "button",
+              "action": "PRIMARY",
+              "label": "Project Hub",
+              "taskReference": {
+                "type": "taskReference",
+                "taskId": "projectHub"
+              }
+            },
+            {
+              "type": "button",
+              "action": "PRIMARY",
+              "label": "Tickets List Detail Hub",
+              "taskReference": {
+                "type": "taskReference",
+                "taskId": "ticketsListDetail"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "horizontal": true,
+          "children": [
+            {
+              "type": "fieldSet",
+              "title": "Hubs",
+              "children": [
+                {
+                  "type": "richText",
+                  "value": "The two primary ways to use Hubs are showcased within this application: Hub (\"hub\") and List-Detail Hub (\"listDetailHub\"). A standard Hub should be used to create a top-level experience when the links to the tickets are known up-front. This page itself rendered within a standard Hub (\"hubHome.pmd\"), showing the other available tickets on the left side. The List-Detail Hub is used in \"ticketListDetail.pmd\" to create a list of project-tickets on the left with the detail for each. This should be used when the list items are all rendering the same ticket with different parameters."
+                }
+              ]
+            },
+            {
+              "type": "fieldSet",
+              "title": "Cards",
+              "children": [
+                {
+                  "type": "richText",
+                  "value": "Cards allow the user to preview large amounts of information with actions to get more detail. Every card includes a header, body, and footer. This creates a cohesive experience that allows every Card to provide the user with control of their experience."
+                },
+                {
+                  "type": "richText",
+                  "label": "Simple",
+                  "value": "A simple card has all of the icons and links with a singular textual body. <a href=\"https://forum.developer.workday.com/t/new-widget-list-card/151\">https://forum.developer.workday.com/t/new-widget-simple-card/149</a>"
+                },
+                {
+                  "type": "richText",
+                  "label": "List",
+                  "value": "A list card shows collection information with an associated limit. <a href=\"https://forum.developer.workday.com/t/new-widget-list-card/151\">https://forum.developer.workday.com/t/new-widget-list-card/151</a>"
+                },
+                {
+                  "type": "richText",
+                  "label": "Pill",
+                  "value": "A pill card contains a list of links to other locations within the application. <a href=\"https://forum.developer.workday.com/t/new-widget-pill-card/150\">https://forum.developer.workday.com/t/new-widget-pill-card/150</a>"
+                },
+                {
+                  "type": "richText",
+                  "label": "Chart",
+                  "value": "A chart card contains a Chart 2.0 visualization. <a href=\"https://forum.developer.workday.com/t/new-widget-chart-card/148\">https://forum.developer.workday.com/t/new-widget-chart-card/148</a>"
+                }
+              ]
+            },
+            {
+              "type": "fieldSet",
+              "title": "Video",
+              "children": [
+                {
+                  "type": "richText",
+                  "value": "Video brings the Media Services offering into your Extend application. This is a plug and play tag: you plug a single mediaId in and your user plays the video! This does require that Media Services are available on the tenant. Existing access controls on the media item are also honored. The below video's mediaId is valid for GMS tenants but may need to be updated in other tenants."
+                },
+                {
+                  "type": "video",
+                  "mediaId": "3cef68364c3101781a0445a172123100"
+                }
+              ]
+            },
+            {
+              "type": "fieldSet",
+              "title": "Charts 2.0",
+              "children": [
+                {
+                  "type": "richText",
+                  "value": "Charts 2.0 is a whole new suite of charting capabilities that allow developers to curate their users' experiences. Custom axis controls, tool-tips, intuitive data slices and more make it easy to create stunning visualizations."
+                },
+                {
+                  "type": "externalLink",
+                  "descriptor": "Charts 2.0 Documentation",
+                  "url": ""
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

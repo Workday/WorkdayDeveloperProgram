@@ -1,0 +1,29 @@
+{
+  "id": 1,
+  "name": "TuitionReimbursementApproval",
+  "label": "Tuition Reimbursement Approval",
+  "description": "Business Process Type for Tuition Reimbursement Approval",
+  "targetBusinessObject": "TuitionReimbursementRequest",
+  "allowsCancel": true,
+  "approvalStep": {
+    "actions": [
+      "APPROVE",
+      "DENY",
+      "SEND_BACK"
+    ],
+    "pageRoute": "/approve/{eventId}"
+  },
+  "details": {
+    "pageRoute": "/details/{eventId}"
+  },
+  "actionSteps": [
+    {
+      "id": 1,
+      "name": "ReviewRequest",
+      "label": "Review Reimbursement Request",
+      "description": "Task to review reimbursement request",
+      "pageRoute": "/actionStep/{eventStepId}"
+    }
+  ],
+  "revisePageRoute": "/revise/{eventStepId}"
+}

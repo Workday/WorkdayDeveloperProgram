@@ -1,0 +1,124 @@
+{
+  "id": "deleteAttachments",
+  "include": [
+    "fileTypes.script"
+  ],
+  "endPoints": [
+    {
+      "name": "getAttachments",
+      "baseUrlType": "app",
+      "url": "<% 'rightToWorkVerifications?workRequest=' + (queryParams.requestId ?? flowVariables.currentRequest)  //'instance filter' checks for files that match the given Model BO
+    %>",
+      "authType": "sso"
+    },
+    {
+      "name": "request",
+      "baseUrlType": "app",
+      "url": "<% /*remember that queryParams.requestId is taking in the parameterBinding from the taskReference tag on the page
+      that sent the user here. This happens to be called 'requestId' in manageEvents.pmd but it could be called whatever the developer chooses*/
+              'workFromAnywhereRequests/' + (queryParams.requestId ?? flowVariables.currentRequest) %>",
+      "authType": "sso"
+    }
+  ],
+  "onLoad": "<% let newList = [];
+  request.rightToWorkVerification != null ? request.rightToWorkVerification.forEach(x => newList.add(x.id)) : [];
+  console.info('existing right to work attachment list is ' + newList);
+  pageVariables.verifications = newList; %>",
+  
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "patchAttachmentList",
+        "url": "<% 'workFromAnywhereRequests/' + (queryParams.requestId ?? flowVariables.currentRequest)
+        %>",
+        "authType": "sso",
+        "onSend": "<% 
+        let removeList = []; let newList = [];
+              //for each selected row, put the ID of that row's file into a list called removeList
+              gridAttachments.getSelectedRows().forEach(thisRow => {removeList.add(thisRow.attachmentColumn.childrenMap.fileId.value)});
+        console.info('file values to remove from selected rows are ' + removeList);
+        newList = pageVariables.verifications.removeAll(removeList); //subtract removeList from existing attachment list
+        let payload = {'rightToWorkVerification': newList}; //initializing payload to log and send
+        console.info('this deleteAttachments payload is ' + json:asJSON(payload));
+        return payload; //send payload
+        
+        %>",
+        "baseUrlType": "app",
+        "httpMethod": "PATCH",
+        "failOnStatusCodes": [
+          "400",
+          "403"
+        ]
+      },
+      {
+        "name": "deleteAttachment",
+        "url": "rightToWorkVerifications/<% fileId.value %>",
+        "authType": "sso",
+        "baseUrlType": "app",
+        "httpMethod": "DELETE",
+        "exclude": "<% !currentRow.selected %>",
+        "failOnStatusCodes": [
+          "400",
+          "403"
+        ]
+      }
+    ],
+    "responseErrorDetail": {
+      "errorSummary": "<% error %>",
+      "errors": "<%list:mapAttribute(errors, 'error')%>"
+    }
+  },
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "<% 'Delete Documents via Selections (File download support)' %>"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "readOnlyText",
+          "label": "Information",
+          "value": "This page executes delete requests sequentially."
+        },
+        {
+          "type": "grid",
+          "id": "gridAttachments",
+          "rows": "<% getAttachments.data %>",
+          "doNotAdd": true,
+          "doNotRemove": true,
+          "selectionEnabled": true,
+          "maxRowSelection": 100,
+          "onRowSelect": "<% %>",
+          "rowVariableName": "file",
+          "columns": [
+            
+            {
+              "type": "column",
+              "columnId": "attachmentColumn",
+              "cellTemplate": {
+                "type": "section",
+                "id": "fileUploaderSection",
+                "children": [
+                  {
+              "type": "pod",
+              "podId": "previouslyAttachedFiles",
+              "_podComment": "loads a fileUploader that returns all relevant attached files for the request"
+            },
+                  {
+                    "type": "hidden",
+                    "id": "fileId",
+                    "value": "<% file.id %>",
+                    "valueOutBinding": "deleteAttachment.id"
+                  }
+                ]
+              },
+              "label": "File Name"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

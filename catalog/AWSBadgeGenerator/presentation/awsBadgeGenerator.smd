@@ -1,0 +1,21 @@
+{
+  "id": "awsBadgeGenerator",
+  "languages": [
+    {
+      "code": "en-US",
+      "description": "English"
+    }
+  ],
+  "siteAuth": {
+    "authTypes": [
+      {
+        "scheme": "SSO",
+        "id": "sso"
+      }
+    ]
+  },
+  "siteId": "awsBadgeGenerator",
+  "cdnEnabled": true,
+  "siteProperties": [ ],
+  "applicationId": "awsBadgeGenerator"
+}

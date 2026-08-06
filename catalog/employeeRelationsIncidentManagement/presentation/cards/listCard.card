@@ -1,0 +1,23 @@
+{
+    "id": "listCard",
+    "parameters": ["list"],
+    "header": {
+        "title": "<% list.title %>",
+        "subtitle": "<% list.subtitle %>",
+        "icon": "<% list.icon %>",
+        "indicator": {
+            "label": "<% list.indicatorLabel %>",
+            "color": "<% list.indicatorColor %>"
+            }
+    },
+    "body": {
+        "type": "listCard",
+        "on": "<% list.items %>",
+        "as": "item",
+        "template": {
+            "label": "<% item.label %>",
+            "value": "<% item.value %>",
+            "secondaryValue": "<% item.secondaryValue %>"
+        }
+    }
+}

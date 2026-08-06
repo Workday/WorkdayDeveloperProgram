@@ -1,0 +1,24 @@
+{
+  "id": "workdayQueryLanguageWql",
+  "languages": [
+    {
+      "code": "en-US",
+      "description": "English"
+    }
+  ],
+  "siteAuth": {
+    "authTypes": [
+      {
+        "scheme": "SSO",
+        "id": "sso"
+      }
+    ]
+  },
+  "siteId": "workdayQueryLanguageWql",
+  "auth": {
+    "type": "SSO"
+  },
+  "cdnEnabled": true,
+  "siteProperties": [ ],
+  "applicationId": "workdayQueryLanguageWql"
+}

@@ -1,0 +1,29 @@
+{
+  "id": "createRecognitionCard",
+  "presentation": {
+    "type": "inlineCard",
+    "header": {
+      "type": "cardHeader",
+      "title": "Create Recognition",
+      "subtitle": "Recognize team with Feedback and gift card",
+      "indicator": {
+        "label": "New App!",
+        "color": "BLUE"
+      },
+      "icon": "WorkdayWThumbnail.jpeg"
+    },
+    "body": {
+      "type": "simpleCard",
+      "value": "Give feedback to your co-workers and even reward them with a gift card for their hard work!"
+    },
+    "footer": [
+      {
+        "label": "Create Recognition for your Team",
+        "taskReference": {
+          "taskId": "findWorker"
+        }
+      }
+    ]
+  },
+  "endPoints": []
+}

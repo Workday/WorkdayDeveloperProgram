@@ -1,0 +1,62 @@
+{
+  "id": 8,
+  "name": "Services",
+  "label": "Services",
+  "defaultSecurityDomains": [
+    "CapitalProjectPlanning",
+    "CapitalProjectPlanningAdministrator",
+    "CapitalProjectPlanningCommon"
+  ],
+  "defaultCollection": {
+    "name": "services",
+    "label": "Services"
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "serviceCategory",
+      "type": "SINGLE_INSTANCE",
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "target": "ServiceCategory",
+      "secureByTarget": false,
+      "enableReportingFromTarget": false
+    },
+    {
+      "id": 2,
+      "name": "serviceName",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": true,
+      "isPurgeable": false,
+      "enableIndex": false,
+      "enableSearch": false,
+      "securityDomains": []
+    },
+    {
+      "id": 3,
+      "name": "serviceDescription",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "enableIndex": false,
+      "enableSearch": false
+    },
+    {
+      "id": 4,
+      "name": "displayOrder",
+      "type": "INTEGER",
+      "label": "Order",
+      "isPurgeable": false,
+      "enableIndex": false
+    },
+    {
+      "id": 5,
+      "name": "active",
+      "type": "BOOLEAN",
+      "isPurgeable": false,
+      "enableIndex": false
+    }
+  ]
+}

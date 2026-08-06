@@ -1,0 +1,43 @@
+{
+  "_pagePurpose1": "This page shows the response data from the testBulkErrors page, IF there are no errors!",
+  "id": "bulkResponse",
+  "endPoints": [ ],
+  "outboundData": {
+    "outboundEndPoints": [ ]
+  },
+  "presentation": {
+    "pageType": "confirm",
+    "title": {
+      "type": "title",
+      "label": "Workday Extend",
+      "enabled": false
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "text",
+          "label": "All of the records have been successfully submitted.",
+          "value": "You can see the response from the last round below"
+        },
+        {
+          "type": "text",
+          "id": "hello",
+          "label": "Hello Bulk!",
+          "value": "<% flowVariables.wholeResponse %>"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

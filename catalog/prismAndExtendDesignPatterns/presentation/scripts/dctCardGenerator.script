@@ -1,0 +1,59 @@
+/*
+ * Generates a structured output with a dynamic indicator label.
+ *
+ * To use this script module in your PMD:
+ * 1. Add the script module to the include section: "include": ["dctCardGenerator.script"]
+ * 2. Call the function using: dctCardGenerator.generateInfo(indicatorLabel)
+ *
+ * Parameters:
+ *   input (string)
+ *
+ * Return Value: (map) A map containing the structured information.
+ */
+const generateInfo = function (input) {
+
+if(input == 'noDataToProcess'){
+  return {
+    "info": {
+      "title": "DCT Not Available",
+      "subtitle": "Make data edits to enable DCT functionality",
+      "icon": "wd-accent-gauge",
+      "indicatorLabel": "Make Corrections",
+      "indicatorColor": "gray",
+      "buttonLabel": "Make Corrections",
+      "task": "viewPageSalesCommissionSearch"
+    }
+  };
+}
+else if(input == 'dctProcessing'){
+
+    return {
+    "info": {
+      "title": "DCT Not Available",
+      "subtitle": "Click the Refresh Page button to reload this page",
+      "icon": "wd-accent-gauge",
+      "indicatorLabel": "DCT Currently Processing",
+      "indicatorColor": "orange",
+      "buttonLabel": "Refresh Page",
+      "task": "home"
+    }
+  };
+}
+else if(input == 'DCTavailable'){
+
+    return {
+    "info": {
+      "title": "Push Extend Data to Prism",
+      "subtitle": "Batch Ready to Process",
+      "icon": "wd-accent-gauge",
+      "indicatorLabel": "Ready to process",
+      "indicatorColor": "green",
+      "buttonLabel": "Launch DCT",
+      "task": "launchDCT"
+    }
+  };
+}
+}
+{
+  "generateInfo": generateInfo
+}

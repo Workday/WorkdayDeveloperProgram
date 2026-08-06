@@ -1,0 +1,11 @@
+var getSortedStratCats =function(data) {
+    // Extract items with a strategicPillarCategory
+    const itemsWithPillarCategory = data.data.filter(item => item.strategicPillarCategory);
+
+    // Sort the extracted items by displayOrder
+    const sortedItems = itemsWithPillarCategory.sort((a, b) => 
+        a.strategicPillarCategory.displayOrder - b.strategicPillarCategory.displayOrder
+    );
+
+    return sortedItems;
+}

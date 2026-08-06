@@ -1,0 +1,18 @@
+{
+  "title": "Vehicle Registration",
+  "description": "Allow employees to register their car according to their location. Includes translations, and powered by Workday Graph API and external APIs.",
+  "type": "Extend App",
+  "components": [
+    "Presentation",
+    "Model",
+    "Graph API",
+    "3rd-Party Technology"
+  ],
+  "products": [
+    "Workday Extend",
+    "Workday HCM"
+  ],
+  "authors": [],
+  "tutorial": "https://forum.developer.workday.com/t/app-catalog-app-vehicle-registration/8454",
+  "source": "workday"
+}

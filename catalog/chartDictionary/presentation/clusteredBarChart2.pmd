@@ -1,0 +1,254 @@
+{
+  "id": "clusteredBarChart2",
+  "include": [
+    "cookieData.script"
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Clustered Bar Charts"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "section",
+          "title": "Vertical Clustered Bar Chart - multiple measurements, single category",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "barOrientation": "VERTICAL",
+              "id": "chart1",
+              "data": "<% cookieData.getCookieData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Num Boxes Sold",
+                  "value": "<% data['actualSales'] %>"
+                },
+                {
+                  "name": "Sales Goal",
+                  "value": "<% data['salesGoal'] %>"
+                },
+                {
+                  "name": "Troop Avg.",
+                  "value": "<% data['troopAverage'] %>"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Cookie Type",
+                "value": "<% data['cookieType'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Vertical Clustered Bar Chart - single measurement, extra category",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "barOrientation": "VERTICAL",
+              "id": "chart2",
+              "data": "<% cookieData.getSellerCookieData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Num Boxes Sold",
+                  "value": "<% data['actualSales'] %>"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Cookie Type",
+                "value": "<% data['cookieType'] %>"
+              },
+              "secondaryCategory": {
+                "name": "Seller",
+                "value": "<% data['sellerName'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Vertical Clustered Bar Chart - single measurement, swap primary and secondary categories",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "barOrientation": "VERTICAL",
+              "id": "chart3",
+              "data": "<% cookieData.getSellerCookieData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Num Boxes Sold",
+                  "value": "<% data['actualSales'] %>"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Seller",
+                "value": "<% data['sellerName'] %>"
+              },
+              "secondaryCategory": {
+                "name": "Cookie Type",
+                "value": "<% data['cookieType'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Horizontal Clustered Bar Chart - multiple measurements, single category",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "barOrientation": "HORIZONTAL",
+              "id": "chart4",
+              "data": "<% cookieData.getCookieData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Num Boxes Sold",
+                  "value": "<% data['actualSales'] %>"
+                },
+                {
+                  "name": "Sales Goal",
+                  "value": "<% data['salesGoal'] %>"
+                },
+                {
+                  "name": "Troop Avg.",
+                  "value": "<% data['troopAverage'] %>"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Cookie Type",
+                "value": "<% data['cookieType'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Horizontal Clustered Bar Chart - single measurement, extra category",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "barOrientation": "HORIZONTAL",
+              "id": "chart5",
+              "data": "<% cookieData.getSellerCookieData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Num Boxes Sold",
+                  "value": "<% data['actualSales'] %>"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Cookie Type",
+                "value": "<% data['cookieType'] %>"
+              },
+              "secondaryCategory": {
+                "name": "Seller",
+                "value": "<% data['sellerName'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Horizontal Clustered Bar Chart - single measurement, swap primary and secondary categories",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "barOrientation": "HORIZONTAL",
+              "id": "chart6",
+              "data": "<% cookieData.getSellerCookieData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Num Boxes Sold",
+                  "value": "<% data['actualSales'] %>"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Seller",
+                "value": "<% data['sellerName'] %>"
+              },
+              "secondaryCategory": {
+                "name": "Cookie Type",
+                "value": "<% data['cookieType'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Horizontal Clustered Bar Chart - Accessibility Mode",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "barOrientation": "HORIZONTAL",
+              "id": "chart7",
+              "data": "<% cookieData.getCookieData() %>",
+              "dataVariableName": "data",
+              "accessibilityMode": true,
+              "measurementDataSets": [
+                {
+                  "name": "Num Boxes Sold",
+                  "value": "<% data['actualSales'] %>"
+                },
+                {
+                  "name": "Sales Goal",
+                  "value": "<% data['salesGoal'] %>"
+                },
+                {
+                  "name": "Troop Avg.",
+                  "value": "<% data['troopAverage'] %>"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Cookie Type",
+                "value": "<% data['cookieType'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Vertical Clustered Bar Chart - Comparison Line",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "barOrientation": "VERTICAL",
+              "id": "chart8",
+              "data": "<% cookieData.getCookieData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Num Boxes Sold",
+                  "value": "<% data['actualSales'] %>"
+                },
+                {
+                  "name": "Sales Goal",
+                  "value": "<% data['salesGoal'] %>"
+                },
+                {
+                  "name": "Troop Avg.",
+                  "value": "<% data['troopAverage'] %>"
+                }
+              ],
+              "measurementAxisOptions": {
+                "comparisonLineValue": "<% 50 %>",
+                "comparisonLineLabel": "<% 'Troop Goal' %>"
+              },
+              "categoryDataSet": {
+                "name": "Cookie Type",
+                "value": "<% data['cookieType'] %>"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "id": "AppLinks",
+  "parameters": [
+  ],
+  "header": {
+    "title": "Get Started",
+    "icon": "wd-accent-megaphone",
+    "indicator": {
+      "label": "Welcome!",
+      "color": "blue"
+    }
+  },
+  "body": {
+    "type": "pillCard",
+    "pills": [
+      {
+        "label": "Request to Work Remote",
+        "taskReference": {
+          "taskId": "createRequestWizard"
+        }
+      },
+      {
+        "label": "Manage Requests",
+        "taskReference": {
+          "taskId": "manageRequests"
+        }
+      },
+      {
+        "label": "Calendar View",
+        "taskReference": {
+          "taskId": "calendarRemoteWork"
+        }
+      }
+    ]
+  },
+  "footer": [
+    {
+      "label": "Return Home",
+      "taskReference": {
+        "taskId": "requestHub"
+      }
+    }
+  ]
+}

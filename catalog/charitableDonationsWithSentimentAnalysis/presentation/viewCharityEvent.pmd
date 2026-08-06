@@ -1,0 +1,79 @@
+{
+  "id": "viewCharityEvent",
+  "securityDomains": [
+    "ManageCharities"
+  ],
+  "endPoints": [
+    {
+      "name": "event",
+      "baseUrlType": "workday-bp",
+      "url": "<% //get the BP event with the associated eventId, passed in via query param
+      'events/' + queryParams.eventId %>",
+      "authType": "sso"
+    },
+    {
+      "name": "charity",
+      "baseUrlType": "app",
+      "url": "<% //gets the URL for the exact charity returned in the 'event' endPoint. That endpoint body has information we need in the for >> id element
+      //note that the BP API returns a response object with 'for' in it. 'for' is a reserved keyword in PMD scripting so to avoid a validation error
+      //we can use bracket notation event['for'].id which is equivalent to event.for.id but without triggering the validation error
+              'charities/' + event['for'].id %>",
+      "authType": "sso"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Charity Details"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "section",
+          "children": [
+            {
+              "type": "image",
+              "sizingHint": "INLINE",
+              "endPoint": {
+                "url": "charityImages/<% charity.image.id %>",
+                "baseUrlType": "app",
+                "authType": "sso"
+              },
+              "render": "<% (!(empty(charity.image))) %>"
+            },
+            {
+              "type": "text",
+              "label": "Name",
+              "value": "<% charity.name %>"
+            },
+            {
+              "type": "richText",
+              "label": "Description",
+              "value": "<% charity.description %>"
+            },
+            {
+              "type": "checkBox",
+              "label": "Match Donations",
+              "trueLabel": "Yes",
+              "falseLabel": "No",
+              "value": "<% charity.matchDonations %>"
+            },
+            {
+              "type": "instanceList",
+              "label": "Relationship Manager",
+              "instanceList": [
+                {
+                  "id": "<% charity.relationshipManager.id %>",
+                  "descriptor": "<% charity.relationshipManager.descriptor %>",
+                  "wid": "<% charity.relationshipManager.id %>"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

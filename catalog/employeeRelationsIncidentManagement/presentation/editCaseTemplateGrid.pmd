@@ -1,0 +1,401 @@
+{
+  "id": "editCaseTemplateGrid",
+  "endPoints": [
+    {
+      "exclude": "<% (queryParams.type=='Add') %>",
+      "name": "caseTemplateData",
+      "baseUrlType": "wql",
+      "authType": "sso",
+      "url": "data",
+      "wqlQuery": {
+        "parameters": {
+          "appId": "<% site.applicationId %>",
+          "rowWID": "<% queryParams.rowWID %>"
+        },
+        "queryId": "caseTemplateData"
+      }
+    },
+    {
+      "exclude": "<% (queryParams.type=='Add') %>",
+      "name": "customFieldData",
+      "baseUrlType": "wql",
+      "authType": "sso",
+      "url": "data",
+      "wqlQuery": {
+        "parameters": {
+          "appId": "<% site.applicationId %>",
+          "rowWID": "<% queryParams.rowWID %>"
+        },
+        "queryId": "customFieldData"
+      }
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "clearCustomFieldData",
+        "baseUrlType": "orchestration",
+        "exclude": "<% (queryParams.type!='Delete') %>",
+        "url": "<% site.applicationId + '/orchestrations/cleanUpSync/launch?wqlBO=caseTemplateCustomFieldsBO&whereTarget=caseTemplate&whereFilter=' + queryParams.rowWID %>",
+        "httpMethod": "POST",
+        "values": [
+          {
+            "_comment": "this does nothing - needs a body to send",
+            "outboundPath": "CleanUpSync",
+            "value": "<% 'CleanUpSync' %>"
+          }
+        ]
+      },
+      {
+        "name": "postTemplate",
+        "url": "<% 'caseTemplatesBO' %>",
+        "baseUrlType": "app",
+        "exclude": "<% (queryParams.type!='Add') %>",
+        "failOnStatusCodes": [
+          {
+            "code": 400
+          }
+        ]
+      },
+      {
+        "name": "putTemplate",
+        "url": "<% 'caseTemplatesBO/' + templateID.value %>",
+        "httpMethod": "PUT",
+        "baseUrlType": "app",
+        "exclude": "<% (queryParams.type!='Edit') %>",
+        "failOnStatusCodes": [
+          {
+            "code": 400
+          }
+        ]
+      },
+      {
+        "name": "deleteTemplate",
+        "url": "<% 'caseTemplatesBO/' + templateID.value %>",
+        "httpMethod": "DELETE",
+        "baseUrlType": "app",
+        "exclude": "<% (queryParams.type!='Delete') %>",
+        "failOnStatusCodes": [
+          {
+            "code": 400
+          }
+        ]
+      },
+      {
+        "name": "postCustomField",
+        "url": "<% 'caseTemplateCustomFieldsBO' %>",
+        "baseUrlType": "app",
+        "exclude": "<% ((queryParams.type=='Delete')||(!empty customFieldID.value)) %>",
+        "onSend": "<%
+                self.data.put('caseTemplate',{'id': postTemplate.id});
+                return self.data;
+                %>",
+        "failOnStatusCodes": [
+          {
+            "code": 400
+          }
+        ]
+      },
+      {
+        "name": "putCustomField",
+        "url": "<% 'caseTemplateCustomFieldsBO/' + customFieldID.value %>",
+        "httpMethod": "PUT",
+        "baseUrlType": "app",
+        "exclude": "<% ((queryParams.type=='Delete')||(empty customFieldID.value)) %>",
+        "failOnStatusCodes": [
+          {
+            "code": 400
+          }
+        ]
+      }
+    ]
+  },
+  "onLoad": "<%
+            //create synthetic data on add
+            if (queryParams.type=='Add') {
+              var syntheticFieldData = [];
+              var loopCounter = 1;
+              var loopCounterFormatted = string:toString(loopCounter).leftPad(2,'0');
+              while (loopCounter <= 10) {
+                syntheticFieldData.add ({
+                  'fieldNumber': 'Custom Field ' + loopCounterFormatted,
+                  'fieldBindingID': 'customField' + loopCounterFormatted
+                  });
+                loopCounter = loopCounter + 1;
+                loopCounterFormatted = string:toString(loopCounter).leftPad(2,'0');
+              }
+              pageVariables.customFieldData = syntheticFieldData;
+            } else {
+              pageVariables.customFieldData = customFieldData.data;
+            }
+            %>",
+  "presentation": {
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "<% queryParams.type + ' Case Template' %>",
+      "enabled": false
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "text",
+          "label": "Template Name",
+          "value": "<% empty(caseTemplateData.data[0].templateName) ? null : caseTemplateData.data[0].templateName %>",
+          "enabled": "<% (queryParams.type=='Delete') ? false : true %>",
+          "required": true,
+          "valuesOut": [
+            {
+              "value": "<% self.value %>",
+              "valueOutBinding": "postTemplate.templateName"
+            },
+            {
+              "value": "<% self.value %>",
+              "valueOutBinding": "putTemplate.templateName"
+            }
+          ]
+        },
+        {
+          "type": "readOnlyText",
+          "label": "Please Note: Values",
+          "value": "When entering values for instanceLists, ensure values are comma ',' separated"
+        },
+        {
+          "type": "grid",
+          "id": "customFieldsGrid",
+          "label": "Template Custom Fields",
+          "enabled": "<% (queryParams.type=='Delete') ? false : true %>",
+          "doNotAdd": true,
+          "doNotRemove": true,
+          "rows": "<% pageVariables.customFieldData %>",
+          "rowVariableName": "customFieldGridRow",
+          "columns": [
+            {
+              "type": "column",
+              "columnId": "col1",
+              "label": "Custom Field Number",
+              "cellTemplate": {
+                "type": "readOnlyText",
+                "value": "<% customFieldGridRow.fieldNumber %>",
+                "valuesOut": [
+                  {
+                    "value": "<% self.value %>",
+                    "valueOutBinding": "postCustomField.fieldNumber"
+                  },
+                  {
+                    "value": "<% self.value %>",
+                    "valueOutBinding": "putCustomField.fieldNumber"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "col2",
+              "label": "Enabled",
+              "cellTemplate": {
+                "type": "checkBox",
+                "id": "customFieldEnabled",
+                "value": "<% empty(customFieldGridRow.fieldEnabled) ? false : customFieldGridRow.fieldEnabled %>",
+                "onChange": "<%
+                            customFieldLabel.setValue('');
+                            customFieldLabel.setEnabled(customFieldEnabled.value);
+                            customFieldType.setValue([]);
+                            customFieldType.setEnabled(customFieldEnabled.value);
+                            customFieldRequired.setValue(false);
+                            customFieldRequired.setEnabled(customFieldEnabled.value);
+
+                            %>",
+                "valuesOut": [
+                  {
+                    "value": "<% self.value %>",
+                    "valueOutBinding": "postCustomField.fieldEnabled"
+                  },
+                  {
+                    "value": "<% self.value %>",
+                    "valueOutBinding": "putCustomField.fieldEnabled"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "col3",
+              "label": "Label",
+              "cellTemplate": {
+                "type": "text",
+                "id": "customFieldLabel",
+                "enabled": "<% (customFieldEnabled.value) ? true : false %>",
+                "required": true,
+                "value": "<% empty(customFieldGridRow.fieldLabel) ? '' : customFieldGridRow.fieldLabel %>",
+                "valuesOut": [
+                  {
+                    "value": "<% self.value %>",
+                    "valueOutBinding": "postCustomField.fieldLabel"
+                  },
+                  {
+                    "value": "<% self.value %>",
+                    "valueOutBinding": "putCustomField.fieldLabel"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "col4",
+              "label": "Type",
+              "cellTemplate": {
+                "type": "instanceList",
+                "id": "customFieldType",
+                "enabled": "<% (customFieldEnabled.value) ? true : false %>",
+                "required": true,
+                "selectedValues": "<% empty(customFieldGridRow.fieldType) ? [] : [customFieldGridRow.fieldType] %>",
+                "instanceList": [
+                  {
+                    "id": "text",
+                    "descriptor": "Text"
+                  },
+                  {
+                    "id": "textArea",
+                    "descriptor": "Text Area"
+                  },
+                  {
+                    "id": "date",
+                    "descriptor": "Date"
+                  },
+                  {
+                    "id": "checkBox",
+                    "descriptor": "Check Box"
+                  },
+                  {
+                    "id": "instanceList",
+                    "descriptor": "Instance List"
+                  }
+                ],
+                "valuesOut": [
+                  {
+                    "value": "<% self.value[0] %>",
+                    "valueOutBinding": "postCustomField.fieldType"
+                  },
+                  {
+                    "value": "<% self.value[0] %>",
+                    "valueOutBinding": "putCustomField.fieldType"
+                  }
+                ],
+                "onChange": "<%
+                        instanceListValues.setValue('');
+                        instanceListValues.setVisible(self.value[0]=='instanceList');
+                        %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "col5",
+              "label": "Values",
+              "cellTemplate": {
+                "type": "text",
+                "id": "instanceListValues",
+                "visible": "<% (customFieldGridRow.fieldType=='instanceList') %>",
+                "value": "<% empty(customFieldGridRow.fieldValues) ? '' : customFieldGridRow.fieldValues %>",
+                "valuesOut": [
+                  {
+                    "value": "<% self.value %>",
+                    "valueOutBinding": "postCustomField.fieldValues"
+                  },
+                  {
+                    "value": "<% self.value %>",
+                    "valueOutBinding": "putCustomField.fieldValues"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "col6",
+              "label": "Required",
+              "cellTemplate": {
+                "type": "checkBox",
+                "id": "customFieldRequired",
+                "enabled": "<% (customFieldEnabled.value) ? true : false %>",
+                "value": "<% empty(customFieldGridRow.fieldRequired) ? false : customFieldGridRow.fieldRequired %>",
+                "valuesOut": [
+                  {
+                    "value": "<% self.value %>",
+                    "valueOutBinding": "postCustomField.fieldRequired"
+                  },
+                  {
+                    "value": "<% self.value %>",
+                    "valueOutBinding": "putCustomField.fieldRequired"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "colHidden",
+              "cellTemplate": {
+                "type": "section",
+                "children": [
+                  {
+                    "type": "hidden",
+                    "value": "<% customFieldGridRow.fieldBindingID %>",
+                    "valuesOut": [
+                      {
+                        "value": "<% self.value %>",
+                        "valueOutBinding": "postCustomField.fieldBindingID"
+                      },
+                      {
+                        "value": "<% self.value %>",
+                        "valueOutBinding": "putCustomField.fieldBindingID"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "hidden",
+                    "value": "<% queryParams.rowWID %>",
+                    "valuesOut": [
+                      {
+                        "value": "<% self.value %>",
+                        "valueOutBinding": "putCustomField.caseTemplate.id"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "hidden",
+                    "id": "customFieldID",
+                    "value": "<% empty(customFieldGridRow.workdayID) ? null : customFieldGridRow.workdayID %>",
+                    "valueOutBinding": "putCustomField.id"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "hidden",
+          "id": "templateID",
+          "label": "(temp) Template ID",
+          "value": "<% queryParams.rowWID %>",
+          "enabled": false,
+          "valueOutBinding": "putTemplate.id"
+        },
+        {
+          "type": "readOnlyText",
+          "value": "<%  %>"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Click OK to save changes"
+        }
+      ]
+    }
+  }
+}

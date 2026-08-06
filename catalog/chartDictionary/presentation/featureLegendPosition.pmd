@@ -1,0 +1,152 @@
+{
+  "id": "featureLegendPosition",
+  "include": [
+    "pokemonData.script"
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Legend Positions"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "section",
+          "title": "legendPosition: BOTTOM (default)",
+          "children": [
+            {
+              "type": "percentAreaChart2",
+              "id": "chart1",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Health",
+                  "value": "<% data.stats.hp %>"
+                },
+                {
+                  "name": "Damage",
+                  "value": "<% 250 - data.stats.hp %>"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "legendPosition: TOP",
+          "children": [
+            {
+              "type": "percentAreaChart2",
+              "id": "chart2",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "legendPosition": "TOP",
+              "measurementDataSets": [
+                {
+                  "name": "Health",
+                  "value": "<% data.stats.hp %>"
+                },
+                {
+                  "name": "Damage",
+                  "value": "<% 250 - data.stats.hp %>"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "legendPosition: LEFT",
+          "children": [
+            {
+              "type": "percentAreaChart2",
+              "id": "chart3",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "legendPosition": "LEFT",
+              "measurementDataSets": [
+                {
+                  "name": "Health",
+                  "value": "<% data.stats.hp %>"
+                },
+                {
+                  "name": "Damage",
+                  "value": "<% 250 - data.stats.hp %>"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "legendPosition: RIGHT",
+          "children": [
+            {
+              "type": "percentAreaChart2",
+              "id": "chart4",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "legendPosition": "RIGHT",
+              "measurementDataSets": [
+                {
+                  "name": "Health",
+                  "value": "<% data.stats.hp %>"
+                },
+                {
+                  "name": "Damage",
+                  "value": "<% 250 - data.stats.hp %>"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "legendPosition: HIDDEN",
+          "children": [
+            {
+              "type": "percentAreaChart2",
+              "id": "chart5",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "legendPosition": "HIDDEN",
+              "measurementDataSets": [
+                {
+                  "name": "Health",
+                  "value": "<% data.stats.hp %>"
+                },
+                {
+                  "name": "Damage",
+                  "value": "<% 250 - data.stats.hp %>"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

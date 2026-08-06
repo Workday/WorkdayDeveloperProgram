@@ -1,0 +1,40 @@
+{
+  "id": "pill",
+  "parameters": [
+  ],
+  "header": {
+    "title": "<% 'Team Quick Links' %>",
+    "icon": "wd-accent-rocket"
+  },
+  "body": {
+    "type": "pillCard",
+    "pills": [
+      {
+        "label": "Meet the Team",
+        "taskReference": {
+          "taskId": "projectTeam"
+        }
+      },
+      {
+        "label": "Project Home",
+        "taskReference": {
+          "taskId": "projectHome"
+        }
+      },
+      {
+        "label": "User Feedback",
+        "taskReference": {
+          "taskId": "projectUserFeedback"
+        }
+      }
+    ]
+  },
+  "footer": [
+    {
+      "label": "Additional Links",
+      "taskReference": {
+        "taskId": "projectHub"
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "id": 8,
+  "name": "ProtectedCaseStatus",
+  "label": "Protected Case Status",
+  "defaultSecurityDomains": [
+    "ManageProtectedCases"
+  ],
+  "defaultCollection": {
+    "name": "protectedCaseStatuses",
+    "label": "Protected Case Statuses"
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "description",
+      "label": "Description",
+      "type": "TEXT",
+      "useForDisplay": true
+    },
+    {
+      "id": 2,
+      "name": "code",
+      "label": "Code",
+      "type": "TEXT",
+      "isReferenceId": true
+    },
+    {
+      "id": 3,
+      "name": "resolved",
+      "label": "Resolved",
+      "type": "BOOLEAN"
+    },
+    {
+      "id": 4,
+      "name": "initial",
+      "label": "Initial",
+      "type": "BOOLEAN"
+    },
+    {
+      "id": 5,
+      "name": "statusOrder",
+      "label": "Order",
+      "type": "TEXT"
+    }
+  ]
+}

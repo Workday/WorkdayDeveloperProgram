@@ -1,0 +1,51 @@
+{
+  "id": 2,
+  "name": "StrategicPillarCategory",
+  "label": "Strategic Pillar Category",
+  "defaultSecurityDomains": [
+    "CapitalProjectPlanning",
+    "CapitalProjectPlanningAdministrator",
+    "CapitalProjectPlanningCommon"
+  ],
+  "defaultCollection": {
+    "name": "strategicPillarCategories",
+    "label": "Strategic Pillar Categories"
+  },
+  "fields": [
+    {
+      "enableSearch": true,
+      "enableIndex": true,
+      "isPurgeable": false,
+      "useForDisplay": true,
+      "isReferenceId": false,
+      "type": "TEXT",
+      "name": "strategicPillarCategoryName",
+      "id": 1
+    },
+    {
+      "label": "Order",
+      "enableIndex": false,
+      "isPurgeable": false,
+      "type": "INTEGER",
+      "name": "displayOrder",
+      "id": 2
+    },
+    {
+      "enableSearch": false,
+      "enableIndex": false,
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "isReferenceId": false,
+      "type": "TEXT",
+      "name": "categoryDefinition",
+      "id": 3
+    },
+    {
+      "enableIndex": false,
+      "isPurgeable": false,
+      "type": "BOOLEAN",
+      "name": "active",
+      "id": 4
+    }
+  ]
+}

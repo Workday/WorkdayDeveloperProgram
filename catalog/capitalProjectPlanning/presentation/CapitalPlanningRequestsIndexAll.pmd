@@ -1,0 +1,288 @@
+{
+  "id": "CapitalPlanningRequestsIndexAll",
+  "endPoints": [
+    {
+      "baseUrlType": "WQL",
+      "url": "<% '/data?query='+string:pathEncode('SELECT workdayID, requestDate, summary, requestTitle, capitalProjectRequest{workdayID, requestID,requestedBy}, sponsor, approvalStatus{workdayID, status, statusCode} FROM '+site.applicationId+'_capitalProjectRequestHeaders ORDER BY requestID DESC')  %>",
+      "name": "requestsGET",
+      "failOnStatusCodes": [
+        {
+          "code": "400"
+        },
+        {
+          "code": "401"
+        },
+        {
+          "code": "403"
+        },
+        {
+          "codeName": "404"
+        },
+        {
+          "code": "500",
+          "codeName": "500"
+        },
+        {
+          "code": "501"
+        },
+        {
+          "code": "503"
+        }
+      ]
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Capital Project Planning Requests"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "visible": false,
+          "type": "fieldSet",
+          "id": "fldCreateButton",
+          "children": [
+            {
+              "type": "button",
+              "id": "btnCreateCapitalPlanningProjectWidget",
+              "label": "Create Capital Project Request",
+              "taskReference": {
+                "taskId": "CapitalPlanningRequestCreate"
+              }
+            }
+          ]
+        },
+        {
+          "enabled": false,
+          "excelExportEnabled": true,
+          "type": "grid",
+          "id": "capitalProjectsGridWidget",
+          "rows": "<% requestsGET.data ? requestsGET.data : [] %>",
+          "rowVariableName": "request",
+          "columns": [
+            {
+              "type": "column",
+              "id": "IDColumn",
+              "label": "Request ID",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% request.capitalProjectRequest.requestID %>"
+              },
+              "columnId": "IDColumn"
+            },
+            {
+              "type": "column",
+              "id": "titleColumn",
+              "label": "Title",
+              "columnId": "titleColumn",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% request.requestTitle %>"
+              }
+            },
+            {
+              "sortableAndFilterable": true,
+              "type": "column",
+              "label": "Status",
+              "columnId": "statusColumn",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% request.approvalStatus.status %>"
+              }
+            },
+            {
+              "sortableAndFilterable": true,
+              "type": "column",
+              "id": "requestDateColumn",
+              "label": "Request Date",
+              "columnId": "requestDateColumn",
+              "cellTemplate": {
+                "type": "date",
+                "value": "<% request.requestDate %>"
+              },
+              "excel": {
+                "value": "<% self.value %>",
+                "valueType": "DATE",
+                "enabled": false
+              }
+            },
+            {
+              "sortableAndFilterable": true,
+              "type": "column",
+              "id": "requestedByColumn",
+              "label": "Requested By",
+              "columnId": "requestedByColumn",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% request.capitalProjectRequest.requestedBy ? request.capitalProjectRequest.requestedBy.descriptor : '' %>"
+              }
+            },
+            {
+              "sortableAndFilterable": true,
+              "type": "column",
+              "label": "Sponsor",
+              "columnId": "sponsorColumn",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% request.sponsor.descriptor %>"
+              }
+            },
+            {
+              "type": "column",
+              "label": "Actions",
+              "cellTemplate": {
+                "type": "section",
+                "children": [
+                  {
+                    "visible": "<%
+                                 var status = request.approvalStatus.statusCode;
+                                 (status =='Status_Approved')
+                                %>",
+                    "type": "dropDownButton",
+                    "id": "viewAndLinkBtn",
+                    "label": "Actions",
+                    "values": [
+                      {
+                        "label": "View",
+                        "taskReference": {
+                          "taskId": "CapitalPlanningRequestView",
+                          "parameterBindings": {
+                            "headerWID": "<% request.workdayID %>",
+                            "requestWID": "<% request.capitalProjectRequest.workdayID %>"
+                          }
+                        },
+                        "commandHttpMethod": "GET"
+                      },
+                      {
+                        "label": "Link Project",
+                        "taskReference": {
+                          "taskId": "LinkProjectToRequest",
+                          "parameterBindings": {
+                            "headerWID": "<% request.workdayID %>",
+                            "headerTitle": "<% request.requestTitle %>",
+                            "requestWID": "<% request.capitalProjectRequest.workdayID %>",
+                            "requestID": "<% request.capitalProjectRequest.requestID %>"
+                          }
+                        },
+                        "commandHttpMethod": "POST"
+                      }
+                    ]
+                  },
+                  {
+                    "visible": "<%
+                                 var status = request.approvalStatus.statusCode;
+                                 (status =='Status_RequestedApproval')
+                                %>",
+                    "type": "dropDownButton",
+                    "id": "viewEditBtn",
+                    "label": "Actions",
+                    "values": [
+                      {
+                        "label": "View",
+                        "taskReference": {
+                          "parameterBindings": {
+                            "headerWID": "<% request.workdayID %>",
+                            "requestWID": "<% request.capitalProjectRequest.workdayID %>"
+                          },
+                          "taskId": "CapitalPlanningRequestView"
+                        },
+                        "commandHttpMethod": "GET"
+                      },
+                      {
+                        "label": "Edit",
+                        "taskReference": {
+                          "taskId": "CapitalPlanningRequestEdit",
+                          "parameterBindings": {
+                            "headerWID": "<% request.workdayID %>"
+                          }
+                        },
+                        "commandHttpMethod": "POST"
+                      }
+                    ]
+                  },
+                  {
+                    "visible": "<%
+                                 var status = request.approvalStatus.statusCode;
+                                 (status =='Status_Draft'||status == 'Status_SentBack')
+                                %>",
+                    "type": "dropDownButton",
+                    "id": "editApproveBtn",
+                    "label": "Actions",
+                    "values": [
+                      {
+                        "label": "View",
+                        "taskReference": {
+                          "parameterBindings": {
+                            "headerWID": "<% request.workdayID %>",
+                            "requestWID": "<% request.capitalProjectRequest.workdayID %>"
+                          },
+                          "taskId": "CapitalPlanningRequestView"
+                        },
+                        "commandHttpMethod": "GET"
+                      },
+                      {
+                        "label": "Edit",
+                        "taskReference": {
+                          "taskId": "CapitalPlanningRequestEdit",
+                          "parameterBindings": {
+                            "headerWID": "<% request.workdayID %>"
+                          }
+                        },
+                        "commandHttpMethod": "POST"
+                      },
+                      {
+                        "label": "Request Approval",
+                        "taskReference": {
+                          "taskId": "CapitalPlanningRequestApproveConfirm",
+                          "parameterBindings": {
+                            "headerWID": "<% request.workdayID %>",
+                            "headerTitle": "<% request.requestTitle %>",
+                            "requestWID": "<% request.capitalProjectRequest.workdayID %>",
+                            "requestID": "<% request.capitalProjectRequest.requestID %>"
+                          }
+                        },
+                        "commandHttpMethod": "GET"
+                      }
+                    ]
+                  },
+                  {
+                    "visible": "<%
+                                 var status = request.approvalStatus.statusCode;
+                                 !(status =='Status_RequestedApproval'||status =='Status_Approved'||status =='Status_Draft'||status == 'Status_SentBack')
+                                %>",
+                    "type": "button",
+                    "id": "btnViewOnly",
+                    "label": "View Request",
+                    "taskReference": {
+                      "taskId": "CapitalPlanningRequestView",
+                      "parameterBindings": {
+                        "headerWID": "<% request.workdayID %>",
+                        "requestWID": "<% request.capitalProjectRequest.workdayID %>"
+                      }
+                    }
+                  }
+                ]
+              },
+              "columnId": "Actions",
+              "excel": {
+                "enabled": false
+              },
+              "id": "actionSet"
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer"
+    },
+    "pageType": "VIEW"
+  },
+  "outboundData": {},
+  "securityDomains": [
+    "CapitalProjectPlanningAdministrator"
+  ]
+}

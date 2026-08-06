@@ -1,0 +1,15 @@
+{
+  "title": "PMD Widget Dictionary",
+  "description": "Get to know a wide variety of Presentation Components tags, all demonstrated in this app.",
+  "type": "Reference",
+  "components": [
+    "Presentation",
+    "Card"
+  ],
+  "products": [
+    "Workday Extend"
+  ],
+  "authors": [],
+  "tutorial": "",
+  "source": "workday"
+}

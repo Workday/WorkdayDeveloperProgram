@@ -1,0 +1,120 @@
+{
+  "id": "featureChartMarkLabels",
+  "include": [
+    "pokemonData.script"
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Chart Mark Labels Feature"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "section",
+          "title": "Stacked Bar Chart with Chart Mark Labels",
+          "children": [
+            {
+              "type": "stackedBarChart2",
+              "id": "chart1",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Attack",
+                  "value": "<% data.stats.attack %>",
+                  "chartMarkLabel": "<% 'Attack: ' + data.stats.attack %>"
+                },
+                {
+                  "name": "Defense",
+                  "value": "<% data.stats.defense %>",
+                  "chartMarkLabel": "<% 'Defense: ' + data.stats.defense %>"
+                },
+                {
+                  "name": "Speed",
+                  "value": "<% data.stats.speed %>",
+                  "chartMarkLabel": "<% 'Speed: ' + data.stats.speed %>"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Stacked Area Chart with Chart Mark Labels",
+          "children": [
+            {
+              "type": "stackedAreaChart2",
+              "id": "chart2",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Attack",
+                  "value": "<% data.stats.attack %>",
+                  "chartMarkLabel": "<% 'Attack: ' + data.stats.attack %>"
+                },
+                {
+                  "name": "Defense",
+                  "value": "<% data.stats.defense %>",
+                  "chartMarkLabel": "<% 'Defense: ' + data.stats.defense %>"
+                },
+                {
+                  "name": "Speed",
+                  "value": "<% data.stats.speed %>",
+                  "chartMarkLabel": "<% 'Speed: ' + data.stats.speed %>"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Combo Chart with Chart Mark Labels",
+          "children": [
+            {
+              "type": "comboChart2",
+              "id": "chart3",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Attack",
+                  "value": "<% data.stats.attack %>",
+                  "chartMarkLabel": "<% 'Attack: ' + data.stats.attack %>",
+                  "chartMarkType": "BAR"
+                },
+                {
+                  "name": "Defense",
+                  "value": "<% data.stats.defense %>",
+                  "chartMarkLabel": "<% 'Defense: ' + data.stats.defense %>",
+                  "chartMarkType": "BAR"
+                },
+                {
+                  "name": "Speed",
+                  "value": "<% data.stats.speed %>",
+                  "chartMarkLabel": "<% 'Speed: ' + data.stats.speed %>",
+                  "chartMarkType": "LINE"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

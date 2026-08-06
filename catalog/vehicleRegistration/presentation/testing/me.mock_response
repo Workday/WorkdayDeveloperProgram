@@ -1,0 +1,24 @@
+{ 
+  "id": "me",
+  "responseCode": 200, 
+  "responseBody": {
+  "data": {
+    "worker": {
+      "data": [
+        {
+          "workdayID": {
+            "id": "3aa5550b7fe348b98d7b5741afc65534"
+          },
+          "primaryJob": {
+            "location": {
+              "workdayID": {
+                "id": "d13a7c46a06443c4a33c09afbdf72c73"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+} 
+}

@@ -1,0 +1,65 @@
+{
+  "id": 15,
+  "name": "RequestedServiceCategory",
+  "label": "Requested Service Category",
+  "defaultSecurityDomains": [
+    "CapitalProjectPlanning",
+    "CapitalProjectPlanningAdministrator"
+  ],
+  "defaultCollection": {
+    "name": "requestedServiceCategories",
+    "label": "Requested Service Categories"
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "serviceCategory",
+      "type": "SINGLE_INSTANCE",
+      "description": "",
+      "useForDisplay": true,
+      "isPurgeable": false,
+      "target": "ServiceCategory",
+      "secureByTarget": false,
+      "enableReportingFromTarget": false
+    },
+    {
+      "id": 2,
+      "name": "approvingCostCenter",
+      "type": "SINGLE_INSTANCE",
+      "description": "",
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "target": "COST_CENTER",
+      "secureByTarget": true,
+      "enableReportingFromTarget": false
+    },
+    {
+      "id": 3,
+      "name": "approvingOrganization",
+      "type": "SINGLE_INSTANCE",
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "target": "SUPERVISORY_ORGANIZATION",
+      "secureByTarget": false,
+      "enableReportingFromTarget": false
+    },
+    {
+      "id": 4,
+      "name": "approved",
+      "type": "BOOLEAN",
+      "description": "",
+      "isPurgeable": false,
+      "enableIndex": false
+    },
+    {
+      "id": 5,
+      "name": "capitalProjectRequest",
+      "type": "SINGLE_INSTANCE",
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "target": "CapitalProjectRequest",
+      "secureByTarget": false,
+      "enableReportingFromTarget": false
+    }
+  ]
+}

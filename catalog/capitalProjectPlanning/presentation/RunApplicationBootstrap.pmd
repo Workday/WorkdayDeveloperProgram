@@ -1,0 +1,57 @@
+{
+  "id": "RunApplicationBootstrap",
+  "endPoints": [
+    {
+      "name": "referenceDataGET",
+      "baseUrlType": "BUSINESS-OBJECT",
+      "url": "/referenceData"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Initialize Capital Project Planning Application?"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "readOnlyText",
+          "value": "Run first time initialization of the Capital Project Planning Application?"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer"
+    },
+    "micro": true,
+    "pageType": "EDIT"
+  },
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "exclude": "<% referenceDataGET.data[0] ? true :false %>",
+        "name": "runBootstrapPOST",
+        "url": "/CapitalProjectPlanningBootstrap/launch",
+        "authType": "sso",
+        "baseUrlType": "ORCHESTRATE",
+        "onSend": "<%
+                                                 {
+                                                 \"bootstrap\": bootstrapData.allBootstrapData
+                                                 }
+                                                 
+                                                %>"
+      }
+    ]
+  },
+  "securityDomains": [
+    "CapitalProjectPlanningAdministrator"
+  ],
+  "include": [
+    "bootstrapData.script"
+  ],
+  "onLoad": "<%
+                //console.info(\"bootstrap toJson\", bootstrapData.allBootstrapData.toJson());
+                console.info(\"bootstrap toJson\", bootstrapData.getStrategicPillarCategories().toJson());
+               %>"
+}

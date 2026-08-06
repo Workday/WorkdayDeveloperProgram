@@ -1,0 +1,36 @@
+{
+  "id": 6,
+  "name": "PaymentErrors",
+  "label": "Payment Errors",
+  "defaultSecurityDomains": [
+    "ManagePaymentsAndErrors"
+  ],
+  "defaultCollection": {
+    "name": "paymentErrorses",
+    "label": "Payment Errorses", 
+    "description": "Displays any payment errors"
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "paymentID",
+      "label": "Payment ID",
+      "type": "TEXT", 
+      "description": "Displays payment ID"
+    },
+    {
+      "id": 2,
+      "name": "errorID",
+      "label": "Error ID",
+      "type": "TEXT",
+      "isReferenceId": true,
+      "useForDisplay": false
+    },
+    {
+      "id": 3,
+      "name": "errorMessage",
+      "label": "Error Message",
+      "type": "TEXT"
+    }
+  ]
+}

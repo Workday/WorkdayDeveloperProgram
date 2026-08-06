@@ -1,0 +1,32 @@
+{
+  "id": "registerVehicleWizard",
+  "endPoints": [ ],
+  "presentation": {
+    "body": {
+      "type": "editWizard",
+      "title": "<% presentationLabels.RegisterVehicle %>",
+      "subtitle": "",
+      "summarySettings": {
+        "enabled": true,
+        "label": "<% presentationLabels.Confirm %>"
+      },
+      "editTasks": [
+        {
+          "label": "<% presentationLabels.RegisterVehicle %>",
+          "task": {
+            "taskId": "register"
+          }
+        }
+      ],
+      "conclusion": {
+        "task": {
+          "taskId": "vehicleHub",
+          "parameters": {
+            "message": "Request has been submitted."
+          }
+        },
+        "render": true
+      }
+    }
+  }
+}

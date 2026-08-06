@@ -1,0 +1,247 @@
+{
+  "id": "buttons",
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "button, buttonGroup, dropdownButton, pageActionButton, externalLink, editButtonBar, editButton, dropdownEditButton"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "pod",
+          "podId": "header"
+        },
+        {
+          "type": "section",
+          "horizontal": "true",
+          "children": [
+            {
+              "type": "fieldSet",
+              "children": [
+                {
+                  "type": "button",
+                  "label": "Primary",
+                  "action": "PRIMARY",
+                  "taskReference": {
+                    "taskId": "redirectQuery",
+                    "parameters": "<% json:create(json:attribute('id', 'this assignment style works but will be overwritten in this case')) %>",
+                    "parameterBindings": {
+                      "id": "this will overwrite the other parameter"
+                    },
+                    "_comment": "While the parameters field works, parameterBindings will overwrite those fields."
+                  }
+                },
+                {
+                  "type": "button",
+                  "label": "Secondary",
+                  "taskReference": {
+                    "taskId": "home"
+                  }
+                },
+                {
+                  "type": "button",
+                  "label": "Auxiliary",
+                  "action": "AUXILIARY",
+                  "taskReference": {
+                    "taskId": "home"
+                  }
+                },
+                {
+                  "type": "button",
+                  "label": "Link",
+                  "action": "LINK",
+                  "taskReference": {
+                    "taskId": "home"
+                  }
+                },
+                {
+                  "type": "buttonGroup",
+                  "label": "buttonGroup",
+                  "action": "PRIMARY",
+                  "children": [
+                    {
+                      "type": "button",
+                      "label": "Option 1",
+                      "action": "PRIMARY",
+                      "taskReference": {
+                        "taskId": "home"
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "label": "Option 2",
+                      "action": "PRIMARY",
+                      "taskReference": {
+                        "taskId": "home"
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "label": "Option 3",
+                      "action": "PRIMARY",
+                      "taskReference": {
+                        "taskId": "home"
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "label": "Option 4",
+                      "action": "PRIMARY",
+                      "taskReference": {
+                        "taskId": "home"
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "label": "Option 5",
+                      "action": "PRIMARY",
+                      "taskReference": {
+                        "taskId": "home"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "action": "PRIMARY",
+                  "type": "dropDownButton",
+                  "id": "dropDownButtonList",
+                  "label": "dropDownButton",
+                  "values": [
+                    {
+                      "label": "Look at more widgets",
+                      "taskReference": {
+                        "taskId": "home"
+                      }
+                    },
+                    {
+                      "label": "Go back to home",
+                      "taskReference": {
+                        "taskId": "home"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "readOnlyText",
+                  "label": "pageActionButton",
+                  "value": "Updates a text value when a user clicks the button"
+                },
+                {
+                  "type": "pageActionButton",
+                  "id": "myPageActionButton",
+                  "visible": true,
+                  "label": "Click Me!",
+                  "onClick": "<% myText.value = 'Yes' %>"
+                },
+                {
+                  "type": "text",
+                  "id": "myText",
+                  "enabled": "false",
+                  "label": "Have you clicked the pageActionButton yet?",
+                  "value": "<% 'No' %> "
+                },
+                {
+                  "type": "externalLink",
+                  "label": "externalLink",
+                  "descriptor": "Link to an External Site",
+                  "url": "https://developer.workday.com"
+                },
+                {
+                  "type": "externalLink",
+                  "descriptor": "Link to a Workday Task (note that this still opens in a new tab/window)",
+                  "url": "<% '/' + tenant + '/d/home.htmld' %>"
+                },
+                {
+                  "type": "editButtonBar",
+                  "id": "editButtonBar",
+                  "editButtons": [
+                    {
+                      "type": "editButton",
+                      "label": "editButton",
+                      "id": "1",
+                      "buttonType": "PRIMARY",
+                      "ignoreRequiredFields": "true"
+                    },
+                    {
+                      "type": "dropdownEditButton",
+                      "id": "acceptButton",
+                      "buttonType": "PRIMARY",
+                      "enabled": "false",
+                      "dropDown": {
+                        "id": "accept",
+                        "type": "dropdown",
+                        "label": "Accept",
+                        "instanceList": [
+                          {
+                            "id": "7",
+                            "descriptor": "Accept"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "dropdownEditButton",
+                      "id": "rejectButton",
+                      "buttonType": "AUXILIARY",
+                      "dropDown": {
+                        "id": "reject",
+                        "type": "dropdown",
+                        "label": "Reject",
+                        "instanceList": [
+                          {
+                            "id": "2",
+                            "descriptor": "No Reason Specified"
+                          },
+                          {
+                            "id": "3",
+                            "descriptor": "Did not clear interview"
+                          },
+                          {
+                            "id": "4",
+                            "descriptor": "Did not do well in test"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "fieldSet",
+              "children": [
+                {
+                  "type": "cardContainer",
+                  "cards": [
+                {
+                  "type": "card",
+                  "cardId": "landingAction",
+                  "parameters": "<% {
+                      'title': 'Link to Delivered Task & Reports',
+                      'task': 'linkToDelivered',
+                      'action' : '',
+                      'body' : 'Learn how to configure buttons and card footers to link directly to a delivered task or report'
+                  }%>"
+                }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "pod",
+          "podId": "footer"
+        }
+      ]
+    },
+    "pageType": "EDIT",
+    "standardEditButtonsHidden": true
+  }
+}

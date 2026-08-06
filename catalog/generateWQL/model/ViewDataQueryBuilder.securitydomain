@@ -1,0 +1,6 @@
+{
+  "id": 1,
+  "name": "ExtendAppViewDataQueryBuilder",
+  "enabledForPageSecurity": false,
+  "label": "View: Data Query Builder"
+}

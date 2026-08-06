@@ -1,0 +1,46 @@
+{
+  "id": 12,
+  "name": "AdditionalData",
+  "label": "Additional Data",
+  "defaultSecurityDomains": [
+    "CapitalProjectPlanning",
+    "CapitalProjectPlanningAdministrator",
+    "CapitalProjectPlanningCommon"
+  ],
+  "defaultCollection": {
+    "name": "additionalData",
+    "label": "Additional Data"
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "label",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": true,
+      "isPurgeable": false,
+      "enableIndex": false,
+      "enableSearch": false
+    },
+    {
+      "id": 2,
+      "name": "data",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "enableIndex": false,
+      "enableSearch": false
+    },
+    {
+      "enableReportingFromTarget": false,
+      "secureByTarget": true,
+      "target": "CapitalProjectRequest",
+      "isPurgeable": false,
+      "useForDisplay": false,
+      "type": "SINGLE_INSTANCE",
+      "name": "capitalProjectRequest",
+      "id": 3
+    }
+  ]
+}

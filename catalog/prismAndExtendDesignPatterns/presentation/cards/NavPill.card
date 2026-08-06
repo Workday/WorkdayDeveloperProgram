@@ -1,0 +1,34 @@
+{
+    "id": "NavPill",
+    "header": {
+        "title": "<% 'Prism Data in Grids' %>",
+        "subtitle":"Edit Grid Patterns for High Volume",
+        "icon": "wd-accent-checkmarked-page"
+    },
+    "body": {
+    "type": "pillCard",
+    "pills": [
+      {
+        "label": "Slow Loading Editable Grid",
+        "taskReference": {
+          "taskId": "editPageSalesCommissionsResultsFlow",
+          "parameterBindings": {
+            "rowCount": "2500"
+          }
+        }
+      },
+      {
+        "label": "Limiting Result Size For Edit Grid",
+        "taskReference": {
+          "taskId": "editPageSalesCommissionSearch"
+        }
+      },
+      {
+        "label": "Scalable High Volume Pattern",
+        "taskReference": {
+          "taskId": "viewPageSalesCommissionSearch"
+        }
+      }
+    ]
+  }
+}

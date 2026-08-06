@@ -1,0 +1,16 @@
+{
+  "title": "Worker Image Upload Inbound",
+  "description": "Use an Integration System orchestration to retrieve and load worker photos.",
+  "type": "Integration App",
+  "components": [
+    "Orchestration"
+  ],
+  "products": [
+    "Workday Orchestrate",
+    "Workday SOAP API",
+    "Workday HCM"
+  ],
+  "authors": [],
+  "tutorial": "https://forum.developer.workday.com/t/app-catalog-app-worker-inbound-image-upload/8182",
+  "source": "workday"
+}

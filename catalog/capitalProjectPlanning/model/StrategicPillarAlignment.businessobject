@@ -1,0 +1,52 @@
+{
+  "id": 7,
+  "name": "StrategicPillarAlignment",
+  "label": "Strategic Pillar Alignment",
+  "defaultSecurityDomains": [
+    "CapitalProjectPlanning",
+    "CapitalProjectPlanningAdministrator"
+  ],
+  "defaultCollection": {
+    "name": "strategicPillarAlignments",
+    "label": "Strategic Pillar Alignments"
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "strategicPillarCategory",
+      "type": "SINGLE_INSTANCE",
+      "useForDisplay": true,
+      "isPurgeable": false,
+      "target": "StrategicPillarCategory",
+      "secureByTarget": false,
+      "enableReportingFromTarget": false
+    },
+    {
+      "id": 2,
+      "name": "capitalProjectRequest",
+      "type": "SINGLE_INSTANCE",
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "target": "CapitalProjectRequest",
+      "secureByTarget": true,
+      "enableReportingFromTarget": false
+    },
+    {
+      "id": 3,
+      "name": "isAligned",
+      "type": "BOOLEAN",
+      "isPurgeable": false,
+      "enableIndex": false
+    },
+    {
+      "id": 4,
+      "name": "explanation",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "enableIndex": false,
+      "enableSearch": false
+    }
+  ]
+}

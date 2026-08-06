@@ -1,0 +1,13 @@
+{
+  "id": 2,
+  "name": "ExcelFile",
+  "label": "Excel File",
+  "defaultSecurityDomains": [
+    "ManageExcelFiles"
+  ],
+  "defaultCollection": {
+    "name": "excelFiles",
+    "label": "Excel Files"
+  },
+  "fields": []
+}

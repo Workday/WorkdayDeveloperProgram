@@ -1,0 +1,82 @@
+{
+  "id": "featureEditPage",
+  "include": [
+    "pokemonData.script"
+  ],
+  "presentation": {
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "Charts as view-only widgets on an edit page"
+    },
+    "body": {
+      "type": "fieldSet",
+      "horizontal": true,
+      "children": [
+        {
+          "type": "fieldSet",
+          "title": "Edit Widgets",
+          "children": [
+            {
+              "type": "text",
+              "label": "Text",
+              "value": "Edit me"
+            },
+            {
+              "type": "richText",
+              "label": "Rich Text",
+              "value": "Edit me"
+            },
+            {
+              "type": "number",
+              "label": "Number",
+              "value": 123
+            },
+            {
+              "type": "date",
+              "label": "Date"
+            }
+          ]
+        },
+        {
+          "type": "fieldSet",
+          "title": "Chart (view-only)",
+          "children": [
+            {
+              "type": "clusteredBarChart2",
+              "id": "chart1",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "HP",
+                  "value": "<% data.stats.hp %>"
+                },
+                {
+                  "name": "Attack",
+                  "value": "<% data.stats.attack %>"
+                },
+                {
+                  "name": "Defense",
+                  "value": "<% data.stats.defense %>"
+                },
+                {
+                  "name": "Speed",
+                  "value": "<% data.stats.speed %>"
+                }
+              ],
+              "measurementAxisOptions": {
+                "comparisonLineValue": "<% 123.123 %>",
+                "comparisonLineLabel": "<% 'Comparison Line Label' %>"
+              },
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data['pokemon'] %>"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

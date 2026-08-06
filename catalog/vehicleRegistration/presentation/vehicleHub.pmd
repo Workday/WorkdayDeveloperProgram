@@ -1,0 +1,47 @@
+{
+  "id": "vehicleHub",
+  "presentation": {
+    "body": {
+      "type": "hub",
+      "icon": "wd-accent-clipboard-checklist",
+      "label": "<% presentationLabels.VehicleRegistration %>",
+      "initialTask": {
+        "taskId": "home"
+      },
+      "navigationTasks": [
+        {
+          "type": "item",
+          "icon": "wd-icon-timeline-milestone",
+          "label": "<% presentationLabels.ReturnHome %>",
+          "task": {
+            "taskId": "home"
+          }
+        }
+      ],
+      "additionalLinks": {
+        "title": "<% presentationLabels.AdditionalLinks %>",
+        "links": [
+          {
+            "type": "task",
+            "label": "<% presentationLabels.RegisterVehicle %>",
+            "task": {
+              "taskId": "registerVehicleWizard"
+            }
+          },
+          {
+            "type": "task",
+            "label": "<% presentationLabels.ViewLocations %>",
+            "task": {
+              "taskId": "viewLocations"
+            }
+          },
+          {
+            "type": "external",
+            "label": "<% presentationLabels.DeveloperForum %>",
+            "url": "https://forum.developer.workday.com/"
+          }
+        ]
+      }
+    }
+  }
+}

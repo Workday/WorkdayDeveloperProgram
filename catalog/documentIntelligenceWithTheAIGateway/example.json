@@ -1,0 +1,19 @@
+{
+  "title": "Document Intelligence With The AI Gateway",
+  "description": "Leverage Workday AI Gateway's Document Intelligence API to scan and capture text from resumes, receipts, and more.",
+  "type": "Extend App",
+  "components": [
+    "Presentation",
+    "Model",
+    "Orchestration",
+    "WQL"
+  ],
+  "products": [
+    "Workday Extend",
+    "Workday Orchestrate",
+    "Workday REST API"
+  ],
+  "authors": [],
+  "tutorial": "https://forum.developer.workday.com/t/app-catalog-app-document-intelligence-with-the-ai-gateway/4666",
+  "source": "workday"
+}

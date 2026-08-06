@@ -1,0 +1,149 @@
+var getIncrements = function() {
+  var incrementsList = [];
+  for ( var i : 1 to 50 ) {
+    incrementsList.add( { 'id': i, 'descriptor': i } );
+  }
+  return incrementsList;
+}
+
+var getDaysBetween = function(date1, date2) {
+  // swap two dates if necessary
+  if (date:after(date2, date1)) {
+    var temp = date1;
+      date1 = date2;
+      date2 = temp;
+  }
+  var CENTURY = 36500;
+  var YEAR = 365;
+  var MONTH = 30;
+  var WEEK = 7;
+  var DAY = 1;
+  var step = CENTURY;
+  var sameDay = false;
+  var diff = 0;
+  while (true) {
+    var newDate = date:add(date2, 'DAY', step);
+      if (date:after(date1, newDate)) {
+        date2 = newDate;
+          diff += step;
+      }
+        else {
+        sameDay = date:year(date1) == date:year(newDate) &&
+          date:month(date1) == date:month(newDate) &&
+          date:extractValue('DAY', date1) == date:extractValue('DAY', newDate);
+          if (sameDay) {
+            diff += step;
+              break;
+          }
+          if (step == CENTURY) {
+            step = YEAR;
+          }
+            else if (step == YEAR) {
+            step = MONTH;
+          }
+            else if (step == MONTH) {
+            step = WEEK;
+          }
+            else if (step == WEEK) {
+            step = DAY;
+          }
+            else {
+            step = 0;
+          }
+      }
+  }
+  return diff;
+};
+
+// Returns: Sun, Mon, Tue, Wed, Thu, Fri, or Sat
+var getDayOfWeek = function(date) {
+  // Cast date to String
+  var dateString = date + '';
+  return dateString.substringBefore(' ');
+}
+
+// Get Holidays from defined endpoint.
+var getHolidays = function(start, end, worker) {
+  var reqMap = {'start' : date:format(start, 'yyyy-MM-dd'), 'end' : date:format(end, 'yyyy-MM-dd'), 'worker' : worker};
+  var rsp = holidayService.invoke(reqMap);
+  return rsp.data.map( holiday => {  date:parseDateString(holiday.date); });
+}
+
+// Check if date is on the weekend.
+var isWeekend = function(date) {
+  var dayOfWeek = getDayOfWeek(date);
+  return (dayOfWeek == 'Sun' || dayOfWeek == 'Sat');
+}
+
+var isHoliday = function(date, holidays) {
+  return holidays.contains(date);
+}
+
+var getNextBusinessDay = function(date, holidays) {
+  while( isWeekend(date) || isHoliday(date, holidays) )
+    date = date:add(date, 'DAY', 1);
+
+  return date;
+}
+
+var addBusinessDays = function(start, increment) {
+  var holidays = getHolidays(start, date:add(start, 'MONTH', 6), currentWorker.id);
+  // Find first business day from start. To ensure that start is a business day
+  var endDate = getNextBusinessDay(start, holidays);
+  for (var i : 1 to  increment) {
+    endDate = getNextBusinessDay(date:add(endDate, 'DAY', 1), holidays);
+  }
+  return endDate;
+}
+
+// Calculates the end date by providing a start date and an increment value
+var calculateByBusinessDays = function() {
+  if( !(empty startDateW.value) && !(empty incrementW.value)) {
+    var endDate = addBusinessDays(startDateW.value, incrementW.value[0]);
+      endDateW.value = date:format(endDate, 'MM/dd/yyyy');
+      businessDaysW.value = getDaysBetween(startDateW.value, endDate);
+  }
+}
+
+var addBusinessDaysCount = function(start, totalDays) {
+  var holidays = getHolidays(start, date:add(start, 'MONTH', 6), currentWorker.id);
+  var businessDays = totalDays;
+  for (var i : 1 to  totalDays) {
+    if ( isWeekend(start) || isHoliday(start, holidays) ) {
+      businessDays -= 1;
+    }
+      start = date:add(start, 'DAY', 1);
+  }
+  return businessDays;
+}
+
+// Calculates the number of business days by providing start and end dates.
+var calculateByDate = function() {
+  if( !(empty startDateD.value) && !(empty endDateD.value)) {
+    var totalDays = getDaysBetween(startDateD.value, endDateD.value);
+      var businessDays = addBusinessDaysCount(startDateD.value, totalDays);
+      businessDaysD.value = businessDays;
+      totalDaysD.value = totalDays;
+  }
+}
+
+// Calculates the number of business days by providing start and end dates.
+var getTodaysDate = function() {
+  return date:getTodaysDate(date:getDateTimeZone('America/Los_Angeles'))
+}
+
+  /* Export all functions */
+{
+  "getTodaysDate": getTodaysDate,
+  "calculateByDate": calculateByDate,
+  "addBusinessDaysCount": addBusinessDaysCount,
+  "calculateByBusinessDays": calculateByBusinessDays,
+  "addBusinessDays": addBusinessDays,
+  "getNextBusinessDay": getNextBusinessDay,
+  "isHoliday": isHoliday,
+  "isWeekend": isWeekend,
+  "getHolidays": getHolidays,
+  "getDayOfWeek": getDayOfWeek,
+  "getDaysBetween": getDaysBetween,
+  "getIncrements": getIncrements
+}

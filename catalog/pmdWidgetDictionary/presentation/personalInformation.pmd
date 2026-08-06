@@ -1,0 +1,171 @@
+{
+  "id": "personalInformation",
+  "endPoints": [ ],
+  "presentation": {
+    "pageType": "edit",
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "fieldSet",
+          "id": "contactInfoFieldSet",
+          "title": "Contact Info",
+          "horizontal": true,
+          "children": [
+            {
+              "type": "fieldSet",
+              "id": "fieldSet0",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "firstName",
+                  "label": "First Name",
+                  "required": true,
+                  "value": ""
+                },
+                {
+                  "type": "text",
+                  "id": "email",
+                  "label": "Email",
+                  "required": false,
+                  "value": ""
+                }
+              ]
+            },
+            {
+              "type": "fieldSet",
+              "id": "fieldSet1",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "middleName",
+                  "label": "Middle Name",
+                  "value": ""
+                },
+                {
+                  "type": "text",
+                  "id": "phone",
+                  "label": "Phone",
+                  "required": false,
+                  "value": ""
+                }
+              ]
+            },
+            {
+              "type": "fieldSet",
+              "id": "fieldSet2",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "lastName",
+                  "label": "Last Name",
+                  "required": true,
+                  "value": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "fieldSet",
+          "id": "addressFieldSet",
+          "title": "Address",
+          "collapsible": true,
+          "children": [
+            {
+              "type": "text",
+              "id": "street",
+              "label": "Street Name",
+              "value": ""
+            },
+            {
+              "type": "text",
+              "id": "state",
+              "label": "State",
+              "value": ""
+            },
+            {
+              "type": "text",
+              "id": "city",
+              "label": "City",
+              "value": ""
+            },
+            {
+              "type": "text",
+              "id": "zip",
+              "label": "ZIP",
+              "value": ""
+            }
+          ]
+        },
+        {
+          "type": "fieldSet",
+          "id": "applicantInfoFieldSet",
+          "title": "Employment Eligibility & Status",
+          "children": [
+            {
+              "type": "radioGroup",
+              "label": "What is your current employment status?",
+              "hideDisplayOption": true,
+              "instanceList": [
+                {
+                  "id": "1",
+                  "descriptor": "Employed"
+                },
+                {
+                  "id": "2",
+                  "descriptor": "Self-Employed"
+                },
+                {
+                  "id": "3",
+                  "descriptor": "Unemployed"
+                },
+                {
+                  "id": "4",
+                  "descriptor": "Student"
+                }
+              ]
+            },
+            {
+              "type": "date",
+              "label": "Date Available",
+              "id": "date",
+              "value": "<% date:getTodaysDate(clientTimeZone) %>"
+            },
+            {
+              "type": "radioGroup",
+              "label": "Are you a citizen of the United States?",
+              "hideDisplayOption": true,
+              "instanceList": [
+                {
+                  "id": "1",
+                  "descriptor": "Yes"
+                },
+                {
+                  "id": "2",
+                  "descriptor": "No"
+                }
+              ]
+            },
+            {
+              "type": "radioGroup",
+              "label": "If not, are you authorized to work in the United States?",
+              "hideDisplayOption": true,
+              "instanceList": [
+                {
+                  "id": "1",
+                  "descriptor": "Yes"
+                },
+                {
+                  "id": "2",
+                  "descriptor": "No"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

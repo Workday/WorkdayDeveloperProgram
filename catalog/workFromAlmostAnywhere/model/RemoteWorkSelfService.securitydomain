@@ -1,0 +1,6 @@
+{
+  "id": 4,
+  "name": "RemoteWorkSelfService",
+  "enabledForPageSecurity": true,
+  "label": "Remote Work Self Service"
+}

@@ -1,0 +1,144 @@
+{
+  "id": "dropdown",
+  "script": "<%
+             var populateInstanceList= function(orgId) {
+
+                 if( !(empty orgId)) {
+                     console.info('organization type ID is ' + orgId);
+
+                     var listData = organizations.invoke({'id': orgId[0]});
+                         console.info('endpoint response is ' + listData.data);
+                         instanceListOrgs.setValues(listData.data.map(x => {{'id' : x.id, 'descriptor' : x.descriptor}}));
+                 } else {
+                     instanceListOrgs.setValues([]);
+                 }
+             };
+             %>",
+  "endPoints": [
+    {
+      "name": "countries",
+      "baseUrlType": "wdayRef",
+      "url": "/country/vers/latest/items?pageLimit=15",
+      "authType": "sso",
+      "bestEffort": "true"
+    },
+    {
+      "name": "orgTypes",
+      "baseUrlType": "wdayCom",
+      "url": "/organizationTypes",
+      "authType": "sso"
+    },
+    {
+      "name": "organizations",
+      "deferred": true,
+      "baseUrlType": "wdayCom",
+      "url": "<% '/organizations?organizationType=' + id %>",
+      "authType": "sso"
+    }
+  ],
+  "presentation": {
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "dropdown"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": true,
+      "columnWidthRatios": [
+        0.3,
+        0.3,
+        0.3
+      ],
+      "sorted": false,
+      "children": [
+        {
+          "type": "section",
+          "children": [
+            {
+              "type": "pod",
+              "podId": "header"
+            },
+            {
+              "type": "dropdown",
+              "label": "Country - Reference Data",
+              "id": "country",
+              "idKey": "ISO_3166_1_Alpha_3_Code",
+              "displayKey": "name",
+              "values": "<% countries.items %>",
+              "onChange": "<% displayCountry.value = !empty self.value ? self.value.get(0) : '' %>"
+            },
+            {
+              "type": "text",
+              "enabled": false,
+              "id": "displayCountry",
+              "label": "Selected Country"
+            },
+            {
+              "type": "dropdown",
+              "label": "Hardcoded Data 1",
+              "id": "hardcoded",
+              "selectedValues": "<% ['id2'] %>",
+              "onChange": "<% displayHardcodedData.value = !empty self.value ? self.value.get(0) : '' %>",
+              "instanceList": [
+                {
+                  "id": "id1",
+                  "descriptor": "Option 1"
+                },
+                {
+                  "id": "id2",
+                  "descriptor": "Option 2"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "enabled": false,
+              "id": "displayHardcodedData",
+              "label": "Selected Data",
+              "value": "<% hardcoded.value[0] ?:  '' %>"
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "children": [
+            {
+              "type": "text",
+              "enabled": false,
+              "id": "displayHardcodedData",
+              "label": "Dependent Dropdown Design Pattern",
+              "value": "You can use any kind of list you want for this. Here we are using dropdowns, but the design pattern will work with any other list type"
+            },
+            {
+              "type": "dropdown",
+              "label": "Organization Type",
+              "id": "organizationType",
+              "values": "<% orgTypes.data %>",
+              "onChange": "<% populateInstanceList(self.value) %>",
+              "valueOutBinding": "flowVariables.orgType"
+            },
+            {
+              "type": "dropdown",
+              "label": "Select an Org",
+              "id": "instanceListOrgs",
+              "displayKey": "descriptor",
+              "required": "true",
+              "values": "<% [] %>",
+              "valueOutBinding": "flowVariables.organization"
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "pod",
+          "podId": "footer"
+        }
+      ]
+    }
+  }
+}

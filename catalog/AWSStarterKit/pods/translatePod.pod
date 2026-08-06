@@ -1,0 +1,105 @@
+{
+    "podId": "translatePod",
+    "seed": {
+      "parameters": [],
+      "endPoints": [
+       {
+      "name": "translate_Lambda_Bulk",
+      "baseUrlType": "orchestration",
+      "url": "bulkTranslations/launch",
+      "httpMethod": "POST",
+      "deferred": true,
+      "values": [
+        {
+          "outboundPath": "translatedText",
+          "value": "<% translatedText %>"
+        },
+        {
+          "outboundPath": "translateFrom",
+          "value": "<% 'en' %>"
+        },
+        {
+          "outboundPath": "translateTo",
+          "value": "<% translateTo.value[0] %>"
+        }
+      ]
+    }
+      ],
+      "template":
+      {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "fieldSet",
+          "title": "Translate Labels With AWS",
+          "initializeCollapsed": true,
+          "collapsible": true,
+          "children": [
+            {
+              "type": "dropdown",
+              "id": "translateTo",
+              "label": "Language",
+              "onChange": "<% 
+                  //call bulk translation orchestration
+                  fBulkTranslate();
+
+                  //loop through translations and add to map for dynamicSection
+                  var dynamicSectionData = {:};
+                  for (var labelObject : pageVariables.AWSLabels.translatedText) {
+                    var key = map:getKeys(labelObject)[0];
+                    var value = labelObject[key];
+                    dynamicSectionData.add(key,value);
+                  };
+
+                  //update dynamicSection data
+                  ds.data = dynamicSectionData;
+                %>",
+              "instanceList": [
+                {
+                  "id": "en",
+                  "descriptor": "English"
+                },
+                {
+                  "id": "es",
+                  "descriptor": "Spanish"
+                },
+                {
+                  "id": "fr",
+                  "descriptor": "French"
+                },
+                {
+                  "id": "ja",
+                  "descriptor": "Japanese"
+                },
+                {
+                  "id": "de",
+                  "descriptor": "German"
+                },
+                {
+                  "id": "it",
+                  "descriptor": "Italian"
+                },
+                {
+                  "id": "ko",
+                  "descriptor": "Korean"
+                },
+                {
+                  "id": "pt",
+                  "descriptor": "Portuguese"
+                },
+                {
+                  "id": "zh",
+                  "descriptor": "Chinese (Simplified)"
+                },
+                {
+                  "id": "zh-TW",
+                  "descriptor": "Chinese (Traditional)"
+                }
+              ]
+            }
+          ]
+        }
+      ]}
+  }
+}

@@ -1,0 +1,43 @@
+{
+    "id": "Rating",
+    "parameters": ["title", "label", "confidence"],
+    "header": {
+        "title": "<% title %>",
+        "_subtitle": "<% subtitle %>",
+       "indicator": {
+           "label": "<% label %>",
+           "color":"<% 
+              if (title == 'Positive') {
+                return 'green'
+              } else if (title == 'Neutral') {
+                return 'orange'
+              } else {
+                return 'red'
+              } 
+            %>"
+        },
+        "icon": "<% 
+          if (title == 'Positive') {
+            return 'wd-accent-fun'
+          } else if (title == 'Neutral') {
+            return 'wd-accent-inbox'
+          } else {
+            return 'wd-accent-clipboard-checklist'
+          } 
+        %>"
+    },
+  "body": {
+    "type": "simpleCard",
+    "value": "<% 
+      var body = '';
+      if (title == 'Positive') {
+        body = 'Great! Use the description to encourage more giving.\\nRating Confidence: ' + confidence
+      } else if (title == 'Neutral') {
+        body = 'Improve the description to inspire giving.\\nRating Confidence: ' + confidence
+      } else {
+        body = 'Replace the description to showcase the good.\\nRating Confidence: ' + confidence
+      }
+      string:toString(body) 
+    %>"
+  }
+}

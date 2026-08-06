@@ -1,0 +1,102 @@
+{
+  "_pagePurpose1": "This page utilizes an Orchestration to delete MyTeamData model objects IN BULK.",
+  "_pagePurpose2": "This is notable because Extend pages cannot directly call the Model Object REST API for bulk deletes!",
+  "id": "teamDataBulkDelete",
+  "endPoints": [
+    {
+      "name": "myReportsEntries",
+      "authType": "sso",
+      "baseUrlType": "workday-wql",
+      "url": "data",
+      "wqlQuery": {
+        "parameters": {
+          "applicationId": "<% site.applicationId %>"
+        },
+        "queryId": "myReportsEntries"
+      }
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "DeleteEntries",
+        "authType": "sso",
+        "httpMethod": "POST",
+        "baseUrlType": "workday-orchestration",
+        "url": "DeleteModelData/launch"
+      }
+    ]
+  },
+  "presentation": {
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "Delete Bulk Data",
+      "enabled": false
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "readOnlyText",
+          "id": "info",
+          "label": "Instructions",
+          "value": "The data in the grid below will be deleted via a Synchronous Orchestration when the OK button is clicked."
+        },
+        {
+          "type": "grid",
+          "id": "helloWorkers",
+          "label": "Hello Workers!",
+          "rows": "<% myReportsEntries.data %>",
+          "rowVariableName": "workerVN",
+          "enabled": false,
+          "doNotRemove": true,
+          "doNotAdd": true,
+          "isArrayOutBinding": true,
+          "columns": [
+            {
+              "columnId": "descriptor",
+              "label": "Name",
+              "type": "column",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% workerVN.teamMember.descriptor %>"
+              }
+            },
+            {
+              "columnId": "WID",
+              "label": "WID",
+              "type": "column",
+              "cellTemplate": {
+                "type": "text",
+                "id": "deleteEntryID",
+                "value": "<% workerVN.workdayID %>",
+                "valueOutBinding": "DeleteEntries.data[].id"
+              }
+            },
+            {
+              "columnId": "Entry",
+              "label": "Entry",
+              "type": "column",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% workerVN.actualEntry %>"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}

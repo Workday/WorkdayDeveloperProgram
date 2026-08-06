@@ -1,0 +1,303 @@
+{
+  "id": "updateCharity",
+  "securityDomains": [
+    "ManageCharities"
+  ],
+  "endPoints": [
+    {
+      "name": "worker",
+      "baseUrlType": "workday-staffing",
+      "url": "workers/me",
+      "authType": "sso"
+    },
+    {
+      "name": "charity",
+      "baseUrlType": "app",
+      "url": "<% 'charities/' + (queryParams.charityId ?? flowVariables.currentCharity) %>",
+      "authType": "sso"
+    },
+    {
+      "name": "workerSearch",
+      "baseUrlType": "workday-staffing",
+      "url": "<% 'workers?search=' + instanceListQuery %>",
+      "exclude": "<% empty(instanceListQuery) %>",
+      "authType": "sso",
+      "deferred": "true"
+    },
+    {
+      "name": "getAttachments",
+      "baseUrlType": "app",
+      "url": "<% 'charityFiles?charity=' + (queryParams.charityId ?? flowVariables.currentCharity)  //'instance filter' checks for files that have a 'charity' matching the current charity
+    %>",
+      "authType": "sso"
+    },
+    {
+      "name" : "analyzeText",
+      "baseUrlType" : "workday-ml",
+      "authType" : "sso",
+      "httpMethod" : "POST",
+      "url" : "predict",
+      "exclude" : "<% empty description.getValue() %>",
+      "deferred" : true,
+      "onSend" : "<%
+        self.data = {:};
+        self.data.input_queries = [description.getValue()];
+        self.data.return_aspects = 'True';
+        console.info(json:asJSON(self.data));
+        return self.data;
+      %>",
+      "responseErrorDetail": {
+        "errorSummary": "<% error %>",
+        "errors": "<% errors.map(item => { item.error }); %>"
+      }
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "editButtonBarFlowVariable",
+        "type": "outboundVariable",
+        "variableScope": "flow",
+        "values": [
+          {
+            "outboundPath": "deleteClicked",
+            "value": "<% deleteButton.value %>"
+          },
+          {
+            "outboundPath": "currentCharity",
+            "value": "<% //needs flowVariable in case you deleted attachments then came back
+            (flowVariables.currentCharity ?? queryParams.charityId)
+            %>"
+          }
+        ]
+      },
+      {
+        "name": "updateCharity",
+        "baseUrlType": "app",
+        "url": "<% 'charities/' + charity.id %>",
+        "authType": "sso",
+        "httpMethod": "PUT",
+        "values": [
+          {
+            "outboundPath": "image",
+            "value": "<% charity.image ?: null %>"
+          }
+        ]
+      },
+      {
+        "name": "createCharityFiles",
+        "baseUrlType": "app",
+        "url": "charityFilesCollection",
+        "authType": "sso",
+        "httpMethod": "POST",
+        "onMultiPartSend": "<%
+          for (var file : self.data.metadata.charityFiles) { //loop through as many files as were uploaded
+            //Put an uploadedBy object with an id field to the JSON part.
+            file.put('uploadedBy',{'id': worker.id}); //put the new uploadedBy map in the metadata. This captures the WID of the uploader.
+            //Put uploadedDate field to the JSON part.
+            file.uploadedDate = date:getTodaysDate(date:getDateTimeZone(userTimeZone)); //put the uploadedDate field in the metadata
+            file.put('charity',{'id': charity.id}); //link the file with the charity
+            console.info('metadata is ' + json:asJSON(self.data)); //log the metadata being passed in for debugging purposes
+          }
+          self.data;
+    %>",
+        "exclude": "<% //This exclude statement checks whether a file was uploaded successfully!
+                    empty attachmentFileUploader.children %>"
+      }
+    ],
+    "responseErrorDetail": {
+      "errorSummary": "<% error %>",
+      "errors": "<% errors.map(item => { item.error }); %>"
+    }
+  },
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Update Charity"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": true,
+      "sorted": false,
+      "children": [
+        {
+          "type": "section",
+          "children": [
+            {
+              "type": "text",
+              "id": "name",
+              "label": "Name",
+              "required": "<% true %>",
+              "value": "<% charity.name %>",
+              "valueOutBinding": "updateCharity.name"
+            },
+            {
+              "type": "richText",
+              "id": "description",
+              "label": "Description",
+              "value": "<% charity.description %>",
+              "valueOutBinding": "updateCharity.description",
+              "onChange":  "<% 
+                  self.clearError();
+                  if (!empty(self.value)) { 
+                    if (description.value?.length() > 1000) {
+                      description.setError('Description must be less than 1000 characters.');
+                    } else if (string:split(description.value, '\\s+').size() > 512) {
+                      description.setError('Description must be less than 512 words.');
+                    } else {
+                      description.clearError();
+                    }
+                  } 
+              %>"
+            },
+            {
+              "type": "pod",
+              "podId": "pageActionButtonRating"
+            },
+            {
+              "type": "checkBox",
+              "id": "matchDonations",
+              "label": "Match Donations",
+              "value": "<% charity.matchDonations %>",
+              "valueOutBinding": "updateCharity.matchDonations"
+            },
+            {
+              "type": "instanceList",
+              "searchEndPoint": "<% endpoints.workerSearch %>",
+              "multiSelect": "false",
+              "id": "instanceListWorkerSearch",
+              "label": "Relationship Manager",
+              "searchResultValues": "<% workerSearch.data %>",
+              "required": "<% true %>",
+              "values": "<% (!(empty(charity.relationshipManager))) ? [charity.relationshipManager] : [] %>",
+              "selectedValues": "<% (!(empty(charity.relationshipManager))) ? [charity.relationshipManager] : [] %>",
+              "valueOutBinding": "updateCharity.relationshipManager.id"
+            },
+            {
+              "type": "button",
+              "action": "AUXILIARY",
+              "label": "Update Logo",
+              "taskReference": {
+                "taskId": "updateCharityImage",
+                "parameterBindings": {
+                  "charityId": "<% charity.id %>"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "id": "rightside",
+          "children": [
+            {
+              "type": "section",
+              "horizontal": false,
+              "sorted": false,
+              "children": [
+                {
+                  "compact": "<% true %>",
+                  "required": "<% false %>",
+                  "type": "fileUploader",
+                  "label": "Attach Files Related to the Charity",
+                  "id": "attachmentFileUploader",
+                  "maxImageDimension": "1024",
+                  "maxFileSize": "5242880",
+                  "fileTypes": "*",
+                  "valueOutBinding": "<%
+                                       'createCharityFiles:charityFiles' //outbound endpoint name : attachment obect API URL 
+                                       
+                                      %>",
+                  "metadata": "<%
+                               {:} //need at least an empty map in a metadata tag for onMultiPartSend() to have metadata to work with!
+                               %>"
+                }
+              ]
+            },
+            {
+              "type": "fileUploader",
+              "render": "<% !empty(getAttachments.data)  %>",
+              "label": "Previously attached files for Charity:",
+              "id": "multiFileUploader",
+              "valueOutBinding": "postAttachments:filedata:",
+              "enabled": "false",
+              "fileTypes": "txt,jpg,jpeg,png,ppt,pptx,pdf,doc,docx,xlsx,xls",
+              "singular": false,
+              "children": [
+                {
+                  "type": "loop",
+                  "on": "<% getAttachments.data %>",
+                  "as": "file",
+                  "children": [
+                    {
+                      "type": "fileUploaderRow",
+                      "render": "<% !(empty file.fileName) %>",
+                      "attachment": {
+                        "type": "attachmentList",
+                        "attachmentURL": "https://api.workday.com/apps/<%site.applicationId%>/v1/charityFiles/<%file.id%>?charity=<%queryParams.charityId%>",
+                        "attachmentAuth": "sso",
+                        "attachmentName": "<% file.fileName %>",
+                        "attachmentUriTemplate": "[Target]",
+                        "instanceList": [
+                          {
+                            "action": "attachment",
+                            "descriptor": "<%file.fileName%>",
+                            "mimeType": "<% fileType:getFileType(file.fileName) %>"
+                          }
+                        ]
+                      },
+                      "fileName": "<%file.fileName%>",
+                      "fileType": "<%fileType:getFileType(file.fileName) %>"
+                    }
+                  ]
+                }
+              ],
+              "fileUploaderRowTemplate": []
+            }
+          ]
+        },
+        {
+          "type" : "section",
+          "children" : [ {
+            "type" : "dynamicSection",
+            "id" : "ratingDynamicSection",
+            "data" : "<% null %>",
+            "dataVariableName" : "dynamicData",
+            "children" : [ {
+              "type" : "cardContainer",
+              "cards" : [ {
+                "type" : "card",
+                "cardId" : "Rating",
+                "parameters" : "<%
+                  {
+                    'title': dynamicData[0].sentiment,
+                    'label': 'Charity Description Rating',
+                    'confidence': dynamicData[0].confidence
+                 }
+              %>"
+              } ],
+              "render" : "<% ! empty dynamicData  %>"
+            } ]
+          } ]
+        },
+        {
+          "type": "editButtonBar",
+          "editButtons": [
+            {
+              "type": "editButton",
+              "label": "Update Charity",
+              "id": "updateCharityButton",
+              "buttonType": "PRIMARY"
+            },
+            {
+              "type": "editButton",
+              "label": "Remove Attachments",
+              "id": "deleteButton",
+              "buttonType": "AUXILIARY"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

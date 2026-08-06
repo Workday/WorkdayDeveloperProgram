@@ -1,0 +1,269 @@
+{
+  "id": "editMultiRaterForEmployeeReview",
+  "_generationNote": "This page updates a single instance of the MultiRaterForEmployeeReview business object.",
+  "endPoints": [
+    {
+      "_generationNote": "Gets a single instance, as specified by 'queryParams.instanceId' of the MultiRaterForEmployeeReview business object resource.",
+      "name": "getMultiRaterForEmployeeReview",
+      "url": "<% `{{apiGatewayEndpoint}}/apps/{{site.applicationId}}/v1/multiRaterForEmployeeReviews/{{queryParams.instanceId}}` %>",
+      "authType": "sso",
+      "httpMethod": "GET"
+    },
+    {
+      "name": "getWorkers",
+      "httpMethod": "GET",
+      "authType": "sso",
+      "_generationNote": "For data types with a large quantity of instances, it may be required to apply filtering.",
+      "_generationNote2": "If there are more than 100 instances, consider using a search endpoint or another way for the user to filter the available selections.",
+      "url": "<% {{apiGatewayEndpoint}}/common/v1/workers %>"
+    }
+  ],
+  "securityDomains": [ ],
+  "script": "",
+  "presentation": {
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "id": "title",
+      "label": "Update Multi Rater For Employee Review"
+    },
+    "body": {
+      "type": "section",
+      "id": "bodySection",
+      "children": [
+        {
+          "type": "text",
+          "id": "reviewWID",
+          "label": "ReviewWID",
+          "value": "<% getMultiRaterForEmployeeReview.reviewWID %>",
+          "valuesOut": [
+            {
+              "value": "<% self.value %>",
+              "valueOutBinding": "updateMultiRaterForEmployeeReview.reviewWID"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "ratingID",
+          "label": "RatingID",
+          "value": "<% getMultiRaterForEmployeeReview.ratingID %>",
+          "valuesOut": [
+            {
+              "value": "<% self.value %>",
+              "valueOutBinding": "updateMultiRaterForEmployeeReview.ratingID"
+            }
+          ]
+        },
+        {
+          "type": "dropdown",
+          "id": "reviewer1",
+          "label": "Reviewer 1",
+          "idKey": "id",
+          "displayKey": "descriptor",
+          "_generationNote": "The values, used to create the selectable options, conforms to a Workday collection resource.",
+          "_generationNote2": "In particular, the response contains 'data' with an array of objects with both 'id' and 'descriptor'.",
+          "values": "<% getWorkers.data %>",
+          "selectedValues": "<% empty getMultiRaterForEmployeeReview.reviewer1 ? [] : [getMultiRaterForEmployeeReview.reviewer1.id] %>",
+          "valuesOut": [
+            {
+              "value": "<% self.value[0] ?? null %>",
+              "valueOutBinding": "updateMultiRaterForEmployeeReview.reviewer1.id"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "reviewerRating1",
+          "label": "Reviewer Rating 1",
+          "value": "<% getMultiRaterForEmployeeReview.reviewerRating1 %>",
+          "valuesOut": [
+            {
+              "value": "<% self.value %>",
+              "valueOutBinding": "updateMultiRaterForEmployeeReview.reviewerRating1"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "reviewerComment1",
+          "label": "Reviewer Comment 1",
+          "value": "<% getMultiRaterForEmployeeReview.reviewerComment1 %>",
+          "valuesOut": [
+            {
+              "value": "<% self.value %>",
+              "valueOutBinding": "updateMultiRaterForEmployeeReview.reviewerComment1"
+            }
+          ]
+        },
+        {
+          "type": "dropdown",
+          "id": "reviewer2",
+          "label": "Reviewer 2",
+          "idKey": "id",
+          "displayKey": "descriptor",
+          "_generationNote": "The values, used to create the selectable options, conforms to a Workday collection resource.",
+          "_generationNote2": "In particular, the response contains 'data' with an array of objects with both 'id' and 'descriptor'.",
+          "values": "<% getWorkers.data %>",
+          "selectedValues": "<% empty getMultiRaterForEmployeeReview.reviewer2 ? [] : [getMultiRaterForEmployeeReview.reviewer2.id] %>",
+          "valuesOut": [
+            {
+              "value": "<% self.value[0] ?? null %>",
+              "valueOutBinding": "updateMultiRaterForEmployeeReview.reviewer2.id"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "reviewerRating2",
+          "label": "Reviewer Rating 2",
+          "value": "<% getMultiRaterForEmployeeReview.reviewerRating2 %>",
+          "valuesOut": [
+            {
+              "value": "<% self.value %>",
+              "valueOutBinding": "updateMultiRaterForEmployeeReview.reviewerRating2"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "reviewerComment2",
+          "label": "Reviewer Comment 2",
+          "value": "<% getMultiRaterForEmployeeReview.reviewerComment2 %>",
+          "valuesOut": [
+            {
+              "value": "<% self.value %>",
+              "valueOutBinding": "updateMultiRaterForEmployeeReview.reviewerComment2"
+            }
+          ]
+        },
+        {
+          "type": "dropdown",
+          "id": "reviewer3",
+          "label": "Reviewer 3",
+          "idKey": "id",
+          "displayKey": "descriptor",
+          "_generationNote": "The values, used to create the selectable options, conforms to a Workday collection resource.",
+          "_generationNote2": "In particular, the response contains 'data' with an array of objects with both 'id' and 'descriptor'.",
+          "values": "<% getWorkers.data %>",
+          "selectedValues": "<% empty getMultiRaterForEmployeeReview.reviewer3 ? [] : [getMultiRaterForEmployeeReview.reviewer3.id] %>",
+          "valuesOut": [
+            {
+              "value": "<% self.value[0] ?? null %>",
+              "valueOutBinding": "updateMultiRaterForEmployeeReview.reviewer3.id"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "reviewerRating3",
+          "label": "Reviewer Rating 3",
+          "value": "<% getMultiRaterForEmployeeReview.reviewerRating3 %>",
+          "valuesOut": [
+            {
+              "value": "<% self.value %>",
+              "valueOutBinding": "updateMultiRaterForEmployeeReview.reviewerRating3"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "reviewerComment3",
+          "label": "Reviewer Comment 3",
+          "value": "<% getMultiRaterForEmployeeReview.reviewerComment3 %>",
+          "valuesOut": [
+            {
+              "value": "<% self.value %>",
+              "valueOutBinding": "updateMultiRaterForEmployeeReview.reviewerComment3"
+            }
+          ]
+        },
+        {
+          "type": "dropdown",
+          "id": "forWorker",
+          "label": "For Worker",
+          "idKey": "id",
+          "displayKey": "descriptor",
+          "_generationNote": "The values, used to create the selectable options, conforms to a Workday collection resource.",
+          "_generationNote2": "In particular, the response contains 'data' with an array of objects with both 'id' and 'descriptor'.",
+          "values": "<% getWorkers.data %>",
+          "selectedValues": "<% empty getMultiRaterForEmployeeReview.forWorker ? [] : [getMultiRaterForEmployeeReview.forWorker.id] %>",
+          "valuesOut": [
+            {
+              "value": "<% self.value[0] ?? null %>",
+              "valueOutBinding": "updateMultiRaterForEmployeeReview.forWorker.id"
+            }
+          ]
+        },
+        {
+          "type": "dropdown",
+          "id": "createdBy",
+          "label": "Created By",
+          "idKey": "id",
+          "displayKey": "descriptor",
+          "_generationNote": "The values, used to create the selectable options, conforms to a Workday collection resource.",
+          "_generationNote2": "In particular, the response contains 'data' with an array of objects with both 'id' and 'descriptor'.",
+          "values": "<% getWorkers.data %>",
+          "selectedValues": "<% empty getMultiRaterForEmployeeReview.createdBy ? [] : [getMultiRaterForEmployeeReview.createdBy.id] %>",
+          "valuesOut": [
+            {
+              "value": "<% self.value[0] ?? null %>",
+              "valueOutBinding": "updateMultiRaterForEmployeeReview.createdBy.id"
+            }
+          ]
+        },
+        {
+          "type": "number",
+          "fractionDigits": 0,
+          "value": "<% getMultiRaterForEmployeeReview.finalRating %>",
+          "valuesOut": [
+            {
+              "value": "<% self.value %>",
+              "valueOutBinding": "updateMultiRaterForEmployeeReview.finalRating"
+            }
+          ],
+          "id": "finalRating",
+          "label": "Final Rating"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "id": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "id": "footerText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  },
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "_generationNote": "Updates a single instance, as specified by 'queryParams.instanceId', of the MultiRaterForEmployeeReview business object resource.",
+        "name": "updateMultiRaterForEmployeeReview",
+        "url": "<% `{{apiGatewayEndpoint}}/apps/{{site.applicationId}}/v1/multiRaterForEmployeeReviews/{{queryParams.instanceId}}` %>",
+        "authType": "sso",
+        "httpMethod": "PUT",
+        "failOnStatusCodes": [
+          {
+            "code": 400
+          },
+          {
+            "code": 403
+          }
+        ]
+      }
+    ],
+    "responseErrorDetail": {
+      "_generationNote": "This responseErrorDetail works with the Workday API error structure.",
+      "_generationNote2": "If there is only a single error, the errorSummary will be shown.",
+      "errorSummary": "<% error %>",
+      "_generationNote3": "For multiple errors, append the top-level error to provide context.",
+      "errors": "<% empty errors ? [] : [error].join(errors.map(err => { err.error } )) %>"
+    }
+  }
+}

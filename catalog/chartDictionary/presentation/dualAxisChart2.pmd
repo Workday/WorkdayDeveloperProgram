@@ -1,0 +1,209 @@
+{
+  "id": "dualAxisChart2",
+  "include": [
+    "pokemonData.script"
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Dual Axis Charts"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "section",
+          "title": "Simple Dual Axis Chart",
+          "children": [
+            {
+              "type": "dualAxisChart2",
+              "id": "chart1",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Attack",
+                  "value": "<% data.stats.attack %>",
+                  "chartMarkType": "BAR",
+                  "axisPosition": "LEFT"
+                },
+                {
+                  "name": "Defense",
+                  "value": "<% data.stats.defense %>",
+                  "chartMarkType": "BAR",
+                  "axisPosition": "LEFT"
+                },
+                {
+                  "name": "Level",
+                  "value": "<% data.level.currentLevel %>",
+                  "chartMarkType": "LINE",
+                  "axisPosition": "RIGHT"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data.pokemon %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Dual Axis Chart - flip left and right axes",
+          "children": [
+            {
+              "type": "dualAxisChart2",
+              "id": "chart2",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Attack",
+                  "value": "<% data.stats.attack %>",
+                  "chartMarkType": "BAR",
+                  "axisPosition": "RIGHT"
+                },
+                {
+                  "name": "Defense",
+                  "value": "<% data.stats.defense %>",
+                  "chartMarkType": "BAR",
+                  "axisPosition": "RIGHT"
+                },
+                {
+                  "name": "Level",
+                  "value": "<% data.level.currentLevel %>",
+                  "chartMarkType": "LINE",
+                  "axisPosition": "LEFT"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data.pokemon %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Dual Axis Chart - chart mark labels and comparison line",
+          "children": [
+            {
+              "type": "dualAxisChart2",
+              "id": "chart3",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Attack",
+                  "value": "<% data.stats.attack %>",
+                  "chartMarkType": "BAR",
+                  "axisPosition": "LEFT",
+                  "chartMarkLabel": "<% 'Att: ' + data.stats.attack %>"
+                },
+                {
+                  "name": "Defense",
+                  "value": "<% data.stats.defense %>",
+                  "chartMarkType": "BAR",
+                  "axisPosition": "LEFT",
+                  "chartMarkLabel": "<% 'Def: ' + data.stats.defense %>"
+                },
+                {
+                  "name": "Level",
+                  "value": "<% data.level.currentLevel %>",
+                  "chartMarkType": "LINE",
+                  "axisPosition": "RIGHT",
+                  "chartMarkLabel": "<% 'Lvl: ' + data.level.currentLevel %>"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data.pokemon %>"
+              },
+              "comparisonLineValue": 45,
+              "comparisonLineLabel": "Comparison Line"
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Dual Axis Chart - axis options: change title for left axis, hide axis values for right axis",
+          "children": [
+            {
+              "type": "dualAxisChart2",
+              "id": "chart4",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "measurementDataSets": [
+                {
+                  "name": "Attack",
+                  "value": "<% data.stats.attack %>",
+                  "chartMarkType": "BAR",
+                  "axisPosition": "LEFT"
+                },
+                {
+                  "name": "Defense",
+                  "value": "<% data.stats.defense %>",
+                  "chartMarkType": "BAR",
+                  "axisPosition": "LEFT"
+                },
+                {
+                  "name": "Level",
+                  "value": "<% data.level.currentLevel %>",
+                  "chartMarkType": "LINE",
+                  "axisPosition": "RIGHT"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data.pokemon %>"
+              },
+              "leftAxisOptions": {
+                "axisTitle": "Stats"
+              },
+              "rightAxisOptions": {
+                "hideAxisValues": true
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Dual Axis Chart - accessibility mode",
+          "children": [
+            {
+              "type": "dualAxisChart2",
+              "id": "chart5",
+              "data": "<% pokemonData.getPokemonData() %>",
+              "dataVariableName": "data",
+              "accessibilityMode": true,
+              "measurementDataSets": [
+                {
+                  "name": "Attack",
+                  "value": "<% data.stats.attack %>",
+                  "chartMarkType": "BAR",
+                  "axisPosition": "LEFT"
+                },
+                {
+                  "name": "Defense",
+                  "value": "<% data.stats.defense %>",
+                  "chartMarkType": "BAR",
+                  "axisPosition": "LEFT"
+                },
+                {
+                  "name": "Level",
+                  "value": "<% data.level.currentLevel %>",
+                  "chartMarkType": "LINE",
+                  "axisPosition": "RIGHT"
+                }
+              ],
+              "categoryDataSet": {
+                "name": "Pokemon",
+                "value": "<% data.pokemon %>"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

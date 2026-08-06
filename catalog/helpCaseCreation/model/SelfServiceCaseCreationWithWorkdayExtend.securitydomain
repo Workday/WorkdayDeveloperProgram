@@ -1,0 +1,6 @@
+{
+  "id": 1,
+  "name": "SelfServiceCreateCaseWithWorkdayExtend",
+  "label": "Self Service: Create Case with Workday Extend",
+  "enabledForPageSecurity": true
+}
