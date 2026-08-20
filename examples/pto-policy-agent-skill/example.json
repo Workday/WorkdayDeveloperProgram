@@ -1,0 +1,15 @@
+{
+  "title": "PTO & Leave Policy Agent Skill",
+  "description": "A markdown skill that teaches an agent to answer employee questions about PTO, leave accrual, rollover, and sick leave policy with clear escalation rules.",
+  "type": "Agent Skill",
+  "components": [],
+  "products": [
+    "Workday Absence Management",
+    "Workday HCM"
+  ],
+  "authors": [
+    "srivilliamsai"
+  ],
+  "tutorial": "",
+  "source": "community"
+}
