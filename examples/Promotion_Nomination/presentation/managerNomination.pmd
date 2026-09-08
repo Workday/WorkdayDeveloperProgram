@@ -1,0 +1,354 @@
+{
+  "id": "managerNomination",
+  "endPoints": [
+    {
+      "name": "me",
+      "baseUrlType": "workday-staffing",
+      "url": "/workers/me",
+      "authType": "sso"
+    },
+    {
+      "_comment": "Retrieves logged-in manager's direct reports ",
+      "name": "getEmployeeList",
+      "baseUrlType": "workday-wql",
+      "authType": "sso",
+      "url": "<%
+               var query= '/data?query=' + string:urlEncode('SELECT worker FROM myDirectReports WHERE workerType in (d588c41a446c11de98360015c5e6daf6)');
+               return query;
+              %>"
+    },
+    {
+      "name": "workerInfo",
+      "url": "https://api.workday.com/common/v1/workers/me",
+      "authType": "sso"
+    },
+    {
+      "_comment": "Retrieves selected worker information ",
+      "deferred": true,
+      "name": "getEmployeeData",
+      "baseUrlType": "workday-wql",
+      "authType": "sso",
+      "url": "<%
+                  var query= '/data?query=' + string:urlEncode('SELECT worker, location, manager_Level01, hireDate, timeInJobProfile, jobProfile, jobTitle, lastPromotionDate FROM myDirectReports WHERE worker in \"' +selectedWorkerIdQuery+ '\"');
+                  return query;
+                  %>"
+    },
+    {
+      "name": "getJobProfiles",
+      "baseUrlType": "workday-wql",
+      "authType": "sso",
+      "url": "<%
+               var query= '/data?query=' + string:urlEncode('SELECT jobProfileName, workdayID FROM allActiveJobProfiles (dataSourceFilter = defaultFilter) WHERE jobProfileName startswith \"' +instanceListQuery+ '\"');
+             // console.info('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXz', query);
+              return query.replace('%2B','%20');
+              %>",
+      "deferred": true
+    },
+    {
+      "name": "getJobProfilesNoSearch",
+      "baseUrlType": "workday-wql",
+      "authType": "sso",
+      "url": "<%
+               var query= '/data?query=' + string:urlEncode('SELECT jobProfileName, workdayID FROM allActiveJobProfiles (dataSourceFilter = defaultFilter)');
+             // console.info('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXz', query);
+              return query.replace('%2B','%20');
+              %>"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Employee Promotion Nomination"
+    },
+    "body": {
+      "type": "fieldSet",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "section",
+          "children": [
+            {
+              "type": "readOnlyText",
+              "id": "welcome",
+              "value": "Welcome to the Promotion Nomination App. Please select an employee to begin"
+            },
+            {
+              "horizontal": true,
+              "type": "section",
+              "verticalAlignment": "top",
+              "children": [
+                {
+                  "required": true,
+                  "type": "instanceList",
+                  "label": "Select an Employee",
+                  "id": "selectedEmployeeWidget",
+                  "displayKey": "worker.descriptor",
+                  "idKey": "worker.id",
+                  "values": "<% getEmployeeList.data %>",
+                  "onChange": "<% 
+                                if (!empty selectedEmployeeWidget.value[0]) //Retrieve selected employee information 
+                                { 
+                    
+                           var responseEmpData =getEmployeeData.invoke({'selectedWorkerIdQuery': selectedEmployeeWidget.value[0]});
+                           
+                             
+                            var timeInJobProfileVar =(!empty responseEmpData.data[0].timeInJobProfile) ? responseEmpData.data[0].timeInJobProfile : null;
+                             var currentJobProfileVar = (!empty responseEmpData.data[0].jobProfile.descriptor) ? responseEmpData.data[0].jobProfile.descriptor: null;
+                             var currentJobProfileIDVar = (!empty responseEmpData.data[0].jobProfile.id) ? responseEmpData.data[0].jobProfile.id: null;
+                             var currentJobProfileResponseValue = [{'id': currentJobProfileIDVar, 'descriptor': currentJobProfileVar}];
+                             var rawHireDateVar =  (!empty responseEmpData.data[0].hireDate) ? responseEmpData.data[0].hireDate: null;
+                            var parsedHireDateVar = date:parse(rawHireDateVar, 'yyyy-MM-dd');
+                             var jobTitleVar = (!empty responseEmpData.data[0].jobTitle) ? responseEmpData.data[0].jobTitle: null;
+                             var rawLastPromotionDateVar = (!empty responseEmpData.data[0].lastPromotionDate) ? responseEmpData.data[0].lastPromotionDate: null;
+                            var parsedLastPromotionDateVar = date:parse(rawLastPromotionDateVar, 'yyyy-MM-dd');
+
+                            
+                            promotionReasonWidget.visible  = true;
+                            proposedDateWidget.visible  = true;
+                            proposedDateWidget.visible  = true;
+                            proposedJobProfileWidget.visible  = true;
+                            promotionCycleWidget.visible  = true;                           
+
+                             timeJobProfileWidget.value = timeInJobProfileVar;
+                             timeJobProfileWidget.visible  = true;
+
+                            currentJobProfileWidget.setValues(currentJobProfileResponseValue);
+                            currentJobProfileWidget.setValue(currentJobProfileResponseValue.map(item => {item.id}));
+                            currentJobProfileWidget.visible = true;
+
+                            hireDateWidget.value = parsedHireDateVar;
+                            hireDateWidget.visible = true;
+
+                            currentJobTitleWidget.value = jobTitleVar;
+                            currentJobTitleWidget.visible = true;
+
+                            lastPromotionDateWidget.value = parsedLastPromotionDateVar;
+                            lastPromotionDateWidget.visible = true;
+
+                            promotionConsiderationQ1.visible = true;
+                            promotionBusNeedQ2.visible = true;
+                            roleConsiderationQ3.visible = true;
+                       }
+                       else
+                       {
+                         self.setError('Please select a worker to nominate');
+                       } %>"
+                }
+              ],
+              "columnWidthRatios": [
+                "0.75",
+                "0.25"
+              ]
+            },
+            {
+              "required": true,
+              "visible": false,
+              "type": "radioGroup",
+              "id": "promotionReasonWidget",
+              "label": "Reason for Promotion",
+              "instanceList": [
+                {
+                  "id": "100A",
+                  "descriptor": "Merit/Performance"
+                },
+                {
+                  "id": "101B",
+                  "descriptor": "Increased Responsibilities"
+                },
+                {
+                  "id": "102C",
+                  "descriptor": "Organizational Restructuring"
+                }
+              ]
+            },
+            {
+              "required": true,
+              "visible": false,
+              "label": "Proposed Effective Date",
+              "type": "date",
+              "id": "proposedDateWidget"
+            },
+            {
+              "visible": false,
+              "label": "Proposed Job Profile",
+              "type": "instanceList",
+              "id": "proposedJobProfileWidget",
+              "values": "<% getJobProfilesNoSearch.data %>",
+              "displayKey": "jobProfileName",
+              "idKey": "workdayID"
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "id": "derivedFieldsSection",
+          "children": [
+            {
+              "enabled": false,
+              "visible": false,
+              "label": "Promotion Cycle",
+              "type": "text",
+              "id": "promotionCycleWidget",
+              "value": "2026-Q1"
+            },
+            {
+              "enabled": false,
+              "label": "Current Manager",
+              "visible": false,
+              "type": "text",
+              "id": "currentManagerWidget"
+            },
+            {
+              "enabled": false,
+              "label": "Time in Job Profile",
+              "visible": false,
+              "type": "text",
+              "id": "timeJobProfileWidget"
+            },
+            {
+              "enabled": false,
+              "label": "Hire Date",
+              "visible": false,
+              "type": "date",
+              "id": "hireDateWidget"
+            },
+            {
+              "enabled": false,
+              "visible": false,
+              "label": "Current Job Profile",
+              "type": "instanceList",
+              "idKey": "id",
+              "id": "currentJobProfileWidget",
+              "values": "<% [] %>"
+            },
+            {
+              "enabled": false,
+              "label": "Current Job Title",
+              "visible": false,
+              "type": "text",
+              "id": "currentJobTitleWidget"
+            },
+            {
+              "enabled": false,
+              "label": "Date of Last Promotion",
+              "visible": false,
+              "type": "date",
+              "id": "lastPromotionDateWidget"
+            },
+            {
+              "required": true,
+              "visible": false,
+              "type": "textArea",
+              "id": "promotionConsiderationQ1",
+              "label": "Why is the worker being considered?"
+            },
+            {
+              "required": true,
+              "visible": false,
+              "type": "textArea",
+              "id": "promotionBusNeedQ2",
+              "label": "What is the business need?"
+            },
+            {
+              "required": true,
+              "visible": false,
+              "type": "textArea",
+              "id": "roleConsiderationQ3",
+              "label": "How does this worker suit the role?"
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "enabled": "false",
+          "type": "richText"
+        }
+      ]
+    },
+    "pageType": "EDIT"
+  },
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "storePromotionNominationBO",
+        "baseUrlType": "app",
+        "url": "promotionNominationBOS",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "onSend": "<%
+                  //Outbound endpoint that submits the BO           
+                    
+                  
+                  var obj = {:};
+
+                  obj.add('nominee', (!empty selectedEmployeeWidget.selectedEntries[0].id) ? {'id':selectedEmployeeWidget.selectedEntries[0].id} : null);
+                  obj.add('nominator', (!empty me.id) ? {'id':me.id} : null);
+                  obj.add('nominationReason', (!empty promotionReasonWidget.selectedEntries[0].descriptor) ? promotionReasonWidget.selectedEntries[0].descriptor : null);
+                   obj.add('proposedDate', (!empty proposedDateWidget.value) ? date:format(proposedDateWidget.value, 'yyyy-MM-dd') : null);
+                   obj.add('proposedJobProfile', (!empty proposedJobProfileWidget.selectedEntries[0].id) ? {'id':proposedJobProfileWidget.selectedEntries[0].id} : null);
+                  obj.add('promotionCycle', (!empty promotionCycleWidget.value) ? promotionCycleWidget.value : null);
+                  obj.add('timeInJobProfile', (!empty timeJobProfileWidget.value) ? timeJobProfileWidget.value : null);
+                  obj.add('hireDate', (!empty hireDateWidget.value) ? date:format(hireDateWidget.value, 'yyyy-MM-dd') : null);
+                  obj.add('currentJobProfile', (!empty currentJobProfileWidget.selectedEntries[0].id) ? {'id':currentJobProfileWidget.selectedEntries[0].id} : null);
+                  obj.add('currentJobTitle', (!empty currentJobTitleWidget.value) ? currentJobTitleWidget.value : null);
+                  obj.add('lastPromotionDate', (!empty lastPromotionDateWidget.value) ? date:format(lastPromotionDateWidget.value, 'yyyy-MM-dd') : '2020-01-01');
+                  obj.add('workerConsideration', (!empty promotionConsiderationQ1.value) ? promotionConsiderationQ1.value : null);
+                  obj.add('businessNeed', (!empty promotionBusNeedQ2.value) ? promotionBusNeedQ2.value : null);
+                  obj.add('workerSuitRole', (!empty roleConsiderationQ3.value) ? roleConsiderationQ3.value : null);
+                  self.data = obj;
+                  console.info('Nomination payload is ' + json:asJSON(self.data));                         
+                  return self.data;
+                 %>",
+        "failOnStatusCodes": [
+          {
+            "code": 400
+          },
+          {
+            "code": 403
+          }
+        ]
+      },
+      {
+        "name": "submitPromotion",
+        "baseUrlType": "app",
+        "url": "<% 'https://api.workday.com/apps/promotionNomination_rvylxm/v1/promotionNominationBPEvents' %>",
+        "authType": "sso",
+        "onSend": "<%
+                  var payload =
+                  {
+                  'description': 'Approval for Promotion Nomination',
+                  'businessProcessTarget': {'id': storePromotionNominationBO.id}
+                        };
+                  console.info('zzzzzzzzzzz ' + payload.businessProcessTarget);
+                  return payload;
+                 %>",
+        "failOnStatusCodes": [
+          {
+            "code": 400
+          },
+          {
+            "code": 403
+          }
+        ]
+      },
+      {
+        "type": "outboundVariable",
+        "name": "ExtensionResponse",
+        "variableScope": "flow",
+        "values": [
+          {
+            "outboundPath": "PromotionSubmissionResponseValue",
+            "value": "<% submitPromotion.id %>"
+          }
+        ]
+      }
+    ]
+  },
+  "securityDomains": [
+    "ManagerPromotionNomination"
+  ]
+}
