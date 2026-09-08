@@ -51,7 +51,10 @@
     The nomination enters the multi-level approval chain. Once approved, all data is archived to the Custom Business Object.
   </li>
 </ol>
-
+<h2>Artifacts</h2>
+<ul>
+  <li><strong> managerNomination:</strong> Landing page for managers</li>
+  <li><strong>eventDetails:</strong> Business process approval page definition</li>
 <h2>💡 Optional Enhancements</h2>
 <blockquote>
   <strong>Workday Orchestrate Integration:</strong><br>
