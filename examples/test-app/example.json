@@ -1,0 +1,10 @@
+{
+  "title": "my demo app ",
+  "description": "One or two sentences about what this example shows.",
+  "type": "Extend App",
+  "components": [],
+  "products": [],
+  "authors": ["obinna"],
+  "tutorial": "",
+  "source": "community"
+}
