@@ -176,17 +176,29 @@ export async function postReview({ github, context, core, reportPath, headSha, h
   const posted = await existingFindingIds({ github, context, prNumber });
   const { comments, overflow } = buildReview(report, lineMap, posted);
 
-  if (comments.length > 0) {
-    await github.rest.pulls.createReview({
-      ...context.repo,
-      pull_number: prNumber,
-      commit_id: headSha,
-      event: "COMMENT",
-      body: `Example audit: ${comments.length} inline suggestion(s). The summary comment on this PR has the full list.`,
-      comments
-    });
-    core.info(`Posted ${comments.length} inline comment(s).`);
+  // Post inline comments in small batches. Large reviews can make GitHub
+  // return a 502 after it has already created the review, so a failure here
+  // must never prevent the summary comment below. The next run dedupes by
+  // finding id, so a batch that half-succeeded is not repeated.
+  const BATCH = 20;
+  let postedCount = 0;
+  for (let i = 0; i < comments.length; i += BATCH) {
+    const batch = comments.slice(i, i + BATCH);
+    try {
+      await github.rest.pulls.createReview({
+        ...context.repo,
+        pull_number: prNumber,
+        commit_id: headSha,
+        event: "COMMENT",
+        body: i === 0 ? `Example audit: ${comments.length} inline comment(s). The summary comment on this PR has the full list.` : `Example audit, continued (${i + 1} to ${i + batch.length} of ${comments.length}).`,
+        comments: batch
+      });
+      postedCount += batch.length;
+    } catch (err) {
+      core.warning(`Inline review batch failed (${err.status ?? ""} ${err.message}); continuing with the summary comment.`);
+    }
   }
+  if (postedCount > 0) core.info(`Posted ${postedCount} inline comment(s).`);
 
   let body = toMarkdown(report, { forComment: true });
   if (checkConclusion === "failure" && report.mode === "enforcing") {
@@ -194,8 +206,12 @@ export async function postReview({ github, context, core, reportPath, headSha, h
   }
   const notInline = overflow.filter((f) => !posted.has(f.id) && f.line === 0).length;
   if (notInline > 0 && comments.length > 0) body += `\n${notInline} finding(s) are file-level and appear only in this summary.\n`;
-  await upsertStickyComment({ github, context, prNumber, body });
-  core.info(`Updated summary comment on #${prNumber}.`);
+  try {
+    await upsertStickyComment({ github, context, prNumber, body });
+    core.info(`Updated summary comment on #${prNumber}.`);
+  } catch (err) {
+    core.setFailed(`Could not post the summary comment: ${err.status ?? ""} ${err.message}`);
+  }
 }
 
 function str(v, max) {
