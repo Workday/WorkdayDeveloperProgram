@@ -36,7 +36,7 @@ Thanks for helping build the open home for Workday Build examples. Adding an exa
    Each creates `examples/your-example-name/` with a prefilled `example.json` and README skeleton. (You can also copy `examples/_template/` by hand.)
 
 3. **Drop your artifact in.** Whatever it is: Extend app source (exported with Local Disk Sync, the WDCLI, or the ZIP download), orchestration definitions, an agent skill as markdown, diagrams. The folder must be self-contained.
-4. **Fill in the two files.** `example.json` needs a title, a description, and a type; everything else is optional. The README needs three short sections: What it is, What's inside, How to use it.
+4. **Fill in the two files.** `example.json` needs a title, a description, and a type; everything else is optional. The README needs four short sections: What it is, What's inside, How to use it, and Before you deploy (everything a reader must change for their own tenant, such as app reference ids, base URLs, WIDs, or dates).
 5. **Validate.** From the repository root:
 
    ```bash
@@ -45,14 +45,23 @@ Thanks for helping build the open home for Workday Build examples. Adding an exa
 
    This checks your metadata and updates the README index table. Commit the README change with your example; CI runs the same script with `--check`. If you cannot run Node locally, skip this step and see Submitting by hand below.
 
-6. **Open a pull request** and complete the short checklist in the PR template.
+6. **Audit (optional but recommended).** The same checks CI runs on your pull request, with the fix for each finding:
+
+   ```bash
+   ./scripts/install-arcane.sh
+   node scripts/audit-examples.mjs --changed
+   ```
+
+   The first command downloads [Arcane Auditor](https://github.com/Developers-and-Dragons/ArcaneAuditor), a community code review tool for Extend apps, into a gitignored folder. The second audits every example folder you changed. Without Arcane, `node scripts/audit-examples.mjs --changed --skip-arcane` still runs the hub's own checks (folder name, metadata, README sections, hardcoded values). What each finding means and how to fix it is in [docs/EXAMPLE_BEST_PRACTICES.md](docs/EXAMPLE_BEST_PRACTICES.md).
+
+7. **Open a pull request** and complete the short checklist in the PR template.
 
 ## Submitting by hand (no tooling required)
 
 The scaffolder and validator are conveniences, not requirements. The actual contract is just a folder under `examples/` containing your artifact plus `example.json` and `README.md`. To submit without running anything:
 
 1. Copy `examples/_template/` into a new kebab-case folder, or create the files directly in the GitHub web UI in your fork.
-2. Fill in `example.json` (the template's README documents every field) and write the three README sections.
+2. Fill in `example.json` (the template's README documents every field) and write the four README sections.
 3. Add your artifact files to the folder.
 4. For the index table in the repository README, either add your row between the `<!-- examples:start -->` and `<!-- examples:end -->` markers by copying the format of an existing row, or leave the table alone and say so in your PR. CI will flag the stale table, and a reviewer will regenerate it for you during review. That is normal and fine.
 
@@ -62,6 +71,7 @@ The scaffolder and validator are conveniences, not requirements. The actual cont
 - The README says what the artifact is and how to use it (deploy, import, read, or run).
 - `example.json` is valid: `type` comes from the `types` list in `hub.config.json`, and any `components` or `products` come from their lists too.
 - No credentials, tenant names, or real personal data anywhere in the folder. Sample data must be clearly fictional.
+- Nothing tenant-specific is hardcoded without a note. Hardcoded Workday API URLs, app reference ids, and debug logging fail the audit; anything else a reader must change goes in the README under "Before you deploy". The full list of checks, with the fix for each, is in [docs/EXAMPLE_BEST_PRACTICES.md](docs/EXAMPLE_BEST_PRACTICES.md).
 
 ## Examples must be real Workday use cases
 
@@ -97,6 +107,11 @@ Workday DevRel reviews every pull request before merge. We look for:
 - **It works.** We follow your README and end up with the example doing what it says.
 - **It teaches.** The README explains the why, not just the how.
 - **It is safe.** No secrets, no real data, nothing tenant-specific.
+
+Two automated checks run first and post their results on the pull request:
+
+- **Validate examples** checks `example.json` and the README index table.
+- **Audit examples** runs Arcane Auditor plus the hub's own rules on the folders you changed, then comments on the PR with what to fix and how. Where the fix is mechanical you get a one-click suggestion. ACTION findings (hardcoded Workday URLs or app ids, debug logging, missing error handling) fail the check; ADVICE findings are recommendations and never block. If a finding is wrong for your example, say so in the PR and a maintainer can override it.
 
 We aim to respond within a few business days. Discussions on the PR are part of the process, so expect questions and suggestions rather than a silent merge or close.
 

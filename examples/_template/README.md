@@ -23,6 +23,16 @@ The concrete steps to put this example to work, whatever that means for this art
 
 If your example needs configuration (credentials, tenant URLs), document the variables here and never commit real values.
 
+## Before you deploy
+
+Everything a reader has to change before this example works in their own tenant. Delete the lines that do not apply. Typical items:
+
+- **App reference id**: `presentation/myApp_abc123.amd` and `.smd` carry the id Workday generated for the original tenant. Replace `myApp_abc123` with your own, or reference it with `site.applicationId` in scripts.
+- **Base URLs**: endpoints use `baseUrlType` with the data providers in the `.amd`; check they match your region.
+- **Security domains**: `SampleDomain` in `model/` needs to be mapped to your security groups.
+- **Dates or periods**: `2026-Q1` in `managerNomination.pmd` is the current cycle; change it or compute it.
+- **WIDs**: any Workday id in a WQL query is from the original tenant and must be replaced.
+
 ---
 
 ## Fill in example.json (delete this section before submitting)
