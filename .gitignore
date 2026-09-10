@@ -22,3 +22,7 @@ venv/
 .DS_Store
 Thumbs.db
 *.log
+
+# Arcane Auditor local install and audit output
+.arcane-auditor/bin/
+audit/

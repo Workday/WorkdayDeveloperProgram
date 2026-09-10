@@ -9,127 +9,158 @@ import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from "
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
+export const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 const readmePath = join(repoRoot, "README.md");
-const checkOnly = process.argv.includes("--check");
 
-const config = JSON.parse(readFileSync(join(repoRoot, "hub.config.json"), "utf8"));
+export const config = JSON.parse(readFileSync(join(repoRoot, "hub.config.json"), "utf8"));
 
 // catalog/ holds Workday-built apps, examples/ holds community examples.
-const sections = [
+export const sections = [
   { dir: "catalog", markers: "catalog", defaultSource: "workday" },
   { dir: "examples", markers: "examples", defaultSource: "community" }
 ];
 
-const errors = [];
-const entries = [];
+// Validates one entry folder (catalog/<name> or examples/<name>). Returns
+// { errors, entry }: entry is null when the folder has no usable metadata.
+// Also used by scripts/audit/hub-rules.mjs, so keep it free of side effects.
+export function validateEntry(sectionDir, name) {
+  const section = sections.find((s) => s.dir === sectionDir);
+  const dir = join(repoRoot, sectionDir, name);
+  const errors = [];
 
-for (const section of sections) {
-  const sectionDir = join(repoRoot, section.dir);
-  if (!existsSync(sectionDir)) continue;
+  if (!existsSync(join(dir, "README.md"))) {
+    errors.push(`${sectionDir}/${name}: missing README.md`);
+  }
 
-  for (const name of readdirSync(sectionDir).sort()) {
-    // _template and dotfiles are not entries
-    if (name.startsWith("_") || name.startsWith(".")) continue;
-    const dir = join(sectionDir, name);
-    if (!statSync(dir).isDirectory()) continue;
+  const metaPath = join(dir, "example.json");
+  if (!existsSync(metaPath)) {
+    errors.push(`${sectionDir}/${name}: missing example.json`);
+    return { errors, entry: null };
+  }
 
-    if (!existsSync(join(dir, "README.md"))) {
-      errors.push(`${section.dir}/${name}: missing README.md`);
+  let meta;
+  try {
+    meta = JSON.parse(readFileSync(metaPath, "utf8"));
+  } catch (err) {
+    errors.push(`${sectionDir}/${name}/example.json is not valid JSON: ${err.message}`);
+    return { errors, entry: null };
+  }
+
+  if (!meta.title) errors.push(`${sectionDir}/${name}: example.json needs a "title"`);
+  if (!meta.description) errors.push(`${sectionDir}/${name}: example.json needs a "description"`);
+
+  if (!meta.type) {
+    errors.push(`${sectionDir}/${name}: example.json needs a "type"`);
+  } else if (!config.types.includes(meta.type)) {
+    errors.push(`${sectionDir}/${name}: "${meta.type}" is not an approved type. Pick from: ${config.types.join(", ")}`);
+  }
+
+  for (const component of asList(meta.components)) {
+    if (!config.components.includes(component)) {
+      errors.push(`${sectionDir}/${name}: "${component}" is not an approved component. Pick from: ${config.components.join(", ")}`);
     }
+  }
 
-    const metaPath = join(dir, "example.json");
-    if (!existsSync(metaPath)) {
-      errors.push(`${section.dir}/${name}: missing example.json`);
-      continue;
+  for (const product of asList(meta.products)) {
+    if (!config.products.includes(product)) {
+      errors.push(`${sectionDir}/${name}: "${product}" is not an approved product. Pick from: ${config.products.join(", ")}`);
     }
+  }
 
-    let meta;
-    try {
-      meta = JSON.parse(readFileSync(metaPath, "utf8"));
-    } catch (err) {
-      errors.push(`${section.dir}/${name}/example.json is not valid JSON: ${err.message}`);
-      continue;
-    }
+  if (meta.tutorial && !meta.tutorial.startsWith("https://")) {
+    errors.push(`${sectionDir}/${name}: "tutorial" should be an https link, or left out`);
+  }
 
-    if (!meta.title) errors.push(`${section.dir}/${name}: example.json needs a "title"`);
-    if (!meta.description) errors.push(`${section.dir}/${name}: example.json needs a "description"`);
+  if (meta.source && !["workday", "community"].includes(meta.source)) {
+    errors.push(`${sectionDir}/${name}: "source" must be "workday" or "community", or left out`);
+  }
+  if (sectionDir === "catalog" && meta.source === "community") {
+    errors.push(`catalog/${name}: catalog apps are Workday-maintained, so "source" cannot be "community". Community submissions live in examples/.`);
+  }
 
-    if (!meta.type) {
-      errors.push(`${section.dir}/${name}: example.json needs a "type"`);
-    } else if (!config.types.includes(meta.type)) {
-      errors.push(`${section.dir}/${name}: "${meta.type}" is not an approved type. Pick from: ${config.types.join(", ")}`);
-    }
-
-    for (const component of asList(meta.components)) {
-      if (!config.components.includes(component)) {
-        errors.push(`${section.dir}/${name}: "${component}" is not an approved component. Pick from: ${config.components.join(", ")}`);
-      }
-    }
-
-    for (const product of asList(meta.products)) {
-      if (!config.products.includes(product)) {
-        errors.push(`${section.dir}/${name}: "${product}" is not an approved product. Pick from: ${config.products.join(", ")}`);
-      }
-    }
-
-    if (meta.tutorial && !meta.tutorial.startsWith("https://")) {
-      errors.push(`${section.dir}/${name}: "tutorial" should be an https link, or left out`);
-    }
-
-    if (meta.source && !["workday", "community"].includes(meta.source)) {
-      errors.push(`${section.dir}/${name}: "source" must be "workday" or "community", or left out`);
-    }
-    if (section.dir === "catalog" && meta.source === "community") {
-      errors.push(`catalog/${name}: catalog apps are Workday-maintained, so "source" cannot be "community". Community submissions live in examples/.`);
-    }
-
-    entries.push({
+  return {
+    errors,
+    entry: {
       id: name,
       sectionMarkers: section.markers,
-      path: `${section.dir}/${name}`,
+      path: `${sectionDir}/${name}`,
       title: meta.title || name,
       description: meta.description || "",
       type: meta.type || ""
-    });
+    }
+  };
+}
+
+// Validates every entry in both sections. Returns { errors, entries }.
+export function validateAll() {
+  const errors = [];
+  const entries = [];
+  for (const section of sections) {
+    const sectionDir = join(repoRoot, section.dir);
+    if (!existsSync(sectionDir)) continue;
+
+    for (const name of readdirSync(sectionDir).sort()) {
+      // _template and dotfiles are not entries
+      if (name.startsWith("_") || name.startsWith(".")) continue;
+      if (!statSync(join(sectionDir, name)).isDirectory()) continue;
+
+      const result = validateEntry(section.dir, name);
+      errors.push(...result.errors);
+      if (result.entry) entries.push(result.entry);
+    }
   }
+  return { errors, entries };
 }
 
-if (errors.length > 0) {
-  console.error("Problems found:\n");
-  for (const error of errors) console.error(`  - ${error}`);
-  console.error(`\n${errors.length} problem(s). Fix them and re-run.`);
-  process.exit(1);
+// Compares the README index tables against the entries. Returns true when
+// every table is in sync.
+export function tablesInSync(entries, readme = readFileSync(readmePath, "utf8")) {
+  for (const section of sections) {
+    const expected = rowsFor(entries, section.markers);
+    const current = tableRows(readme, section.markers);
+    if (JSON.stringify(current) !== JSON.stringify(expected)) return false;
+  }
+  return true;
 }
 
-entries.sort((a, b) => a.title.localeCompare(b.title));
+const isMain = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
+if (isMain) main();
 
-const readme = readFileSync(readmePath, "utf8");
+function main() {
+  const checkOnly = process.argv.includes("--check");
+  const { errors, entries } = validateAll();
 
-// Compare each table by content, not formatting, so tools like Prettier
-// can reflow them without the check calling them stale.
-let allInSync = true;
-for (const section of sections) {
-  const expected = rowsFor(section.markers);
-  const current = tableRows(readme, section.markers);
-  if (JSON.stringify(current) !== JSON.stringify(expected)) allInSync = false;
-}
-
-if (checkOnly) {
-  if (!allInSync) {
-    console.error("A README table is out of date. Run: node scripts/validate-examples.mjs");
+  if (errors.length > 0) {
+    console.error("Problems found:\n");
+    for (const error of errors) console.error(`  - ${error}`);
+    console.error(`\n${errors.length} problem(s). Fix them and re-run.`);
     process.exit(1);
   }
-  console.log(`OK: ${entries.length} entr${entries.length === 1 ? "y" : "ies"} validated, README tables in sync.`);
-} else if (allInSync) {
-  console.log(`Validated ${entries.length} entr${entries.length === 1 ? "y" : "ies"}, README tables already up to date.`);
-} else {
-  let updated = readme;
-  for (const section of sections) {
-    updated = withFreshTable(updated, section.markers);
+
+  entries.sort((a, b) => a.title.localeCompare(b.title));
+
+  const readme = readFileSync(readmePath, "utf8");
+
+  // Compare each table by content, not formatting, so tools like Prettier
+  // can reflow them without the check calling them stale.
+  const allInSync = tablesInSync(entries, readme);
+
+  if (checkOnly) {
+    if (!allInSync) {
+      console.error("A README table is out of date. Run: node scripts/validate-examples.mjs");
+      process.exit(1);
+    }
+    console.log(`OK: ${entries.length} entr${entries.length === 1 ? "y" : "ies"} validated, README tables in sync.`);
+  } else if (allInSync) {
+    console.log(`Validated ${entries.length} entr${entries.length === 1 ? "y" : "ies"}, README tables already up to date.`);
+  } else {
+    let updated = readme;
+    for (const section of sections) {
+      updated = withFreshTable(updated, entries, section.markers);
+    }
+    writeFileSync(readmePath, updated);
+    console.log(`Validated ${entries.length} entr${entries.length === 1 ? "y" : "ies"} and updated README.md.`);
   }
-  writeFileSync(readmePath, updated);
-  console.log(`Validated ${entries.length} entr${entries.length === 1 ? "y" : "ies"} and updated README.md.`);
 }
 
 function asList(value) {
@@ -138,7 +169,7 @@ function asList(value) {
   return [];
 }
 
-function rowsFor(markers) {
+function rowsFor(entries, markers) {
   return entries
     .filter((entry) => entry.sectionMarkers === markers)
     .map((entry) => [`[\`${entry.id}\`](${entry.path})`, entry.description, entry.type]);
@@ -170,9 +201,9 @@ function tableRows(text, markers) {
   return rows;
 }
 
-function withFreshTable(text, markers) {
+function withFreshTable(text, entries, markers) {
   const [startAt, endAt] = markerPositions(text, markers);
-  const rows = rowsFor(markers).map((cells) => `| ${cells.join(" | ")} |`);
+  const rows = rowsFor(entries, markers).map((cells) => `| ${cells.join(" | ")} |`);
   const table = ["| Example | Description | Type |", "| --- | --- | --- |", ...rows].join("\n");
   return text.slice(0, startAt) + "\n" + table + "\n" + text.slice(endAt);
 }

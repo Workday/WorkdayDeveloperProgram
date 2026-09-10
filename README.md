@@ -40,6 +40,7 @@ scripts/
   new-example.mjs        Scaffold a new example folder in one command
   new-example.sh / .ps1  The same scaffolder for machines without Node
   validate-examples.mjs  CI validation + README index generation
+  audit-examples.mjs     Arcane Auditor + hub rules, same audit CI runs on PRs
 site/                    Optional Astro gallery (not required to use the examples)
 hub.config.json          Repo URLs and the approved type, component, and product lists
 ```
@@ -124,7 +125,7 @@ We want your examples. Community contributions go into `examples/` (the Examples
 
 1. Scaffold a folder: `node scripts/new-example.mjs your-example-name`. No Node? `./scripts/new-example.sh` (macOS, Linux) and `scripts\new-example.ps1` (Windows) do the same thing.
 2. Drop your artifact in, and fill in the generated `example.json` and README.
-3. Validate: `node scripts/validate-examples.mjs`
+3. Validate: `node scripts/validate-examples.mjs`, then audit: `./scripts/install-arcane.sh && node scripts/audit-examples.mjs --changed` (optional; CI runs it on your PR and explains every finding in [docs/EXAMPLE_BEST_PRACTICES.md](docs/EXAMPLE_BEST_PRACTICES.md))
 4. Open a pull request. Workday DevRel reviews every submission before merge.
 
 Prefer to do it by hand? No tooling is required. Copy [`examples/_template`](examples/_template) into a new folder (you can even create the files straight from the GitHub web UI), fill in the two files, and open the PR. The index table above can be edited by hand, or a reviewer will regenerate it for you during review.

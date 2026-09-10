@@ -1,0 +1,99 @@
+# Audits the example folders a pull request touches with Arcane Auditor plus
+# the hub's own rules (scripts/audit-examples.mjs). Findings show up as
+# annotations and in the job summary, which works for pull requests from
+# forks because nothing here needs a write token. The follow-up workflow
+# (audit-comment.yml) posts the same findings as a PR comment with one-click
+# suggestions.
+#
+# ACTION findings fail this check. ADVICE findings never do. To ship a PR
+# with open ACTION items, a maintainer adds the "audit-override" label.
+# Set the repository variable AUDIT_MODE=advisory to make the whole check
+# non-blocking.
+
+name: Audit examples
+
+on:
+  pull_request:
+    paths:
+      - "examples/**"
+      - "catalog/**"
+      - "scripts/**"
+      - ".arcane-auditor/**"
+      - ".github/workflows/audit-examples.yml"
+  workflow_dispatch:
+    inputs:
+      dirs:
+        description: "Space-separated folders to audit, for example: examples/stock-notifications catalog/employeeRecognition"
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: audit-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    env:
+      AUDIT_MODE: ${{ contains(github.event.pull_request.labels.*.name, 'audit-override') && 'advisory' || vars.AUDIT_MODE || 'enforcing' }}
+      BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+
+      - name: Find changed example folders
+        id: dirs
+        run: |
+          if [ -n "$PR_NUMBER" ]; then
+            node scripts/audit-examples.mjs --list-changed "$BASE_SHA" "$HEAD_SHA"
+          else
+            echo "dirs=${{ inputs.dirs }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Arcane's own GitHub Action installs the pinned CLI (sha256 verified)
+      # and reviews each folder. Annotations and the fail-on policy are left
+      # to the merge step below so hub rules and Arcane rules render together.
+      - name: Run Arcane Auditor
+        if: steps.dirs.outputs.dirs != ''
+        uses: Ekwuno/ArcaneAuditor@c31316d1147cb0e2d3f47688e668f7f3b2f9e887 # v2.0.0 CLI, action from the Ekwuno fork main
+        with:
+          path: ${{ steps.dirs.outputs.dirs }}
+          config: .arcane-auditor/config.json
+          output: audit/arcane.json
+          annotate: "false"
+          fail-on: none
+
+      - name: Merge with hub rules and report
+        if: steps.dirs.outputs.dirs != ''
+        run: |
+          merge=""
+          [ -f audit/arcane.json ] && merge="--merge audit/arcane.json"
+          if [ -n "$PR_NUMBER" ]; then
+            node scripts/audit-examples.mjs --changed "$BASE_SHA" "$HEAD_SHA" $merge \
+              --mode "$AUDIT_MODE" --format ci --output audit/report.json --pr "$PR_NUMBER"
+          else
+            node scripts/audit-examples.mjs --dirs ${{ steps.dirs.outputs.dirs }} $merge \
+              --mode "$AUDIT_MODE" --format ci --output audit/report.json
+          fi
+
+      - name: Nothing to audit
+        if: steps.dirs.outputs.dirs == ''
+        run: echo "No example folders changed." >> "$GITHUB_STEP_SUMMARY"
+
+      # The comment workflow reads this artifact. Uploaded even when the
+      # check fails so contributors still get the suggestions.
+      - uses: actions/upload-artifact@v4
+        if: always() && github.event_name == 'pull_request' && steps.dirs.outputs.dirs != ''
+        with:
+          name: audit-report
+          path: audit/
+          retention-days: 7
