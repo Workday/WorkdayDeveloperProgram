@@ -2,25 +2,27 @@
 title: AP E-Invoice Application
 description: An application that takes an XML based electoric Invoice (e-invoice) and processes it to create a Supplier Invoice in Workday.
 ---
-*Version 2026.2*
+*Version 2026.1
 
 # Introduction
 
-*View [AP E-Invoice forum page Mock-up](https://miro.com/app/board/uXjVGOeZbhE=/?share_link_id=69114798645) for more information on this app.*
+*View [AP E-Invoice forum page](https://forum.developer.workday.com/t/app-catalog-app-ap-e-invoice-application/46504) for more information on this app.*
 
 # Overview
 
-The AP E-Invoice application is a Workday Entend Application that exposes an inbound endpoint and associated orchestration logic to receive text-based electronic invoices in multiple XML schemas.
+The [AP E-Invoice Application](https://github.com/Workday/WorkdayDeveloperProgram/blob/main/catalog/apEinvoice/AP-E-InvoiceReferenceApplicationOverview.pdf) is a Workday Extend Application that exposes an inbound endpoint and associated orchestration logic to receive text-based electronic invoices in multiple XML schemas.
 The orchestration performs schema handling, data validation, mapping, and other processing before invoking Workday Financials services to generate a Supplier Invoice (AP Invoice) record in Workday.
+
+Here is a [Demo Video](https://github.com/Workday/WorkdayDeveloperProgram/blob/main/catalog/apEinvoice/AP-E-InvoiceReferenceApplicationDemo.mp4) of the application. 
 
 Follow the instructions below to deploy and set up the application on the GMS tenant. Once it is deployed and the one-time setup is performed, you can immediately see how it works with the seed data and sample invoices.
 
 # Deploy Instructions
 
-1. Download the AP E-Invoice app source apeinvoice.zip. The delivered application has an App Reference ID of 'apeinvoiceextend_nkzjqw'. The App Reference ID is composed of the  application name (apeinvoiceextend) + "_" + org (company) specific suffix (nkzjqw).
+1. Download the AP E-Invoice app source [apeinvoice.zip](https://github.com/Workday/WorkdayDeveloperProgram/blob/main/catalog/apEinvoice/apeinvoice.zip). The delivered application has an App Reference ID of 'apeinvoice_pgbbrx'. The App Reference ID is composed of the  application name (apeinvoice) + "_" + org (company) specific suffix (pgbbrx).
 2. Determine the suffix for your org by looking at an existing app or create a dummy app.  Let's say you determined the suffix to be "abcdef"
-3. Execute the delivered script updateAppid.sh (Mac/Linux) or updateAppid.ps1 (Window) as follow
-  updateAppid.sh  apeinvoice.zip apeinvoiceextend_nkzjqw  newAppName_abcdef
+3. Download and Execute the delivered script [updateAppid.sh](https://github.com/Workday/WorkdayDeveloperProgram/blob/main/catalog/apEinvoice/scripts/updateAppid.sh) (Mac/Linux) or [updateAppid.ps1](https://github.com/Workday/WorkdayDeveloperProgram/blob/main/catalog/apEinvoice/scripts/updateAppid.ps1) (Window) as follow
+  updateAppid.sh  apeinvoice.zip apeinvoice_pgbbrx  newAppName_abcdef
 4. A new zip called "newAppName_abcdef.zip" will be created.
 5. Open the app console [Console](https://developer.workday.com/console/apps).
 6. Select "Create Extend App->Upload a Zip file"
@@ -29,10 +31,7 @@ Follow the instructions below to deploy and set up the application on the GMS te
 9. Deploy
 
 
-
 # Configuration Instructions
-
-
 
 ## App Manager
 
@@ -41,8 +40,6 @@ You can access **App Manager** within your tenant by doing a search for *App Man
 1. Navigate to **App Manager**. Choose *Configure* on the AP E-Invoice app.
 2. In the **Model Components** section, locate the Security Domain `EInvoice App Domain` and click **Create** in the **Domain Security Policy** column.
 3. Check `Confirm` and click **OK**.
-
-
 
 ## Configure Tenant Security
 
@@ -81,7 +78,6 @@ Below, we have provided instructions on how to configure the Einvoice Applicatio
   2. Confirm and activate
 
 
-
 ## Einvoice Application One Time Setup
 
 We have provided a one-time setup task that completes the configuration of the Einvoice application.
@@ -93,7 +89,11 @@ Follow the following steps to perform the One Time Setup:
 - Select 'One Time Setup' on the side menu 
 - Click the 'Perform One-Time Setup' button
 
-The "Perform One-Time Setup" button will create the required integration systems and seed sample invoices and data to provide a demo of the eInvoice application out of the box. The button disappears after it is clicked. To confirm the setup completed successfully, go back to the overview page and compare the number of records loaded to the expected counts below. If the counts do not match, you can come back to this page and run the setup again.
+The "Perform One-Time Setup" button will create the required integration systems and seed sample invoices and data to provide a demo of the eInvoice application out of the box. The button disappears after it is clicked. To confirm the setup completed successfully, go back to the overview page and compare the number of records loaded to the expected counts below. If the counts do not match, you can come back to this page and run the 'Perform One-Time Setup' again.
+
+Lookup References: 12 
+Tax Mappings: 3
+Additional Attribute Mappings: 2 
 
 # Test Instructions
 
@@ -107,4 +107,7 @@ Now that you have configured the security and performed the One-Time-Setup, it i
 - Navigate to the E-Invoice Home (EInvoice Home) to monitor the processing and access the completed invoice. 
 - When complete, select 'E-Invoice Runs' on the side menu to view the processed invoice.
 
-In the Demo Video, we show how to launch the Einvoice processing using http protocol. 
+Although the E-Invoice Reference Application functions out of the box without the optional Custom Object, setting it up using the steps found in this [document](https://github.com/Workday/WorkdayDeveloperProgram/blob/main/catalog/apEinvoice/ConfiguringOptionalCustomObjectForE-InvoiceApplication.pdf) demonstrates how invoice data maps to a custom object during processing.
+
+
+In the [Demo Video](https://github.com/Workday/WorkdayDeveloperProgram/blob/main/catalog/apEinvoice/AP-E-InvoiceReferenceApplicationDemo.mp4), we show how to launch the Einvoice processing using http protocol. 
