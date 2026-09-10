@@ -25,4 +25,4 @@ Thumbs.db
 
 # Arcane Auditor local install and audit output
 .arcane-auditor/bin/
-audit/
+/audit/
