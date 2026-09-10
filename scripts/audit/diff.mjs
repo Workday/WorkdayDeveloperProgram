@@ -6,7 +6,7 @@
 //                             used to tell new code from pre-existing code
 
 import { execFileSync } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { repoRoot, sections } from "../validate-examples.mjs";
 
@@ -31,14 +31,20 @@ export function changedDirs(base, head) {
 
   const seen = new Map();
   for (const file of names) {
-    const [section, name] = file.split("/");
+    const parts = file.split("/");
+    // Only files inside an entry folder count: examples/<name>/... . A file
+    // sitting directly under examples/ (its README) is not an entry.
+    if (parts.length < 3) continue;
+    const [section, name] = parts;
     if (!section || !name || !sectionDirs.includes(section)) continue;
     if (name.startsWith("_") || name.startsWith(".")) continue;
     const path = `${section}/${name}`;
     if (seen.has(path)) continue;
     // Skip folders deleted in this range. Check the working tree first (CI
     // checks out the PR head) and fall back to the head commit for local runs.
-    if (!existsSync(join(repoRoot, path)) && !existsAt(head || "HEAD", path)) continue;
+    const abs = join(repoRoot, path);
+    const inTree = existsSync(abs) && statSync(abs).isDirectory();
+    if (!inTree && !existsAt(head || "HEAD", path)) continue;
     seen.set(path, { path, section, name, status: existedAt(base || "origin/main", head || "HEAD", path) ? "modified" : "added" });
   }
   return [...seen.values()];
