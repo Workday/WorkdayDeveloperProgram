@@ -1,0 +1,142 @@
+{
+  "id": "eventDetails",
+  "endPoints": [
+    {
+      "name": "eventGenericBP",
+      "url": "<% 'https://api.workday.com/businessProcess/v1/events/' + queryParams.eventId %>",
+      "authType": "sso"
+    },
+    {
+      "name": "getPromotionNominationBP",
+      "url": "<% 'https://api.workday.com/apps/'+ site.applicationId + '/v1/promotionNominationBOS/' + eventGenericBP.for.id%>",
+      "authType": "sso",
+      "httpMethod": "GET"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "View Promotion Nomination Details"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "enabled": false,
+          "type": "text",
+          "label": "Nominee",
+          "id": "nomineeWidget",
+          "value": "<% empty getPromotionNominationBP.nominee.descriptor ? 'No Nominee value found' : getPromotionNominationBP.nominee.descriptor  %>"
+        },
+        {
+          "enabled": false,
+          "type": "text",
+          "label": "Nominator",
+          "id": "nominatorWidget",
+          "value": "<% empty getPromotionNominationBP.nominator.descriptor ? 'No Nominator value found' : getPromotionNominationBP.nominator.descriptor %>"
+        },
+        {
+          "type": "fieldSet",
+          "children": [
+            {
+              "type": "text",
+              "id": "nominationReasonWidget",
+              "label": "Nomination Reason",
+              "value": "<% empty getPromotionNominationBP.nominationReason ? 'No Nominator value found' : getPromotionNominationBP.nominationReason %>"
+            },
+            {
+              "visible": true,
+              "type": "date",
+              "id": "proposedDateWidget",
+              "label": "Proposed Date",
+              "value": "<% empty getPromotionNominationBP.proposedDate ? null : getPromotionNominationBP.proposedDate %>"
+            },
+            {
+              "enabled": false,
+              "type": "text",
+              "label": "Proposed Job Profile",
+              "id": "proposedJobProfileWidget",
+              "value": "<% empty getPromotionNominationBP.proposedJobProfile.descriptor ? 'No Nominator value found' : getPromotionNominationBP.proposedJobProfile.descriptor %>"
+            },
+            {
+              "type": "text",
+              "id": "promotionCycleWidget",
+              "label": "Promotion Cycle",
+              "value": "<% empty getPromotionNominationBP.promotionCycle ? 'No Nominator value found' : getPromotionNominationBP.promotionCycle %>"
+            },
+            {
+              "type": "text",
+              "id": "timeInJobProfileWidget",
+              "label": "Time in Job Profile",
+              "value": "<% empty getPromotionNominationBP.timeInJobProfile ? 'No Nominator value found' : getPromotionNominationBP.timeInJobProfile %>"
+            },
+            {
+              "type": "date",
+              "id": "hireDateeWidget",
+              "label": "Hire Date",
+              "value": "<% empty getPromotionNominationBP.hireDate ? null : getPromotionNominationBP.hireDate %>"
+            },
+            {
+              "type": "text",
+              "id": "currentJobProfileWidget",
+              "label": "Current Job Profile",
+              "value": "<% empty getPromotionNominationBP.currentJobProfile.descriptor ? 'No Nominator value found' : getPromotionNominationBP.currentJobProfile.descriptor %>"
+            },
+            {
+              "type": "text",
+              "id": "currentJobTitleWidget",
+              "label": "Current Job Title",
+              "value": "<% empty getPromotionNominationBP.currentJobTitle ? 'No Nominator value found' : getPromotionNominationBP.currentJobTitle %>"
+            },
+            {
+              "visible": true,
+              "type": "date",
+              "id": "lastPromotionDateWidget",
+              "label": "Last Promotion Date",
+              "value": "<% empty getPromotionNominationBP.lastPromotionDate ? null : getPromotionNominationBP.lastPromotionDate %>"
+            },
+            {
+              "type": "date",
+              "id": "hireDateWidget",
+              "label": "Employee Hire Date",
+              "value": "<% empty getPromotionNominationBP.hireDate ? null : getPromotionNominationBP.hireDate %>"
+            },
+            {
+              "type": "textArea",
+              "id": "workerConsiderationWidget",
+              "label": "Why do you consicder the worker?",
+              "value": "<% empty getPromotionNominationBP.workerConsideration ? 'No Nominator value found' : getPromotionNominationBP.workerConsideration %>"
+            },
+            {
+              "type": "textArea",
+              "id": "businessNeedWidget",
+              "label": "What is the business need?",
+              "value": "<% empty getPromotionNominationBP.businessNeed ? 'No Nominator value found' : getPromotionNominationBP.businessNeed %>"
+            },
+            {
+              "type": "textArea",
+              "id": "workerSuitRoleWidget",
+              "label": "Does the Worker suit the role?",
+              "value": "<% empty getPromotionNominationBP.workerSuitRole ? 'No Nominator value found' : getPromotionNominationBP.workerSuitRole %>"
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    },
+    "pageType": "VIEW"
+  },
+  "securityDomains": [
+    "ManagerPromotionNomination"
+  ]
+}

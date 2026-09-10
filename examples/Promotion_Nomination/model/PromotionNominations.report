@@ -1,0 +1,101 @@
+{
+  "id": 1,
+  "name": "PromotionNominations",
+  "businessObject": "PromotionNominationBO",
+  "defaultSecurityDomains": [
+    "ManagerPromotionNomination"
+  ],
+  "sortConfigs": [],
+  "columns": [
+    {
+      "id": 1,
+      "name": "PromotionNominationBO",
+      "order": "a",
+      "isSelfReferencing": true
+    },
+    {
+      "id": 2,
+      "name": "Nominee",
+      "order": "b",
+      "field": "nominee"
+    },
+    {
+      "id": 3,
+      "name": "Nominator",
+      "order": "c",
+      "field": "nominator"
+    },
+    {
+      "id": 4,
+      "name": "Nomination Reason",
+      "order": "d",
+      "field": "nominationReason"
+    },
+    {
+      "id": 5,
+      "name": "Proposed Date",
+      "order": "e",
+      "field": "proposedDate"
+    },
+    {
+      "id": 6,
+      "name": "Proposed Job Profile",
+      "order": "f",
+      "field": "proposedJobProfile"
+    },
+    {
+      "id": 7,
+      "name": "Promotion Cycle",
+      "order": "g",
+      "field": "promotionCycle"
+    },
+    {
+      "id": 8,
+      "name": "Time In Job Profile",
+      "order": "h",
+      "field": "timeInJobProfile"
+    },
+    {
+      "id": 9,
+      "name": "Hire Date",
+      "order": "i",
+      "field": "hireDate"
+    },
+    {
+      "id": 10,
+      "name": "Current Job Profile",
+      "order": "j",
+      "field": "currentJobProfile"
+    },
+    {
+      "id": 11,
+      "name": "Current Job Title",
+      "order": "k",
+      "field": "currentJobTitle"
+    },
+    {
+      "id": 12,
+      "name": "Last Promotion Date",
+      "order": "l",
+      "field": "lastPromotionDate"
+    },
+    {
+      "id": 13,
+      "name": "Worker Consideration",
+      "order": "m",
+      "field": "workerConsideration"
+    },
+    {
+      "id": 15,
+      "name": "Worker Suit Role",
+      "order": "o",
+      "field": "workerSuitRole"
+    },
+    {
+      "id": 16,
+      "name": "Business Need",
+      "order": "p",
+      "field": "businessNeed"
+    }
+  ]
+}

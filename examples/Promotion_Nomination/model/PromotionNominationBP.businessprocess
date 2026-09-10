@@ -1,0 +1,25 @@
+{
+  "id": 1,
+  "name": "PromotionNominationBP",
+  "label": "Promotion Nomination BP",
+  "description": "Business Process Type for PromotionNominationBP",
+  "useForOrchestrate": false,
+  "allowsCancel": true,
+  "approvalStep": {
+    "pageRoute": "/eventDetails",
+    "actions": [
+      "APPROVE",
+      "DENY"
+    ]
+  },
+  "actionSteps": [],
+  "targetBusinessObject": "PromotionNominationBO",
+  "securityDomains": [
+    "ManagerPromotionNomination"
+  ],
+  "details": {
+    "pageRoute": "/eventDetails/{eventId}"
+  },
+  "allowsManualSendBack": false,
+  "allowsRescind": true
+}
