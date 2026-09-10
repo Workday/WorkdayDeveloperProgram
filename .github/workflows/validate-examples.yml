@@ -1,13 +1,9 @@
 name: Validate examples
 
+# Runs on every pull request because it is a required check on main. It
+# takes a few seconds, so there is no reason to skip it.
 on:
   pull_request:
-    paths:
-      - "catalog/**"
-      - "examples/**"
-      - "scripts/**"
-      - "hub.config.json"
-      - "README.md"
 
 jobs:
   validate:

@@ -12,14 +12,11 @@
 
 name: Audit examples
 
+# Runs on every pull request, not just ones that touch examples, because it
+# is a required check on main. When nothing relevant changed it finishes in
+# seconds with "No example folders changed".
 on:
   pull_request:
-    paths:
-      - "examples/**"
-      - "catalog/**"
-      - "scripts/**"
-      - ".arcane-auditor/**"
-      - ".github/workflows/audit-examples.yml"
   workflow_dispatch:
     inputs:
       dirs:
