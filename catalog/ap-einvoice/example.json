@@ -12,7 +12,10 @@
     "Workday Extend",
     "Workday Orchestrate"
   ],
-  "authors": [Chris Ngan, William Tam],
+  "authors": [
+    "Chris Ngan", 
+    "William Tam"
+  ],
   "tutorial": "",
   "source": "Workday"
 }
