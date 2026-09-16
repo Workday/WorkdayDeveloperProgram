@@ -1,16 +1,21 @@
 {
   "id": "eventDetails",
+"securityDomains": [
+    "ManagerPromotionNomination"
+  ],
   "endPoints": [
     {
       "name": "eventGenericBP",
       "url": "<% 'https://api.workday.com/businessProcess/v1/events/' + queryParams.eventId %>",
-      "authType": "sso"
+      "authType": "sso",
+"failOnStatusCodes": [{"code": 400}, {"code": 403}]
     },
     {
       "name": "getPromotionNominationBP",
       "url": "<% 'https://api.workday.com/apps/'+ site.applicationId + '/v1/promotionNominationBOS/' + eventGenericBP.for.id%>",
       "authType": "sso",
-      "httpMethod": "GET"
+      "httpMethod": "GET",
+"failOnStatusCodes": [{"code": 400}, {"code": 403}]
     }
   ],
   "presentation": {
@@ -135,8 +140,5 @@
       ]
     },
     "pageType": "VIEW"
-  },
-  "securityDomains": [
-    "ManagerPromotionNomination"
-  ]
+  }
 }
