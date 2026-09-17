@@ -1,21 +1,23 @@
 {
   "id": "eventDetails",
-"securityDomains": [
+   "securityDomains": [
     "ManagerPromotionNomination"
   ],
   "endPoints": [
     {
       "name": "eventGenericBP",
-      "url": "<% 'https://api.workday.com/businessProcess/v1/events/' + queryParams.eventId %>",
+      "baseUrlType": "workday-bp",
+      "url": "<% `events/{{queryParams.eventId}}` %>",
       "authType": "sso",
-"failOnStatusCodes": [{"code": 400}, {"code": 403}]
+      "failOnStatusCodes": [{"code": 400}, {"code": 403}]
     },
     {
       "name": "getPromotionNominationBP",
-      "url": "<% 'https://api.workday.com/apps/'+ site.applicationId + '/v1/promotionNominationBOS/' + eventGenericBP.for.id%>",
+      "baseUrlType": "app",
+      "url": "<% `promotionNominationBOS/{{eventGenericBP.for.id}}` %>",
       "authType": "sso",
       "httpMethod": "GET",
-"failOnStatusCodes": [{"code": 400}, {"code": 403}]
+      "failOnStatusCodes": [{"code": 400}, {"code": 403}]
     }
   ],
   "presentation": {
@@ -25,6 +27,7 @@
     },
     "body": {
       "type": "section",
+      "id": "sectionID1",
       "horizontal": false,
       "children": [
         {
@@ -43,6 +46,7 @@
         },
         {
           "type": "fieldSet",
+           "id": "fieldSet1",
           "children": [
             {
               "type": "text",
@@ -134,11 +138,13 @@
       "children": [
         {
           "type": "richText",
-          "enabled": "false",
+          "id": "footerTextID",
+          "enabled": false,
           "value": "Powered By Workday Extend"
         }
       ]
     },
     "pageType": "VIEW"
   }
+ 
 }
