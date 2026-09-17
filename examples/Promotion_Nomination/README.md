@@ -56,6 +56,9 @@
   <li><strong> managerNomination:</strong> Landing page for managers</li>
   <li><strong>eventDetails:</strong> Business process approval page definition</li>
 <h2>💡 Optional Enhancements</h2>
+
+  ##before you Deploy:
+  Make sure the app base URL is updated in the AMD file with your app name.
 <blockquote>
   <strong>Workday Orchestrate Integration:</strong><br>
   The app can be configured to automatically trigger a <strong>Change Job</strong> business process for the worker upon final approval completion using a <strong>Workday Orchestrate</strong> workflow.
