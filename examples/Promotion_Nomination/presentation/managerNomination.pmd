@@ -348,11 +348,12 @@
     },
     "footer": {
       "type": "footer",
-      "id": "footerTextID",
+      "id": "footerID",
       "children": [
         {
           "enabled": false,
-          "type": "richText"
+          "type": "richText",
+         "id": "footerTextID"
         }
       ]
     },
