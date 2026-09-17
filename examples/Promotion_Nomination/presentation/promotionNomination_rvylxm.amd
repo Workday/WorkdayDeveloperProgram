@@ -1,5 +1,5 @@
 {
-  "appProperties": [ ],
+  "appProperties": [],
   "tasks": [
     {
       "id": "managerNomination",
@@ -16,27 +16,27 @@
       }
     }
   ],
-  "applicationId": "promotionNomination_rvylxm",
+  "applicationId": site.applicationId,
   "dataProviders": [
     {
       "key": "workday-staffing",
-      "value": "https://api.workday.com/staffing/v7/"
+      "value": "<% apiGatewayEndpoint + '/staffing/v7/' %>"
     },
     {
       "key": "workday-wql",
-      "value": "https://api.us.wcp.workday.com/wql/v1"
+      "value": "<% apiGatewayEndpoint + '/wql/v1' %>"
     },
     {
       "key": "workday-common",
-      "value": "https://api.us.wcp.workday.com/common/v1"
+      "value": "<% apiGatewayEndpoint + '/common/v1' %>"
     },
     {
       "key": "workday-bp",
-      "value": "https://api.workday.com/businessProcess/v1/"
+      "value": "<% apiGatewayEndpoint + '/businessProcess/v1/' %>"
     },
     {
       "key": "app",
-      "value": "https://api.workday.com/apps/promotionNomination_rvylxm/v1/"
+      "value": "<% apiGatewayEndpoint + '/apps/promotionNomination_rvylxm/v1/' %>"
     }
   ]
 }
