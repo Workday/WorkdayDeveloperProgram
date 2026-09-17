@@ -1,65 +1,49 @@
-<h1 align="center"> Promotion Nomination App</h1>
+# Promotion Nomination App
 
-<p align="center">
-  <em>A streamlined promotion nomination platform that enables managers to identify, evaluate, and advocate for top-performing direct reports.</em>
-</p>
+A streamlined promotion nomination platform that enables managers to identify, evaluate, and advocate for top-performing direct reports.
 
-<hr>
+## What it is
 
-<h2>📋 Overview</h2>
-<p>
-  The <strong>Promotion Nomination App</strong> automates the collection of employee career data and routes nominations through a multi-level approval workflow, ensuring consistent evaluation, transparency, and governance across all promotion decisions.
-</p>
+The Promotion Nomination App automates the collection of employee career data and routes nominations through a multi-level approval workflow. It ensures consistent evaluation, transparency, and governance across all promotion decisions by handling everything from employee selection through final approval and archival.
 
-<h2>✨ Key Features</h2>
-<ul>
-  <li><strong>👤 Employee Selection:</strong> Managers easily nominate from their direct reports via an intuitive dropdown interface.</li>
-  <li><strong>⚡ Auto-Populated Career Data:</strong> The system automatically retrieves current job profile, tenure, hire date, and promotion history. Optionally, you can enhance it to retrieve worker Talent details from Workday or any 3rd platform</li>
-  <li><strong>📝 Structured Business Case:</strong> Guided fields capture detailed nomination rationale and alignment with target roles.</li>
-  <li><strong>📅 Promotion Cycle Tracking:</strong> Tag nominations to specific evaluation cycles (e.g., <code>2026-Q1</code>).</li>
-  <li><strong>🔄 Approval Workflow:</strong> Automatic routing to next-level managers, followed by the People Business Partner (PBP).</li>
-  <li><strong>🔒 Audit Trail:</strong> All records are securely stored in a Custom Business Object (CBO) for governance, tracking, and analytics.</li>
-</ul>
+## What's inside
 
-<h2>⚙️ How It Works</h2>
-<ol>
-  <li>
-    <strong>Select Employee</strong><br>
-    Manager selects an eligible worker from their list of direct reports.
-  </li>
-  <li>
-    <strong>Auto-Populate Career History</strong><br>
-    The system automatically pulls key worker details:
-    <ul>
-      <li>Current job profile &amp; time in position</li>
-      <li>Original hire date</li>
-      <li>Last promotion date</li>
-    </ul>
-  </li>
-  <li>
-    <strong>Build the Rationale</strong><br>
-    Manager provides promotion justification:
-    <ul>
-      <li><strong>Reason for Promotion:</strong> Merit, increased responsibilities, or restructuring</li>
-      <li><strong>Target Role:</strong> Proposed job profile</li>
-      <li><strong>Timeline:</strong> Proposed effective date</li>
-      <li><strong>Business Impact:</strong> Detailed justification field</li>
-    </ul>
-  </li>
-  <li>
-    <strong>Approval &amp; Archival</strong><br>
-    The nomination enters the multi-level approval chain. Once approved, all data is archived to the Custom Business Object.
-  </li>
-</ol>
-<h2>Artifacts</h2>
-<ul>
-  <li><strong> managerNomination:</strong> Landing page for managers</li>
-  <li><strong>eventDetails:</strong> Business process approval page definition</li>
-<h2>💡 Optional Enhancements</h2>
+**Core components:**
+- **managerNomination**: Landing page where managers submit and track nominations
+- **eventDetails**: Business process approval page definition for multi-level review
 
-  ##before you Deploy:
-  Make sure the app base URL is updated in the AMD file with your app name.
-<blockquote>
-  <strong>Workday Orchestrate Integration:</strong><br>
-  The app can be configured to automatically trigger a <strong>Change Job</strong> business process for the worker upon final approval completion using a <strong>Workday Orchestrate</strong> workflow.
-</blockquote>
+**Key capabilities:**
+- Employee selection from direct reports with intuitive dropdown interface
+- Auto-populated career data (current job profile, tenure, hire date, promotion history)
+- Optional integration with Workday Talent details or third-party platforms
+- Structured fields for nomination rationale and target role alignment
+- Promotion cycle tracking (e.g., 2026-Q1)
+- Multi-level approval routing to next-level managers and People Business Partner
+- Secure storage and audit trail via Custom Business Object
+
+## How to use it
+
+**1. Select Employee**
+Manager selects an eligible worker from their list of direct reports.
+
+**2. Auto-Populate Career History**
+The system automatically pulls:
+- Current job profile and time in position
+- Original hire date
+- Last promotion date
+
+**3. Build the Nomination**
+Manager provides promotion justification with:
+- Reason for promotion (merit, increased responsibilities, restructuring)
+- Target role (proposed job profile)
+- Timeline (proposed effective date)
+- Business impact statement
+
+**4. Route Through Approvals**
+The nomination enters the multi-level approval chain. Once all approvals are granted, data is archived to the Custom Business Object.
+
+## Before you deploy
+
+- Update the app base URL in the AMD file with your app name
+- Optionally configure Workday Orchestrate integration to automatically trigger the Change Job business process upon final approval
+- Test the approval workflow with test users at each level
