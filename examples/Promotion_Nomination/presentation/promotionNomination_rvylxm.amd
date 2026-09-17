@@ -1,0 +1,42 @@
+{
+  "appProperties": [],
+  "tasks": [
+    {
+      "id": "managerNomination",
+      "routingPattern": "/",
+      "page": {
+        "id": "managerNomination"
+      }
+    },
+    {
+      "id": "eventDetails",
+      "routingPattern": "/eventDetails/{eventId}",
+      "page": {
+        "id": "eventDetails"
+      }
+    }
+  ],
+  "applicationId": site.applicationId,
+  "dataProviders": [
+    {
+      "key": "workday-staffing",
+      "value": "<% apiGatewayEndpoint + '/staffing/v7/' %>"
+    },
+    {
+      "key": "workday-wql",
+      "value": "<% apiGatewayEndpoint + '/wql/v1' %>"
+    },
+    {
+      "key": "workday-common",
+      "value": "<% apiGatewayEndpoint + '/common/v1' %>"
+    },
+    {
+      "key": "workday-bp",
+      "value": "<% apiGatewayEndpoint + '/businessProcess/v1/' %>"
+    },
+    {
+      "key": "app",
+      "value": "<% apiGatewayEndpoint + '/apps/promotionNomination_rvylxm/v1/' %>"
+    }
+  ]
+}
