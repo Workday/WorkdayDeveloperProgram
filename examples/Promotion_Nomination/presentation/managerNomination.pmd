@@ -7,11 +7,11 @@
     {
       "name": "me",
       "baseUrlType": "workday-staffing",
-      "url": "/workers/me",
       "authType": "sso",
+      "url": "/workers/me",
       "failOnStatusCodes": [{"code": 400}, {"code": 403}]
     },
-    {  "_comment": "Retrieves logged-in manager's direct reports ",
+    { 
       "name": "getEmployeeList",  
       "baseUrlType": "workday-wql",
       "authType": "sso",
@@ -24,12 +24,11 @@
     {
       "name": "workerInfo",
       "baseUrlType": "workday-common",
+       "authType": "sso",
       "url": "/workers/me",
-      "authType": "sso",
       "failOnStatusCodes": [{"code": 400}, {"code": 403}]
     },
     {
-  "_comment": "Retrieves selected worker information",
   "deferred": true,
   "name": "getEmployeeData",
   "baseUrlType": "workday-wql",
@@ -38,6 +37,7 @@
   "failOnStatusCodes": [{"code": 400}, {"code": 403}]
 },
     {
+      "deferred": true,
       "name": "getJobProfiles",
       "baseUrlType": "workday-wql",
       "authType": "sso",
@@ -46,7 +46,7 @@
              // console.info('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXz', query);
               return query.replace('%2B','%20');
               %>",
-      "deferred": true,
+      
       "failOnStatusCodes": [{"code": 400}, {"code": 403}]
     },
     {
@@ -66,9 +66,10 @@
       {
         "name": "storePromotionNominationBO",
         "baseUrlType": "app",
+         "authType": "sso",
         "url": "promotionNominationBOS",
         "httpMethod": "POST",
-        "authType": "sso",
+       
         "onSend": "<%
                   //Outbound endpoint that submits the BO           
                     
@@ -105,8 +106,9 @@
       {
         "name": "submitPromotion",
         "baseUrlType": "app",
-        "url": "<% 'promotionNominationBPEvents' %>",
         "authType": "sso",
+        "url": "<% 'promotionNominationBPEvents' %>",
+        
         "onSend": "<%
                   let payload =
                   {
@@ -348,12 +350,11 @@
     },
     "footer": {
       "type": "footer",
-      "id": "footerID",
+      "id": "footerTextID",
       "children": [
         {
           "enabled": false,
-          "type": "richText",
-         "id": "footerTextID"
+          "type": "richText"
         }
       ]
     },
