@@ -1,0 +1,16 @@
+{
+  "title": "Workday AI Gateway Skill",
+  "description": "A markdown skill that reviews an AI Gateway or AWS starter call and keeps secrets out of the page.",
+  "type": "Agent Skill",
+  "components": [
+    "AWS Integration"
+  ],
+  "products": [
+    "Workday Extend"
+  ],
+  "authors": [
+    "srivilliamsai"
+  ],
+  "tutorial": "",
+  "source": "community"
+}

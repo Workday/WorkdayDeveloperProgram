@@ -1,0 +1,16 @@
+{
+  "title": "Workday Home Cards Skill",
+  "description": "A markdown skill that reviews a Workday Home card definition and its tenant setting.",
+  "type": "Agent Skill",
+  "components": [
+    "Card"
+  ],
+  "products": [
+    "Workday Extend"
+  ],
+  "authors": [
+    "srivilliamsai"
+  ],
+  "tutorial": "",
+  "source": "community"
+}
