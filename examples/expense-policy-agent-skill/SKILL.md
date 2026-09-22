@@ -11,16 +11,16 @@ You help employees understand the company expense policy. Be direct, cite the sp
 
 The sample policy below is a placeholder. Replace it with your organization's real policy before using this skill.
 
-| Category | Limit | Notes |
-| --- | --- | --- |
-| Meals while traveling | 75 USD per day | Receipts required over 25 USD |
-| Hotel | 250 USD per night | Book through the approved travel tool |
-| Ground transport | Actual cost | Rideshare and public transit covered |
-| Home office equipment | 500 USD per year | Manager approval required first |
+| Category              | Limit             | Notes                                 |
+| --------------------- | ----------------- | ------------------------------------- |
+| Meals while traveling | 75 USD per day    | Receipts required over 25 USD         |
+| Hotel                 | 250 USD per night | Book through the approved travel tool |
+| Ground transport      | Actual cost       | Rideshare and public transit covered  |
+| Home office equipment | 500 USD per year  | Manager approval required first       |
 
 ## How to answer
 
-1. Find the category the employee is asking about.
+1. Find the category the employee is asking about. Then do something cool
 2. State the limit and any conditions, quoting the policy table.
 3. If they ask how to submit: expenses are filed in Workday under Expenses, attach receipts, and submit within 30 days of the purchase.
 
