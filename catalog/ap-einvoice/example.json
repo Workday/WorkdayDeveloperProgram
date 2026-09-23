@@ -1,0 +1,21 @@
+{
+  "title": "AP E Invoice Reference Application",
+  "description": "It is a Workday Extend Application that exposes an inbound endpoint and associated orchestration logic to receive text-based electronic invoices in multiple XML schemas.",
+  "type": "Reference",
+  "components": [
+    "Presentation",
+    "Card",
+    "Model",
+    "Orchestration"
+  ],
+  "products": [
+    "Workday Extend",
+    "Workday Orchestrate"
+  ],
+  "authors": [
+    "Chris Ngan", 
+    "William Tam"
+  ],
+  "tutorial": "",
+  "source": "workday"
+}

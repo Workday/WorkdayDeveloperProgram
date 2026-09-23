@@ -1,0 +1,6 @@
+{
+  "id": "milestoneAnniversaries",
+  "parameters": [],
+  "query": "SELECT worker, workdayID, fullName, primaryWorkEmail, businessTitle, hireDate, lengthOfServiceInYears, manager FROM allActiveWorkers WHERE hireDate IS NOT NULL ORDER BY hireDate ASC",
+  "limit": "100"
+}

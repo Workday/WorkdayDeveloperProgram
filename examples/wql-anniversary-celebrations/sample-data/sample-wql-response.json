@@ -1,0 +1,53 @@
+{
+  "total": 3,
+  "data": [
+    {
+      "worker": {
+        "id": "21045",
+        "descriptor": "Alex Morgan"
+      },
+      "workdayID": "a1b2c3d4e5f678901234567890abcdef",
+      "fullName": "Alex Morgan",
+      "primaryWorkEmail": "alex.morgan@example.com",
+      "businessTitle": "Senior Systems Architect",
+      "hireDate": "2016-09-15",
+      "lengthOfServiceInYears": 10,
+      "manager": {
+        "id": "10024",
+        "descriptor": "Taylor Chen"
+      }
+    },
+    {
+      "worker": {
+        "id": "24182",
+        "descriptor": "Jordan Lee"
+      },
+      "workdayID": "b2c3d4e5f6a178901234567890abcdef",
+      "fullName": "Jordan Lee",
+      "primaryWorkEmail": "jordan.lee@example.com",
+      "businessTitle": "Staff Software Engineer",
+      "hireDate": "2021-09-18",
+      "lengthOfServiceInYears": 5,
+      "manager": {
+        "id": "10024",
+        "descriptor": "Taylor Chen"
+      }
+    },
+    {
+      "worker": {
+        "id": "28910",
+        "descriptor": "Samira Patel"
+      },
+      "workdayID": "c3d4e5f6a1b278901234567890abcdef",
+      "fullName": "Samira Patel",
+      "primaryWorkEmail": "samira.patel@example.com",
+      "businessTitle": "Product Designer",
+      "hireDate": "2025-09-20",
+      "lengthOfServiceInYears": 1,
+      "manager": {
+        "id": "14089",
+        "descriptor": "Devon Reed"
+      }
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "title": "WQL Milestone Celebrations Orchestration",
+  "description": "An orchestration that queries Workday via WQL for active workers celebrating milestone work anniversaries and formats an announcement digest payload for collaboration channels.",
+  "type": "Orchestration",
+  "components": [
+    "Orchestration",
+    "WQL",
+    "3rd-Party Technology"
+  ],
+  "products": [
+    "Workday Orchestrate",
+    "Workday REST API"
+  ],
+  "authors": [
+    "srivilliamsai"
+  ],
+  "tutorial": "",
+  "source": "community"
+}

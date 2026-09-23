@@ -1,0 +1,29 @@
+{
+  "total": 3,
+  "data": [
+    {
+      "id": "1",
+      "recipientWorker": "Alex Morgan",
+      "senderWorker": "Jordan Lee",
+      "badgeType": "Customer Hero",
+      "kudosMessage": "Huge thank you for stepping in to resolve the tenant configuration issue for our European launch!",
+      "createdMoment": "2026-09-18T10:15:00Z"
+    },
+    {
+      "id": "2",
+      "recipientWorker": "Samira Patel",
+      "senderWorker": "Taylor Chen",
+      "badgeType": "Velocity Champion",
+      "kudosMessage": "Incredible velocity delivering the new design system components ahead of schedule.",
+      "createdMoment": "2026-09-19T14:30:00Z"
+    },
+    {
+      "id": "3",
+      "recipientWorker": "Devon Reed",
+      "senderWorker": "Alex Morgan",
+      "badgeType": "Master Collaborator",
+      "kudosMessage": "Thank you for facilitating the cross-functional alignment workshop with our product managers.",
+      "createdMoment": "2026-09-20T09:00:00Z"
+    }
+  ]
+}

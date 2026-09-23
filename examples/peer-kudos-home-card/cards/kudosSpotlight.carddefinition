@@ -1,0 +1,16 @@
+{
+  "id": "kudosSpotlight",
+  "presentation": {
+    "type": "inlineCard",
+    "header": {
+      "type": "cardHeader",
+      "title": "Team Kudos Spotlight",
+      "subtitle": "Recognize your peers",
+      "icon": "wd-accent-star"
+    },
+    "body": {
+      "type": "simpleCard",
+      "value": "Celebrate your colleagues' achievements and send instant appreciation across your team."
+    }
+  }
+}

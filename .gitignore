@@ -4,6 +4,7 @@ node_modules/
 # Site build output
 site/dist/
 site/.astro/
+site/public/downloads/
 
 # Environment files (never commit credentials)
 .env
@@ -22,3 +23,7 @@ venv/
 .DS_Store
 Thumbs.db
 *.log
+
+# Arcane Auditor local install and audit output
+.arcane-auditor/bin/
+/audit/

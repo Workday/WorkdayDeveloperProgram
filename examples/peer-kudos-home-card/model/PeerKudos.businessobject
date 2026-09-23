@@ -1,0 +1,64 @@
+{
+  "id": 1,
+  "name": "PeerKudos",
+  "label": "Peer Kudos",
+  "defaultSecurityDomains": [
+    "KudosSecurityDomain"
+  ],
+  "defaultCollection": {
+    "name": "peerKudoses",
+    "label": "Peer Kudoses"
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "recipientWorker",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": true,
+      "isPurgeable": false,
+      "enableIndex": false,
+      "enableSearch": false
+    },
+    {
+      "id": 2,
+      "name": "senderWorker",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "enableIndex": false,
+      "enableSearch": false
+    },
+    {
+      "id": 3,
+      "name": "badgeType",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "enableIndex": false,
+      "enableSearch": false
+    },
+    {
+      "id": 4,
+      "name": "kudosMessage",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "enableIndex": false,
+      "enableSearch": false
+    },
+    {
+      "id": 5,
+      "name": "createdMoment",
+      "type": "TEXT",
+      "isReferenceId": false,
+      "useForDisplay": false,
+      "isPurgeable": false,
+      "enableIndex": false,
+      "enableSearch": false
+    }
+  ]
+}

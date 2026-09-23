@@ -1,0 +1,21 @@
+{
+  "title": "Peer Kudos & Recognition Card",
+  "description": "An Extend app with a Home page card, custom business object, and orchestration that lets employees celebrate peer contributions and notifies managers.",
+  "type": "Extend App",
+  "components": [
+    "Presentation",
+    "Card",
+    "Model",
+    "Orchestration"
+  ],
+  "products": [
+    "Workday Extend",
+    "Workday Orchestrate",
+    "Workday HCM"
+  ],
+  "authors": [
+    "srivilliamsai"
+  ],
+  "tutorial": "",
+  "source": "community"
+}

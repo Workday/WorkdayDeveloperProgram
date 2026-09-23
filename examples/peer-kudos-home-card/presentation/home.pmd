@@ -1,0 +1,35 @@
+{
+  "id": "home",
+  "securityDomains": [
+    "KudosSecurityDomain"
+  ],
+  "presentation": {
+    "headerSize": "VPS_DEFAULT",
+    "title": {
+      "type": "title",
+      "id": "pageTitle",
+      "label": "Team Kudos & Recognition"
+    },
+    "body": {
+      "type": "section",
+      "id": "mainSection",
+      "children": [
+        {
+          "type": "text",
+          "id": "introText",
+          "value": "Welcome to Peer Kudos! Celebrate your teammates' daily wins and company value alignment."
+        },
+        {
+          "type": "button",
+          "id": "giveKudosButton",
+          "action": "PRIMARY",
+          "label": "Give Kudos",
+          "taskReference": {
+            "type": "taskReference",
+            "taskId": "sendKudos"
+          }
+        }
+      ]
+    }
+  }
+}

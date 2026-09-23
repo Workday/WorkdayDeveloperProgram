@@ -2,7 +2,7 @@
 import "../styles/global.css";
 import Header from "./Header.astro";
 import Footer from "./Footer.astro";
-import { config, withBase, sourceLabel } from "../lib/examples.js";
+import { config, withBase, sourceLabel, downloadUrl, downloadName, sparseCheckout } from "../lib/examples.js";
 
 const { example } = Astro.props;
 
@@ -25,7 +25,7 @@ const badge = sourceLabel(example);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{example.title} | Workday Examples Hub</title>
+    <title>{example.title} | Workday Developer Program</title>
     <meta name="description" content={example.description} />
     <link rel="icon" type="image/png" href={withBase("favicon.png")} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -89,7 +89,7 @@ const badge = sourceLabel(example);
             </div>
           </div>
         </div>
-        <div class="flex shrink-0 gap-2.5">
+        <div class="flex shrink-0 flex-wrap gap-2.5">
           {example.tutorial && (
             <a
               href={example.tutorial}
@@ -104,12 +104,48 @@ const badge = sourceLabel(example);
             href={codeUrl}
             target="_blank"
             rel="noopener"
-            class="rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-neutral-700 dark:bg-white dark:text-black dark:hover:bg-neutral-200"
+            class="rounded-md border border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-100 dark:border-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-900"
           >
             View code
           </a>
+          <a
+            href={downloadUrl(example)}
+            download={downloadName(example)}
+            class="inline-flex items-center gap-2 rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-neutral-700 dark:bg-white dark:text-black dark:hover:bg-neutral-200"
+          >
+            <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3v12m0 0 4-4m-4 4-4-4"></path>
+              <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path>
+            </svg>
+            Download zip
+          </a>
         </div>
       </div>
+
+      <details class="mt-6 rounded-lg border border-neutral-200 dark:border-neutral-800">
+        <summary class="cursor-pointer select-none px-4 py-3 text-sm font-medium text-neutral-700 dark:text-neutral-300">
+          Get it with git instead
+        </summary>
+        <div class="border-t border-neutral-200 px-4 py-4 dark:border-neutral-800">
+          <p class="text-sm text-neutral-500 dark:text-neutral-400">
+            Check out only this folder and keep the git history, so you can open a pull request from the same checkout.
+            See the <a href={contributeUrl} target="_blank" rel="noopener" class="text-wd-blue hover:underline">contribution guide</a>.
+          </p>
+          <div class="relative mt-3">
+            <pre class="overflow-x-auto rounded-md bg-neutral-100 p-4 pr-24 text-[13px] leading-relaxed text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200"><code id="sparse-checkout">{sparseCheckout(example)}</code></pre>
+            <button
+              type="button"
+              id="copy-sparse-checkout"
+              class="absolute right-2 top-2 rounded-md border border-neutral-200 bg-white px-2.5 py-1 text-xs font-medium text-neutral-700 transition-colors hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-300 dark:hover:bg-neutral-800"
+            >
+              Copy
+            </button>
+          </div>
+          <p class="mt-3 text-xs text-neutral-500 dark:text-neutral-400">
+            The zip carries the same trail: its <code>SOURCE.md</code> records the commit it was built from and these commands.
+          </p>
+        </div>
+      </details>
 
       <div class="mt-10 flex flex-col gap-12 lg:flex-row">
         <article class="prose prose-neutral min-w-0 max-w-3xl flex-1 dark:prose-invert prose-headings:scroll-mt-24 prose-headings:font-semibold prose-headings:tracking-tight">
@@ -140,5 +176,27 @@ const badge = sourceLabel(example);
     </main>
 
     <Footer contributeUrl={contributeUrl} />
+
+    <script>
+      const copyButton = document.getElementById("copy-sparse-checkout");
+      const snippet = document.getElementById("sparse-checkout");
+      copyButton?.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(snippet?.textContent ?? "");
+          copyButton.textContent = "Copied";
+        } catch {
+          // Clipboard blocked: select the snippet so a manual copy works.
+          if (snippet) {
+            const range = document.createRange();
+            range.selectNodeContents(snippet);
+            const selection = window.getSelection();
+            selection?.removeAllRanges();
+            selection?.addRange(range);
+          }
+          copyButton.textContent = "Selected";
+        }
+        setTimeout(() => (copyButton.textContent = "Copy"), 1500);
+      });
+    </script>
   </body>
 </html>

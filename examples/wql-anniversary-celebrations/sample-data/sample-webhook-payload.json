@@ -1,0 +1,49 @@
+{
+  "text": "Team Milestone Anniversaries",
+  "blocks": [
+    {
+      "type": "header",
+      "text": {
+        "type": "plain_text",
+        "text": "Team Milestone Anniversaries This Week",
+        "emoji": true
+      }
+    },
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "Join us in congratulating our teammates reaching major career milestones!"
+      }
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "section",
+      "fields": [
+        {
+          "type": "mrkdwn",
+          "text": "*Alex Morgan* (10 Years)\nSenior Systems Architect"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*Jordan Lee* (5 Years)\nStaff Software Engineer"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*Samira Patel* (1 Year)\nProduct Designer"
+        }
+      ]
+    },
+    {
+      "type": "context",
+      "elements": [
+        {
+          "type": "mrkdwn",
+          "text": "Generated automatically via Workday Orchestrate & WQL"
+        }
+      ]
+    }
+  ]
+}

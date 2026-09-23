@@ -1,0 +1,67 @@
+# Posts the example audit results on the pull request: one sticky summary
+# comment plus inline review comments with one-click suggestions where the
+# fix is mechanical.
+#
+# This runs separately from audit-examples.yml because that workflow has no
+# write token on pull requests from forks. This one is triggered by
+# workflow_run, always executes the version of these files on the default
+# branch, and only ever reads the audit artifact as data. It never checks out
+# or runs anything from the pull request itself.
+
+name: Audit comment
+
+on:
+  workflow_run:
+    workflows: ["Audit examples"]
+    types: [completed]
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: write
+
+concurrency:
+  group: audit-comment-${{ github.event.workflow_run.head_sha }}
+  cancel-in-progress: true
+
+jobs:
+  comment:
+    if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion != 'cancelled'
+    runs-on: ubuntu-latest
+    steps:
+      # Default branch only: trusted scripts, never the PR head.
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+
+      - name: Download the audit report
+        id: download
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: audit-report
+          path: audit
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+
+      - name: Post review and summary comment
+        if: steps.download.outcome == 'success'
+        uses: actions/github-script@v7
+        env:
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          HEAD_OWNER: ${{ github.event.workflow_run.head_repository.owner.login }}
+          AUDIT_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+        with:
+          script: |
+            const { postReview } = await import(`${process.env.GITHUB_WORKSPACE}/scripts/audit/post-review.mjs`);
+            await postReview({
+              github, context, core,
+              reportPath: "audit/report.json",
+              headSha: process.env.HEAD_SHA,
+              headBranch: process.env.HEAD_BRANCH,
+              headOwner: process.env.HEAD_OWNER,
+              checkConclusion: process.env.AUDIT_CONCLUSION
+            });

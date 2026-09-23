@@ -1,0 +1,19 @@
+/*
+  Workday Query Language (WQL) - Worker Milestone Anniversaries
+  Data Source: allActiveWorkers
+  Description: Queries active employees to identify milestone work anniversaries
+               (e.g., 1, 5, 10, 15, 20+ years of service).
+*/
+
+SELECT
+  worker,
+  workdayID,
+  fullName,
+  primaryWorkEmail,
+  businessTitle,
+  hireDate,
+  lengthOfServiceInYears,
+  manager
+FROM allActiveWorkers
+WHERE hireDate IS NOT NULL
+ORDER BY hireDate ASC

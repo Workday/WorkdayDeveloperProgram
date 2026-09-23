@@ -40,6 +40,7 @@ scripts/
   new-example.mjs        Scaffold a new example folder in one command
   new-example.sh / .ps1  The same scaffolder for machines without Node
   validate-examples.mjs  CI validation + README index generation
+  audit-examples.mjs     Arcane Auditor + hub rules, same audit CI runs on PRs
 site/                    Optional Astro gallery (not required to use the examples)
 hub.config.json          Repo URLs and the approved type, component, and product lists
 ```
@@ -53,6 +54,8 @@ hub.config.json          Repo URLs and the approved type, component, and product
 - 📄 **Reference**: design patterns, diagrams, and other material worth copying.
 
 ## Use an example
+
+Every example can be downloaded on its own from the [gallery](https://workday.github.io/WorkdayDeveloperProgram/): each card and example page has a **Download zip** button, so there is no need to clone the whole repository. The zip includes a `SOURCE.md` that records the commit it was built from and how to send changes back. To work with git instead:
 
 ```bash
 git clone https://github.com/Workday/WorkdayDeveloperProgram
@@ -72,6 +75,7 @@ Workday-built apps, maintained by Workday. Both tables below are kept in sync wi
 <!-- catalog:start -->
 | Example | Description | Type |
 | --- | --- | --- |
+| [`ap-einvoice`](catalog/ap-einvoice) | It is a Workday Extend Application that exposes an inbound endpoint and associated orchestration logic to receive text-based electronic invoices in multiple XML schemas. | Reference |
 | [`AWSStarterKit`](catalog/AWSStarterKit) | Jumpstart your AWS app with the AWS starter kit examples. | Extend App |
 | [`capitalProjectPlanning`](catalog/capitalProjectPlanning) | This application simplifies requesting new capital projects and managing their planned capital funds, providing transparency and accountability. It allows you to track financial impact, manage funds efficiently, and make informed investment decisions. Built to complement Workday Adaptive Planning capabilities, it enhances the end-user experience and streamlines capital project request workflows, especially beneficial for Healthcare, SLED, and beyond. | Extend App |
 | [`charitableDonations`](catalog/charitableDonations) | Enable employees to donate to charities with one-time and recurring payroll deductions. Features hubs and cards. | Extend App |
@@ -114,8 +118,10 @@ Community examples, open to everyone. This is the section external contributions
 | --- | --- | --- |
 | [`expense-policy-agent-skill`](examples/expense-policy-agent-skill) | A markdown skill that teaches an agent to answer expense policy questions and escalate anything it cannot verify. | Agent Skill |
 | [`employee-data-orchestration`](examples/employee-data-orchestration) | An orchestration that reads worker data from one tenant and creates matching records through the Workday REST API. | Orchestration |
+| [`peer-kudos-home-card`](examples/peer-kudos-home-card) | An Extend app with a Home page card, custom business object, and orchestration that lets employees celebrate peer contributions and notifies managers. | Extend App |
 | [`pto-policy-agent-skill`](examples/pto-policy-agent-skill) | A markdown skill that teaches an agent to answer employee questions about PTO, leave accrual, rollover, and sick leave policy with clear escalation rules. | Agent Skill |
 | [`stock-notifications`](examples/stock-notifications) | An Extend app that fetches Workday's current stock price from an external API and displays it on a home page card. | Extend App |
+| [`wql-anniversary-celebrations`](examples/wql-anniversary-celebrations) | An orchestration that queries Workday via WQL for active workers celebrating milestone work anniversaries and formats an announcement digest payload for collaboration channels. | Orchestration |
 <!-- examples:end -->
 
 ## Contributing
@@ -124,7 +130,7 @@ We want your examples. Community contributions go into `examples/` (the Examples
 
 1. Scaffold a folder: `node scripts/new-example.mjs your-example-name`. No Node? `./scripts/new-example.sh` (macOS, Linux) and `scripts\new-example.ps1` (Windows) do the same thing.
 2. Drop your artifact in, and fill in the generated `example.json` and README.
-3. Validate: `node scripts/validate-examples.mjs`
+3. Validate: `node scripts/validate-examples.mjs`, then audit: `./scripts/install-arcane.sh && node scripts/audit-examples.mjs --changed` (optional; CI runs it on your PR and explains every finding in [docs/EXAMPLE_BEST_PRACTICES.md](docs/EXAMPLE_BEST_PRACTICES.md))
 4. Open a pull request. Workday DevRel reviews every submission before merge.
 
 Prefer to do it by hand? No tooling is required. Copy [`examples/_template`](examples/_template) into a new folder (you can even create the files straight from the GitHub web UI), fill in the two files, and open the PR. The index table above can be edited by hand, or a reviewer will regenerate it for you during review.

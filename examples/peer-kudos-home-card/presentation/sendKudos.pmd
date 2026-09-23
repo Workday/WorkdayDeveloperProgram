@@ -1,0 +1,95 @@
+{
+  "id": "sendKudos",
+  "securityDomains": [
+    "KudosSecurityDomain"
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "kudosOutbound",
+        "baseUrlType": "workday-apps",
+        "url": "<% `/apps/{{site.applicationId}}/v1/peerKudoses` %>",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "failOnStatusCodes": [
+          {
+            "code": 400
+          },
+          {
+            "code": 403
+          }
+        ]
+      }
+    ]
+  },
+  "presentation": {
+    "headerSize": "VPS_DEFAULT",
+    "title": {
+      "type": "title",
+      "id": "sendKudosTitle",
+      "label": "Send Peer Kudos"
+    },
+    "body": {
+      "type": "section",
+      "id": "formSection",
+      "children": [
+        {
+          "type": "text",
+          "id": "formIntro",
+          "value": "Recognize a colleague for living our core team values."
+        },
+        {
+          "type": "textInput",
+          "id": "recipientInput",
+          "label": "Recipient Colleague Name",
+          "valueOutBinding": "kudosOutbound.recipientWorker",
+          "required": true
+        },
+        {
+          "type": "dropdown",
+          "id": "badgeDropdown",
+          "label": "Kudos Badge",
+          "valueOutBinding": "kudosOutbound.badgeType",
+          "required": true,
+          "values": [
+            {
+              "id": "val1",
+              "value": "Customer Hero"
+            },
+            {
+              "id": "val2",
+              "value": "Velocity Champion"
+            },
+            {
+              "id": "val3",
+              "value": "Master Collaborator"
+            },
+            {
+              "id": "val4",
+              "value": "Innovation Driver"
+            }
+          ]
+        },
+        {
+          "type": "textArea",
+          "id": "messageInput",
+          "label": "Appreciation Note",
+          "valueOutBinding": "kudosOutbound.kudosMessage",
+          "required": true
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "id": "pageFooter",
+      "children": [
+        {
+          "type": "button",
+          "id": "submitButton",
+          "action": "PRIMARY",
+          "label": "Submit Kudos"
+        }
+      ]
+    }
+  }
+}

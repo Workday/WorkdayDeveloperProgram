@@ -5,7 +5,9 @@
   "description": "Optional gallery site for the Workday Use Case Hub. Built with Astro and Tailwind.",
   "type": "module",
   "scripts": {
+    "predev": "node scripts/build-zips.mjs",
     "dev": "astro dev",
+    "prebuild": "node scripts/build-zips.mjs",
     "build": "astro build",
     "preview": "astro preview"
   },
@@ -14,5 +16,8 @@
     "@tailwindcss/vite": "^4.1.0",
     "astro": "^5.0.0",
     "tailwindcss": "^4.1.0"
+  },
+  "devDependencies": {
+    "fflate": "^0.8.3"
   }
 }
