@@ -1,0 +1,13 @@
+{
+  "id": 1,
+  "name": "DefaultPhoto",
+  "label": "Default Photo",
+  "defaultSecurityDomains": [
+    "ManagerPromotionNomination"
+  ],
+  "defaultCollection": {
+    "name": "defaultPhotos",
+    "label": "Default Photos"
+  },
+  "fields": []
+}

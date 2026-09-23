@@ -1,0 +1,42 @@
+{
+  "appProperties": [ ],
+  "tasks": [
+    {
+      "id": "managerNomination",
+      "routingPattern": "/",
+      "page": {
+        "id": "managerNomination"
+      }
+    },
+    {
+      "id": "eventDetails",
+      "routingPattern": "/eventDetails/{eventId}",
+      "page": {
+        "id": "eventDetails"
+      }
+    }
+  ],
+  "applicationId": "promotionNomination_rvylxm",
+  "dataProviders": [
+    {
+      "key": "workday-staffing",
+      "value": "https://api.workday.com/staffing/v7/"
+    },
+    {
+      "key": "workday-wql",
+      "value": "https://api.us.wcp.workday.com/wql/v1"
+    },
+    {
+      "key": "workday-common",
+      "value": "https://api.us.wcp.workday.com/common/v1"
+    },
+    {
+      "key": "workday-bp",
+      "value": "https://api.workday.com/businessProcess/v1/"
+    },
+    {
+      "key": "app",
+      "value": "https://api.workday.com/apps/promotionNomination_rvylxm/v1/"
+    }
+  ]
+}
