@@ -1,0 +1,16 @@
+{
+  "title": "Workday Extend Skill",
+  "description": "A markdown skill that reviews an Extend app shell and data model: AMD routes, SMD auth, business objects, and security domains.",
+  "type": "Agent Skill",
+  "components": [
+    "Model"
+  ],
+  "products": [
+    "Workday Extend"
+  ],
+  "authors": [
+    "srivilliamsai"
+  ],
+  "tutorial": "",
+  "source": "community"
+}

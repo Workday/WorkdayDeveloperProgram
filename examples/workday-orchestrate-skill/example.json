@@ -1,0 +1,16 @@
+{
+  "title": "Workday Orchestrate Skill",
+  "description": "A markdown skill that reviews an Orchestrate flow for Maya file shape, expressions, and secrets.",
+  "type": "Agent Skill",
+  "components": [
+    "Orchestration"
+  ],
+  "products": [
+    "Workday Orchestrate"
+  ],
+  "authors": [
+    "srivilliamsai"
+  ],
+  "tutorial": "",
+  "source": "community"
+}

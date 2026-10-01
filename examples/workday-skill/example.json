@@ -1,0 +1,14 @@
+{
+  "title": "Workday Skill Router",
+  "description": "A markdown skill that chooses which Workday agent skill to apply when a task starts a new app or touches more than one artifact.",
+  "type": "Agent Skill",
+  "components": [],
+  "products": [
+    "Workday Extend"
+  ],
+  "authors": [
+    "srivilliamsai"
+  ],
+  "tutorial": "",
+  "source": "community"
+}

@@ -1,0 +1,16 @@
+{
+  "title": "Workday PMD Skill",
+  "description": "A markdown skill that reviews an Extend page for a security domain, endpoint failures, widget ids, labels, and secrets.",
+  "type": "Agent Skill",
+  "components": [
+    "Presentation"
+  ],
+  "products": [
+    "Workday Extend"
+  ],
+  "authors": [
+    "srivilliamsai"
+  ],
+  "tutorial": "",
+  "source": "community"
+}

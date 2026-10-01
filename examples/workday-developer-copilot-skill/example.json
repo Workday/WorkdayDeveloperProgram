@@ -1,0 +1,14 @@
+{
+  "title": "Workday Developer Copilot Skill",
+  "description": "A markdown skill that shapes a prompt for Workday Developer Copilot and lists what must not be pasted.",
+  "type": "Agent Skill",
+  "components": [],
+  "products": [
+    "Workday Extend"
+  ],
+  "authors": [
+    "srivilliamsai"
+  ],
+  "tutorial": "",
+  "source": "community"
+}

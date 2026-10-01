@@ -121,6 +121,14 @@ Community examples, open to everyone. This is the section external contributions
 | [`peer-kudos-home-card`](examples/peer-kudos-home-card) | An Extend app with a Home page card, custom business object, and orchestration that lets employees celebrate peer contributions and notifies managers. | Extend App |
 | [`pto-policy-agent-skill`](examples/pto-policy-agent-skill) | A markdown skill that teaches an agent to answer employee questions about PTO, leave accrual, rollover, and sick leave policy with clear escalation rules. | Agent Skill |
 | [`stock-notifications`](examples/stock-notifications) | An Extend app that fetches Workday's current stock price from an external API and displays it on a home page card. | Extend App |
+| [`workday-ai-gateway-skill`](examples/workday-ai-gateway-skill) | A markdown skill that reviews an AI Gateway or AWS starter call and keeps secrets out of the page. | Agent Skill |
+| [`workday-apis-skill`](examples/workday-apis-skill) | A markdown skill that chooses and reviews a Workday Graph, WQL, REST, or SOAP call. | Agent Skill |
+| [`workday-developer-copilot-skill`](examples/workday-developer-copilot-skill) | A markdown skill that shapes a prompt for Workday Developer Copilot and lists what must not be pasted. | Agent Skill |
+| [`workday-extend-skill`](examples/workday-extend-skill) | A markdown skill that reviews an Extend app shell and data model: AMD routes, SMD auth, business objects, and security domains. | Agent Skill |
+| [`workday-home-cards-skill`](examples/workday-home-cards-skill) | A markdown skill that reviews a Workday Home card definition and its tenant setting. | Agent Skill |
+| [`workday-orchestrate-skill`](examples/workday-orchestrate-skill) | A markdown skill that reviews an Orchestrate flow for Maya file shape, expressions, and secrets. | Agent Skill |
+| [`workday-pmd-skill`](examples/workday-pmd-skill) | A markdown skill that reviews an Extend page for a security domain, endpoint failures, widget ids, labels, and secrets. | Agent Skill |
+| [`workday-skill`](examples/workday-skill) | A markdown skill that chooses which Workday agent skill to apply when a task starts a new app or touches more than one artifact. | Agent Skill |
 | [`wql-anniversary-celebrations`](examples/wql-anniversary-celebrations) | An orchestration that queries Workday via WQL for active workers celebrating milestone work anniversaries and formats an announcement digest payload for collaboration channels. | Orchestration |
 <!-- examples:end -->
 
