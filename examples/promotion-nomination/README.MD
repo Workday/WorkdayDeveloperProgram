@@ -26,7 +26,7 @@ To test, sign in as a manager with direct reports and run through the steps abov
 
 ## Before you deploy
 
-- **App reference id.** The `app` data provider in `presentation/promotionNomination_rvylxm.amd` has the id `promotionNomination_rvylxm` in its URL, and the `.amd` file name carries it too. Replace it with the id your tenant generates when you import the app.
+- **App reference id.** The id `promotionNomination_rvylxm` appears in the `applicationId` field of the `.amd`, in the `id`, `applicationId` and `siteId` fields of the `.smd`, in the `app` data provider URL in the `.amd`, and in the `.amd` and `.smd` file names. Replace it with the id your tenant generates on import, and keep the `.amd` and `.smd` values identical.
 - **Worker type ID.** The `getEmployeeList` endpoint in `managerNomination.pmd` limits direct reports to one worker type, using the ID `d588c41a446c11de98360015c5e6daf6`. That ID is specific to the tenant this example came from. Replace it with the worker type you want, or remove the filter.
 - **Security domain.** Map `ManagerPromotionNomination` to the security groups that should submit and view nominations, then activate pending security policy changes.
 - **Business object and business process.** The app expects a `promotionNominationBOS` business object and a `promotionNominationBPEvents` business process. Approval steps, such as routing to a next-level manager or a People Business Partner, are set up in the business process definition, not in these page files. Configure them for your own approval chain.
