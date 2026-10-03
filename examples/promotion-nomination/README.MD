@@ -11,6 +11,7 @@ It is a good reference if you want to see WQL-driven form prefill, a two-step su
 - `presentation/managerNomination.pmd`: the landing page (route `/`). Employee picker, prefilled career fields, nomination form, and the submit logic.
 - `presentation/eventDetails.pmd`: the read-only page (route `/eventDetails/{eventId}`). Loads the business process event, follows it to the saved nomination, and displays it.
 - `presentation/promotionNomination_rvylxm.amd`: the app definition. Declares the two routes and the five data providers (`workday-staffing`, `workday-wql`, `workday-common`, `workday-bp`, `app`), all built on `apiGatewayEndpoint`.
+- `presentation/promotionNomination_rvylxm.smd`: the site definition. Holds the app and site ids, the language, and the SSO authentication scheme.
 
 Both pages use the `ManagerPromotionNomination` security domain.
 
