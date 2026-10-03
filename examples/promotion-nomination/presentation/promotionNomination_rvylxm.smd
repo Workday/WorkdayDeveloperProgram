@@ -1,5 +1,7 @@
 {
   "id": "promotionNomination_rvylxm",
+  "applicationId": "promotionNomination_rvylxm",
+  "siteId": "promotionNomination_rvylxm",
   "languages": [
     {
       "code": "en-US",
@@ -13,9 +15,5 @@
         "id": "sso"
       }
     ]
-  },
-  "siteId": "promotionNomination_rvylxm",
-  "cdnEnabled": true,
-  "siteProperties": [ ],
-  "applicationId": "promotionNomination_rvylxm"
+  }
 }
