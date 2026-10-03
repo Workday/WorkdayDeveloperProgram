@@ -7,7 +7,7 @@
     {
       "name": "eventGenericBP",
       "baseUrlType": "workday-bp",
-      "url": "<% 'events/{{queryParams.eventId}}' %>",
+      "url": "<% `events/{{queryParams.eventId}}` %>",
       "authType": "sso",
       "failOnStatusCodes": [
         {
@@ -21,7 +21,7 @@
     {
       "name": "getPromotionNominationBP",
       "baseUrlType": "app",
-      "url": "<% 'promotionNominationBOS/{{eventGenericBP.for.id}}' %>",
+      "url": "<% `promotionNominationBOS/{{eventGenericBP.for.id}}` %>",
       "authType": "sso",
       "httpMethod": "GET",
       "failOnStatusCodes": [
@@ -37,10 +37,12 @@
   "presentation": {
     "title": {
       "type": "title",
-      "label": "View Promotion Nomination Details"
+      "label": "View Promotion Nomination Details",
+      "id": "titleHeading"
     },
     "body": {
       "type": "section",
+      "id": "sectionID1",
       "horizontal": false,
       "children": [
         {
@@ -59,6 +61,7 @@
         },
         {
           "type": "fieldSet",
+          "id": "fieldSet1",
           "children": [
             {
               "type": "text",
@@ -147,10 +150,12 @@
     },
     "footer": {
       "type": "footer",
+      "id": "footerTextID1",
       "children": [
         {
           "type": "richText",
-          "enabled": "false",
+          "id": "footerTextID",
+          "enabled": false,
           "value": "Powered By Workday Extend"
         }
       ]
