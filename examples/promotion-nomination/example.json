@@ -1,5 +1,5 @@
 {
   "title": "Promotion Nomination",
-  "description": "Workday App for managers to nominate their direct reports for promotions",
+  "description": "A manager nominates a direct report for promotion. Career data is prefilled from Workday, the nomination is saved to a business object, and a business process routes it for approval.",
   "type": "Extend App"
 }
