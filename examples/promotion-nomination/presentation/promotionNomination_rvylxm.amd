@@ -16,7 +16,7 @@
       }
     }
   ],
-"applicationId": "promotionNomination_rvylxm",
+"applicationId": site.applicationId,
   "dataProviders": [
     {
       "key": "workday-staffing",
