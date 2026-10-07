@@ -1,0 +1,19 @@
+{
+  "id": "promotionNomination_rvylxm",
+  "applicationId": "promotionNomination_rvylxm",
+  "siteId": "promotionNomination_rvylxm",
+  "languages": [
+    {
+      "code": "en-US",
+      "description": "English"
+    }
+  ],
+  "siteAuth": {
+    "authTypes": [
+      {
+        "scheme": "SSO",
+        "id": "sso"
+      }
+    ]
+  }
+}
