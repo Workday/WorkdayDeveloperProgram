@@ -165,6 +165,7 @@ The hosted version lives at [workday.github.io/WorkdayDeveloperProgram](https://
 
 This repository is maintained by the Workday DevRel team to provide educational examples. It is not an officially supported Workday product. The full support policy, including what we fix ourselves and how community examples are kept healthy, lives in [SUPPORT.md](SUPPORT.md).
 
+- **FAQ**: Got questions about the Workday Developer Program? Want to know how to create a personal account and tenant? We've got answers in [FAQ.md](FAQ.md)!
 - **Questions and ideas**: open a [discussion](https://github.com/Workday/WorkdayDeveloperProgram/discussions) or start a thread on the Workday community forum.
 - **Bugs in an example**: open an [issue](https://github.com/Workday/WorkdayDeveloperProgram/issues) using the bug report template.
 - **New example proposals**: open an issue with the proposal template before you build, if you want early feedback.
