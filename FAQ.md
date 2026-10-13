@@ -93,7 +93,7 @@ There’s no separate extension process. See “How long does a development tena
 #### What is the purge policy?
 
 Tenants with no activity for 7 consecutive days are automatically and permanently deleted. At this time, deletion cannot be undone, so please back up anything you want to keep. [Check the Tenants section of the Developer Site](https://developer.workday.com/console/tenants) for your tenant’s exact expiration date. It is also shown to you when you log in:
-![image|690x446](upload://zw2JjF0tYAeAvcMu2QVuNskgQAh.png)
+![image|690x446](./images/tenantexpirynotice.png)
 
 
 #### Can I have more than one tenant?
@@ -124,7 +124,7 @@ When you log in, you’ll be redirected to the digital Account Center, where you
 
 Sign out, then sign in with your personal credentials to reach your personal account. Make sure to use the option below **Accessing your personal account? Sign in with your Workday Digital ID.**
 
-![image|578x499](upload://9T8C25laMrQsXOcCPrTWY5o42o4.png)
+![image|578x499](./images/accesspersonalaccount.png)
 
 
 #### Can I create a personal account directly?
