@@ -1,0 +1,6 @@
+{
+  "id": 1,
+  "name": "SmartOrgLoaderDomain",
+  "enabledForPageSecurity": true,
+  "enabledForOrchestrationSecurity": true
+}

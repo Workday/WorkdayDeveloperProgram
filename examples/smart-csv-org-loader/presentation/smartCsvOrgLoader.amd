@@ -1,0 +1,34 @@
+{
+  "appProperties": [],
+  "tasks": [
+    {
+      "id": "uploadAndValidateOrgCsv",
+      "routingPattern": "/",
+      "page": {
+        "id": "uploadAndValidateOrgCsv"
+      }
+    },
+    {
+      "id": "viewLoadBatchHistory",
+      "routingPattern": "/history",
+      "page": {
+        "id": "viewLoadBatchHistory"
+      }
+    }
+  ],
+  "applicationId": "smartCsvOrgLoader",
+  "dataProviders": [
+    {
+      "key": "workday-wql",
+      "value": "<% apiGatewayEndpoint + '/wql/v1/' %>"
+    },
+    {
+      "key": "workday-app",
+      "value": "<% apiGatewayEndpoint + '/apps/' + site.applicationId + '/v1/' %>"
+    },
+    {
+      "key": "orchestration",
+      "value": "<% apiGatewayEndpoint + '/orchestrate/v1/apps/' + site.applicationId + '/orchestrations/' %>"
+    }
+  ]
+}
