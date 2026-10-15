@@ -1,0 +1,2581 @@
+{
+  "flowVersion": "3.2.0",
+  "_type": "Flow",
+  "_value": {
+    "id": {
+      "_type": "String",
+      "_value": "554d9678cd4f42e0b129fbe30f8db42e"
+    },
+    "name": {
+      "_type": "Identifier",
+      "_value": "processOrgAssignmentLoad"
+    },
+    "type": {
+      "_type": "FlowType",
+      "_value": ".maya.FlowAsync"
+    },
+    "start": {
+      "_type": "StartAsync",
+      "_value": {
+        "structuredRequest": {
+          "_type": [
+            "Opt",
+            "RequestStructure"
+          ],
+          "_value": null
+        },
+        "notes": {
+          "_type": [
+            "List",
+            "Note"
+          ],
+          "_value": [
+            {
+              "_type": "Note",
+              "_value": {
+                "key": {
+                  "_type": "String",
+                  "_value": "description"
+                },
+                "value": {
+                  "_type": "String",
+                  "_value": "Async launch from the Extend page: body is {batchId, rows:[...]}. Returns immediately; per-row results land in the orgAssignmentLoadRows business object."
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "end": {
+      "_type": "EndEmptyMaya",
+      "_value": {
+        "notes": {
+          "_type": [
+            "List",
+            "Note"
+          ],
+          "_value": []
+        }
+      }
+    },
+    "nodes": {
+      "_type": [
+        "List",
+        "Node"
+      ],
+      "_value": [
+        {
+          "_type": "CreateValues",
+          "_value": {
+            "name": {
+              "_type": "Identifier",
+              "_value": "ParseRequest"
+            },
+            "isDisabled": {
+              "_type": "Boolean",
+              "_value": false
+            },
+            "errorHandler": {
+              "_type": [
+                "Opt",
+                "ErrorHandler"
+              ],
+              "_value": null
+            },
+            "values": {
+              "_type": [
+                "List",
+                "Assignment"
+              ],
+              "_value": [
+                {
+                  "_type": "Assignment",
+                  "_value": {
+                    "param": {
+                      "_type": "Parameter",
+                      "_value": {
+                        "name": {
+                          "_type": "Identifier",
+                          "_value": "batchId"
+                        },
+                        "type": {
+                          "_type": "Type",
+                          "_value": "String"
+                        },
+                        "default": {
+                          "_type": [
+                            "Opt",
+                            "Any"
+                          ],
+                          "_value": null
+                        }
+                      }
+                    },
+                    "expr": {
+                      "_type": [
+                        "Expr",
+                        "String"
+                      ],
+                      "_value": {
+                        "type": {
+                          "_type": "Type",
+                          "_value": "String"
+                        },
+                        "source": {
+                          "_type": "String",
+                          "_value": "data(\"start\", \"request\").asJSON().stringAtJsonPath(\"$.batchId\")"
+                        },
+                        "isAuto": {
+                          "_type": "Boolean",
+                          "_value": false
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "notes": {
+              "_type": [
+                "List",
+                "Note"
+              ],
+              "_value": [
+                {
+                  "_type": "Note",
+                  "_value": {
+                    "key": {
+                      "_type": "String",
+                      "_value": "description"
+                    },
+                    "value": {
+                      "_type": "String",
+                      "_value": "Read the batchId the Extend page sent when it launched this orchestration"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "_type": "SendWorkdayApiRequest",
+          "_value": {
+            "name": {
+              "_type": "Identifier",
+              "_value": "GetStagedRows"
+            },
+            "isDisabled": {
+              "_type": "Boolean",
+              "_value": true
+            },
+            "errorHandler": {
+              "_type": [
+                "Opt",
+                "ErrorHandler"
+              ],
+              "_value": null
+            },
+            "body": {
+              "_type": [
+                "Opt",
+                "DataRefBody"
+              ],
+              "_value": null
+            },
+            "path": {
+              "_type": [
+                "Expr",
+                "String"
+              ],
+              "_value": {
+                "type": {
+                  "_type": "Type",
+                  "_value": "String"
+                },
+                "source": {
+                  "_type": "String",
+                  "_value": "s\"${\"/apps/\"}${context.appReferenceId()}${\"/v1/orgAssignmentLoadRows?limit=100\"}\""
+                },
+                "isAuto": {
+                  "_type": "Boolean",
+                  "_value": false
+                }
+              }
+            },
+            "queryParams": {
+              "_type": [
+                "List",
+                "QueryParam"
+              ],
+              "_value": []
+            },
+            "method": {
+              "_type": "HttpMethod",
+              "_value": "GET"
+            },
+            "headers": {
+              "_type": [
+                "List",
+                "Header"
+              ],
+              "_value": []
+            },
+            "auth": {
+              "_type": "WorkdayCredentialRef",
+              "_value": {
+                "resourceName": {
+                  "_type": "String",
+                  "_value": "_DEFAULT_WORKDAY_CREDENTIAL"
+                }
+              }
+            },
+            "connectTimeoutMs": {
+              "_type": "Long",
+              "_value": 10000
+            },
+            "responseTimeoutMs": {
+              "_type": "Long",
+              "_value": 20000
+            },
+            "overallTimeoutMs": {
+              "_type": "Long",
+              "_value": 300000
+            },
+            "retryConfigRef": {
+              "_type": "RetryConfigRef",
+              "_value": "_DEFAULT_WORKDAY_RETRY_CONFIG"
+            },
+            "tlsConfig": {
+              "_type": [
+                "Opt",
+                "TlsConfig"
+              ],
+              "_value": null
+            },
+            "proxyConfig": {
+              "_type": [
+                "Opt",
+                "ProxyConfig"
+              ],
+              "_value": null
+            },
+            "responseType": {
+              "_type": "HttpResponseType",
+              "_value": "Any"
+            },
+            "notes": {
+              "_type": [
+                "List",
+                "Note"
+              ],
+              "_value": [
+                {
+                  "_type": "Note",
+                  "_value": {
+                    "key": {
+                      "_type": "String",
+                      "_value": "description"
+                    },
+                    "value": {
+                      "_type": "String",
+                      "_value": "Read staged rows from the app's business object (filtered to this batch in the loop)"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "_type": "Loop",
+          "_value": {
+            "name": {
+              "_type": "Identifier",
+              "_value": "Loop"
+            },
+            "isDisabled": {
+              "_type": "Boolean",
+              "_value": false
+            },
+            "errorHandler": {
+              "_type": [
+                "Opt",
+                "ErrorHandler"
+              ],
+              "_value": null
+            },
+            "inputData": {
+              "_type": [
+                "Expr",
+                [
+                  "Iterator",
+                  [
+                    "Opt",
+                    "Any"
+                  ]
+                ]
+              ],
+              "_value": {
+                "type": {
+                  "_type": "Type",
+                  "_value": [
+                    "Iterator",
+                    [
+                      "Json",
+                      {
+                        "_type": [
+                          "Opt",
+                          "JsonSchemaRef"
+                        ],
+                        "_value": null
+                      }
+                    ]
+                  ]
+                },
+                "source": {
+                  "_type": "String",
+                  "_value": "data(\"start\", \"request\").asJSON().iterator(\"$.rows[*]\")"
+                },
+                "isAuto": {
+                  "_type": "Boolean",
+                  "_value": false
+                }
+              }
+            },
+            "filter": {
+              "_type": [
+                "Opt",
+                [
+                  "Expr",
+                  "Boolean"
+                ]
+              ],
+              "_value": {
+                "_type": [
+                  "Expr",
+                  "Boolean"
+                ],
+                "_value": {
+                  "type": {
+                    "_type": "Type",
+                    "_value": "Boolean"
+                  },
+                  "source": {
+                    "_type": "String",
+                    "_value": "data.Loop.item.stringAtJsonPath(\"$.batchId\") == data.ParseRequest.batchId"
+                  },
+                  "isAuto": {
+                    "_type": "Boolean",
+                    "_value": false
+                  }
+                }
+              }
+            },
+            "aggregateNode": {
+              "_type": [
+                "Opt",
+                "Aggregate"
+              ],
+              "_value": null
+            },
+            "earlyStopCondition": {
+              "_type": [
+                "Opt",
+                "EarlyStopCondition"
+              ],
+              "_value": null
+            },
+            "sorts": {
+              "_type": [
+                "List",
+                "SortedBy"
+              ],
+              "_value": []
+            },
+            "locale": {
+              "_type": [
+                "Opt",
+                "Locale"
+              ],
+              "_value": null
+            },
+            "group": {
+              "_type": "ImplicitGroup",
+              "_value": {
+                "name": {
+                  "_type": "Identifier",
+                  "_value": "_group_Loop"
+                },
+                "isDisabled": {
+                  "_type": "Boolean",
+                  "_value": false
+                },
+                "errorHandler": {
+                  "_type": [
+                    "Opt",
+                    "ErrorHandler"
+                  ],
+                  "_value": {
+                    "_type": "ErrorHandler",
+                    "_value": {
+                      "name": {
+                        "_type": "Identifier",
+                        "_value": "_errorHandler_group_Loop"
+                      },
+                      "isDisabled": {
+                        "_type": "Boolean",
+                        "_value": false
+                      },
+                      "strategy": {
+                        "_type": "ErrorHandlerStrategy",
+                        "_value": "ConditionalOutputs"
+                      },
+                      "nodes": {
+                        "_type": [
+                          "List",
+                          "Node"
+                        ],
+                        "_value": [
+                          {
+                            "_type": "Log",
+                            "_value": {
+                              "name": {
+                                "_type": "Identifier",
+                                "_value": "LogRowError"
+                              },
+                              "isDisabled": {
+                                "_type": "Boolean",
+                                "_value": false
+                              },
+                              "errorHandler": {
+                                "_type": [
+                                  "Opt",
+                                  "ErrorHandler"
+                                ],
+                                "_value": null
+                              },
+                              "message": {
+                                "_type": [
+                                  "Expr",
+                                  "String"
+                                ],
+                                "_value": {
+                                  "type": {
+                                    "_type": "Type",
+                                    "_value": "String"
+                                  },
+                                  "source": {
+                                    "_type": "String",
+                                    "_value": "\"\"\"Row failed; see the load history task for details\"\"\""
+                                  },
+                                  "isAuto": {
+                                    "_type": "Boolean",
+                                    "_value": false
+                                  }
+                                }
+                              },
+                              "condition": {
+                                "_type": [
+                                  "Expr",
+                                  "Boolean"
+                                ],
+                                "_value": {
+                                  "type": {
+                                    "_type": "Type",
+                                    "_value": "Boolean"
+                                  },
+                                  "source": {
+                                    "_type": "String",
+                                    "_value": "true"
+                                  },
+                                  "isAuto": {
+                                    "_type": "Boolean",
+                                    "_value": false
+                                  }
+                                }
+                              },
+                              "notes": {
+                                "_type": [
+                                  "List",
+                                  "Note"
+                                ],
+                                "_value": [
+                                  {
+                                    "_type": "Note",
+                                    "_value": {
+                                      "key": {
+                                        "_type": "String",
+                                        "_value": "description"
+                                      },
+                                      "value": {
+                                        "_type": "String",
+                                        "_value": "Log the row error and continue with the next row"
+                                      }
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "notes": {
+                        "_type": [
+                          "List",
+                          "Note"
+                        ],
+                        "_value": [
+                          {
+                            "_type": "Note",
+                            "_value": {
+                              "key": {
+                                "_type": "String",
+                                "_value": "description"
+                              },
+                              "value": {
+                                "_type": "String",
+                                "_value": ""
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                "nodes": {
+                  "_type": [
+                    "List",
+                    "Node"
+                  ],
+                  "_value": [
+                    {
+                      "_type": "CreateValues",
+                      "_value": {
+                        "name": {
+                          "_type": "Identifier",
+                          "_value": "RowFields"
+                        },
+                        "isDisabled": {
+                          "_type": "Boolean",
+                          "_value": false
+                        },
+                        "errorHandler": {
+                          "_type": [
+                            "Opt",
+                            "ErrorHandler"
+                          ],
+                          "_value": null
+                        },
+                        "values": {
+                          "_type": [
+                            "List",
+                            "Assignment"
+                          ],
+                          "_value": [
+                            {
+                              "_type": "Assignment",
+                              "_value": {
+                                "param": {
+                                  "_type": "Parameter",
+                                  "_value": {
+                                    "name": {
+                                      "_type": "Identifier",
+                                      "_value": "batchId"
+                                    },
+                                    "type": {
+                                      "_type": "Type",
+                                      "_value": "String"
+                                    },
+                                    "default": {
+                                      "_type": [
+                                        "Opt",
+                                        "Any"
+                                      ],
+                                      "_value": null
+                                    }
+                                  }
+                                },
+                                "expr": {
+                                  "_type": [
+                                    "Expr",
+                                    "String"
+                                  ],
+                                  "_value": {
+                                    "type": {
+                                      "_type": "Type",
+                                      "_value": "String"
+                                    },
+                                    "source": {
+                                      "_type": "String",
+                                      "_value": "data.Loop.item.stringAtJsonPath(\"$.batchId\")"
+                                    },
+                                    "isAuto": {
+                                      "_type": "Boolean",
+                                      "_value": false
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "_type": "Assignment",
+                              "_value": {
+                                "param": {
+                                  "_type": "Parameter",
+                                  "_value": {
+                                    "name": {
+                                      "_type": "Identifier",
+                                      "_value": "employeeId"
+                                    },
+                                    "type": {
+                                      "_type": "Type",
+                                      "_value": "String"
+                                    },
+                                    "default": {
+                                      "_type": [
+                                        "Opt",
+                                        "Any"
+                                      ],
+                                      "_value": null
+                                    }
+                                  }
+                                },
+                                "expr": {
+                                  "_type": [
+                                    "Expr",
+                                    "String"
+                                  ],
+                                  "_value": {
+                                    "type": {
+                                      "_type": "Type",
+                                      "_value": "String"
+                                    },
+                                    "source": {
+                                      "_type": "String",
+                                      "_value": "data.Loop.item.stringAtJsonPath(\"$.employeeId\")"
+                                    },
+                                    "isAuto": {
+                                      "_type": "Boolean",
+                                      "_value": false
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "_type": "Assignment",
+                              "_value": {
+                                "param": {
+                                  "_type": "Parameter",
+                                  "_value": {
+                                    "name": {
+                                      "_type": "Identifier",
+                                      "_value": "soapRequestXml"
+                                    },
+                                    "type": {
+                                      "_type": "Type",
+                                      "_value": "String"
+                                    },
+                                    "default": {
+                                      "_type": [
+                                        "Opt",
+                                        "Any"
+                                      ],
+                                      "_value": null
+                                    }
+                                  }
+                                },
+                                "expr": {
+                                  "_type": [
+                                    "Expr",
+                                    "String"
+                                  ],
+                                  "_value": {
+                                    "type": {
+                                      "_type": "Type",
+                                      "_value": "String"
+                                    },
+                                    "source": {
+                                      "_type": "String",
+                                      "_value": "data.Loop.item.stringAtJsonPath(\"$.soapRequestXml\")"
+                                    },
+                                    "isAuto": {
+                                      "_type": "Boolean",
+                                      "_value": false
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "_type": "Assignment",
+                              "_value": {
+                                "param": {
+                                  "_type": "Parameter",
+                                  "_value": {
+                                    "name": {
+                                      "_type": "Identifier",
+                                      "_value": "positionId"
+                                    },
+                                    "type": {
+                                      "_type": "Type",
+                                      "_value": "String"
+                                    },
+                                    "default": {
+                                      "_type": [
+                                        "Opt",
+                                        "Any"
+                                      ],
+                                      "_value": null
+                                    }
+                                  }
+                                },
+                                "expr": {
+                                  "_type": [
+                                    "Expr",
+                                    "String"
+                                  ],
+                                  "_value": {
+                                    "type": {
+                                      "_type": "Type",
+                                      "_value": "String"
+                                    },
+                                    "source": {
+                                      "_type": "String",
+                                      "_value": "data.Loop.item.stringAtJsonPath(\"$.positionId\")"
+                                    },
+                                    "isAuto": {
+                                      "_type": "Boolean",
+                                      "_value": false
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "_type": "Assignment",
+                              "_value": {
+                                "param": {
+                                  "_type": "Parameter",
+                                  "_value": {
+                                    "name": {
+                                      "_type": "Identifier",
+                                      "_value": "effectiveDate"
+                                    },
+                                    "type": {
+                                      "_type": "Type",
+                                      "_value": "String"
+                                    },
+                                    "default": {
+                                      "_type": [
+                                        "Opt",
+                                        "Any"
+                                      ],
+                                      "_value": null
+                                    }
+                                  }
+                                },
+                                "expr": {
+                                  "_type": [
+                                    "Expr",
+                                    "String"
+                                  ],
+                                  "_value": {
+                                    "type": {
+                                      "_type": "Type",
+                                      "_value": "String"
+                                    },
+                                    "source": {
+                                      "_type": "String",
+                                      "_value": "data.Loop.item.stringAtJsonPath(\"$.effectiveDate\")"
+                                    },
+                                    "isAuto": {
+                                      "_type": "Boolean",
+                                      "_value": false
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "_type": "Assignment",
+                              "_value": {
+                                "param": {
+                                  "_type": "Parameter",
+                                  "_value": {
+                                    "name": {
+                                      "_type": "Identifier",
+                                      "_value": "costCenterRefId"
+                                    },
+                                    "type": {
+                                      "_type": "Type",
+                                      "_value": "String"
+                                    },
+                                    "default": {
+                                      "_type": [
+                                        "Opt",
+                                        "Any"
+                                      ],
+                                      "_value": null
+                                    }
+                                  }
+                                },
+                                "expr": {
+                                  "_type": [
+                                    "Expr",
+                                    "String"
+                                  ],
+                                  "_value": {
+                                    "type": {
+                                      "_type": "Type",
+                                      "_value": "String"
+                                    },
+                                    "source": {
+                                      "_type": "String",
+                                      "_value": "data.Loop.item.stringAtJsonPath(\"$.costCenterRefId\")"
+                                    },
+                                    "isAuto": {
+                                      "_type": "Boolean",
+                                      "_value": false
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "_type": "Assignment",
+                              "_value": {
+                                "param": {
+                                  "_type": "Parameter",
+                                  "_value": {
+                                    "name": {
+                                      "_type": "Identifier",
+                                      "_value": "companyRefId"
+                                    },
+                                    "type": {
+                                      "_type": "Type",
+                                      "_value": "String"
+                                    },
+                                    "default": {
+                                      "_type": [
+                                        "Opt",
+                                        "Any"
+                                      ],
+                                      "_value": null
+                                    }
+                                  }
+                                },
+                                "expr": {
+                                  "_type": [
+                                    "Expr",
+                                    "String"
+                                  ],
+                                  "_value": {
+                                    "type": {
+                                      "_type": "Type",
+                                      "_value": "String"
+                                    },
+                                    "source": {
+                                      "_type": "String",
+                                      "_value": "data.Loop.item.stringAtJsonPath(\"$.companyRefId\")"
+                                    },
+                                    "isAuto": {
+                                      "_type": "Boolean",
+                                      "_value": false
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "_type": "Assignment",
+                              "_value": {
+                                "param": {
+                                  "_type": "Parameter",
+                                  "_value": {
+                                    "name": {
+                                      "_type": "Identifier",
+                                      "_value": "regionRefId"
+                                    },
+                                    "type": {
+                                      "_type": "Type",
+                                      "_value": "String"
+                                    },
+                                    "default": {
+                                      "_type": [
+                                        "Opt",
+                                        "Any"
+                                      ],
+                                      "_value": null
+                                    }
+                                  }
+                                },
+                                "expr": {
+                                  "_type": [
+                                    "Expr",
+                                    "String"
+                                  ],
+                                  "_value": {
+                                    "type": {
+                                      "_type": "Type",
+                                      "_value": "String"
+                                    },
+                                    "source": {
+                                      "_type": "String",
+                                      "_value": "data.Loop.item.stringAtJsonPath(\"$.regionRefId\")"
+                                    },
+                                    "isAuto": {
+                                      "_type": "Boolean",
+                                      "_value": false
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "_type": "Assignment",
+                              "_value": {
+                                "param": {
+                                  "_type": "Parameter",
+                                  "_value": {
+                                    "name": {
+                                      "_type": "Identifier",
+                                      "_value": "customOrgsPipeDelimited"
+                                    },
+                                    "type": {
+                                      "_type": "Type",
+                                      "_value": "String"
+                                    },
+                                    "default": {
+                                      "_type": [
+                                        "Opt",
+                                        "Any"
+                                      ],
+                                      "_value": null
+                                    }
+                                  }
+                                },
+                                "expr": {
+                                  "_type": [
+                                    "Expr",
+                                    "String"
+                                  ],
+                                  "_value": {
+                                    "type": {
+                                      "_type": "Type",
+                                      "_value": "String"
+                                    },
+                                    "source": {
+                                      "_type": "String",
+                                      "_value": "data.Loop.item.stringAtJsonPath(\"$.customOrgsPipeDelimited\")"
+                                    },
+                                    "isAuto": {
+                                      "_type": "Boolean",
+                                      "_value": false
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        "notes": {
+                          "_type": [
+                            "List",
+                            "Note"
+                          ],
+                          "_value": [
+                            {
+                              "_type": "Note",
+                              "_value": {
+                                "key": {
+                                  "_type": "String",
+                                  "_value": "description"
+                                },
+                                "value": {
+                                  "_type": "String",
+                                  "_value": "Fields for this staged row"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "_type": "CreateTextTemplate",
+                      "_value": {
+                        "name": {
+                          "_type": "Identifier",
+                          "_value": "CreateRowBody"
+                        },
+                        "isDisabled": {
+                          "_type": "Boolean",
+                          "_value": false
+                        },
+                        "errorHandler": {
+                          "_type": [
+                            "Opt",
+                            "ErrorHandler"
+                          ],
+                          "_value": null
+                        },
+                        "message": {
+                          "_type": "TextTemplate",
+                          "_value": "{\"batchId\": \"{{data.RowFields.batchId}}\", \"employeeId\": \"{{data.RowFields.employeeId}}\", \"positionId\": \"{{data.RowFields.positionId}}\", \"effectiveDate\": \"{{data.RowFields.effectiveDate}}\", \"costCenterRefId\": \"{{data.RowFields.costCenterRefId}}\", \"companyRefId\": \"{{data.RowFields.companyRefId}}\", \"regionRefId\": \"{{data.RowFields.regionRefId}}\", \"customOrgsPipeDelimited\": \"{{data.RowFields.customOrgsPipeDelimited}}\", \"validationStatus\": \"STAGED\", \"validationMessage\": \"Passed pre-validation\"}"
+                        },
+                        "contentType": {
+                          "_type": "String",
+                          "_value": "application/json"
+                        },
+                        "formatRef": {
+                          "_type": [
+                            "Opt",
+                            "TextFormatRef"
+                          ],
+                          "_value": null
+                        },
+                        "notes": {
+                          "_type": [
+                            "List",
+                            "Note"
+                          ],
+                          "_value": [
+                            {
+                              "_type": "Note",
+                              "_value": {
+                                "key": {
+                                  "_type": "String",
+                                  "_value": "description"
+                                },
+                                "value": {
+                                  "_type": "String",
+                                  "_value": ""
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "_type": "SendWorkdayApiRequest",
+                      "_value": {
+                        "name": {
+                          "_type": "Identifier",
+                          "_value": "CreateRow"
+                        },
+                        "isDisabled": {
+                          "_type": "Boolean",
+                          "_value": false
+                        },
+                        "errorHandler": {
+                          "_type": [
+                            "Opt",
+                            "ErrorHandler"
+                          ],
+                          "_value": null
+                        },
+                        "body": {
+                          "_type": [
+                            "Opt",
+                            "DataRefBody"
+                          ],
+                          "_value": {
+                            "_type": "DataRefBody",
+                            "_value": {
+                              "dataRef": {
+                                "_type": [
+                                  "Expr",
+                                  "Data"
+                                ],
+                                "_value": {
+                                  "type": {
+                                    "_type": "Type",
+                                    "_value": "Data"
+                                  },
+                                  "source": {
+                                    "_type": "String",
+                                    "_value": "data.CreateRowBody.message"
+                                  },
+                                  "isAuto": {
+                                    "_type": "Boolean",
+                                    "_value": false
+                                  }
+                                }
+                              },
+                              "contentType": {
+                                "_type": [
+                                  "Opt",
+                                  "String"
+                                ],
+                                "_value": {
+                                  "_type": "String",
+                                  "_value": "application/json"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "path": {
+                          "_type": [
+                            "Expr",
+                            "String"
+                          ],
+                          "_value": {
+                            "type": {
+                              "_type": "Type",
+                              "_value": "String"
+                            },
+                            "source": {
+                              "_type": "String",
+                              "_value": "s\"${\"/apps/\"}${context.appReferenceId()}${\"/v1/orgAssignmentLoadRows\"}\""
+                            },
+                            "isAuto": {
+                              "_type": "Boolean",
+                              "_value": false
+                            }
+                          }
+                        },
+                        "queryParams": {
+                          "_type": [
+                            "List",
+                            "QueryParam"
+                          ],
+                          "_value": []
+                        },
+                        "method": {
+                          "_type": "HttpMethod",
+                          "_value": "POST"
+                        },
+                        "headers": {
+                          "_type": [
+                            "List",
+                            "Header"
+                          ],
+                          "_value": []
+                        },
+                        "auth": {
+                          "_type": "WorkdayCredentialRef",
+                          "_value": {
+                            "resourceName": {
+                              "_type": "String",
+                              "_value": "_DEFAULT_WORKDAY_CREDENTIAL"
+                            }
+                          }
+                        },
+                        "connectTimeoutMs": {
+                          "_type": "Long",
+                          "_value": 10000
+                        },
+                        "responseTimeoutMs": {
+                          "_type": "Long",
+                          "_value": 20000
+                        },
+                        "overallTimeoutMs": {
+                          "_type": "Long",
+                          "_value": 300000
+                        },
+                        "retryConfigRef": {
+                          "_type": "RetryConfigRef",
+                          "_value": "_DEFAULT_WORKDAY_RETRY_CONFIG"
+                        },
+                        "tlsConfig": {
+                          "_type": [
+                            "Opt",
+                            "TlsConfig"
+                          ],
+                          "_value": null
+                        },
+                        "proxyConfig": {
+                          "_type": [
+                            "Opt",
+                            "ProxyConfig"
+                          ],
+                          "_value": null
+                        },
+                        "responseType": {
+                          "_type": "HttpResponseType",
+                          "_value": "Any"
+                        },
+                        "notes": {
+                          "_type": [
+                            "List",
+                            "Note"
+                          ],
+                          "_value": [
+                            {
+                              "_type": "Note",
+                              "_value": {
+                                "key": {
+                                  "_type": "String",
+                                  "_value": "description"
+                                },
+                                "value": {
+                                  "_type": "String",
+                                  "_value": "Mark the row completed"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "_type": "CreateValues",
+                      "_value": {
+                        "name": {
+                          "_type": "Identifier",
+                          "_value": "CreatedRow"
+                        },
+                        "isDisabled": {
+                          "_type": "Boolean",
+                          "_value": false
+                        },
+                        "errorHandler": {
+                          "_type": [
+                            "Opt",
+                            "ErrorHandler"
+                          ],
+                          "_value": null
+                        },
+                        "values": {
+                          "_type": [
+                            "List",
+                            "Assignment"
+                          ],
+                          "_value": [
+                            {
+                              "_type": "Assignment",
+                              "_value": {
+                                "param": {
+                                  "_type": "Parameter",
+                                  "_value": {
+                                    "name": {
+                                      "_type": "Identifier",
+                                      "_value": "rowId"
+                                    },
+                                    "type": {
+                                      "_type": "Type",
+                                      "_value": "String"
+                                    },
+                                    "default": {
+                                      "_type": [
+                                        "Opt",
+                                        "Any"
+                                      ],
+                                      "_value": null
+                                    }
+                                  }
+                                },
+                                "expr": {
+                                  "_type": [
+                                    "Expr",
+                                    "String"
+                                  ],
+                                  "_value": {
+                                    "type": {
+                                      "_type": "Type",
+                                      "_value": "String"
+                                    },
+                                    "source": {
+                                      "_type": "String",
+                                      "_value": "data.CreateRow.response.asJSON().stringAtJsonPath(\"$.id\")"
+                                    },
+                                    "isAuto": {
+                                      "_type": "Boolean",
+                                      "_value": false
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        "notes": {
+                          "_type": [
+                            "List",
+                            "Note"
+                          ],
+                          "_value": [
+                            {
+                              "_type": "Note",
+                              "_value": {
+                                "key": {
+                                  "_type": "String",
+                                  "_value": "description"
+                                },
+                                "value": {
+                                  "_type": "String",
+                                  "_value": "Fields for this staged row"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "_type": "CreateTextTemplate",
+                      "_value": {
+                        "name": {
+                          "_type": "Identifier",
+                          "_value": "ChangeOrgAssignmentsRequest"
+                        },
+                        "isDisabled": {
+                          "_type": "Boolean",
+                          "_value": false
+                        },
+                        "errorHandler": {
+                          "_type": [
+                            "Opt",
+                            "ErrorHandler"
+                          ],
+                          "_value": null
+                        },
+                        "message": {
+                          "_type": "TextTemplate",
+                          "_value": "{{data.RowFields.soapRequestXml}}"
+                        },
+                        "contentType": {
+                          "_type": "String",
+                          "_value": "application/xml"
+                        },
+                        "formatRef": {
+                          "_type": [
+                            "Opt",
+                            "TextFormatRef"
+                          ],
+                          "_value": null
+                        },
+                        "notes": {
+                          "_type": [
+                            "List",
+                            "Note"
+                          ],
+                          "_value": [
+                            {
+                              "_type": "Note",
+                              "_value": {
+                                "key": {
+                                  "_type": "String",
+                                  "_value": "description"
+                                },
+                                "value": {
+                                  "_type": "String",
+                                  "_value": "Change_Organization_Assignments_Request body, prebuilt and validated by the Extend page (blank org columns are omitted there)"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "_type": "SendWorkdayApiRequest",
+                      "_value": {
+                        "name": {
+                          "_type": "Identifier",
+                          "_value": "SOAP_Call"
+                        },
+                        "isDisabled": {
+                          "_type": "Boolean",
+                          "_value": false
+                        },
+                        "errorHandler": {
+                          "_type": [
+                            "Opt",
+                            "ErrorHandler"
+                          ],
+                          "_value": null
+                        },
+                        "body": {
+                          "_type": [
+                            "Opt",
+                            "DataRefBody"
+                          ],
+                          "_value": {
+                            "_type": "DataRefBody",
+                            "_value": {
+                              "dataRef": {
+                                "_type": [
+                                  "Expr",
+                                  "Data"
+                                ],
+                                "_value": {
+                                  "type": {
+                                    "_type": "Type",
+                                    "_value": "Data"
+                                  },
+                                  "source": {
+                                    "_type": "String",
+                                    "_value": "data.ChangeOrgAssignmentsRequest.message.wrapSoapV11()"
+                                  },
+                                  "isAuto": {
+                                    "_type": "Boolean",
+                                    "_value": false
+                                  }
+                                }
+                              },
+                              "contentType": {
+                                "_type": [
+                                  "Opt",
+                                  "String"
+                                ],
+                                "_value": null
+                              }
+                            }
+                          }
+                        },
+                        "path": {
+                          "_type": [
+                            "Expr",
+                            "String"
+                          ],
+                          "_value": {
+                            "type": {
+                              "_type": "Type",
+                              "_value": "String"
+                            },
+                            "source": {
+                              "_type": "String",
+                              "_value": "\"/soap/v42.0/Staffing\""
+                            },
+                            "isAuto": {
+                              "_type": "Boolean",
+                              "_value": false
+                            }
+                          }
+                        },
+                        "queryParams": {
+                          "_type": [
+                            "List",
+                            "QueryParam"
+                          ],
+                          "_value": []
+                        },
+                        "method": {
+                          "_type": "HttpMethod",
+                          "_value": "POST"
+                        },
+                        "headers": {
+                          "_type": [
+                            "List",
+                            "Header"
+                          ],
+                          "_value": []
+                        },
+                        "auth": {
+                          "_type": "WorkdayCredentialRef",
+                          "_value": {
+                            "resourceName": {
+                              "_type": "String",
+                              "_value": "_DEFAULT_WORKDAY_CREDENTIAL"
+                            }
+                          }
+                        },
+                        "connectTimeoutMs": {
+                          "_type": "Long",
+                          "_value": 10000
+                        },
+                        "responseTimeoutMs": {
+                          "_type": "Long",
+                          "_value": 20000
+                        },
+                        "overallTimeoutMs": {
+                          "_type": "Long",
+                          "_value": 300000
+                        },
+                        "retryConfigRef": {
+                          "_type": "RetryConfigRef",
+                          "_value": "_DEFAULT_WORKDAY_RETRY_CONFIG"
+                        },
+                        "tlsConfig": {
+                          "_type": [
+                            "Opt",
+                            "TlsConfig"
+                          ],
+                          "_value": null
+                        },
+                        "proxyConfig": {
+                          "_type": [
+                            "Opt",
+                            "ProxyConfig"
+                          ],
+                          "_value": null
+                        },
+                        "responseType": {
+                          "_type": "HttpResponseType",
+                          "_value": "Any"
+                        },
+                        "notes": {
+                          "_type": [
+                            "List",
+                            "Note"
+                          ],
+                          "_value": [
+                            {
+                              "_type": "Note",
+                              "_value": {
+                                "key": {
+                                  "_type": "String",
+                                  "_value": "description"
+                                },
+                                "value": {
+                                  "_type": "String",
+                                  "_value": "Staffing v42.0 Change_Organization_Assignments"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "_type": "CreateValues",
+                      "_value": {
+                        "name": {
+                          "_type": "Identifier",
+                          "_value": "ResponseValues"
+                        },
+                        "isDisabled": {
+                          "_type": "Boolean",
+                          "_value": false
+                        },
+                        "errorHandler": {
+                          "_type": [
+                            "Opt",
+                            "ErrorHandler"
+                          ],
+                          "_value": null
+                        },
+                        "values": {
+                          "_type": [
+                            "List",
+                            "Assignment"
+                          ],
+                          "_value": [
+                            {
+                              "_type": "Assignment",
+                              "_value": {
+                                "param": {
+                                  "_type": "Parameter",
+                                  "_value": {
+                                    "name": {
+                                      "_type": "Identifier",
+                                      "_value": "response"
+                                    },
+                                    "type": {
+                                      "_type": "Type",
+                                      "_value": "Data"
+                                    },
+                                    "default": {
+                                      "_type": [
+                                        "Opt",
+                                        "Any"
+                                      ],
+                                      "_value": null
+                                    }
+                                  }
+                                },
+                                "expr": {
+                                  "_type": [
+                                    "Expr",
+                                    "Data"
+                                  ],
+                                  "_value": {
+                                    "type": {
+                                      "_type": "Type",
+                                      "_value": "Data"
+                                    },
+                                    "source": {
+                                      "_type": "String",
+                                      "_value": "data.SOAP_Call.response"
+                                    },
+                                    "isAuto": {
+                                      "_type": "Boolean",
+                                      "_value": false
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "_type": "Assignment",
+                              "_value": {
+                                "param": {
+                                  "_type": "Parameter",
+                                  "_value": {
+                                    "name": {
+                                      "_type": "Identifier",
+                                      "_value": "resStatusCode"
+                                    },
+                                    "type": {
+                                      "_type": "Type",
+                                      "_value": "Number"
+                                    },
+                                    "default": {
+                                      "_type": [
+                                        "Opt",
+                                        "Any"
+                                      ],
+                                      "_value": null
+                                    }
+                                  }
+                                },
+                                "expr": {
+                                  "_type": [
+                                    "Expr",
+                                    "Number"
+                                  ],
+                                  "_value": {
+                                    "type": {
+                                      "_type": "Type",
+                                      "_value": "Number"
+                                    },
+                                    "source": {
+                                      "_type": "String",
+                                      "_value": "data.SOAP_Call.responseStatusCode"
+                                    },
+                                    "isAuto": {
+                                      "_type": "Boolean",
+                                      "_value": false
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "_type": "Assignment",
+                              "_value": {
+                                "param": {
+                                  "_type": "Parameter",
+                                  "_value": {
+                                    "name": {
+                                      "_type": "Identifier",
+                                      "_value": "isError"
+                                    },
+                                    "type": {
+                                      "_type": "Type",
+                                      "_value": "Boolean"
+                                    },
+                                    "default": {
+                                      "_type": [
+                                        "Opt",
+                                        "Any"
+                                      ],
+                                      "_value": null
+                                    }
+                                  }
+                                },
+                                "expr": {
+                                  "_type": [
+                                    "Expr",
+                                    "Boolean"
+                                  ],
+                                  "_value": {
+                                    "type": {
+                                      "_type": "Type",
+                                      "_value": "Boolean"
+                                    },
+                                    "source": {
+                                      "_type": "String",
+                                      "_value": "data.ResponseValues.resStatusCode.is2xxStatusCode().not().or(data.ResponseValues.response.isSoapFault())"
+                                    },
+                                    "isAuto": {
+                                      "_type": "Boolean",
+                                      "_value": false
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        "notes": {
+                          "_type": [
+                            "List",
+                            "Note"
+                          ],
+                          "_value": [
+                            {
+                              "_type": "Note",
+                              "_value": {
+                                "key": {
+                                  "_type": "String",
+                                  "_value": "description"
+                                },
+                                "value": {
+                                  "_type": "String",
+                                  "_value": ""
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "_type": "BranchOnConditions",
+                      "_value": {
+                        "name": {
+                          "_type": "Identifier",
+                          "_value": "WriteBackStatus"
+                        },
+                        "isDisabled": {
+                          "_type": "Boolean",
+                          "_value": false
+                        },
+                        "errorHandler": {
+                          "_type": [
+                            "Opt",
+                            "ErrorHandler"
+                          ],
+                          "_value": null
+                        },
+                        "ifBranches": {
+                          "_type": [
+                            "List",
+                            "WhenBranch"
+                          ],
+                          "_value": [
+                            {
+                              "_type": "WhenBranch",
+                              "_value": {
+                                "name": {
+                                  "_type": "Identifier",
+                                  "_value": "IF"
+                                },
+                                "condition": {
+                                  "_type": [
+                                    "Expr",
+                                    "Boolean"
+                                  ],
+                                  "_value": {
+                                    "type": {
+                                      "_type": "Type",
+                                      "_value": "Boolean"
+                                    },
+                                    "source": {
+                                      "_type": "String",
+                                      "_value": "data.ResponseValues.isError"
+                                    },
+                                    "isAuto": {
+                                      "_type": "Boolean",
+                                      "_value": false
+                                    }
+                                  }
+                                },
+                                "group": {
+                                  "_type": "ImplicitGroup",
+                                  "_value": {
+                                    "name": {
+                                      "_type": "Identifier",
+                                      "_value": "_group_IF_BranchonConditions"
+                                    },
+                                    "isDisabled": {
+                                      "_type": "Boolean",
+                                      "_value": false
+                                    },
+                                    "errorHandler": {
+                                      "_type": [
+                                        "Opt",
+                                        "ErrorHandler"
+                                      ],
+                                      "_value": null
+                                    },
+                                    "nodes": {
+                                      "_type": [
+                                        "List",
+                                        "Node"
+                                      ],
+                                      "_value": [
+                                        {
+                                          "_type": "CreateValues",
+                                          "_value": {
+                                            "name": {
+                                              "_type": "Identifier",
+                                              "_value": "FaultText"
+                                            },
+                                            "isDisabled": {
+                                              "_type": "Boolean",
+                                              "_value": false
+                                            },
+                                            "errorHandler": {
+                                              "_type": [
+                                                "Opt",
+                                                "ErrorHandler"
+                                              ],
+                                              "_value": null
+                                            },
+                                            "values": {
+                                              "_type": [
+                                                "List",
+                                                "Assignment"
+                                              ],
+                                              "_value": [
+                                                {
+                                                  "_type": "Assignment",
+                                                  "_value": {
+                                                    "param": {
+                                                      "_type": "Parameter",
+                                                      "_value": {
+                                                        "name": {
+                                                          "_type": "Identifier",
+                                                          "_value": "message"
+                                                        },
+                                                        "type": {
+                                                          "_type": "Type",
+                                                          "_value": "String"
+                                                        },
+                                                        "default": {
+                                                          "_type": [
+                                                            "Opt",
+                                                            "Any"
+                                                          ],
+                                                          "_value": null
+                                                        }
+                                                      }
+                                                    },
+                                                    "expr": {
+                                                      "_type": [
+                                                        "Expr",
+                                                        "String"
+                                                      ],
+                                                      "_value": {
+                                                        "type": {
+                                                          "_type": "Type",
+                                                          "_value": "String"
+                                                        },
+                                                        "source": {
+                                                          "_type": "String",
+                                                          "_value": "data.SOAP_Call.response.asXML().stringAtXPath(\"/*/*/*/faultstring\")"
+                                                        },
+                                                        "isAuto": {
+                                                          "_type": "Boolean",
+                                                          "_value": false
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              ]
+                                            },
+                                            "notes": {
+                                              "_type": [
+                                                "List",
+                                                "Note"
+                                              ],
+                                              "_value": [
+                                                {
+                                                  "_type": "Note",
+                                                  "_value": {
+                                                    "key": {
+                                                      "_type": "String",
+                                                      "_value": "description"
+                                                    },
+                                                    "value": {
+                                                      "_type": "String",
+                                                      "_value": ""
+                                                    }
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "_type": "CreateTextTemplate",
+                                          "_value": {
+                                            "name": {
+                                              "_type": "Identifier",
+                                              "_value": "FaultPatchBody"
+                                            },
+                                            "isDisabled": {
+                                              "_type": "Boolean",
+                                              "_value": false
+                                            },
+                                            "errorHandler": {
+                                              "_type": [
+                                                "Opt",
+                                                "ErrorHandler"
+                                              ],
+                                              "_value": null
+                                            },
+                                            "message": {
+                                              "_type": "TextTemplate",
+                                              "_value": "{\"validationStatus\": \"SOAP_FAULT\", \"validationMessage\": \"{{data.FaultText.message}}\"}"
+                                            },
+                                            "contentType": {
+                                              "_type": "String",
+                                              "_value": "application/json"
+                                            },
+                                            "formatRef": {
+                                              "_type": [
+                                                "Opt",
+                                                "TextFormatRef"
+                                              ],
+                                              "_value": null
+                                            },
+                                            "notes": {
+                                              "_type": [
+                                                "List",
+                                                "Note"
+                                              ],
+                                              "_value": [
+                                                {
+                                                  "_type": "Note",
+                                                  "_value": {
+                                                    "key": {
+                                                      "_type": "String",
+                                                      "_value": "description"
+                                                    },
+                                                    "value": {
+                                                      "_type": "String",
+                                                      "_value": ""
+                                                    }
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "_type": "SendWorkdayApiRequest",
+                                          "_value": {
+                                            "name": {
+                                              "_type": "Identifier",
+                                              "_value": "PatchRowFault"
+                                            },
+                                            "isDisabled": {
+                                              "_type": "Boolean",
+                                              "_value": false
+                                            },
+                                            "errorHandler": {
+                                              "_type": [
+                                                "Opt",
+                                                "ErrorHandler"
+                                              ],
+                                              "_value": null
+                                            },
+                                            "body": {
+                                              "_type": [
+                                                "Opt",
+                                                "DataRefBody"
+                                              ],
+                                              "_value": {
+                                                "_type": "DataRefBody",
+                                                "_value": {
+                                                  "dataRef": {
+                                                    "_type": [
+                                                      "Expr",
+                                                      "Data"
+                                                    ],
+                                                    "_value": {
+                                                      "type": {
+                                                        "_type": "Type",
+                                                        "_value": "Data"
+                                                      },
+                                                      "source": {
+                                                        "_type": "String",
+                                                        "_value": "data.FaultPatchBody.message"
+                                                      },
+                                                      "isAuto": {
+                                                        "_type": "Boolean",
+                                                        "_value": false
+                                                      }
+                                                    }
+                                                  },
+                                                  "contentType": {
+                                                    "_type": [
+                                                      "Opt",
+                                                      "String"
+                                                    ],
+                                                    "_value": {
+                                                      "_type": "String",
+                                                      "_value": "application/json"
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            "path": {
+                                              "_type": [
+                                                "Expr",
+                                                "String"
+                                              ],
+                                              "_value": {
+                                                "type": {
+                                                  "_type": "Type",
+                                                  "_value": "String"
+                                                },
+                                                "source": {
+                                                  "_type": "String",
+                                                  "_value": "s\"${\"/apps/\"}${context.appReferenceId()}${\"/v1/orgAssignmentLoadRows/\"}${data.CreatedRow.rowId}\""
+                                                },
+                                                "isAuto": {
+                                                  "_type": "Boolean",
+                                                  "_value": false
+                                                }
+                                              }
+                                            },
+                                            "queryParams": {
+                                              "_type": [
+                                                "List",
+                                                "QueryParam"
+                                              ],
+                                              "_value": []
+                                            },
+                                            "method": {
+                                              "_type": "HttpMethod",
+                                              "_value": "PATCH"
+                                            },
+                                            "headers": {
+                                              "_type": [
+                                                "List",
+                                                "Header"
+                                              ],
+                                              "_value": []
+                                            },
+                                            "auth": {
+                                              "_type": "WorkdayCredentialRef",
+                                              "_value": {
+                                                "resourceName": {
+                                                  "_type": "String",
+                                                  "_value": "_DEFAULT_WORKDAY_CREDENTIAL"
+                                                }
+                                              }
+                                            },
+                                            "connectTimeoutMs": {
+                                              "_type": "Long",
+                                              "_value": 10000
+                                            },
+                                            "responseTimeoutMs": {
+                                              "_type": "Long",
+                                              "_value": 20000
+                                            },
+                                            "overallTimeoutMs": {
+                                              "_type": "Long",
+                                              "_value": 300000
+                                            },
+                                            "retryConfigRef": {
+                                              "_type": "RetryConfigRef",
+                                              "_value": "_DEFAULT_WORKDAY_RETRY_CONFIG"
+                                            },
+                                            "tlsConfig": {
+                                              "_type": [
+                                                "Opt",
+                                                "TlsConfig"
+                                              ],
+                                              "_value": null
+                                            },
+                                            "proxyConfig": {
+                                              "_type": [
+                                                "Opt",
+                                                "ProxyConfig"
+                                              ],
+                                              "_value": null
+                                            },
+                                            "responseType": {
+                                              "_type": "HttpResponseType",
+                                              "_value": "Any"
+                                            },
+                                            "notes": {
+                                              "_type": [
+                                                "List",
+                                                "Note"
+                                              ],
+                                              "_value": [
+                                                {
+                                                  "_type": "Note",
+                                                  "_value": {
+                                                    "key": {
+                                                      "_type": "String",
+                                                      "_value": "description"
+                                                    },
+                                                    "value": {
+                                                      "_type": "String",
+                                                      "_value": "Write the SOAP fault back to the row"
+                                                    }
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "notes": {
+                                      "_type": [
+                                        "List",
+                                        "Note"
+                                      ],
+                                      "_value": []
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        "elseBranch": {
+                          "_type": "ImplicitGroup",
+                          "_value": {
+                            "name": {
+                              "_type": "Identifier",
+                              "_value": "_else_BranchonConditions"
+                            },
+                            "isDisabled": {
+                              "_type": "Boolean",
+                              "_value": false
+                            },
+                            "errorHandler": {
+                              "_type": [
+                                "Opt",
+                                "ErrorHandler"
+                              ],
+                              "_value": null
+                            },
+                            "nodes": {
+                              "_type": [
+                                "List",
+                                "Node"
+                              ],
+                              "_value": [
+                                {
+                                  "_type": "CreateTextTemplate",
+                                  "_value": {
+                                    "name": {
+                                      "_type": "Identifier",
+                                      "_value": "SuccessPatchBody"
+                                    },
+                                    "isDisabled": {
+                                      "_type": "Boolean",
+                                      "_value": false
+                                    },
+                                    "errorHandler": {
+                                      "_type": [
+                                        "Opt",
+                                        "ErrorHandler"
+                                      ],
+                                      "_value": null
+                                    },
+                                    "message": {
+                                      "_type": "TextTemplate",
+                                      "_value": "{\"validationStatus\": \"COMPLETED\", \"validationMessage\": \"Change_Organization_Assignments succeeded\"}"
+                                    },
+                                    "contentType": {
+                                      "_type": "String",
+                                      "_value": "application/json"
+                                    },
+                                    "formatRef": {
+                                      "_type": [
+                                        "Opt",
+                                        "TextFormatRef"
+                                      ],
+                                      "_value": null
+                                    },
+                                    "notes": {
+                                      "_type": [
+                                        "List",
+                                        "Note"
+                                      ],
+                                      "_value": [
+                                        {
+                                          "_type": "Note",
+                                          "_value": {
+                                            "key": {
+                                              "_type": "String",
+                                              "_value": "description"
+                                            },
+                                            "value": {
+                                              "_type": "String",
+                                              "_value": ""
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "_type": "SendWorkdayApiRequest",
+                                  "_value": {
+                                    "name": {
+                                      "_type": "Identifier",
+                                      "_value": "PatchRowSuccess"
+                                    },
+                                    "isDisabled": {
+                                      "_type": "Boolean",
+                                      "_value": false
+                                    },
+                                    "errorHandler": {
+                                      "_type": [
+                                        "Opt",
+                                        "ErrorHandler"
+                                      ],
+                                      "_value": null
+                                    },
+                                    "body": {
+                                      "_type": [
+                                        "Opt",
+                                        "DataRefBody"
+                                      ],
+                                      "_value": {
+                                        "_type": "DataRefBody",
+                                        "_value": {
+                                          "dataRef": {
+                                            "_type": [
+                                              "Expr",
+                                              "Data"
+                                            ],
+                                            "_value": {
+                                              "type": {
+                                                "_type": "Type",
+                                                "_value": "Data"
+                                              },
+                                              "source": {
+                                                "_type": "String",
+                                                "_value": "data.SuccessPatchBody.message"
+                                              },
+                                              "isAuto": {
+                                                "_type": "Boolean",
+                                                "_value": false
+                                              }
+                                            }
+                                          },
+                                          "contentType": {
+                                            "_type": [
+                                              "Opt",
+                                              "String"
+                                            ],
+                                            "_value": {
+                                              "_type": "String",
+                                              "_value": "application/json"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "path": {
+                                      "_type": [
+                                        "Expr",
+                                        "String"
+                                      ],
+                                      "_value": {
+                                        "type": {
+                                          "_type": "Type",
+                                          "_value": "String"
+                                        },
+                                        "source": {
+                                          "_type": "String",
+                                          "_value": "s\"${\"/apps/\"}${context.appReferenceId()}${\"/v1/orgAssignmentLoadRows/\"}${data.CreatedRow.rowId}\""
+                                        },
+                                        "isAuto": {
+                                          "_type": "Boolean",
+                                          "_value": false
+                                        }
+                                      }
+                                    },
+                                    "queryParams": {
+                                      "_type": [
+                                        "List",
+                                        "QueryParam"
+                                      ],
+                                      "_value": []
+                                    },
+                                    "method": {
+                                      "_type": "HttpMethod",
+                                      "_value": "PATCH"
+                                    },
+                                    "headers": {
+                                      "_type": [
+                                        "List",
+                                        "Header"
+                                      ],
+                                      "_value": []
+                                    },
+                                    "auth": {
+                                      "_type": "WorkdayCredentialRef",
+                                      "_value": {
+                                        "resourceName": {
+                                          "_type": "String",
+                                          "_value": "_DEFAULT_WORKDAY_CREDENTIAL"
+                                        }
+                                      }
+                                    },
+                                    "connectTimeoutMs": {
+                                      "_type": "Long",
+                                      "_value": 10000
+                                    },
+                                    "responseTimeoutMs": {
+                                      "_type": "Long",
+                                      "_value": 20000
+                                    },
+                                    "overallTimeoutMs": {
+                                      "_type": "Long",
+                                      "_value": 300000
+                                    },
+                                    "retryConfigRef": {
+                                      "_type": "RetryConfigRef",
+                                      "_value": "_DEFAULT_WORKDAY_RETRY_CONFIG"
+                                    },
+                                    "tlsConfig": {
+                                      "_type": [
+                                        "Opt",
+                                        "TlsConfig"
+                                      ],
+                                      "_value": null
+                                    },
+                                    "proxyConfig": {
+                                      "_type": [
+                                        "Opt",
+                                        "ProxyConfig"
+                                      ],
+                                      "_value": null
+                                    },
+                                    "responseType": {
+                                      "_type": "HttpResponseType",
+                                      "_value": "Any"
+                                    },
+                                    "notes": {
+                                      "_type": [
+                                        "List",
+                                        "Note"
+                                      ],
+                                      "_value": [
+                                        {
+                                          "_type": "Note",
+                                          "_value": {
+                                            "key": {
+                                              "_type": "String",
+                                              "_value": "description"
+                                            },
+                                            "value": {
+                                              "_type": "String",
+                                              "_value": "Mark the row completed"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            "notes": {
+                              "_type": [
+                                "List",
+                                "Note"
+                              ],
+                              "_value": []
+                            }
+                          }
+                        },
+                        "exceptionMessage": {
+                          "_type": "String",
+                          "_value": "None of the conditions are matched"
+                        },
+                        "exceptionIfNoBranchMatched": {
+                          "_type": "Boolean",
+                          "_value": false
+                        },
+                        "enableOutputs": {
+                          "_type": "Boolean",
+                          "_value": false
+                        },
+                        "notes": {
+                          "_type": [
+                            "List",
+                            "Note"
+                          ],
+                          "_value": [
+                            {
+                              "_type": "Note",
+                              "_value": {
+                                "key": {
+                                  "_type": "String",
+                                  "_value": "description"
+                                },
+                                "value": {
+                                  "_type": "String",
+                                  "_value": ""
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                },
+                "notes": {
+                  "_type": [
+                    "List",
+                    "Note"
+                  ],
+                  "_value": []
+                }
+              }
+            },
+            "notes": {
+              "_type": [
+                "List",
+                "Note"
+              ],
+              "_value": [
+                {
+                  "_type": "Note",
+                  "_value": {
+                    "key": {
+                      "_type": "String",
+                      "_value": "description"
+                    },
+                    "value": {
+                      "_type": "String",
+                      "_value": "One SOAP call per staged row; an error handler on the group logs and continues"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "notes": {
+      "_type": [
+        "List",
+        "Note"
+      ],
+      "_value": []
+    },
+    "resources": {
+      "_type": "ResourceProvider",
+      "_value": {
+        "fileLikeResources": {
+          "_type": [
+            "Map",
+            "Resource"
+          ],
+          "_value": {}
+        },
+        "credentials": {
+          "_type": [
+            "Map",
+            "Credential"
+          ],
+          "_value": {}
+        },
+        "xmlNamespaces": {
+          "_type": [
+            "Map",
+            "String"
+          ],
+          "_value": {}
+        },
+        "retryConfigs": {
+          "_type": [
+            "Map",
+            [
+              "WithNotes",
+              "RetryConfig"
+            ]
+          ],
+          "_value": {}
+        },
+        "csvFormats": {
+          "_type": [
+            "Map",
+            "CsvFormat"
+          ],
+          "_value": {}
+        },
+        "pollingConfigs": {
+          "_type": [
+            "Map",
+            "PollingConfig"
+          ],
+          "_value": {}
+        }
+      }
+    },
+    "defaultWorkdayCredentialRef": {
+      "_type": [
+        "Opt",
+        "AccessTokenFromInitiatingUser"
+      ],
+      "_value": {
+        "_type": "AccessTokenFromInitiatingUser",
+        "_value": "AccessTokenFromInitiatingUser"
+      }
+    },
+    "mayaVersion": {
+      "_type": "String",
+      "_value": "1.4072.0"
+    },
+    "errorHandler": {
+      "_type": [
+        "Opt",
+        "ErrorHandler"
+      ],
+      "_value": null
+    },
+    "cancelBarrier": {
+      "_type": [
+        "Opt",
+        "Identifier"
+      ],
+      "_value": null
+    },
+    "defaultLocale": {
+      "_type": "Locale",
+      "_value": {
+        "value": {
+          "_type": [
+            "Expr",
+            "String"
+          ],
+          "_value": {
+            "type": {
+              "_type": "Type",
+              "_value": "String"
+            },
+            "source": {
+              "_type": "String",
+              "_value": "\"\"\"en_US\"\"\""
+            },
+            "isAuto": {
+              "_type": "Boolean",
+              "_value": false
+            }
+          }
+        }
+      }
+    },
+    "securityDomains": {
+      "_type": [
+        "Opt",
+        [
+          "List",
+          "String"
+        ]
+      ],
+      "_value": {
+        "_type": [
+          "List",
+          "String"
+        ],
+        "_value": [
+          {
+            "_type": "String",
+            "_value": "SmartOrgLoaderDomain"
+          }
+        ]
+      }
+    }
+  }
+}
