@@ -1,0 +1,22 @@
+{
+  "id": "errorPage",
+  "presentation": {
+    "title": {
+      "type": "title",
+      "id": "errTitle",
+      "label": "Something went wrong"
+    },
+    "body": {
+      "type": "section",
+      "id": "errSection",
+      "children": [
+        {
+          "type": "text",
+          "id": "errText",
+          "enabled": false,
+          "value": "The loader couldn't reach Workday. Try again, or check the integration event for details."
+        }
+      ]
+    }
+  }
+}

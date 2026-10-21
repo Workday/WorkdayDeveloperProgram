@@ -1,0 +1,22 @@
+{
+  "title": "Smart CSV Org Assignment Loader",
+  "description": "An Extend app and async orchestration that replaces multi-row Assign Organization EIB spreadsheets with a flat one-row-per-worker CSV: WQL pre-validation of workers and positions, Staffing Change_Organization_Assignments SOAP calls in the background, and per-row status write-back.",
+  "type": "Integration App",
+  "components": [
+    "Presentation",
+    "Model",
+    "Orchestration",
+    "WQL"
+  ],
+  "products": [
+    "Workday Extend",
+    "Workday Orchestrate",
+    "Workday SOAP API",
+    "Workday HCM"
+  ],
+  "authors": [
+    "jadiyeom"
+  ],
+  "tutorial": "",
+  "source": "community"
+}

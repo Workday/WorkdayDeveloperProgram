@@ -1,0 +1,130 @@
+{
+  "id": "viewLoadBatchHistory",
+  "securityDomains": [
+    "SmartOrgLoaderDomain"
+  ],
+  "endPoints": [
+    {
+      "name": "countRows",
+      "baseUrlType": "workday-app",
+      "url": "orgAssignmentLoadRows?limit=1",
+      "authType": "sso",
+      "failOnStatusCodes": [
+        {
+          "code": 400
+        },
+        {
+          "code": 403
+        },
+        {
+          "code": 500
+        }
+      ]
+    },
+    {
+      "name": "loadRows",
+      "baseUrlType": "workday-app",
+      "url": "<% 'orgAssignmentLoadRows?limit=100&offset=' + ((countRows.total != null && countRows.total > 100) ? (countRows.total - 100) : 0) %>",
+      "authType": "sso",
+      "failOnStatusCodes": [
+        {
+          "code": 400
+        },
+        {
+          "code": 403
+        },
+        {
+          "code": 500
+        }
+      ]
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "id": "histTitle",
+      "label": "Org Assignment Batch History"
+    },
+    "body": {
+      "type": "section",
+      "id": "histSection",
+      "children": [
+        {
+          "type": "grid",
+          "id": "historyGrid",
+          "label": "Loaded rows (latest 100)",
+          "rows": "<% loadRows.data %>",
+          "rowVariableName": "h",
+          "columns": [
+            {
+              "type": "column",
+              "columnId": "hBatch",
+              "label": "Batch",
+              "cellTemplate": {
+                "type": "text",
+                "id": "hBatchCell",
+                "enabled": false,
+                "value": "<% h.batchId %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "hEmp",
+              "label": "Employee ID",
+              "cellTemplate": {
+                "type": "text",
+                "id": "hEmpCell",
+                "enabled": false,
+                "value": "<% h.employeeId %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "hPos",
+              "label": "Position ID",
+              "cellTemplate": {
+                "type": "text",
+                "id": "hPosCell",
+                "enabled": false,
+                "value": "<% h.positionId %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "hDate",
+              "label": "Effective Date",
+              "cellTemplate": {
+                "type": "text",
+                "id": "hDateCell",
+                "enabled": false,
+                "value": "<% h.effectiveDate %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "hStatus",
+              "label": "Status",
+              "cellTemplate": {
+                "type": "text",
+                "id": "hStatusCell",
+                "enabled": false,
+                "value": "<% h.validationStatus %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "hMsg",
+              "label": "Message",
+              "cellTemplate": {
+                "type": "text",
+                "id": "hMsgCell",
+                "enabled": false,
+                "value": "<% h.validationMessage %>"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
