@@ -130,6 +130,7 @@ Community examples, open to everyone. This is the section external contributions
 | [`workday-orchestrate-skill`](examples/workday-orchestrate-skill) | A markdown skill that reviews an Orchestrate flow for Maya file shape, expressions, and secrets. | Agent Skill |
 | [`workday-pmd-skill`](examples/workday-pmd-skill) | A markdown skill that reviews an Extend page for a security domain, endpoint failures, widget ids, labels, and secrets. | Agent Skill |
 | [`workday-skill`](examples/workday-skill) | A markdown skill that chooses which Workday agent skill to apply when a task starts a new app or touches more than one artifact. | Agent Skill |
+| [`workplace-adjustment-passport`](examples/workplace-adjustment-passport) | An Extend app with a Home page card, custom business object, and PMD pages that gives employees a confidential, portable accommodation passport that carries forward with them as they change teams or managers. | Extend App |
 | [`wql-anniversary-celebrations`](examples/wql-anniversary-celebrations) | An orchestration that queries Workday via WQL for active workers celebrating milestone work anniversaries and formats an announcement digest payload for collaboration channels. | Orchestration |
 <!-- examples:end -->
 

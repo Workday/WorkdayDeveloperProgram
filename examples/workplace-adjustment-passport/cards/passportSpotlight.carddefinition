@@ -1,0 +1,16 @@
+{
+  "id": "passportSpotlight",
+  "presentation": {
+    "type": "inlineCard",
+    "header": {
+      "type": "cardHeader",
+      "title": "Workplace Adjustment Passport",
+      "subtitle": "Your active accommodations",
+      "icon": "wd-accent-shield"
+    },
+    "body": {
+      "type": "simpleCard",
+      "value": "Access your portable workplace adjustments, manage manager sharing consent, and request new accommodation equipment or scheduling flexibility."
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "appProperties": [],
+  "tasks": [
+    {
+      "id": "myPassport",
+      "routingPattern": "/",
+      "page": {
+        "id": "myPassport"
+      }
+    },
+    {
+      "id": "requestAdjustment",
+      "routingPattern": "/requestAdjustment",
+      "page": {
+        "id": "requestAdjustment"
+      }
+    },
+    {
+      "id": "teamBriefing",
+      "routingPattern": "/teamBriefing",
+      "page": {
+        "id": "teamBriefing"
+      }
+    }
+  ],
+  "applicationId": "workplaceAdjustmentPassport"
+}

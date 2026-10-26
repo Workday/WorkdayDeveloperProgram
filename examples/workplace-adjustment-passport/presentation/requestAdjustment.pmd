@@ -1,0 +1,140 @@
+{
+  "id": "requestAdjustment",
+  "securityDomains": [
+    "PassportSecurityDomain"
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "adjustmentOutbound",
+        "baseUrlType": "workday-apps",
+        "url": "<% `/apps/{{site.applicationId}}/v1/workplaceAdjustmentPassports` %>",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "failOnStatusCodes": [
+          {
+            "code": 400
+          },
+          {
+            "code": 403
+          }
+        ]
+      }
+    ]
+  },
+  "presentation": {
+    "headerSize": "VPS_DEFAULT",
+    "title": {
+      "type": "title",
+      "id": "requestTitle",
+      "label": "Record Workplace Adjustment"
+    },
+    "body": {
+      "type": "section",
+      "id": "requestFormSection",
+      "children": [
+        {
+          "type": "text",
+          "id": "formGuideText",
+          "value": "Use this form to document a workplace adjustment, ergonomic equipment request, or working accommodation. Please focus strictly on practical tools, software, or schedule adjustments."
+        },
+        {
+          "type": "textInput",
+          "id": "workerNameInput",
+          "label": "Employee Name",
+          "valueOutBinding": "adjustmentOutbound.workerName",
+          "required": true
+        },
+        {
+          "type": "dropdown",
+          "id": "categoryDropdown",
+          "label": "Adjustment Category",
+          "valueOutBinding": "adjustmentOutbound.adjustmentCategory",
+          "required": true,
+          "values": [
+            {
+              "id": "cat1",
+              "value": "Ergonomic Equipment"
+            },
+            {
+              "id": "cat2",
+              "value": "Sensory & Environment"
+            },
+            {
+              "id": "cat3",
+              "value": "Assistive Technology"
+            },
+            {
+              "id": "cat4",
+              "value": "Flexible Working Patterns"
+            },
+            {
+              "id": "cat5",
+              "value": "Communication Preference"
+            }
+          ]
+        },
+        {
+          "type": "textInput",
+          "id": "adjustmentTitleInput",
+          "label": "Adjustment Summary Title",
+          "valueOutBinding": "adjustmentOutbound.adjustmentTitle",
+          "required": true
+        },
+        {
+          "type": "textArea",
+          "id": "adjustmentDetailsInput",
+          "label": "Practical Accommodation Details",
+          "valueOutBinding": "adjustmentOutbound.adjustmentDetails",
+          "required": true
+        },
+        {
+          "type": "dropdown",
+          "id": "cadenceDropdown",
+          "label": "Scheduled Review Frequency",
+          "valueOutBinding": "adjustmentOutbound.reviewCadenceMonths",
+          "required": true,
+          "values": [
+            {
+              "id": "cad1",
+              "value": "6 Months"
+            },
+            {
+              "id": "cad2",
+              "value": "12 Months"
+            }
+          ]
+        },
+        {
+          "type": "dropdown",
+          "id": "consentDropdown",
+          "label": "Manager Briefing Consent",
+          "valueOutBinding": "adjustmentOutbound.managerConsent",
+          "required": true,
+          "values": [
+            {
+              "id": "con1",
+              "value": "Granted - Share with Manager"
+            },
+            {
+              "id": "con2",
+              "value": "Restricted - HR Specialist Only"
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "id": "formFooter",
+      "children": [
+        {
+          "type": "button",
+          "id": "submitAdjustmentBtn",
+          "label": "Save Adjustment to Passport",
+          "action": "PRIMARY"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "total": 3,
+  "data": [
+    {
+      "id": "adj-1001",
+      "workerName": "Alex Morgan",
+      "workerId": "21049",
+      "adjustmentCategory": "Assistive Technology",
+      "adjustmentTitle": "Screen Reader & High-Contrast Display Setup",
+      "adjustmentDetails": "Licensed NVDA screen reader software, high-contrast dark theme presets, and noise-canceling wireless headphones.",
+      "status": "Active",
+      "reviewCadenceMonths": "12 Months",
+      "lastReviewedDate": "2026-03-15",
+      "managerConsent": "Granted - Share with Manager",
+      "supportContact": "HR Workplace Accommodations Team"
+    },
+    {
+      "id": "adj-1002",
+      "workerName": "Jordan Chen",
+      "workerId": "34190",
+      "adjustmentCategory": "Ergonomic Equipment",
+      "adjustmentTitle": "Sit-Stand Desk Converter & Vertical Ergonomic Mouse",
+      "adjustmentDetails": "Dual pneumatic monitor arm with 27-inch vertical display alignment and continuous ergonomic desk converter.",
+      "status": "Active",
+      "reviewCadenceMonths": "12 Months",
+      "lastReviewedDate": "2026-05-20",
+      "managerConsent": "Granted - Share with Manager",
+      "supportContact": "Facilities & Ergonomics Team"
+    },
+    {
+      "id": "adj-1003",
+      "workerName": "Samira Patel",
+      "workerId": "19402",
+      "adjustmentCategory": "Sensory & Environment",
+      "adjustmentTitle": "Sensory Focus Core Hours & Written Meeting Summaries",
+      "adjustmentDetails": "Exemption from meeting scheduling between 9am-11am for deep focus work, plus written agenda notes provided 24 hours prior to team meetings.",
+      "status": "Active",
+      "reviewCadenceMonths": "6 Months",
+      "lastReviewedDate": "2026-08-10",
+      "managerConsent": "Granted - Share with Manager",
+      "supportContact": "HR Workplace Accommodations Team"
+    }
+  ]
+}

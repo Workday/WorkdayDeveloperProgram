@@ -1,0 +1,148 @@
+{
+  "id": "myPassport",
+  "securityDomains": [
+    "PassportSecurityDomain"
+  ],
+  "endPoints": [
+    {
+      "name": "passportsData",
+      "baseUrlType": "workday-apps",
+      "url": "<% `/apps/{{site.applicationId}}/v1/workplaceAdjustmentPassports` %>",
+      "authType": "sso",
+      "failOnStatusCodes": [
+        {
+          "code": 400
+        },
+        {
+          "code": 403
+        }
+      ]
+    }
+  ],
+  "presentation": {
+    "headerSize": "VPS_DEFAULT",
+    "title": {
+      "type": "title",
+      "id": "passportTitle",
+      "label": "My Workplace Adjustment Passport"
+    },
+    "body": {
+      "type": "section",
+      "id": "mainSection",
+      "children": [
+        {
+          "type": "text",
+          "id": "passportMissionText",
+          "value": "Your Workplace Adjustment Passport is a confidential record of approved workplace accommodations, assistive technology, and flexible working arrangements. When you transfer teams or report to a new manager, your adjustments travel with you so you don't have to re-explain your requirements."
+        },
+        {
+          "type": "section",
+          "id": "actionButtonBar",
+          "horizontal": true,
+          "children": [
+            {
+              "type": "button",
+              "id": "requestNewBtn",
+              "label": "Request New Adjustment",
+              "action": "PRIMARY",
+              "task": "requestAdjustment"
+            },
+            {
+              "type": "button",
+              "id": "viewManagerBriefingBtn",
+              "label": "Preview Manager Briefing View",
+              "action": "SECONDARY",
+              "task": "teamBriefing"
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "id": "privacyGuaranteeCallout",
+          "children": [
+            {
+              "type": "text",
+              "id": "privacyCalloutHeader",
+              "value": "🔒 Confidentiality & Privacy Notice: Diagnostic and medical information is never requested, collected, or displayed in this passport. Only practical accommodations needed for your day-to-day productivity are recorded."
+            }
+          ]
+        },
+        {
+          "type": "grid",
+          "id": "adjustmentsGrid",
+          "label": "Active Workplace Adjustments",
+          "rows": "<% passportsData.data %>",
+          "rowVariableName": "item",
+          "columns": [
+            {
+              "type": "column",
+              "id": "categoryCol",
+              "columnId": "categoryColId",
+              "label": "Category",
+              "cellTemplate": {
+                "type": "text",
+                "id": "categoryCell",
+                "value": "<% item.adjustmentCategory %>"
+              }
+            },
+            {
+              "type": "column",
+              "id": "titleCol",
+              "columnId": "titleColId",
+              "label": "Adjustment Title",
+              "cellTemplate": {
+                "type": "text",
+                "id": "titleCell",
+                "value": "<% item.adjustmentTitle %>"
+              }
+            },
+            {
+              "type": "column",
+              "id": "detailsCol",
+              "columnId": "detailsColId",
+              "label": "Details & Equipment",
+              "cellTemplate": {
+                "type": "text",
+                "id": "detailsCell",
+                "value": "<% item.adjustmentDetails %>"
+              }
+            },
+            {
+              "type": "column",
+              "id": "cadenceCol",
+              "columnId": "cadenceColId",
+              "label": "Review Cadence",
+              "cellTemplate": {
+                "type": "text",
+                "id": "cadenceCell",
+                "value": "<% item.reviewCadenceMonths %>"
+              }
+            },
+            {
+              "type": "column",
+              "id": "consentCol",
+              "columnId": "consentColId",
+              "label": "Manager Sharing",
+              "cellTemplate": {
+                "type": "text",
+                "id": "consentCell",
+                "value": "<% item.managerConsent %>"
+              }
+            },
+            {
+              "type": "column",
+              "id": "statusCol",
+              "columnId": "statusColId",
+              "label": "Status",
+              "cellTemplate": {
+                "type": "text",
+                "id": "statusCell",
+                "value": "<% item.status %>"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
