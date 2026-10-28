@@ -1,0 +1,185 @@
+var getData = function(){
+  var data = [
+{
+    "mimeType": "text/plain",
+    "iconId": "mime_plain",
+    "contentType": ""
+  },
+{
+    "mimeType": "application/java-archive",
+    "iconId": "mime_java",
+    "contentType": ""
+  },
+{
+    "mimeType": "application/octet-stream",
+    "iconId": "mime_binary",
+    "contentType": ""
+  },
+{
+    "mimeType": "application/vnd.ms-excel",
+    "iconId": "mime_msexcel",
+    "contentType": "398c2a9708d0100003f96143c9430000"
+  },
+{
+    "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "iconId": "mime_msexcel",
+    "contentType": "398c2a9708d0100003f96143c9430000"
+  },
+{
+    "mimeType": "application/vnd.ms-powerpoint",
+    "iconId": "mime_msppt",
+    "contentType": "bda0e171ee8610001fdfe43554e0008b"
+  },
+{
+    "mimeType": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "iconId": "mime_msppt",
+    "contentType": "bda0e171ee8610001fdfe43554e0008b"
+  },
+{
+    "mimeType": "application/msword",
+    "iconId": "mime_msword",
+    "contentType": "73bc2567331510005b2cfa77095506f8"
+  },
+{
+    "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "iconId": "mime_msword",
+    "contentType": "73bc2567331510005b2cfa77095506f8"
+  },
+{
+    "mimeType": "application/pdf",
+    "iconId": "mime_pdf",
+    "contentType": "d9ae3cc8446c11de98360015c5e6daf6"
+  },
+{
+    "mimeType": "mime_post",
+    "iconId": "mime_post",
+    "_comment": "No idea what file type this maps to.",
+    "contentType": ""
+  },
+{
+    "mimeType": "application/rtf",
+    "iconId": "mime_rtf",
+    "contentType": ""
+  },
+{
+    "mimeType": "application/zip",
+    "iconId": "mime_zip",
+    "contentType": ""
+  },
+{
+    "mimeType": "audio/wav",
+    "iconId": "mime_wav",
+    "contentType": "d9ae5154446c11de98360015c5e6daf6"
+  },
+{
+    "mimeType": "image/bmp",
+    "iconId": "mime_image",
+    "contentType": ""
+  },
+{
+    "mimeType": "image/gif",
+    "iconId": "mime_image",
+    "contentType": "d9ae5ed8446c11de98360015c5e6daf6"
+  },
+{
+    "mimeType": "image/jpeg",
+    "iconId": "mime_image",
+    "contentType": "d9ae5d84446c11de98360015c5e6daf6"
+  },
+{
+    "mimeType": "image/png",
+    "iconId": "mime_image",
+    "contentType": "41291951c48210003267802b40f3a841"
+  },
+{
+    "mimeType": "image/svg+xml",
+    "iconId": "mime_image",
+    "contentType": ""
+  },
+{
+    "mimeType": "image/tiff",
+    "iconId": "mime_image",
+    "_comment": "There are likely more image mimetypes that are supported....but this is a good start.",
+    "contentType": ""
+  },
+{
+    "mimeType": "video/mpeg",
+    "iconId": "mime_mpeg",
+    "contentType": ""
+  },
+{
+    "mimeType": "text/html",
+    "iconId": "mime_html",
+    "contentType": "d9ae66b2446c11de98360015c5e6daf6"
+  },
+{
+    "mimeType": "mime_etf",
+    "iconId": "mime_etf",
+    "_comment": "No idea what file type this maps to.",
+    "contentType": ""
+  },
+{
+    "mimeType": "application/xml",
+    "iconId": "mime_xml",
+    "contentType": "d9ae655e446c11de98360015c5e6daf6"
+  },
+{
+    "mimeType": "text/xml",
+    "iconId": "mime_xml",
+    "contentType": "d9ae655e446c11de98360015c5e6daf6"
+  },
+{
+    "mimeType": "video/x-msvideo",
+    "iconId": "mime_avi",
+    "contentType": ""
+  },
+{
+    "mimeType": "mime_qt",
+    "iconId": "mime_qt",
+    "_comment": "No idea what file type this maps to.",
+    "contentType": ""
+  },
+{
+    "mimeType": "mime_msvideo",
+    "iconId": "mime_msvideo",
+    "_comment": "Both this one AND the mime_avi appear to map to the same mimeType.",
+    "contentType": ""
+  }
+  ]
+    ;
+
+}
+
+
+var getIconID = function(myInput) {
+
+  var input = myInput;
+  var result = getData().filter(x => {x.mimeType == input});
+
+  var icon = result[0].iconId ?: '';
+  return icon;
+};
+
+var getIconIDbyContentType = function(myInput) {
+
+  var input = myInput;
+  var result = getData().filter(x => {x.contentType == input});
+
+  var icon = result[0].iconId ?: '';
+  return icon;
+};
+
+var getMimeTypeIDbyContentType = function(myInput) {
+
+  var input = myInput;
+  var result = getData().filter(x => {x.contentType == input});
+
+  var icon = result[0].mimeType ?: '';
+  return icon;
+};
+
+{
+    "getIconID": getIconID,
+    "getIconIDbyContentType": getIconIDbyContentType,
+    "getMimeTypeIDbyContentType": getMimeTypeIDbyContentType
+}

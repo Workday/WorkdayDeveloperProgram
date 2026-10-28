@@ -1,0 +1,287 @@
+{
+  "id": "updateEvent",
+  "securityDomains": [
+    "ManageCreateAnEvent"
+  ],
+  "include": [
+    "fileTypes.script"
+  ],
+  "endPoints": [
+    {
+      "name": "me",
+      "baseUrlType": "workday-staffing",
+      "url": "workers/me",
+      "authType": "sso"
+    },
+    {
+      "name": "event",
+      "baseUrlType": "app",
+      "url": "<% /*remember that queryParams.eventId is taking in the parameterBinding from the taskReference tag on the page
+      that sent the user here. This happens to be called 'workEventId' in manageEvents.pmd but it could be called whatever the developer chooses*/
+              'workEvents/' + (queryParams.workEventId ?? flowVariables.currentEvent) %>",
+      "authType": "sso"
+    },
+    {
+      "name": "getAttachments",
+      "baseUrlType": "app",
+      "url": "<% 'attachedFiles?event=' + (flowVariables.currentEvent ?? queryParams.workEventId)  %>",
+      "authType": "sso"
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "editButtonBarFlowVariable",
+        "type": "outboundVariable",
+        "variableScope": "flow",
+        "values": [
+          {
+            "outboundPath": "deleteClicked",
+            "value": "<% deleteButton.value %>"
+          },
+          {
+            "outboundPath": "currentEvent",
+            "value": "<% (flowVariables.currentEvent ?? queryParams.workEventId) %>"
+          }
+        ]
+      },
+      {
+        "name": "updateEvent",
+        "baseUrlType": "app",
+        "url": "<% 'workEvents/' + event.id %>",
+        "authType": "sso",
+        "httpMethod": "PUT",
+        "allowPutForUnchangedData": true,
+        "onSend": "<% //the above allowPutForUnchangedData attribute will cause the PUT to fire upon page submission even if no data appears to have changed
+                   //Outbound endpoint that updates the BO. We need to provide all existing values on the Event so they do not fall off since this is a PUT
+                   //it is always preferable to add to your payload using onSend as opposed to a values[] array within the outboundEndpoint. Use the following syntax.
+                   //self.data is the payload as it exists coming into this onSend event
+                   self.data.internalOnly = internalOnlyRadioGroup.value[0] == 'yes' ? true : false; //convert internalOnly radio group response from String to Boolean
+                   self.data.description = description.value;
+                   self.data.put('createdBy',{'id': event.createdBy.id}); //add createdBy object
+                   console.info(json:asJSON(self.data)); return self.data; %>"
+      },
+      {
+        "name": "createEventAttachment",
+        "baseUrlType": "app",
+        "url": "attachedFilesCollection",
+        "authType": "sso",
+        "httpMethod": "POST",
+        "multiPartFileLast": true,
+        "onMultiPartSend": "<%
+          for (var file : self.data.metadata.attachedFiles) { //loop through as many files as were uploaded
+            //Put an uploadedBy object with an id field to the JSON part.
+            file.put('uploadedBy',{'id': me.id}); //put the new uploadedBy map in the metadata. This captures the WID of the uploader.
+            //Put uploadedDate field to the JSON part.
+            file.uploadedDate = date:getTodaysDate(date:getDateTimeZone(userTimeZone)); //put the uploadedDate field in the metadata
+            file.put('event',{'id': event.id}); //link the file with the charity
+            console.info('metadata is ' + json:asJSON(self.data)); //log the metadata being passed in for debugging purposes
+          }
+          self.data;
+    %>",
+        "exclude": "<% //This exclude statement checks whether a file was uploaded successfully!
+                    empty attachmentFileUploader.children %>"
+      }
+    ],
+    "responseErrorDetail": {
+      "errorSummary": "<% error %>",
+      "errors": "<% errors.map(item => { item.error }); %>"
+    }
+  },
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Update Event"
+    },
+    "headerSize": "STANDARD",
+    "body": {
+      "type": "section",
+      "horizontal": true,
+      "children": [
+        {
+          "type": "section",
+          "id": "leftside",
+          "children": [
+            {
+              "type": "text",
+              "id": "name",
+              "label": "Event Name",
+              "required": "<% true %>",
+              "value": "<% event.name %>",
+              "valueOutBinding": "updateEvent.name"
+            },
+            {
+              "type": "richText",
+              "id": "description",
+              "label": "Description",
+              "required": "<% true %>",
+              "value": "<% event.description %>"
+            },
+            {
+              "type": "text",
+              "id": "location",
+              "label": "Event Location",
+              "required": "<% true %>",
+              "value": "<% event.location %>",
+              "valueOutBinding": "updateEvent.location"
+            },
+            {
+              "type": "date",
+              "id": "startdate",
+              "required": "<% true %>",
+              "dateFormat": "yyyy-MM-dd",
+              "label": "Start Date of Event",
+              "value": "<% event.startDate %>",
+              "valueOutBinding": "updateEvent.startDate"
+            },
+            {
+              "type": "date",
+              "id": "enddate",
+              "required": "<% true %>",
+              "dateFormat": "yyyy-MM-dd",
+              "label": "End Date of Event",
+              "value": "<% event.endDate %>",
+              "valueOutBinding": "updateEvent.endDate"
+            },
+            {
+              "type": "text",
+              "id": "sponsor",
+              "label": "Event Sponsor",
+              "value": "<% event.sponsor %>",
+              "valueOutBinding": "updateEvent.sponsor"
+            },
+            {
+              "type": "currency",
+              "currencyCode": "USD",
+              "id": "cost",
+              "fractionDigits": 2,
+              "label": "Fee (USD)",
+              "value": "<% //the value to display on page load, in this case the existing value from the inbound endpoint
+                        event.cost.value ?? 0  %>",
+              "valuesOut": [
+                {
+                  "value": "USD",
+                  "valueOutBinding": "updateEvent.cost.currency"
+                },
+                {
+                  "value": "<% //the value the user enters, whereas the valueOutBinding below is what will hit the outbound endpoint
+                            self.value %>",
+                  "valueOutBinding": "updateEvent.cost.value"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "contactInfo",
+              "label": "Contact Info/Email",
+              "value": "<% event.contactInfo %>",
+              "valueOutBinding": "updateEvent.contactInfo"
+            },
+            {
+              "type": "radioGroup",
+              "id": "internalOnlyRadioGroup",
+              "label": "Is this an internal only event?",
+              "hideDisplayOption": "true",
+              "required": "true",
+              "selectedValues": "<% ! empty event.internalOnly ? (event.internalOnly ? ['yes'] : ['no'] ) : ['no']  %>",
+              "instanceList": [
+                {
+                  "id": "yes",
+                  "descriptor": "Yes"
+                },
+                {
+                  "id": "no",
+                  "descriptor": "No"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "id": "rightside",
+          "children": [
+            {
+              "type": "section",
+              "horizontal": false,
+              "sorted": false,
+              "children": [
+                {
+                  "type": "fileUploader",
+                  "label": "Attach Files Related to the Event",
+                  "id": "attachmentFileUploader",
+                  "maxImageDimension": "1024",
+                  "maxFileSize": "5242880",
+                  "compact": "<% true %>",
+                  "required": "<% false %>",
+                  "fileTypes": "*",
+                  "valueOutBinding": "<% 'createEventAttachment:attachedFiles' //outbound endpoint name : attachment obect API URL
+          %> ",
+                  "metadata": "<%
+              {:} //need at least an empty map in a metadata tag for onMultiPartSend() to have metadata to work with!
+              %>"
+                }
+              ]
+            },
+            {
+              "type": "fileUploader",
+              "label": "Previously attached files for Event:",
+              "id": "multiFileUploader",
+              "valueOutBinding": "postAttachments:filedata:",
+              "enabled": "false",
+              "fileTypes": "txt,jpg,jpeg,png,ppt,pptx,pdf,doc,docx,xlsx,xls",
+              "singular": false,
+              "children": [
+                {
+                  "type": "loop",
+                  "on": "<% getAttachments.data %>",
+                  "as": "file",
+                  "children": [
+                    {
+                      "type": "fileUploaderRow",
+                      "render": "<% !(empty file.fileName) %>",
+                      "attachment": {
+                        "type": "attachmentList",
+                        "attachmentURL": "<% 'https://api.workday.com/apps/' + site.applicationId + '/v1/attachedFiles/' + file.id %>",
+                        "attachmentAuth": "sso",
+                        "attachmentName": "<% file.fileName %>",
+                        "attachmentUriTemplate": "[Target]",
+                        "instanceList": [
+                          {
+                            "action": "attachment",
+                            "descriptor": "<% file.fileName%>",
+                            "mimeType": "<% fileType:getFileType(file.fileName) %>"
+                          }
+                        ]
+                      },
+                      "fileName": "<% file.fileName%>",
+                      "fileType": "<% fileTypes.getMimeTypeIDbyContentType(file.contentType.id) %>"
+                    }
+                  ]
+                }
+              ],
+              "fileUploaderRowTemplate": [ ]
+            }
+          ]
+        },
+        {
+          "type": "editButtonBar",
+          "editButtons": [
+            {
+              "type": "editButton",
+              "label": "Update Event",
+              "id": "updateEventButton",
+              "buttonType": "PRIMARY"
+            },
+            {
+              "type": "editButton",
+              "label": "Remove Attachments",
+              "id": "deleteButton",
+              "buttonType": "AUXILIARY"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
