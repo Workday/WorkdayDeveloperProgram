@@ -1,0 +1,268 @@
+{
+  "id": "registerForEvents",
+  "securityDomains": [
+    "RegisterForEvents"
+  ],
+  "endPoints": [
+    {
+      "name": "me",
+      "baseUrlType": "graph",
+      "httpMethod": "POST",
+      "authType": "sso",
+      "failOnStatusCodes": [
+        {
+          "code": "400"
+        },
+        {
+          "code": "403"
+        }
+      ],
+      "graphQuery": {
+        "queryId": "me"
+      }
+    },
+    {
+      "name": "events",
+      "baseUrlType": "workday-wql",
+      "url": "<% const query = 'SELECT name, cost, description, workdayID as id, sponsor, location, startDate, endDate, contactInfo, venue, createdBy, registrants { worker } FROM ' + site.applicationId + '_workEvents';
+              console.info('events query is ' + query);
+              return 'data?query=' + query.urlEncode();
+    %>",
+      "authType": "sso",
+      "failOnStatusCodes": [
+        {
+          "code": "400"
+        },
+        {
+          "code": "403"
+        }
+      ]
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Register for an Event"
+    },
+    "headerSize": "STANDARD",
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "sorted": false,
+      "children": [
+        {
+          "type": "section",
+          "horizontal": true,
+          "children": [
+            {
+              "type": "richText",
+              "value": "Use this page to browse for upcoming Work Events to register for."
+            },
+            {
+              "type": "cardContainer",
+              "layout": "MASONRY",
+              "cards": [
+                {
+                  "type": "card",
+                  "cardId": "CalendarLinks"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "eventsGrid",
+          "label": "Upcoming Work Events",
+          "type": "grid",
+          "rows": "<% //only return events that haven't yet taken place. date:parse() ensures the date strings for today's date and the event dates can be compared using PMD Scripting
+          events.data.filter(event => {date:parse(event.startDate).after(date:now(userTimeZone)) }) %>",
+          "rowVariableName": "event",
+          "columns": [
+            {
+              "cellTemplate": {
+                "type": "button",
+                "label": "<% event.name %>",
+                "action": "LINK",
+                "value": "<% event.id %>",
+                "taskReference": {
+                  "taskId": "updateEvent",
+                  "parameterBindings": {
+                    "workEventId": "<% /* this workEventId is a parameter we are passing to the update page once the user clicks to it.
+                     taskId points to the target page, and on that page, the valid queryParam name in the inbond endpoint for the Event BO instance to update is populated here (event.id):*/
+                                event.id %>"
+                  }
+                }
+              },
+              "label": "Name of Event",
+              "type": "column",
+              "columnId": "name",
+              "sortableAndFilterable": true
+            },
+            {
+              "cellTemplate": {
+                "type": "currency",
+                "label": "Amount (USD)",
+                "id": "cost",
+                "enabled": false,
+                "currencyCode": "USD",
+                "value": "<% event.cost.value ?: 0 %>",
+                "showCurrencySymbol": true,
+                "render": true,
+                "visible": true
+              },
+              "label": "Event Fee",
+              "columnId": "Cost",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "richText",
+                "value": "<% event.description %>"
+              },
+              "label": "Description",
+              "columnId": "Description",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% event.sponsor %>"
+              },
+              "label": "Event Sponsor",
+              "sortableAndFilterable": true,
+              "columnId": "Sponsor",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% event.location %>"
+              },
+              "label": "Location",
+              "columnId": "Proposed Location",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "date",
+                "datePrecision": "DAY",
+                "dateFormat": "yyyy-MM-dd",
+                "value": "<% event.startDate %>"
+              },
+              "label": "Start Date of Event",
+              "sortableAndFilterable": true,
+              "columnId": "StartDateOfEvent",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "date",
+                "datePrecision": "DAY",
+                "dateFormat": "yyyy-MM-dd",
+                "value": "<% event.endDate %>"
+              },
+              "label": "End Date of Event",
+              "sortableAndFilterable": true,
+              "columnId": "EndDateOfEvent",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% event.contactInfo %>"
+              },
+              "label": "Contact Info",
+              "columnId": "ContactInfo",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% let registrantsList = event.registrants ?? [];
+                  let it_me = registrantsList.find(x => x.worker.id == me.data.worker.data[0].workdayID.id);
+                  if (it_me != null) { 'true'; } %>"
+              },
+              "label": "Currently Registered?",
+              "columnId": "registrants",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "instanceList",
+                "instanceList": [
+                  {
+                    "id": "<% event.venue %>",
+                    "descriptor": "<% event.venue.descriptor ?: '' %>"
+                  }
+                ]
+              },
+              "label": "Booked Venue",
+              "columnId": "BookedVenue",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "readOnlyText",
+                "value": "<% event.internalOnly%>"
+              },
+              "label": "Internal Only?",
+              "columnId": "InternalOnly",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "instanceList",
+                "instanceList": [
+                  {
+                    "id": "<% event.createdBy %>",
+                    "descriptor": "<% //here we use a ternary or Elvis expression to tell the page to check
+                                   // whether the descriptor is non-null. If it is null, display an empty string. Else, it will display the expression before the operator.
+                                   event.createdBy.descriptor ?: '' %>"
+                  }
+                ]
+              },
+              "label": "Created By",
+              "columnId": "CreatedBy",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "section",
+                "children": [
+                  {
+                    "type": "button",
+                    "action": "AUXILIARY",
+                    "label": "Register",
+                    "visible": "<% 
+                    let registrantsList = event.registrants ?? [];
+                  let it_me = registrantsList.find(x => x.worker.id == me.data.worker.data[0].workdayID.id);
+                  empty(it_me);
+                     %>",
+                    "taskReference": {
+                      "taskId": "registerForEvent",
+                      "parameterBindings": {
+                        "workEventId": "<% /* this workEventId is a parameter we are passing to the update page once the user clicks to it.
+                     taskId points to the target page, and on that page, the valid queryParam name in the inbond endpoint for the Event BO instance to update is populated here (event.id):*/
+                                    event.id %>"
+                      }
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "value": "Successfully Registered",
+                    "visible": "<% let registrantsList = event.registrants ?? [];
+                  let it_me = registrantsList.find(x => x.worker.id == me.data.worker.data[0].workdayID.id);
+                  !empty(it_me); %>"
+                  }
+                ]
+              },
+              "columnId": "actions",
+              "type": "column",
+              "label": "Actions"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

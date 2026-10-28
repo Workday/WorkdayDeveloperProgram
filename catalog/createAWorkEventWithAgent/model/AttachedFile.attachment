@@ -1,0 +1,35 @@
+{
+  "id": 2,
+  "name": "AttachedFile",
+  "label": "Attached File",
+  "defaultSecurityDomains": [
+    "ManageCreateAnEvent"
+  ],
+  "defaultCollection": {
+    "name": "attachedFiles",
+    "label": "All Attached Files for Event"
+  },
+  "fields": [
+    {
+      "id": 1,
+      "name": "uploadedBy",
+      "label": "File Uploaded By",
+      "type": "SINGLE_INSTANCE",
+      "target": "WORKER"
+    },
+    {
+      "id": 2,
+      "name": "uploadedDate",
+      "label": "File Upload Date",
+      "type": "DATE",
+      "precision": "DAY"
+    },
+    {
+      "id": 3,
+      "name": "event",
+      "label": "Event for Attachment",
+      "type": "SINGLE_INSTANCE",
+      "target": "WorkEvent"
+    }
+  ]
+}

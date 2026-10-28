@@ -1,0 +1,9 @@
+{
+  "id": 3,
+  "name": "WorkEventRegistration",
+  "label": "Work Event Registration",
+  "routePath": "/",
+  "securityDomains": [
+    "RegisterForEvents"
+  ]
+}

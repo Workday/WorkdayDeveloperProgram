@@ -1,0 +1,43 @@
+{
+  "id": "registerConfirmation",
+  "securityDomains": [
+    "RegisterForEvents"
+  ],
+  "presentation": {
+    "headerSize": "HIDDEN",
+    "micro": "true",
+    "standardEditButtonsHidden": "<% true %>",
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "text",
+          "id": "successtext",
+          "value": "Your request to join the Work Event was successful!.",
+          "enabled": "false"
+        },
+        {
+          "action": "SECONDARY",
+          "id": "popupButton1",
+          "type": "button",
+          "taskReference": {
+            "type": "taskReference",
+            "taskId": "registerForEvents"
+          },
+          "label": "Registration Page"
+        },
+        {
+          "action": "SECONDARY",
+          "id": "popupButton2",
+          "type": "button",
+          "taskReference": {
+            "type": "taskReference",
+            "taskId": "calendarWorkEvents"
+          },
+          "label": "Calendar Page"
+        }
+      ]
+    }
+  }
+}

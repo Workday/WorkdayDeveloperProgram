@@ -1,0 +1,25 @@
+{
+  "id": "EventImage",
+  "parameters": ["title", "subtitle", "imageURL"],
+  "header": {
+    "title": "<% title %>",
+    "subtitle": "<% subtitle %>"
+  },
+
+  "body": {
+    "type": "imageCard",
+    "endPoint": {
+      "name": "imageEndPointName",
+      "url" : "<% imageURL %>",
+      "authType" : "sso"
+    }
+  },
+  "footer": [
+    {
+      "label": "View All Events",
+      "taskReference": {
+        "taskId": "calendarWorkEvents"
+      }
+    }
+  ]
+}

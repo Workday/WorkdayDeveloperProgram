@@ -1,0 +1,47 @@
+---
+name: view-work-event
+description: "Displays the details of a single Work Event to the employee in the agent chat window and allows them to register for that event directly from the conversation."
+metadata:
+  tags:
+    - work-event
+    - view
+    - register
+allowed-tools:
+  - get_create_awork_event_with_agent_mcwslt_work_events
+  - patch_create_awork_event_with_agent_mcwslt_work_events
+  - post_create_awork_event_with_agent_mcwslt_registrants
+tool-wids:
+  - name: get_create_awork_event_with_agent_mcwslt_work_events
+    wid: 2eccfb57d2e55a69843387ddf09e5fb2
+  - name: patch_create_awork_event_with_agent_mcwslt_work_events
+    wid: b93e2bc6b4dc5a249842536fe9b711b1
+  - name: post_create_awork_event_with_agent_mcwslt_registrants
+    wid: b27ef2bf4ad958c8b006bdcc36da277d
+---
+
+# View Work Event Skill
+
+This skill displays the full details of a specific Work Event in the agent chat window and allows the employee to register for it or cancel.
+
+## Steps
+
+1. When the user asks to view a specific Work Event — for example "show me the details for [Event Name]" or after clicking a Register button from the `registerForEventsAui` list page — identify the `workEventId` for the event.
+   - If the user has not yet specified which event they want to view, ask them to clarify or use the `register-for-events` skill to help them browse upcoming events first.
+2. Call `get_create_awork_event_with_agent_mcwslt_work_events` with the `workEventId` to load the event details.
+3. Present the following event details to the user conversationally:
+   - Event name
+   - Date range (start date — end date)
+   - Location
+   - Description
+   - Sponsor
+   - Fee
+   - Contact information
+4. Ask the user if they would like to **Register** for the event or if they want to do something else:
+   - If the user confirms registration, call `post_create_awork_event_with_agent_mcwslt_registrants` to create a Registrant record and confirm success: "You have successfully registered for **[Event Name]**!"
+   - If the user declines, acknowledge their choice and end the skill gracefully: "No problem! Let me know if there's anything else I can help with."
+   - If the user is already registered, inform them: "It looks like you're already registered for this event."
+
+## Error Handling
+
+- If the event page fails to load, inform the user and suggest trying again later.
+- If registration fails, relay the error and suggest contacting a system administrator.

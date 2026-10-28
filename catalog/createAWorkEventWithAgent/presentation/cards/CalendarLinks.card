@@ -1,0 +1,43 @@
+{
+  "id": "CalendarLinks",
+  "parameters": [
+  ],
+  "header": {
+    "title": "What's Next?",
+    "icon": "wd-accent-calendar",
+    "indicator": {
+      "color": "blue"
+    }
+  },
+  "body": {
+    "type": "pillCard",
+    "pills": [
+      {
+        "label": "Work Event Calendar",
+        "taskReference": {
+          "taskId": "calendarWorkEvents"
+        }
+      },
+      {
+        "label": "Create a Work Event",
+        "taskReference": {
+          "taskId": "createEventWizard"
+        }
+      },
+      {
+        "label": "Register For Events",
+        "taskReference": {
+          "taskId": "registerForEvents"
+        }
+      }
+    ]
+  },
+  "footer": [
+    {
+      "label": "Return Home",
+      "taskReference": {
+        "taskId": "eventHub"
+      }
+    }
+  ]
+}

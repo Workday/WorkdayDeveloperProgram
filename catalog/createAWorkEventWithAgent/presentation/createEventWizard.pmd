@@ -1,0 +1,32 @@
+{
+  "id": "createEventWizard",
+  "endPoints": [ ],
+  "presentation": {
+    "body": {
+      "type": "editWizard",
+      "title": "Create Work Event",
+      "subtitle": "New Event",
+      "summarySettings": {
+        "enabled": true,
+        "label": "Review Event"
+      },
+      "editTasks": [
+        {
+          "label": "Create Event",
+          "task": {
+            "taskId": "createEvent"
+          }
+        }
+      ],
+      "conclusion": {
+        "task": {
+          "taskId": "eventHub",
+          "parameters": {
+            "message": "Request has been submitted."
+          }
+        },
+        "render": true
+      }
+    }
+  }
+}
