@@ -1,0 +1,20 @@
+{
+  "title": "Workplace Adjustment & Accessibility Passport",
+  "description": "An Extend app with a Home page card, custom business object, and PMD pages that gives employees a confidential, portable accommodation passport that carries forward with them as they change teams or managers.",
+  "type": "Extend App",
+  "components": [
+    "Presentation",
+    "Card",
+    "Model",
+    "Business Process"
+  ],
+  "products": [
+    "Workday Extend",
+    "Workday HCM"
+  ],
+  "authors": [
+    "srivilliamsai"
+  ],
+  "tutorial": "",
+  "source": "community"
+}

@@ -1,0 +1,26 @@
+{
+  "id": 1,
+  "name": "AdjustmentPassportBP",
+  "label": "Workplace Adjustment Review Event",
+  "securityDomain": "PassportSecurityDomain",
+  "steps": [
+    {
+      "order": 1,
+      "name": "InitiateAdjustmentRequest",
+      "type": "Initiation",
+      "assignedTo": "Employee"
+    },
+    {
+      "order": 2,
+      "name": "AccommodationReviewAndApproval",
+      "type": "Approval",
+      "assignedTo": "HR Workplace Accommodations Partner"
+    },
+    {
+      "order": 3,
+      "name": "ImplementationNotification",
+      "type": "Notification",
+      "assignedTo": "Manager"
+    }
+  ]
+}

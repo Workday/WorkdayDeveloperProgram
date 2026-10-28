@@ -1,0 +1,116 @@
+{
+  "id": "teamBriefing",
+  "securityDomains": [
+    "PassportSecurityDomain"
+  ],
+  "endPoints": [
+    {
+      "name": "teamPassportsData",
+      "baseUrlType": "workday-apps",
+      "url": "<% `/apps/{{site.applicationId}}/v1/workplaceAdjustmentPassports` %>",
+      "authType": "sso",
+      "failOnStatusCodes": [
+        {
+          "code": 400
+        },
+        {
+          "code": 403
+        }
+      ]
+    }
+  ],
+  "presentation": {
+    "headerSize": "VPS_DEFAULT",
+    "title": {
+      "type": "title",
+      "id": "teamBriefingTitle",
+      "label": "Team Workplace Adjustments Briefing"
+    },
+    "body": {
+      "type": "section",
+      "id": "briefingSection",
+      "children": [
+        {
+          "type": "text",
+          "id": "managerGuideText",
+          "value": "This briefing provides people leaders with practical information regarding active workplace accommodations, equipment, and work patterns for team members who have consented to share. Use this information to ensure smooth team transitions and continuous productivity."
+        },
+        {
+          "type": "section",
+          "id": "managerTipSection",
+          "children": [
+            {
+              "type": "text",
+              "id": "managerTipText",
+              "value": "💡 Manager Best Practice: Review this summary during your first 1-on-1 with new internal transfers. Inquire whether their equipment, software, or schedule arrangements are functioning smoothly."
+            }
+          ]
+        },
+        {
+          "type": "grid",
+          "id": "teamAdjustmentsGrid",
+          "label": "Approved Team Member Adjustments",
+          "rows": "<% teamPassportsData.data %>",
+          "rowVariableName": "adjustment",
+          "columns": [
+            {
+              "type": "column",
+              "id": "teamMemberCol",
+              "columnId": "teamMemberColId",
+              "label": "Team Member",
+              "cellTemplate": {
+                "type": "text",
+                "id": "teamMemberCell",
+                "value": "<% adjustment.workerName %>"
+              }
+            },
+            {
+              "type": "column",
+              "id": "teamCategoryCol",
+              "columnId": "teamCategoryColId",
+              "label": "Adjustment Category",
+              "cellTemplate": {
+                "type": "text",
+                "id": "teamCategoryCell",
+                "value": "<% adjustment.adjustmentCategory %>"
+              }
+            },
+            {
+              "type": "column",
+              "id": "teamTitleCol",
+              "columnId": "teamTitleColId",
+              "label": "Accommodation Summary",
+              "cellTemplate": {
+                "type": "text",
+                "id": "teamTitleCell",
+                "value": "<% adjustment.adjustmentTitle %>"
+              }
+            },
+            {
+              "type": "column",
+              "id": "teamDetailsCol",
+              "columnId": "teamDetailsColId",
+              "label": "Practical Implementation Details",
+              "cellTemplate": {
+                "type": "text",
+                "id": "teamDetailsCell",
+                "value": "<% adjustment.adjustmentDetails %>"
+              }
+            },
+            {
+              "type": "column",
+              "id": "teamCadenceCol",
+              "columnId": "teamCadenceColId",
+              "label": "Review Frequency",
+              "cellTemplate": {
+                "type": "text",
+                "id": "teamCadenceCell",
+                "value": "<% adjustment.reviewCadenceMonths %>"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
