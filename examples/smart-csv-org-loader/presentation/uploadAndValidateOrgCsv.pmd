@@ -1,0 +1,260 @@
+{
+  "id": "uploadAndValidateOrgCsv",
+  "securityDomains": [
+    "SmartOrgLoaderDomain"
+  ],
+  "include": [
+    "csvParserAndValidator.script"
+  ],
+  "endPoints": [
+    {
+      "name": "workersWql",
+      "baseUrlType": "workday-wql",
+      "url": "data",
+      "httpMethod": "POST",
+      "authType": "sso",
+      "deferred": true,
+      "onSend": "<% self.data = {:}; self.data.query = pageVariables.workerQuery; self.data; %>",
+      "failOnStatusCodes": [
+        {
+          "code": 400
+        },
+        {
+          "code": 403
+        },
+        {
+          "code": 500
+        }
+      ]
+    },
+    {
+      "name": "orgsWql",
+      "baseUrlType": "workday-wql",
+      "url": "data",
+      "httpMethod": "POST",
+      "authType": "sso",
+      "deferred": true,
+      "onSend": "<% self.data = {:}; self.data.query = pageVariables.orgQuery; self.data; %>",
+      "failOnStatusCodes": [
+        {
+          "code": 403
+        },
+        {
+          "code": 500
+        }
+      ]
+    },
+    {
+      "name": "launchLoad",
+      "baseUrlType": "orchestration",
+      "url": "processOrgAssignmentLoad/launch",
+      "httpMethod": "POST",
+      "authType": "sso",
+      "deferred": true,
+      "onSend": "<% self.data = {'batchId': pageVariables.batchId, 'rows': pageVariables.launchRows}; self.data; %>",
+      "failOnStatusCodes": [
+        {
+          "code": 400
+        },
+        {
+          "code": 403
+        },
+        {
+          "code": 500
+        }
+      ]
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "id": "pageTitle",
+      "label": "Smart CSV Org Assignment Loader"
+    },
+    "body": {
+      "type": "section",
+      "id": "mainSection",
+      "children": [
+        {
+          "type": "button",
+          "id": "historyLink",
+          "action": "LINK",
+          "label": "Batch history",
+          "taskReference": {
+            "taskId": "viewLoadBatchHistory"
+          }
+        },
+        {
+          "type": "text",
+          "id": "intro",
+          "enabled": false,
+          "value": "Paste one row per worker. Every Employee, Position and Organization Reference ID is checked against your tenant before anything is loaded."
+        },
+        {
+          "type": "textArea",
+          "id": "csvInput",
+          "label": "CSV (one row per worker)",
+          "value": "Employee_ID,Position_ID,Effective_Date,Cost_Center_ID,Company_ID,Region_ID,Custom_Org_1,Custom_Org_2,Custom_Org_3"
+        },
+        {
+          "type": "checkBox",
+          "id": "autoComplete",
+          "label": "Auto-complete the business process (skips approvals)",
+          "value": false
+        },
+        {
+          "type": "pageActionButton",
+          "id": "validateButton",
+          "label": "Validate",
+          "onClick": "<% var rows = csvParserAndValidator.parseCsv(csvInput.value); if (rows.isEmpty()) { pageVariables.rows = []; validationGrid.setRows([]); loadStatus.setValue('Paste at least one data row under the header, then click Validate.'); } else { pageVariables.workerQuery = csvParserAndValidator.workerQuery(rows); pageVariables.orgQuery = csvParserAndValidator.orgQuery(rows); var workers = workersWql.invoke().data; var orgResp = orgsWql.invoke(); var orgs = (orgResp != null && orgResp.data != null) ? orgResp.data : null; pageVariables.rows = csvParserAndValidator.validateRows(rows, workers, orgs, autoComplete.value); validationGrid.setRows(pageVariables.rows); loadStatus.setValue(''); } %>"
+        },
+        {
+          "type": "grid",
+          "id": "validationGrid",
+          "label": "Pre-validation results",
+          "rows": "<% pageVariables.rows ?? [] %>",
+          "rowVariableName": "r",
+          "columns": [
+            {
+              "type": "column",
+              "columnId": "rowCol",
+              "label": "Row",
+              "cellTemplate": {
+                "type": "text",
+                "id": "rowColCell",
+                "enabled": false,
+                "value": "<% r.rowNumber %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "empCol",
+              "label": "Employee ID",
+              "cellTemplate": {
+                "type": "text",
+                "id": "empColCell",
+                "enabled": false,
+                "value": "<% r.employeeId %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "posCol",
+              "label": "Position ID",
+              "cellTemplate": {
+                "type": "text",
+                "id": "posColCell",
+                "enabled": false,
+                "value": "<% r.positionId %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "dateCol",
+              "label": "Effective Date",
+              "cellTemplate": {
+                "type": "text",
+                "id": "dateColCell",
+                "enabled": false,
+                "value": "<% r.effectiveDate %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "ccCol",
+              "label": "Cost Center",
+              "cellTemplate": {
+                "type": "text",
+                "id": "ccColCell",
+                "enabled": false,
+                "value": "<% r.costCenterRefId %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "compCol",
+              "label": "Company",
+              "cellTemplate": {
+                "type": "text",
+                "id": "compColCell",
+                "enabled": false,
+                "value": "<% r.companyRefId %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "regCol",
+              "label": "Region",
+              "cellTemplate": {
+                "type": "text",
+                "id": "regColCell",
+                "enabled": false,
+                "value": "<% r.regionRefId %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "custCol",
+              "label": "Custom Orgs",
+              "cellTemplate": {
+                "type": "text",
+                "id": "custColCell",
+                "enabled": false,
+                "value": "<% r.customOrgsPipeDelimited %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "statusCol",
+              "label": "Status",
+              "cellTemplate": {
+                "type": "text",
+                "id": "statusColCell",
+                "enabled": false,
+                "value": "<% r.validationStatus %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "msgCol",
+              "label": "Message",
+              "cellTemplate": {
+                "type": "text",
+                "id": "msgColCell",
+                "enabled": false,
+                "value": "<% r.validationMessage %>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "pageActionButton",
+          "id": "loadButton",
+          "label": "Load valid rows",
+          "onClick": "<% var validRows = empty pageVariables.rows ? [] : pageVariables.rows.filter(x => x.validationStatus == 'VALID'); if (validRows.isEmpty()) { loadStatus.setValue('Nothing to load: validate the CSV and fix at least one row first.'); } else { pageVariables.batchId = string:uuid(); var launchRows = []; for (var r : validRows) { launchRows.add({'batchId': pageVariables.batchId, 'employeeId': r.employeeId, 'positionId': empty r.positionId ? '' : r.positionId, 'effectiveDate': empty r.effectiveDate ? '' : r.effectiveDate, 'costCenterRefId': empty r.costCenterRefId ? '' : r.costCenterRefId, 'companyRefId': empty r.companyRefId ? '' : r.companyRefId, 'regionRefId': empty r.regionRefId ? '' : r.regionRefId, 'customOrgsPipeDelimited': empty r.customOrgsPipeDelimited ? '' : r.customOrgsPipeDelimited, 'soapRequestXml': r.soapRequestXml}); } pageVariables.launchRows = launchRows; launchLoad.invoke(); loadStatus.setValue('Load started in the background for ' + validRows.size() + ' valid row(s); rows marked ERROR were skipped. Batch ' + pageVariables.batchId + '. Open Batch history to watch progress: rows appear as STAGED, then COMPLETED or SOAP_FAULT.'); } %>"
+        },
+        {
+          "type": "text",
+          "id": "loadStatus",
+          "label": "Load status",
+          "enabled": false,
+          "value": ""
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "id": "pageFooter",
+      "children": [
+        {
+          "type": "richText",
+          "id": "footerNote",
+          "enabled": false,
+          "value": "Workday Developer Program community example"
+        }
+      ]
+    },
+    "pageType": "EDIT",
+    "standardEditButtonsHidden": true
+  }
+}

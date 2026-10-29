@@ -1,0 +1,22 @@
+{
+  "id": "smartCsvOrgLoader",
+  "applicationId": "smartCsvOrgLoader",
+  "siteId": "smartCsvOrgLoader",
+  "languages": [
+    {
+      "code": "en-US",
+      "description": "English"
+    }
+  ],
+  "siteAuth": {
+    "authTypes": [
+      {
+        "scheme": "SSO",
+        "id": "sso"
+      }
+    ]
+  },
+  "errorPage": {
+    "pageId": "errorPage"
+  }
+}

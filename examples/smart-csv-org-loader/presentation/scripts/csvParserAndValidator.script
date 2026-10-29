@@ -1,0 +1,140 @@
+/*
+ * Flat CSV -> validated rows -> Change_Organization_Assignments SOAP body.
+ * Columns: Employee_ID,Position_ID,Effective_Date,Cost_Center_ID,Company_ID,Region_ID,Custom_Org_1,Custom_Org_2,Custom_Org_3
+ * Reference IDs never contain commas, so quoted cells are rejected with a clear message instead of parsed.
+ */
+
+var cell = function(cols, i) {
+  return cols.size() > i ? string:trim(cols.get(i).replace('~', '')) : '';
+};
+
+// string:split drops empty tokens, which would shift columns left when a cell is blank
+// (e.g. a blank Company_ID would push Region_ID into the Company column). Wrapping every
+// cell in '~' keeps each one non-empty; cell() strips the marker again.
+var splitCells = function(line) {
+  return string:split('~' + line.replace('~', '').replace(',', '~,~') + '~', ',');
+};
+
+// Step 1: split the CSV into raw rows (no tenant calls yet)
+var parseCsv = function(rawCsvText) {
+  var rows = [];
+  if (!string:isBlank(rawCsvText)) {
+    var lines = string:split(string:trim(rawCsvText), '\n');
+    var lineNo = 0;
+    for (var rawLine : lines) {
+      lineNo = lineNo + 1;
+      var line = string:trim(rawLine);
+      if (lineNo > 1 && !string:isBlank(line)) {
+        var cols = splitCells(line);
+        list:add(rows, {
+          'rowNumber': lineNo - 1,
+          'hasQuotes': line.contains('"'),
+          'employeeId': cell(cols, 0), 'positionId': cell(cols, 1), 'effectiveDate': cell(cols, 2),
+          'costCenterRefId': cell(cols, 3), 'companyRefId': cell(cols, 4), 'regionRefId': cell(cols, 5),
+          'customOrgs': list:filter([cell(cols, 6), cell(cols, 7), cell(cols, 8)], c => !string:isBlank(c))
+        });
+      }
+    }
+  }
+  return rows;
+};
+
+// Step 2: build WHERE ... IN lists so WQL only fetches the IDs in this file
+var quoteList = function(ids) {
+  return list:distinct(list:filter(ids, i => !string:isBlank(i))).map(i => { "'" + i + "'" }).join(', ');
+};
+var workerQuery = function(rows) {
+  return 'SELECT employeeID, positionID FROM workersForHCMReporting (dataSourceFilter = allActiveWorkers) WHERE employeeID IN (' + quoteList(rows.map(r => { r.employeeId })) + ')';
+};
+var orgQuery = function(rows) {
+  var ids = [];
+  for (var r : rows) {
+    list:add(ids, r.costCenterRefId); list:add(ids, r.companyRefId); list:add(ids, r.regionRefId);
+    for (var c : r.customOrgs) { list:add(ids, c); }
+  }
+  return 'SELECT referenceID, organizationType, inactive FROM organizations WHERE referenceID IN (' + quoteList(ids) + ')';
+};
+
+var xmlEscape = function(s) {
+  return s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;');
+};
+var ref = function(element, idType, value) {
+  return '<bsvc:' + element + '><bsvc:ID bsvc:type="' + idType + '">' + xmlEscape(value) + '</bsvc:ID></bsvc:' + element + '>';
+};
+
+// Matches Staffing v42.0 Change_Organization_Assignments_Request. Blank columns are omitted,
+// which tells Workday to keep the existing assignment.
+var buildSoap = function(r, autoComplete) {
+  var orgs = '';
+  if (!string:isBlank(r.companyRefId)) { orgs += ref('Company_Assignments_Reference', 'Company_Reference_ID', r.companyRefId); }
+  if (!string:isBlank(r.costCenterRefId)) { orgs += ref('Cost_Center_Assignments_Reference', 'Cost_Center_Reference_ID', r.costCenterRefId); }
+  if (!string:isBlank(r.regionRefId)) { orgs += ref('Region_Assignments_Reference', 'Region_Reference_ID', r.regionRefId); }
+  for (var c : r.customOrgs) {
+    orgs += '<bsvc:Custom_Organization_Assignment_Data>' + ref('Custom_Organization_Assignment_Reference', 'Custom_Organization_Reference_ID', c) + '</bsvc:Custom_Organization_Assignment_Data>';
+  }
+  return '<bsvc:Change_Organization_Assignments_Request xmlns:bsvc="urn:com.workday/bsvc" bsvc:version="v42.0">'
+    + '<bsvc:Business_Process_Parameters><bsvc:Auto_Complete>' + (autoComplete ? 'true' : 'false') + '</bsvc:Auto_Complete><bsvc:Run_Now>true</bsvc:Run_Now></bsvc:Business_Process_Parameters>'
+    + '<bsvc:Change_Organization_Assignments_Data bsvc:Effective_Date="' + r.effectiveDate + '">'
+    + ref('Position_Reference', 'Position_ID', r.positionId)
+    + ref('Worker_Reference', 'Employee_ID', r.employeeId)
+    + '<bsvc:Position_Organization_Assignments_Data>' + orgs + '</bsvc:Position_Organization_Assignments_Data>'
+    + '</bsvc:Change_Organization_Assignments_Data></bsvc:Change_Organization_Assignments_Request>';
+};
+
+var checkOrg = function(orgMap, id, expectedType, errors) {
+  if (!string:isBlank(id)) {
+    if (!map:containsKey(orgMap, id)) {
+      list:add(errors, "Org Ref ID '" + id + "' does not exist");
+    } else {
+      var org = map:get(orgMap, id);
+      if (org.inactive == true) { list:add(errors, "Org Ref ID '" + id + "' is inactive"); }
+      if (!empty expectedType && org.organizationType.descriptor != expectedType) {
+        list:add(errors, "'" + id + "' is a " + org.organizationType.descriptor + ", not a " + expectedType);
+      }
+    }
+  }
+};
+
+// Step 3: validate rows against the WQL results and attach the SOAP body to valid rows
+var validateRows = function(rows, workers, orgs, autoComplete) {
+  var workerMap = {:};
+  for (var w : list:nonNull(workers)) { map:put(workerMap, w.employeeID, w); }
+  var orgMap = {:};
+  for (var o : list:nonNull(orgs)) { map:put(orgMap, o.referenceID, o); }
+
+  var seen = {:};
+  for (var r : rows) {
+    var errors = [];
+    var dupKey = r.employeeId + '|' + r.effectiveDate;
+    if (map:containsKey(seen, dupKey)) { list:add(errors, 'Duplicate of row ' + map:get(seen, dupKey) + ': one change per worker per effective date'); }
+    else { map:put(seen, dupKey, r.rowNumber); }
+    if (r.hasQuotes) { list:add(errors, 'Remove quotes: Reference IDs never contain commas'); }
+    if (string:isBlank(r.employeeId)) { list:add(errors, 'Missing Employee_ID'); }
+    else if (!map:containsKey(workerMap, r.employeeId)) { list:add(errors, "Employee_ID '" + r.employeeId + "' is not an active worker"); }
+    else if (!string:isBlank(r.positionId) && map:get(workerMap, r.employeeId).positionID != r.positionId) {
+      list:add(errors, "Position '" + r.positionId + "' isn't held by " + r.employeeId);
+    }
+    if (string:isBlank(r.positionId)) { list:add(errors, 'Missing Position_ID'); }
+    if (!validate:match('^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$', r.effectiveDate)) { list:add(errors, "Effective_Date '" + r.effectiveDate + "' must be YYYY-MM-DD"); }
+    if (orgs != null) {
+      checkOrg(orgMap, r.costCenterRefId, 'Cost Center', errors);
+      checkOrg(orgMap, r.companyRefId, 'Company', errors);
+      checkOrg(orgMap, r.regionRefId, 'Region', errors);
+      for (var c : r.customOrgs) { checkOrg(orgMap, c, '', errors); }
+    }
+
+    r.customOrgsPipeDelimited = r.customOrgs.join('|');
+    r.validationStatus = list:isEmpty(errors) ? 'VALID' : 'ERROR';
+    r.validationMessage = list:isEmpty(errors) ? (orgs != null ? 'Ready to load' : 'Ready to load (organization IDs will be checked by Workday at load)') : errors.join('; ');
+    r.soapRequestXml = list:isEmpty(errors) ? buildSoap(r, autoComplete) : '';
+  }
+  return rows;
+};
+
+/* Export all functions */
+{
+  "parseCsv": parseCsv,
+  "workerQuery": workerQuery,
+  "orgQuery": orgQuery,
+  "validateRows": validateRows
+}
