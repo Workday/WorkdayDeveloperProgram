@@ -1,0 +1,15 @@
+{
+  "title": "Business Process Undo Agent Skill",
+  "description": "A markdown skill that teaches an agent to read a Workday business process event and prepare a rescind or cancel for approval.",
+  "type": "Agent Skill",
+  "components": [],
+  "products": [
+    "Workday REST API",
+    "Workday HCM"
+  ],
+  "authors": [
+    "Daksh-Aneja-Projects"
+  ],
+  "tutorial": "",
+  "source": "community"
+}

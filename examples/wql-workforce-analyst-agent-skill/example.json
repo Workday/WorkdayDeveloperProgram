@@ -1,0 +1,17 @@
+{
+  "title": "WQL Workforce Analyst Agent Skill",
+  "description": "A markdown skill that teaches an agent to answer workforce questions with one read-only WQL SELECT over the tenant's own data sources and to show the query it ran.",
+  "type": "Agent Skill",
+  "components": [
+    "WQL"
+  ],
+  "products": [
+    "Workday HCM",
+    "Workday REST API"
+  ],
+  "authors": [
+    "Daksh-Aneja-Projects"
+  ],
+  "tutorial": "",
+  "source": "community"
+}

@@ -1,0 +1,15 @@
+{
+  "title": "Inbox Decisions Agent Skill",
+  "description": "A markdown skill that teaches an agent to read a person's Workday inbox, explain what each step does and prepare an approve, deny or send back decision for approval.",
+  "type": "Agent Skill",
+  "components": [],
+  "products": [
+    "Workday REST API",
+    "Workday HCM"
+  ],
+  "authors": [
+    "Daksh-Aneja-Projects"
+  ],
+  "tutorial": "",
+  "source": "community"
+}
