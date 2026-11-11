@@ -1,0 +1,16 @@
+{
+  "title": "Learning Enrolment Agent Skill",
+  "description": "A markdown skill for an agent that finds learning content through read-only WQL and prepares enrolments for a person or their team, for approval.",
+  "type": "Agent Skill",
+  "components": [],
+  "products": [
+    "Workday REST API",
+    "Workday SOAP API",
+    "Workday HCM"
+  ],
+  "authors": [
+    "Daksh-Aneja-Projects"
+  ],
+  "tutorial": "",
+  "source": "community"
+}

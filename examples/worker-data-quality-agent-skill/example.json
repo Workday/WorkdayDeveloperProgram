@@ -1,0 +1,16 @@
+{
+  "title": "Worker Data Quality Agent Skill",
+  "description": "A markdown skill for an agent that finds workers with missing personal data through read-only WQL and prepares a date of birth correction for approval.",
+  "type": "Agent Skill",
+  "components": [],
+  "products": [
+    "Workday REST API",
+    "Workday SOAP API",
+    "Workday HCM"
+  ],
+  "authors": [
+    "Daksh-Aneja-Projects"
+  ],
+  "tutorial": "",
+  "source": "community"
+}
