@@ -1,0 +1,15 @@
+{
+  "title": "Rewards Proposal Agent Skill",
+  "description": "A markdown skill that teaches an agent to prepare spot bonuses and base pay changes as proposals, using the worker's real plan, with the amount always chosen by a person.",
+  "type": "Agent Skill",
+  "components": [],
+  "products": [
+    "Workday HCM",
+    "Workday SOAP API"
+  ],
+  "authors": [
+    "Daksh-Aneja-Projects"
+  ],
+  "tutorial": "",
+  "source": "community"
+}

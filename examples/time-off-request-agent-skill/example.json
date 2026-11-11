@@ -1,0 +1,17 @@
+{
+  "title": "Time Off Request Agent Skill",
+  "description": "A markdown skill that teaches an agent to read real time off balances and eligible types from Workday and to prepare day-by-day time off requests for approval.",
+  "type": "Agent Skill",
+  "components": [],
+  "products": [
+    "Workday Absence Management",
+    "Workday HCM",
+    "Workday REST API",
+    "Workday SOAP API"
+  ],
+  "authors": [
+    "Daksh-Aneja-Projects"
+  ],
+  "tutorial": "",
+  "source": "community"
+}

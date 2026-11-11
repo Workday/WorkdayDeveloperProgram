@@ -116,12 +116,16 @@ Community examples, open to everyone. This is the section external contributions
 <!-- examples:start -->
 | Example | Description | Type |
 | --- | --- | --- |
+| [`business-process-undo-agent-skill`](examples/business-process-undo-agent-skill) | A markdown skill that teaches an agent to read a Workday business process event and prepare a rescind or cancel for approval. | Agent Skill |
 | [`expense-policy-agent-skill`](examples/expense-policy-agent-skill) | A markdown skill that teaches an agent to answer expense policy questions and escalate anything it cannot verify. | Agent Skill |
 | [`employee-data-orchestration`](examples/employee-data-orchestration) | An orchestration that reads worker data from one tenant and creates matching records through the Workday REST API. | Orchestration |
+| [`inbox-decisions-agent-skill`](examples/inbox-decisions-agent-skill) | A markdown skill that teaches an agent to read a person's Workday inbox, explain what each step does and prepare an approve, deny or send back decision for approval. | Agent Skill |
 | [`peer-kudos-home-card`](examples/peer-kudos-home-card) | An Extend app with a Home page card, custom business object, and orchestration that lets employees celebrate peer contributions and notifies managers. | Extend App |
 | [`promotion-nomination`](examples/promotion-nomination) | A manager nominates a direct report for promotion. Career data is prefilled from Workday, the nomination is saved to a business object, and a business process routes it for approval. | Extend App |
 | [`pto-policy-agent-skill`](examples/pto-policy-agent-skill) | A markdown skill that teaches an agent to answer employee questions about PTO, leave accrual, rollover, and sick leave policy with clear escalation rules. | Agent Skill |
+| [`rewards-proposal-agent-skill`](examples/rewards-proposal-agent-skill) | A markdown skill that teaches an agent to prepare spot bonuses and base pay changes as proposals, using the worker's real plan, with the amount always chosen by a person. | Agent Skill |
 | [`stock-notifications`](examples/stock-notifications) | An Extend app that fetches Workday's current stock price from an external API and displays it on a home page card. | Extend App |
+| [`time-off-request-agent-skill`](examples/time-off-request-agent-skill) | A markdown skill that teaches an agent to read real time off balances and eligible types from Workday and to prepare day-by-day time off requests for approval. | Agent Skill |
 | [`workday-ai-gateway-skill`](examples/workday-ai-gateway-skill) | A markdown skill that reviews an AI Gateway or AWS starter call and keeps secrets out of the page. | Agent Skill |
 | [`workday-apis-skill`](examples/workday-apis-skill) | A markdown skill that chooses and reviews a Workday Graph, WQL, REST, or SOAP call. | Agent Skill |
 | [`workday-developer-copilot-skill`](examples/workday-developer-copilot-skill) | A markdown skill that shapes a prompt for Workday Developer Copilot and lists what must not be pasted. | Agent Skill |
@@ -132,6 +136,7 @@ Community examples, open to everyone. This is the section external contributions
 | [`workday-skill`](examples/workday-skill) | A markdown skill that chooses which Workday agent skill to apply when a task starts a new app or touches more than one artifact. | Agent Skill |
 | [`workplace-adjustment-passport`](examples/workplace-adjustment-passport) | An Extend app with a Home page card, custom business object, and PMD pages that gives employees a confidential, portable accommodation passport that carries forward with them as they change teams or managers. | Extend App |
 | [`wql-anniversary-celebrations`](examples/wql-anniversary-celebrations) | An orchestration that queries Workday via WQL for active workers celebrating milestone work anniversaries and formats an announcement digest payload for collaboration channels. | Orchestration |
+| [`wql-workforce-analyst-agent-skill`](examples/wql-workforce-analyst-agent-skill) | A markdown skill that teaches an agent to answer workforce questions with one read-only WQL SELECT over the tenant's own data sources and to show the query it ran. | Agent Skill |
 <!-- examples:end -->
 
 ## Contributing
