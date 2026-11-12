@@ -1,0 +1,15 @@
+{
+  "title": "Help Case Agent Skill",
+  "description": "A markdown skill for an agent that routes an HR question to the right help case type in Workday, prepares the case for approval, and prepares a comment on an existing case, with a clickable link when one is needed.",
+  "type": "Agent Skill",
+  "components": [],
+  "products": [
+    "Workday REST API",
+    "Workday HCM"
+  ],
+  "authors": [
+    "Daksh-Aneja-Projects"
+  ],
+  "tutorial": "",
+  "source": "community"
+}
