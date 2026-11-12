@@ -1,0 +1,16 @@
+{
+  "title": "Time Tracking Agent Skill",
+  "description": "A markdown skill for an agent that reads calculated time blocks and prepares reported hours or a work schedule assignment in Workday.",
+  "type": "Agent Skill",
+  "components": [],
+  "products": [
+    "Workday SOAP API",
+    "Workday REST API",
+    "Workday HCM"
+  ],
+  "authors": [
+    "Daksh-Aneja-Projects"
+  ],
+  "tutorial": "",
+  "source": "community"
+}

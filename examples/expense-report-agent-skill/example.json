@@ -1,0 +1,16 @@
+{
+  "title": "Expense Report Agent Skill",
+  "description": "A markdown skill for an agent that prepares and submits expense reports and cancels reports that are not yet approved in Workday.",
+  "type": "Agent Skill",
+  "components": [],
+  "products": [
+    "Workday REST API",
+    "Workday SOAP API",
+    "Workday Financials"
+  ],
+  "authors": [
+    "Daksh-Aneja-Projects"
+  ],
+  "tutorial": "",
+  "source": "community"
+}
