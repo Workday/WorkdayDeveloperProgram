@@ -1,0 +1,16 @@
+{
+  "title": "Org Design Agent Skill",
+  "description": "A markdown skill for an agent that moves workers between supervisory organizations and creates or closes positions in Workday.",
+  "type": "Agent Skill",
+  "components": [],
+  "products": [
+    "Workday REST API",
+    "Workday SOAP API",
+    "Workday HCM"
+  ],
+  "authors": [
+    "Daksh-Aneja-Projects"
+  ],
+  "tutorial": "",
+  "source": "community"
+}
