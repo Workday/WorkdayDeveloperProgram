@@ -1,0 +1,16 @@
+{
+  "title": "Leave of Absence Agent Skill",
+  "description": "A markdown skill for an agent that reads a worker's leaves of absence and prepares a leave request or a return from leave in Workday.",
+  "type": "Agent Skill",
+  "components": [],
+  "products": [
+    "Workday REST API",
+    "Workday SOAP API",
+    "Workday Absence Management"
+  ],
+  "authors": [
+    "Daksh-Aneja-Projects"
+  ],
+  "tutorial": "",
+  "source": "community"
+}
