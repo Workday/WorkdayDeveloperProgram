@@ -1,0 +1,167 @@
+{
+  "id": 1,
+  "name": "WorkEvent",
+  "label": "Work Event",
+  "defaultSecurityDomains": [
+    "RegisterForEvents",
+    "ManageCreateAnEvent"
+  ],
+  "defaultCollection": {
+    "name": "workEvents",
+    "label": "All Work Events", 
+    "description": "Displays all work events within the Create a Work Event Extend app"
+  },
+  "fields": [
+    {
+      "isReferenceId": true,
+      "useForDisplay": true,
+      "type": "TEXT",
+      "label": "Event Name",
+      "name": "name",
+      "id": 1, 
+      "description": "Displays the name of the event"
+    },
+    {
+      "type": "TEXT",
+      "label": "Event Location",
+      "name": "location",
+      "id": 2, 
+      "description": "Displays the location of the event"
+    },
+    {
+      "type": "TEXT",
+      "label": "Event Description",
+      "name": "description",
+      "id": 3, 
+      "description": "Displays the description of the event"
+    },
+    {
+      "type": "TEXT",
+      "label": "Sponsor",
+      "name": "sponsor",
+      "id": 4, 
+      "description": "Displays the sponsor of the event"
+    },
+    {
+      "precision": "DAY",
+      "type": "DATE",
+      "label": "Start Date",
+      "name": "startDate",
+      "id": 5,
+      "description": "Displays the start date of the event"
+    },
+    {
+      "type": "TEXT",
+      "label": "Contact Info",
+      "name": "contactInfo",
+      "id": 6, 
+      "description": "Displays the contact info of the event organizer"
+    },
+    {
+      "type": "CURRENCY",
+      "label": "Event Fee",
+      "name": "cost",
+      "id": 7, 
+      "description": "Displays the cost of the event"
+    },
+    {
+      "secureByTarget": true,
+      "target": "WORKER",
+      "type": "SINGLE_INSTANCE",
+      "label": "Created By",
+      "name": "createdBy",
+      "id": 8, 
+      "description": "Displays name of the event creator"
+    },
+    {
+      "type": "BOOLEAN",
+      "label": "Internal Only Event",
+      "name": "internalOnly",
+      "id": 9, 
+      "description": "Displays whether or not the event is an internal event"
+    },
+    {
+      "target": "EventImage",
+      "label": "Image",
+      "type": "SINGLE_INSTANCE",
+      "name": "image",
+      "id": 10, 
+      "description": "Displays an image about the event"
+    },
+    {
+      "target": "LOCATION",
+      "label": "Event Venue",
+      "type": "SINGLE_INSTANCE",
+      "name": "venue",
+      "id": 11, 
+      "description": "Displays the event venue"
+    },
+    {
+      "target": "Registrant",
+      "type": "MULTI_INSTANCE",
+      "label": "Registrants",
+      "name": "registrants",
+      "id": 12, 
+      "description": "Displays the registrants of the event"
+    },
+    {
+      "precision": "DAY",
+      "type": "DATE",
+      "name": "endDate",
+      "id": 13,  
+      "description": "Displays the end date of the event"
+    }
+  ],
+  "derivedFields": [
+    {
+      "expression": "'Event: ' + name + ' - ' + description",
+      "label": "Long Description",
+      "type": "TEXT",
+      "name": "longDescription",
+      "id": 1,
+      "description": "Displays long description for the event"
+    },
+    {
+      "expression": "sponsor == 'Workday'",
+      "label": "Is Workday Event",
+      "type": "BOOLEAN",
+      "name": "isWorkdayEvent",
+      "id": 2, 
+      "description": "Displays whether or not the event is a Workday Event"
+    },
+    {
+      "expression": "cost * 0.7",
+      "decimals": 2,
+      "label": "Prorated Amount",
+      "type": "DECIMAL",
+      "name": "proratedAmount",
+      "id": 3, 
+      "description": "Displays any discount for the event"
+    },
+    {
+      "expression": "image.uploadedDate",
+      "label": "Image Uploaded Date",
+      "precision": "DAY",
+      "type": "DATE",
+      "name": "imageUploadedDate",
+      "id": 4, 
+      "description": "Displays the date that the image was uploaded"
+    },
+    {
+      "expression": "(cost > 1000) && internalOnly",
+      "label": "Requires Approval - Internal Only",
+      "type": "BOOLEAN",
+      "name": "requiresApprovalInternal",
+      "id": 5, 
+      "description": "Displays internally whether or not approval is required"
+    },
+    {
+      "expression": "(cost > 5000) || requiresApprovalInternal",
+      "label": "Requires Approval",
+      "type": "BOOLEAN",
+      "name": "requiresApproval",
+      "id": 6, 
+      "description": "if the cost is above $5000, then approval is required "
+    }
+  ]
+}

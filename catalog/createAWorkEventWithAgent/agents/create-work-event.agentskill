@@ -1,0 +1,124 @@
+---
+name: create-work-event
+description: "Guides an employee through creating a new Work Event in the app. Collects all required event details from the employee and submits the event via the app's Work Event REST endpoint."
+metadata:
+  tags:
+    - work-event
+    - create
+allowed-tools:
+  - find_staffing_workers
+  - post_create_awork_event_with_agent_mcwslt_create_work_event_events
+  - post_create_awork_event_with_agent_mcwslt_work_events
+  - agent_file_download
+tool-wids:
+  - name: find_staffing_workers
+    wid: 30aeb92af72e100063e2955a0eff0000
+  - name: post_create_awork_event_with_agent_mcwslt_create_work_event_events
+    wid: c31e2903c40655789159a63ebc07eafa
+  - name: post_create_awork_event_with_agent_mcwslt_work_events
+    wid: 69fb9612b1fa5196ac2c1aa6791e65d5
+  - name: agent_file_download
+    wid: 94fadfecb1bb100031d911f8ed0a0000
+---
+
+# Recurring Event Date Calculator
+
+When a user wants to create a **series of recurring Work Events**, use the sandbox to compute
+all event dates before collecting any other details.
+
+## Recurrence Detection
+
+Ask the user: *"Is this a one-time event or will it repeat on a schedule (e.g., weekly, monthly)?"*
+
+If the user indicates the event **recurs**, collect:
+- **Start Date** — the date of the first occurrence (YYYY-MM-DD)
+- **Recurrence Pattern** — one of: `daily`, `weekly`, `biweekly`, `monthly`
+- **Number of Occurrences** — how many times the event should repeat (including the first)
+
+## Policy Enforcement — 3-Month Limit
+
+**Company policy requires that no occurrence may be scheduled more than 3 months in the future from today's date.**
+
+Once you have the recurrence parameters, **execute the sandbox script below immediately — do not attempt to evaluate or filter dates yourself.** The script is the sole enforcer of the 3-month rule. Only after the script has run and returned its output should you read the `KEPT`, `DROPPED`, and `MAX_ALLOWED` values and relay the results to the user, e.g.:
+
+> *"Based on company policy, occurrences cannot be scheduled more than 3 months in the future (cutoff: {MAX_ALLOWED}). Your series has been trimmed to {KEPT} occurrences. {DROPPED} occurrence(s) beyond that date were removed."*
+
+Execute the following Python script in the sandbox to calculate all occurrence dates:
+
+```python
+from datetime import date, timedelta
+from dateutil.relativedelta import relativedelta
+
+start_date   = date.fromisoformat("{START_DATE}")   # e.g. "2025-09-01"
+pattern      = "{PATTERN}"                           # daily | weekly | biweekly | monthly
+occurrences  = {OCCURRENCES}                         # integer, e.g. 6
+
+deltas = {
+    "daily":     timedelta(days=1),
+    "weekly":    timedelta(weeks=1),
+    "biweekly":  timedelta(weeks=2),
+}
+
+from datetime import date
+max_date = date.today() + relativedelta(months=3)
+
+dates = []
+dropped = 0
+for i in range(occurrences):
+    if pattern == "monthly":
+        d = start_date + relativedelta(months=i)
+    else:
+        d = start_date + deltas[pattern] * i
+    if d <= max_date:
+        dates.append(d.isoformat())
+    else:
+        dropped += 1
+
+print(f"KEPT={len(dates)}")
+print(f"DROPPED={dropped}")
+print(f"MAX_ALLOWED={max_date.isoformat()}")
+for d in dates:
+    print(d)
+```
+
+- Replace `{START_DATE}`, `{PATTERN}`, and `{OCCURRENCES}` with the user's values before executing.
+- The script prints one ISO date per line — capture the output as the list of event dates.
+
+## Creating the Series
+
+Present the full list of computed dates to the user and ask them to confirm (or remove any dates
+they don't want). For each **confirmed date**:
+
+1. Collect any event details that may vary per occurrence (e.g., end date / time), then
+   repeat **Steps 2–7** from the main flow below once per date, creating a separate Work Event
+   instance for each occurrence.
+2. Notify the user of progress after each creation (e.g., *"Event 2 of 6 created ✓"*) and
+   provide a final summary listing all created events when the series is complete.
+
+---
+
+# Create Work Event Skill
+
+This skill helps an employee create a new Work Event. Collect all required details
+conversationally, confirm with the user, then submit via the Work Event API.
+
+## Steps
+
+1. Greet the user and let them know you'll help them create a new Work Event. Ask if they have an **event flyer** they'd like to upload — if so, prompt them to share the image in chat.
+2. If a flyer was provided:
+   - Use `agent_file_download` to download the image.
+   - Use your built-in OCR capabilities to read all text visible in the image, then extract as many of the following event details as possible:
+     - **Name** of the event
+     - **Description**
+     - **Location**
+     - **Start Date** (YYYY-MM-DD)
+     - **End Date** (YYYY-MM-DD)
+     - **Event Sponsor**
+     - **Contact Info / Email**
+     - **Internal Only?** (yes/no)
+   - Present the extracted details to the user and ask them to confirm or correct any fields.
+3. For any details not found in the flyer (or if no flyer was provided), conversationally collect the missing required fields from the user.
+4. Confirm all collected details with the user before submitting.
+5. Use `post_create_awork_event_with_agent_mcwslt_work_events` to create the WorkEvent model instance. Capture the `id` (WID) returned in the response.
+6. Using the `id` from step 5, call `post_create_awork_event_with_agent_mcwslt_create_work_event_events` to trigger the **CreateWorkEvent** business process for the newly created event instance.
+7. Confirm to the user that the event has been created and the business process has been initiated, sharing the event name and any relevant details from the response.

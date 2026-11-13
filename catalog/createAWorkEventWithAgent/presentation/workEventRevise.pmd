@@ -1,0 +1,307 @@
+{
+  "id": "workEventRevise",
+  "endPoints": [
+    {
+      "name": "me",
+      "baseUrlType": "workday-staffing",
+      "url": "workers/me",
+      "authType": "sso"
+    },
+    {
+      "name": "bpEventStep",
+      "baseUrlType": "workday-bp",
+      "url": "<% //note the query param is mentioned in the pageRoute of the revise step
+              //in the .businessprocess file --> /revise/{eventStepId}. Use this syntax to grab the eventStepId path parameter
+              'eventSteps/' + queryParams.eventStepId %>",
+      "authType": "sso"
+    },
+    {
+      "name": "eventInfo",
+      "baseUrlType": "workday-bp",
+      "url": "<% //this endpoint is calling the Workday Business Processes REST API for information about a specific BP Event for our Model BP
+              //use the event.id value from the bpEventStep response to get info about the Model BP Overall Event (overall process)
+              //bpEventStep.event would give us information about the entire BP Event (aka the overall process)
+              //not to be confused with the 'work event' Model BO we are acting on through our Model BP.
+              //and the bpEventStep.event.id grabs the ID of the BP's target BO, in this case our Model BO for a work event
+
+              'events/' + bpEventStep.event.id %>",
+      "authType": "sso"
+    },
+    {
+      "name": "workEventInfo",
+      "baseUrlType": "app",
+      "url": "<% //this endpoint calls our app's Model BO endpoint for work events, and uses the ID of the work event retrieved above
+              //The ID of the Model BO in question is found in eventInfo['for'].id so calling this endpoint returns all the current Model BO data for that instace
+              'workEvents/' + eventInfo['for'].id %>",
+      "authType": "sso"
+    },
+    {
+      "name": "getAttachments",
+      "baseUrlType": "app",
+      "url": "<% 'attachedFiles?event=' + workEventInfo.id  %>",
+      "authType": "sso"
+    },
+    {
+      "name": "getEventComments",
+      "url": "<% 'events/' + bpEventStep.event.id + '/comments' %>",
+      "authType": "sso",
+      "baseUrlType": "workday-bp",
+      "failOnStatusCodes": [
+        {
+          "code": "400"
+        },
+        {
+          "code": "403"
+        }
+      ]
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "updateEvent",
+        "baseUrlType": "app",
+        "url": "<% 'workEvents/' + workEventInfo.id %>",
+        "authType": "sso",
+        "httpMethod": "PUT",
+        "allowPutForUnchangedData": true,
+        "onSend": "<% //the above allowPutForUnchangedData attribute will cause the PUT to fire upon page submission even if no data appears to have changed
+                   //Outbound endpoint that updates the BO. We need to provide all existing values on the Event so they do not fall off since this is a PUT
+                   //it is always preferable to add to your payload using onSend as opposed to a values[] array within the outboundEndpoint. Use the following syntax.
+                   //self.data is the payload as it exists coming into this onSend event
+                   self.data.internalOnly = internalOnlyRadioGroup.value[0] == 'yes' ? true : false; //convert internalOnly radio group response from String to Boolean
+                   self.data.description = description.value;
+                   self.data.put('createdBy',{'id': workEventInfo.createdBy.id}); //add createdBy object
+                   console.info(json:asJSON(self.data)); return self.data; %>"
+      },
+      {
+        "name": "eventAttachment",
+        "baseUrlType": "app",
+        "url": "attachedFiles",
+        "authType": "sso",
+        "httpMethod": "POST",
+        "multiPartFileLast": true,
+        "onSend": "<% //onSend not sent for multipart! yet :) thanks @shuo for confirming
+                   //logs the eventImage payload to the console and then submits the request
+                   //self.data.put('file', 'cid:attachment'); //add Content ID to data part of multipart request
+                   // self.data.put('event', {'id':workEventInfo.id}); //add Event BO ID to data part of multipart request; this links the attachment to the BO
+                   //self.data.put('uploadedBy', {'id':me.id});
+                   //self.data.put('uploadedDate', date:getTodaysDate(null));
+                   //outboundPath is only the JSON path within a part; can't navigate into a part. nowhere to enter a part name
+                   //valueOutBinding is only place to enter a part name
+                   console.info('eventAttachment metadata: ' + json:asJSON(self.data));
+                   return self.data;
+                   %>",
+        "exclude": "<% //This exclude statement checks whether a file was uploaded successfully!
+                    empty attachmentFileUploader.children %>"
+      },
+      {
+        "name": "submitStep",
+        "baseUrlType": "workday-bp",
+        "url": "eventSteps/<% queryParams.eventStepId %>/submit",
+        "httpMethod": "POST",
+        "authType": "sso",
+        "onSend": "<% console.info(json:asJSON(self.data)); return self.data; %>",
+        "values": [
+          {
+            "outboundPath": "stepAction.id",
+            "value": "<% //this action page is ultimately just a PMD; when the information is submitted we need to
+                      //advance the BP by calling the BP event with this exact value, which corresponds to the 'submit' step action ID
+                      //this WID corrresponds to the step action ID of 'submitted'
+                      'd9e4223e446c11de98360015c5e6daf6' %>"
+          }
+        ]
+      }
+    ],
+    "responseErrorDetail": {
+      "errorSummary": "<% error %>",
+      "errors": "<% errors.map(item => { item.error }); %>"
+    }
+  },
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Update Event"
+    },
+    "headerSize": "STANDARD",
+    "body": {
+      "type": "section",
+      "horizontal": true,
+      "children": [
+        {
+          "type": "section",
+          "id": "leftside",
+          "children": [
+            {
+              "type": "text",
+              "id": "sendBackComment",
+              "label": "<% 'Send Back Reason from ' + getEventComments.data[0].person.descriptor + ':'%>",
+              "value": "<% getEventComments.data[0].comment %>",
+              "enabled": false
+            },
+            {
+              "type": "text",
+              "id": "name",
+              "label": "Event Name",
+              "required": "<% true %>",
+              "value": "<% workEventInfo.name %>",
+              "valueOutBinding": "updateEvent.name"
+            },
+            {
+              "type": "richText",
+              "id": "description",
+              "label": "Description",
+              "required": "<% true %>",
+              "value": "<% workEventInfo.description %>"
+            },
+            {
+              "type": "text",
+              "id": "location",
+              "label": "Event Location",
+              "required": "<% true %>",
+              "value": "<% workEventInfo.location %>",
+              "valueOutBinding": "updateEvent.location"
+            },
+            {
+              "type": "date",
+              "id": "startDate",
+              "required": "<% true %>",
+              "dateFormat": "yyyy-MM-dd",
+              "label": "Start Date of Event",
+              "value": "<% workEventInfo.startDate %>",
+              "valueOutBinding": "updateEvent.startDate"
+            },
+            {
+              "type": "date",
+              "id": "endDate",
+              "required": "<% true %>",
+              "dateFormat": "yyyy-MM-dd",
+              "label": "End Date of Event",
+              "value": "<% workEventInfo.endDate %>",
+              "valueOutBinding": "updateEvent.endDate"
+            },
+            {
+              "type": "text",
+              "id": "sponsor",
+              "label": "Event Sponsor",
+              "value": "<% workEventInfo.sponsor %>",
+              "valueOutBinding": "updateEvent.sponsor"
+            },
+            {
+              "type": "currency",
+              "currencyCode": "USD",
+              "id": "cost",
+              "fractionDigits": 2,
+              "label": "Fee (USD)",
+              "value": "<% //the value to display on page load, in this case the existing value from the inbound endpoint
+                        workEventInfo.cost.value ?? 0  %>",
+              "valuesOut": [
+                {
+                  "value": "USD",
+                  "valueOutBinding": "updateEvent.cost.currency"
+                },
+                {
+                  "value": "<% //the value the user enters, whereas the valueOutBinding below is what will hit the outbound endpoint
+                            self.value %>",
+                  "valueOutBinding": "updateEvent.cost.value"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "contactInfo",
+              "label": "Contact Info/Email",
+              "value": "<% workEventInfo.contactInfo %>",
+              "valueOutBinding": "updateEvent.contactInfo"
+            },
+            {
+              "type": "radioGroup",
+              "id": "internalOnlyRadioGroup",
+              "label": "Is this a Workday Extend only event?",
+              "hideDisplayOption": "true",
+              "required": "true",
+              "selectedValues": "<% ! empty workEventInfo.internalOnly ? (workEventInfo.internalOnly ? ['yes'] : ['no'] ) : ['no']  %>",
+              "instanceList": [
+                {
+                  "id": "yes",
+                  "descriptor": "Yes"
+                },
+                {
+                  "id": "no",
+                  "descriptor": "No"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "id": "rightside",
+          "children": [
+            {
+              "type": "section",
+              "horizontal": false,
+              "sorted": false,
+              "children": [
+                {
+                  "type": "fileUploader",
+                  "label": "Attach Files Related to the Event",
+                  "id": "attachmentFileUploader",
+                  "maxImageDimension": "1024",
+                  "maxFileSize": "5242880",
+                  "compact": "<% true %>",
+                  "required": "<% false %>",
+                  "fileTypes": "*",
+                  "valueOutBinding": "<% 'createEventAttachment:attachedFiles' //outbound endpoint name : attachment obect API URL
+          %> ",
+                  "metadata": "<%
+              {:} //need at least an empty map in a metadata tag for onMultiPartSend() to have metadata to work with!
+              %>"
+                }
+              ]
+            },
+            {
+              "type": "fileUploader",
+              "label": "Previously attached files for Event:",
+              "id": "multiFileUploader",
+              "valueOutBinding": "postAttachments:filedata:",
+              "enabled": "false",
+              "fileTypes": "txt,jpg,jpeg,png,ppt,pptx,pdf,doc,docx,xlsx,xls",
+              "singular": false,
+              "children": [
+                {
+                  "type": "loop",
+                  "on": "<% getAttachments.data %>",
+                  "as": "file",
+                  "children": [
+                    {
+                      "type": "fileUploaderRow",
+                      "render": "<% !(empty file.fileName) %>",
+                      "attachment": {
+                        "type": "attachmentList",
+                        "attachmentURL": "<% 'https://api.workday.com/apps/' + site.applicationId + '/v1/attachedFiles/' + file.id %>",
+                        "attachmentAuth": "sso",
+                        "attachmentName": "<% file.fileName %>",
+                        "attachmentUriTemplate": "[Target]",
+                        "instanceList": [
+                          {
+                            "action": "attachment",
+                            "descriptor": "<% file.fileName%>",
+                            "mimeType": "<% fileType:getFileType(file.fileName) %>"
+                          }
+                        ]
+                      },
+                      "fileName": "<% file.fileName%>",
+                      "fileType": "<% fileType:getFileType(file.fileName) %>"
+                    }
+                  ]
+                }
+              ],
+              "fileUploaderRowTemplate": [ ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

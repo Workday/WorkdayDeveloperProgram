@@ -1,0 +1,50 @@
+---
+name: find-work-event
+description: >
+  Helps an employee search for and locate Work Events in the app. Returns a list
+  of matching events so the employee can identify the one they want to view or edit.
+metadata:
+  tags:
+    - work-event
+    - search
+    - find
+allowed-tools:
+  - get_create_awork_event_with_agent_mcwslt_work_events
+tool-wids:
+  - name: get_create_awork_event_with_agent_mcwslt_work_events
+    wid: "2eccfb57d2e55a69843387ddf09e5fb2"
+---
+
+# Find Work Event Skill
+
+This skill helps an employee search for existing Work Events. The employee can search
+by name, date range, or browse available events, and then select one to view or pass
+to the edit-work-event skill.
+
+## Steps
+
+1. Ask the user how they would like to find the event. Options include:
+   - **By name** — ask for the event name or partial name to search
+   - **Browse all** — list available events
+2. Call `get_create_awork_event_with_agent_mcwslt_work_events` to retrieve Work Events.
+   - If the user provided a search term, pass it as a `search` parameter if supported,
+     or retrieve a list and filter by name in the response.
+   - Use `limit` and `offset` to paginate if needed (default limit 20).
+3. Present the results to the user as a numbered or bulleted list, showing for each:
+   - Event Name
+   - Start Date / End Date
+   - Location
+   - Event ID
+4. Ask the user which event they are interested in. If no results match, let the user
+   know and offer to broaden the search or try different keywords.
+5. Once the user selects an event, confirm the selection and offer next steps:
+   - **Edit this event** — hand off the event ID to the edit-work-event skill
+   - **View details** — hand off the event ID to the view-work-event skill
+   - **Search again** — restart the search
+
+## Error Handling
+
+- If the API returns no results, inform the user clearly and suggest broadening the
+  search criteria.
+- If the API returns an error, relay the message to the user and suggest retrying.
+- If the user wants to navigate to more than 20 results, offer to load the next page.

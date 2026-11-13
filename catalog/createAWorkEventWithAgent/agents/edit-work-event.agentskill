@@ -1,0 +1,52 @@
+---
+name: edit-work-event
+description: >
+  Helps an employee edit an existing Work Event. Loads the current event data,
+  allows the employee to update fields, and saves the changes via the app's
+  Work Event REST endpoint.
+metadata:
+  tags:
+    - work-event
+    - edit
+allowed-tools:
+  - get_create_awork_event_with_agent_mcwslt_work_events
+  - patch_create_awork_event_with_agent_mcwslt_work_events
+tool-wids:
+  - name: get_create_awork_event_with_agent_mcwslt_work_events
+    wid: "2eccfb57d2e55a69843387ddf09e5fb2"
+  - name: patch_create_awork_event_with_agent_mcwslt_work_events
+    wid: "b93e2bc6b4dc5a249842536fe9b711b1"
+---
+
+# Edit Work Event Skill
+
+This skill helps an employee edit an existing Work Event. The event should already
+have been identified (via the find-work-event skill or provided by the user).
+
+## Steps
+
+1. If a `workEventId` has been provided (e.g., passed from a find-work-event flow),
+   proceed to step 2. Otherwise, ask the user to provide the Work Event ID they want
+   to edit.
+2. Call `get_create_awork_event_with_agent_mcwslt_work_events` with the event ID as
+   `contextInstanceId` to load the current event details.
+3. Conversationally collect any fields the user wants to update:
+   - **Name** of the event
+   - **Description**
+   - **Location**
+   - **Start Date** (YYYY-MM-DD)
+   - **End Date** (YYYY-MM-DD)
+   - **Event Sponsor**
+   - **Contact Info / Email**
+   - **Internal Only?** (yes/no)
+   Present the current values to the user and ask which fields they would like to change.
+
+4. Confirm the changes with the user, then update the event using `patch_create_awork_event_with_agent_mcwslt_work_events`.
+
+## Error Handling
+
+- If the event ID is not found (404), inform the user and suggest using the
+  find-work-event skill to locate the correct event.
+- If the API returns a validation error, relay the message to the user and prompt
+  them to correct the field.
+- If the user declines confirmation, ask if they'd like to adjust their changes or cancel.

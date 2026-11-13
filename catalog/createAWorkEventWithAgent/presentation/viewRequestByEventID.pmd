@@ -1,0 +1,199 @@
+{
+  "id": "viewRequestByEventID",
+  "include": [
+    "fileTypes.script"
+  ],
+  "endPoints": [
+    {
+      "baseUrlType": "workday-wql",
+      "name": "getRequestId",
+      "authType": "sso",
+      "url": "<% //Grab the request ID using the BP Event ID. queryParams.eventId will automatically pull in the BP Event ID if it is in the page's scope
+              var query = 'SELECT businessProcessTarget FROM ' + site.applicationId + '_createWorkEventEvents WHERE workdayID = \"' + queryParams.eventId + '\"';
+              //if you reuse this code be sure to replace _createWorkEventEvents above with the appropriate endpoint for your Model BP
+              console.info(query);
+              return 'data?query=' + query.pathEncode() %>",
+      "failOnStatusCodes": [
+        {
+          "code": "400"
+        },
+        {
+          "code": "403"
+        }
+      ]
+    },
+    {
+      "baseUrlType": "app",
+      "name": "workEvent",
+      "authType": "sso",
+      "url": "<% //Grab the relevant instance of the Work Event BO using the results of the getRequestId endpoint
+              'workEvents/' + getRequestId.data[0].businessProcessTarget.id %>",
+      "exclude": false
+    },
+    {
+      "name": "getAttachments",
+      "baseUrlType": "app",
+      "url": "<% 'attachedFiles?event=' + getRequestId.data[0].businessProcessTarget.id  %>",
+      "authType": "sso"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "label": "Work Event Details",
+      "type": "title"
+    },
+    "headerSize": "STANDARD",
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "_comments": "Business Objects Details block",
+          "type": "section",
+          "horizontal": true,
+          "title": "Work Event Information",
+          "children": [
+            {
+              "type": "section",
+              "horizontal": false,
+              "children": [
+                {
+                  "type": "fieldSet",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "name",
+                      "label": "Work Event Name",
+                      "value": "<% workEvent.name %>",
+                      "enabled": false
+                    },
+                    {
+                      "type": "richText",
+                      "id": "description",
+                      "label": "Description",
+                      "value": "<% workEvent.description %>"
+                    },
+                    {
+                      "type": "text",
+                      "id": "location",
+                      "label": "Proposed Event Location",
+                      "value": "<% workEvent.location %>"
+                    },
+                    {
+                      "type": "date",
+                      "id": "date",
+                      "dateFormat": "yyyy-MM-dd",
+                      "label": "Start Date of Work Event",
+                      "value": "<% workEvent.startDate %>"
+                    },
+                    {
+                      "type": "text",
+                      "id": "sponsor",
+                      "label": "Work Event Sponsor",
+                      "value": "<% workEvent.sponsor %>"
+                    },
+                    {
+                      "type": "currency",
+                      "currencyCode": "USD",
+                      "id": "cost",
+                      "minimumValue": "<% 0.01 %>",
+                      "fractionDigits": 2,
+                      "label": "Fee (USD)",
+                      "value": "<% workEvent.cost.value ?? 0 %>"
+                    },
+                    {
+                      "type": "text",
+                      "id": "contactInfo",
+                      "label": "Contact Info/Email",
+                      "required": "<% true %>",
+                      "value": "<% workEvent.contactInfo %>"
+                    },
+                    {
+                      "type": "text",
+                      "id": "venue",
+                      "label": "Work Event Venue",
+                      "required": "<% true %>",
+                      "value": "<% workEvent.venue.descriptor ?? '' %>"
+                    },
+                    {
+                      "id": "internalOnlyCheckBox",
+                      "type": "checkBox",
+                      "value": "<% workEvent.internalOnly %>",
+                      "visible": "<% true %>",
+                      "label": "Internal Only Event?",
+                      "enabled": false,
+                      "trueLabel": "Yes",
+                      "falseLabel": "No"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "fieldSet",
+          "title": "Work Event Attachments",
+          "render": "<% !(empty getAttachments.data) %>",
+          "children": [
+            {
+              "type": "fileUploader",
+              "id": "multiFileUploader",
+              "valueOutBinding": "postAttachments:filedata:",
+              "enabled": "false",
+              "fileTypes": "jpg,pdf",
+              "singular": false,
+              "children": [
+                {
+                  "type": "loop",
+                  "on": "<% getAttachments.data %>",
+                  "as": "file",
+                  "children": [
+                    {
+                      "type": "fileUploaderRow",
+                      "render": "<% !(empty file.fileName) %>",
+                      "attachment": {
+                        "type": "attachmentList",
+                        "attachmentURL": "<% 'https://api.workday.com/apps/' + site.applicationId + '/v1/attachedFiles/' + file.id %>",
+                        "attachmentAuth": "sso",
+                        "attachmentName": "<% file.fileName %>",
+                        "attachmentUriTemplate": "[Target]",
+                        "instanceList": [
+                          {
+                            "action": "attachment",
+                            "descriptor": "<% file.fileName%>"
+                          }
+                        ]
+                      },
+                      "fileName": "<% file.fileName%>",
+                      "fileType": "<% fileTypes.getMimeTypeIDbyContentType(file.contentType.id) %>"
+                    }
+                  ]
+                }
+              ],
+              "fileUploaderRowTemplate": [ ]
+            }
+          ]
+        },
+        {
+          "type": "button",
+          "label": "<% 'Return to Create a Work Event Home' %>",
+          "action": "PRIMARY",
+          "taskReference": {
+            "taskId": "eventHub"
+          }
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By<br/><b>Workday Extend 🎟️</b>"
+        }
+      ]
+    }
+  }
+}

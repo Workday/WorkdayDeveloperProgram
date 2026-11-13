@@ -1,0 +1,138 @@
+{
+  "id": 1,
+  "name": "AllWorkEvents",
+  "defaultSecurityDomains": [
+    "ManageCreateAnEvent"
+  ],
+  "columns": [
+    {
+      "id": 1,
+      "name": "WorkEvent",
+      "order": "a",
+      "isSelfReferencing": true
+    },
+    {
+      "id": 2,
+      "name": "Event Name",
+      "field": "name",
+      "order": "b"
+    },
+    {
+      "id": 3,
+      "name": "Event Location",
+      "field": "location",
+      "order": "c"
+    },
+    {
+      "id": 4,
+      "name": "Event Description",
+      "field": "description",
+      "order": "d"
+    },
+    {
+      "id": 13,
+      "name": "Start Date",
+      "order": "e",
+      "field": "startDate"
+    },
+    {
+      "id": 15,
+      "name": "End Date",
+      "order": "g",
+      "field": "endDate"
+    },
+    {
+      "id": 5,
+      "name": "Sponsor",
+      "field": "sponsor",
+      "order": "h"
+    },
+    {
+      "id": 7,
+      "name": "Contact Info",
+      "field": "contactInfo",
+      "order": "i"
+    },
+    {
+      "id": 8,
+      "name": "Event Fee",
+      "field": "cost",
+      "order": "j"
+    },
+    {
+      "id": 9,
+      "name": "Created By",
+      "field": "createdBy",
+      "order": "k"
+    },
+    {
+      "id": 10,
+      "name": "Internal Only Event",
+      "field": "internalOnly",
+      "order": "l"
+    },
+    {
+      "id": 11,
+      "name": "Image",
+      "field": "image",
+      "order": "m"
+    },
+    {
+      "id": 12,
+      "name": "Event Venue",
+      "field": "venue",
+      "order": "n"
+    },
+    {
+      "id": 14,
+      "name": "Registrants",
+      "order": "o",
+      "field": "registrants"
+    },
+    {
+      "id": 16,
+      "name": "Long Description",
+      "order": "p",
+      "field": "longDescription"
+    },
+    {
+      "id": 17,
+      "name": "Is Workday Event",
+      "order": "q",
+      "field": "isWorkdayEvent"
+    },
+    {
+      "id": 18,
+      "name": "Prorated Amount",
+      "order": "r",
+      "field": "proratedAmount"
+    },
+    {
+      "id": 19,
+      "name": "Image Uploaded Date",
+      "order": "s",
+      "field": "imageUploadedDate"
+    },
+    {
+      "id": 20,
+      "name": "Requires Approval - Internal Only",
+      "order": "t",
+      "field": "requiresApprovalInternal"
+    },
+    {
+      "id": 21,
+      "name": "Requires Approval",
+      "order": "u",
+      "field": "requiresApproval"
+    }
+  ],
+  "businessObject": "WorkEvent",
+  "sortConfigs": [
+    {
+      "id": 1,
+      "order": "a",
+      "field": "name",
+      "direction": "ASCENDING"
+    }
+  ]
+}

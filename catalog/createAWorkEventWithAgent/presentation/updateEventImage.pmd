@@ -1,0 +1,242 @@
+{
+  "id": "updateEventImage",
+  "securityDomains": [
+    "ManageCreateAnEvent"
+  ],
+  "endPoints": [
+    {
+      "name": "worker",
+      "baseUrlType": "workday-staffing",
+      "url": "workers/me",
+      "authType": "sso"
+    },
+    {
+      "name": "event",
+      "baseUrlType": "app",
+      "url": "<% 'workEvents/' + queryParams.workEventId %>",
+      "authType": "sso"
+    },
+    {
+      "name": "eventImage",
+      "baseUrlType": "app",
+      "url": "<% //won't fire the endpoint if
+              //there is no image saved to the
+              //event's 'image' field
+              'eventImages/' + event.image.id %>",
+      "exclude": "<% empty(event.image) %>",
+      "authType": "sso"
+    },
+    {
+      "name": "eventImageMetadata",
+      "baseUrlType": "app",
+      "url": "<% //Get the Event Image metadata by specifying the Accept header as JSON. Model Attachments are files that can be stored
+              //alongside JSON metadata in a multipart request (JSON metadata in one part, the file contents in another). This request hits the exact same endpoint
+              //as 'eventImage' above, with the only difference being that it will specifically consume the JSON metadata associated with the file contents in eventImage
+              'eventImages/' + event.image.id %>",
+      "exclude": "<% empty(event.image)%>",
+      "authType": "sso",
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ]
+    }
+  ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "createEventImage",
+        "baseUrlType": "app",
+        "url": "eventImages",
+        "authType": "sso",
+        "httpMethod": "POST",
+        "multiPartFileLast": true,
+        "onSend": "<%
+                   //logs the createEventImage payload to the console and then submits the request
+                   //console.info('createEventImage' + json:asJSON(self.data));
+                   return self.data;
+                   %>",
+        "exclude": "<% //This exclude statement checks whether a file was uploaded successfully!
+                    empty imageFileUploader.children %>"
+      },
+      {
+        "name": "updateEvent",
+        "baseUrlType": "app",
+        "url": "<% //Set the newly created Event Image on the Event since the relationship did not previously exist.
+                'workEvents/' + event.id %>",
+        "authType": "sso",
+        "onSend": "<%
+                   //logs the updateEvent payload to the console and then submits the request
+                   console.info(json:asJSON(self.data));
+                   return self.data;
+                   %>",
+        "exclude": "<% //This exclude statement checks whether the previous outbound endpoint returned an ID, which will only be true if it fired successfully
+                    empty createEventImage.id %>",
+        "httpMethod": "PATCH",
+        "values": [
+          {
+            "outboundPath": "image.id",
+            "value": "<% //Set Event Image relationship with ID returned by createEventImage endpoint.
+                      createEventImage.id %>"
+          }
+        ]
+      },
+      {
+        "name": "deleteOldImage",
+        "baseUrlType": "app",
+        "url": "<% 'eventImages/' + event.image.id %>",
+        "authType": "sso",
+        "httpMethod": "DELETE",
+        "multiPartFileLast": true,
+        "onSend": "<%
+                   //console.info(json:asJSON(self.data));
+                   return self.data;
+                   %>",
+        "exclude": "<% //Delete prior Event Image if there is one already there
+                    empty(event.image) %>"
+      }
+    ],
+    "responseErrorDetail": {
+      "errorSummary": "<% error %>",
+      "errors": "<% errors.map(item => { item.error }); %>"
+    }
+  },
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Update Event Image"
+    },
+    "headerSize": "STANDARD",
+    "body": {
+      "type": "section",
+      "title": "Upload an Event Image",
+      "horizontal": false,
+      "sorted": false,
+      "children": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name of Event",
+          "value": "<% event.name %>",
+          "enabled": "<% false %>"
+        },
+        {
+          "type": "section",
+          "horizontal": true,
+          "sorted": false,
+          "id": "bothLeftAndRightSides",
+          "children": [
+            {
+              "type": "section",
+              "horizontal": false,
+              "sorted": false,
+              "id": "leftside",
+              "children": [
+                {
+                  "type": "hidden",
+                  "value": "<% worker.id %>",
+                  "valueOutBinding": "<% //note the use of PMD multipart/form-data syntax outboundEndpointName:partName:field
+                                      //where the field 'uploadedBy.id' will be populated in a 'data' part for the request
+                                      //these fields make up the exact kind of 'metadata' we retrieved above with the endpoint using theh 'Accept: application/json' header
+                                      'createEventImage:data:uploadedBy.id' %>"
+                },
+                {
+                  "type": "hidden",
+                  "value": "<% date:getTodaysDate(null) %>",
+                  "valueOutBinding": "<% //note the use of PMD multipart/form-data syntax outboundEndpointName:partName:field
+                                      //where the field 'uploadedDate' will be populated in a 'data' part for the request
+                                      //these fields make up the exact kind of 'metadata' we retrieved above with the endpoint using theh 'Accept: application/json' header
+                                      'createEventImage:data:uploadedDate' %>"
+                },
+                {
+                  "type": "hidden",
+                  "value": "<% //the content-id or 'cid' associated with the file binary that will be sent by fileUploader
+                            //the cid: prefix tells the app which 'partName' in the multipart request the actual file contents will go to. The name 'image' here is arbitrary
+                            //all that matters is that 'image' here matches the partName in the fileUploader's valueOutBinding below, e.g. 'image' here matches the 'image'
+                            //in 'createEventImage:image'
+                            'cid:image' %>",
+                  "valueOutBinding": "<% //note the use of PMD multipart/form-data syntax outboundEndpointName:partName:field
+                                      //where the field 'file' will be populated in a 'data' part for the request
+                                      //these fields make up the exact kind of 'metadata' we retrieved above with the endpoint using the 'Accept: application/json' header
+                                      //this elemenet of the multipart request MUST be outboundEndpointName:data:file where outboundEndpointName is the name of the outbound endpoint
+                                      //receiving the file from fileUploader
+                                      'createEventImage:data:file' %>"
+                },
+                {
+                  "type": "fileUploader",
+                  "id": "imageFileUploader",
+                  "label": "New Image",
+                  "singular": "<% true %>",
+                  "maxImageDimension": "1024",
+                  "maxFileSize": "5242880",
+                  "compact": "<% false %>",
+                  "required": "<% true %>",
+                  "fileTypes": "gif,jpg,jpeg,png",
+                  "valueOutBinding": "<% //notice that when using fileUploader for multipart data (necessary for Model Attachment requests) this value will be
+                                      //outboundEndpointName + ':' + partName after 'cid:' above
+                                      'createEventImage:image'%>"
+                }
+              ]
+            },
+            {
+              "type": "section",
+              "title": "Current Image",
+              "id": "rightside",
+              "horizontal": false,
+              "sorted": false,
+              "children": [
+                {
+                  "type": "section",
+                  "id": "currentImageInfo",
+                  "horizontal": false,
+                  "sorted": false,
+                  "render": "<% (!(empty(event.image))) %>",
+                  "children": [
+                    {
+                      "type": "image",
+                      "sizingHint": "INLINE",
+                      "id": "currentEventImage",
+                      "endPoint": {
+                        "url": "eventImages/<% event.image.id %>",
+                        "baseUrlType": "app",
+                        "authType": "sso"
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "uploadedBy",
+                      "label": "Uploaded By",
+                      "value": "<% eventImageMetadata.uploadedBy.descriptor %>",
+                      "enabled": "<% false %>"
+                    },
+                    {
+                      "type": "text",
+                      "label": "Uploaded Date",
+                      "id": "uploadedDate",
+                      "enabled": "<% false %>",
+                      "value": "<% eventImageMetadata.uploadedDate %>"
+                    },
+                    {
+                      "type": "text",
+                      "label": "File Size",
+                      "id": "fileSize",
+                      "value": "<% file:byteCountToDisplaySize(eventImageMetadata.fileLength) %>",
+                      "enabled": "<% false %>"
+                    }
+                  ]
+                },
+                {
+                  "type": "readOnlyText",
+                  "id": "noImageMessage",
+                  "value": "There is currently no image for this Event.",
+                  "render": "<% empty(event.image) %>"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

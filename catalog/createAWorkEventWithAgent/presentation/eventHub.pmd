@@ -1,0 +1,73 @@
+{
+  "id": "eventHub",
+  "securityDomains": [
+    "RegisterForEvents"
+  ],
+  "presentation": {
+    "body": {
+      "type": "hub",
+      "label": "Work Event Registration",
+      "initialTask": {
+        "taskId": "home"
+      },
+      "navigationTasks": [
+        {
+          "type": "item",
+          "icon": "wd-icon-timeline-milestone",
+          "label": "About",
+          "task": {
+            "taskId": "home"
+          }
+        },
+        {
+          "type": "item",
+          "icon": "wd-icon-search-user",
+          "label": "Register For Events",
+          "task": {
+            "taskId": "registerForEvents"
+          }
+        },
+        {
+          "type": "item",
+          "icon": "wd-icon-checkboxes",
+          "label": "My Registered Events",
+          "task": {
+            "taskId": "manageMyEvents"
+          }
+        },
+        {
+          "type": "item",
+          "icon": "wd-icon-time-off-balance",
+          "label": "Manage Events",
+          "task": {
+            "taskId": "manageEvents"
+          }
+        }
+      ],
+      "additionalLinks": {
+        "title": "Create New Work Events",
+        "links": [
+          {
+            "type": "task",
+            "label": "Create Event",
+            "task": {
+              "taskId": "createEventWizard"
+            }
+          },
+          {
+            "type": "task",
+            "label": "Work Event Calendar",
+            "task": {
+              "taskId": "calendarWorkEvents"
+            }
+          },
+          {
+            "type": "external",
+            "label": "Developer Forum",
+            "url": "https://forum.developer.workday.com/"
+          }
+        ]
+      }
+    }
+  }
+}

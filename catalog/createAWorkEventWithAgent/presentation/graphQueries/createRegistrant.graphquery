@@ -1,0 +1,43 @@
+{
+    "id": "createRegistrant",
+    "parameters": ["worker", "event"],
+    "query": "
+        mutation createAWorkEventMultiinstance_nkzjqw_createRegistrant($createRegistrant_input: CreateAWorkEventMultiinstance_nkzjqw_RegistrantsSummary_CreateInput!) {
+  createAWorkEventMultiinstance_nkzjqw_createRegistrant(
+    input: $createRegistrant_input
+  ) {
+    descriptor
+    event {
+      descriptor
+      workdayID {
+        id
+      }
+    }
+    workdayID {
+      id
+    }
+    worker {
+      descriptor
+      workdayID {
+        id
+      }
+    }
+  }
+}",
+    "variables": {
+  "createRegistrant_input": {
+    "event": {
+      "id": {
+        "id": "<% event %>",
+        "type": "WID"
+      }
+    },
+    "worker": {
+      "id": {
+        "id": "<% worker %>",
+        "type": "WID"
+      }
+    }
+  }
+}
+}

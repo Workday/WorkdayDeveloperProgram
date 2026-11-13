@@ -1,0 +1,122 @@
+{
+  "id": "calendarWorkEvents",
+  "onLoad": "<%
+    // The sample calendar is view-only for non-employees.
+    me.workerType.descriptor == 'Employee' ? pageVariables.viewOnly = false : pageVariables.viewOnly = true;
+    getWorkEvents.data.forEach(e => { e.status = getBPEvents.data.find(bpEvent => {bpEvent.businessProcessTarget.id == e.id}).status ?? 'Approved'});
+    console.info('augmented work event data is ' + json:asJSON(getWorkEvents.data));
+  %>",
+  "presentation": {
+    "title": {
+      "type": "title",
+      "id": "title",
+      "label": "Work Event Calendar"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "multiSelectCalendar",
+          "calendarStartDate": "<% date:now('America/Los_Angeles') %>",
+          "eventData": {
+            "on": "<% getWorkEvents.data %>",
+            "as": "event",
+            "template": {
+              "startDate": "<% date:parse(event.startDate) %>",
+              "endDate": "<% date:parse(event.endDate ?? event.startDate) %>",
+              "style": "<%  if (event.status == 'In Progress') { 'SUBMITTED'; } else
+                            if (event.status == 'Successfully Completed' || event.status == 'Approved') { 'APPROVED';} else      
+                            if (event.status == 'Denied') { 'DENIED'; } %>",
+              "title": "<% event.descriptor %>",
+              "editTask": {
+                "task": {
+                  "taskId": "registerForEvent",
+                  "parameters": {
+                    "workEventId": "<% event.id %>"
+                  }
+                },
+                "render": "<% !pageVariables.viewOnly %>"
+              }
+            }
+          },
+          "submitButton": {
+            "render": "<% !pageVariables.viewOnly %>",
+            "label": "<% 'Create Work Event'  %>",
+            "datesQueryParamName": "selectedDates",
+            "task": {
+              "taskId": "quickAddWorkEvent",
+              "parameters": {
+                "createdById": "<% me.id %>",
+                "createdByName": "<% me.descriptor %>"
+              }
+            }
+          },
+          "sidebar": {
+            "task": {
+              "taskId": "sidebarInfo",
+              "parameters": {
+                "name": "<% me.descriptor %>",
+                "businessTitle": "<% me.primaryJob.businessTitle %>",
+                "primaryLocation": "<% me.primaryJob.location.descriptor %>"
+              }
+            },
+            "position": "left"
+          }
+        },
+        {
+          "type": "cardContainer",
+          "layout": "MASONRY",
+          "cards": [
+            {
+              "type": "card",
+              "cardId": "CalendarLinks"
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": "false",
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  },
+  "endPoints": [
+    {
+      "baseUrlType": "workday-staffing",
+      "name": "me",
+      "authType": "sso",
+      "url": "workers/me"
+    },
+    {
+      "name": "getWorkEvents",
+      "baseUrlType": "app",
+      "url": "workEvents?limit=<% pagingVariables.limit ?: 50 %>&offset=<% pagingVariables.offset ?: 0 %>",
+      "authType": "sso",
+      "httpMethod": "GET"
+    },
+    {
+      "baseUrlType": "workday-wql",
+      "name": "getBPEvents",
+      "authType": "sso",
+      "url": "<% //Grab the request ID using the BP Event ID. queryParams.eventId will automatically pull in the BP Event ID if it is in the page's scope
+              var query = 'SELECT businessProcessTarget, status FROM ' + site.applicationId + '_createWorkEventEvents';
+              //if you reuse this code be sure to replace _createWorkEventEvents above with the appropriate endpoint for your Model BP
+              console.info('getBPEvents query is ' + query);
+              return 'data?query=' + query.pathEncode() %>",
+      "failOnStatusCodes": [
+        {
+          "code": "400"
+        },
+        {
+          "code": "403"
+        }
+      ]
+    }
+  ]
+}

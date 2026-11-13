@@ -1,0 +1,223 @@
+{
+  "id": "manageEvents",
+  "endPoints": [
+    {
+      "name": "events",
+      "baseUrlType": "workday-wql",
+      "url": "<% const query = 'SELECT name, cost, workdayID AS id, description, sponsor, location, startDate, endDate, contactInfo, venue, createdBy, registrants FROM ' + site.applicationId + '_workEvents';
+              console.info('events query is ' + query);
+              return 'data?query=' + query.urlEncode();
+    %>",
+      "authType": "sso"
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Manage Work Events"
+    },
+    "headerSize": "STANDARD",
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "sorted": false,
+      "children": [
+        {
+          "type": "section",
+          "horizontal": true,
+          "children": [
+            {
+              "type": "cardContainer",
+              "layout": "MASONRY",
+              "cards": [
+                {
+                  "type": "card",
+                  "cardId": "CalendarLinks"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "eventsGrid",
+          "label": "Events",
+          "type": "grid",
+          "rows": "<% events.data %>",
+          "rowVariableName": "event",
+          "columns": [
+            {
+              "cellTemplate": {
+                "type": "button",
+                "label": "<% event.name %>",
+                "action": "LINK",
+                "value": "<% event.id %>",
+                "taskReference": {
+                  "taskId": "updateEvent",
+                  "parameterBindings": {
+                    "workEventId": "<% /* this workEventId is a parameter we are passing to the update page once the user clicks to it.
+                     taskId points to the target page, and on that page, the valid queryParam name in the inbond endpoint for the Event BO instance to update is populated here (event.id):*/
+                                event.id %>"
+                  }
+                }
+              },
+              "label": "Name of Event",
+              "type": "column",
+              "columnId": "name",
+              "sortableAndFilterable": true
+            },
+            {
+              "cellTemplate": {
+                "type": "currency",
+                "label": "Amount (USD)",
+                "id": "cost",
+                "enabled": false,
+                "currencyCode": "USD",
+                "value": "<% event.cost.value ?: 0 %>",
+                "showCurrencySymbol": true,
+                "render": true,
+                "visible": true
+              },
+              "label": "Event Fee",
+              "columnId": "Cost",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "richText",
+                "value": "<% event.description %>"
+              },
+              "label": "Description",
+              "columnId": "Description",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% event.sponsor %>"
+              },
+              "label": "Event Sponsor",
+              "sortableAndFilterable": true,
+              "columnId": "Sponsor",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% event.location %>"
+              },
+              "label": "Location",
+              "columnId": "Proposed Location",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "date",
+                "datePrecision": "DAY",
+                "dateFormat": "yyyy-MM-dd",
+                "value": "<% event.startDate %>"
+              },
+              "label": "Start Date of Event",
+              "sortableAndFilterable": true,
+              "columnId": "StartDateOfEvent",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "date",
+                "datePrecision": "DAY",
+                "dateFormat": "yyyy-MM-dd",
+                "value": "<% event.endDate %>"
+              },
+              "label": "End Date of Event",
+              "sortableAndFilterable": true,
+              "columnId": "EndDateOfEvent",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% event.contactInfo %>"
+              },
+              "label": "Contact Info",
+              "columnId": "ContactInfo",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "instanceList",
+                "instanceList": [
+                  {
+                    "id": "<% event.venue %>",
+                    "descriptor": "<% event.venue.descriptor ?: '' %>"
+                  }
+                ]
+              },
+              "label": "Booked Venue",
+              "columnId": "BookedVenue",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "readOnlyText",
+                "value": "<% event.internalOnly%>"
+              },
+              "label": "Internal Only?",
+              "columnId": "InternalOnly",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "instanceList",
+                "instanceList": [
+                  {
+                    "id": "<% event.createdBy %>",
+                    "descriptor": "<% //here we use a ternary or Elvis expression to tell the page to check
+                                   // whether the descriptor is non-null. If it is null, display an empty string. Else, it will display the expression before the operator.
+                                   event.createdBy.descriptor ?: '' %>"
+                  }
+                ]
+              },
+              "label": "Created By",
+              "columnId": "CreatedBy",
+              "type": "column"
+            },
+            {
+              "cellTemplate": {
+                "type": "section",
+                "children": [
+                  {
+                    "type": "button",
+                    "action": "AUXILIARY",
+                    "label": "Update",
+                    "taskReference": {
+                      "taskId": "updateEvent",
+                      "parameterBindings": {
+                        "workEventId": "<% /* this workEventId is a parameter we are passing to the update page once the user clicks to it.
+                     taskId points to the target page, and on that page, the valid queryParam name in the inbond endpoint for the Event BO instance to update is populated here (event.id):*/
+                                    event.id %>"
+                      }
+                    }
+                  },
+                  {
+                    "type": "button",
+                    "action": "AUXILIARY",
+                    "label": "Update Image",
+                    "taskReference": {
+                      "taskId": "updateEventImage",
+                      "parameterBindings": {
+                        "workEventId": "<% event.id %>"
+                      }
+                    }
+                  }
+                ]
+              },
+              "columnId": "actions",
+              "type": "column",
+              "label": "Actions"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
