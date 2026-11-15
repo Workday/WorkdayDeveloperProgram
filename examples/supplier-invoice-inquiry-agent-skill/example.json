@@ -1,0 +1,17 @@
+{
+  "title": "Supplier Invoice Inquiry Agent Skill",
+  "description": "A markdown skill for an agent that checks supplier invoice status, explains payment holds and match exceptions, and prepares AP escalation notes in Workday Financials.",
+  "type": "Agent Skill",
+  "components": [
+    "WQL"
+  ],
+  "products": [
+    "Workday Financials",
+    "Workday REST API"
+  ],
+  "authors": [
+    "srivilliamsai"
+  ],
+  "tutorial": "",
+  "source": "community"
+}
