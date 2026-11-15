@@ -137,6 +137,7 @@ Community examples, open to everyone. This is the section external contributions
 | [`workday-developer-copilot-skill`](examples/workday-developer-copilot-skill) | A markdown skill that shapes a prompt for Workday Developer Copilot and lists what must not be pasted. | Agent Skill |
 | [`workday-extend-skill`](examples/workday-extend-skill) | A markdown skill that reviews an Extend app shell and data model: AMD routes, SMD auth, business objects, and security domains. | Agent Skill |
 | [`workday-home-cards-skill`](examples/workday-home-cards-skill) | A markdown skill that reviews a Workday Home card definition and its tenant setting. | Agent Skill |
+| [`workday-mcp-agent-tools`](examples/workday-mcp-agent-tools) | A reference implementation and specification of Model Context Protocol (MCP) Agent-Ready Tools for Workday, providing flattened JSON-RPC schemas and security guardrails for AI agents. | Reference |
 | [`workday-orchestrate-skill`](examples/workday-orchestrate-skill) | A markdown skill that reviews an Orchestrate flow for Maya file shape, expressions, and secrets. | Agent Skill |
 | [`workday-pmd-skill`](examples/workday-pmd-skill) | A markdown skill that reviews an Extend page for a security domain, endpoint failures, widget ids, labels, and secrets. | Agent Skill |
 | [`workday-skill`](examples/workday-skill) | A markdown skill that chooses which Workday agent skill to apply when a task starts a new app or touches more than one artifact. | Agent Skill |

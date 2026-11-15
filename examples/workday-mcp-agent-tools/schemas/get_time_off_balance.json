@@ -1,0 +1,20 @@
+{
+  "name": "get_time_off_balance",
+  "description": "Retrieves current available time off balances, unit of measure (hours or days), and plan categories for a worker across eligible absence plans (e.g. Vacation, Sick, Floating Holiday).",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "worker_id": {
+        "type": "string",
+        "description": "Workday ID (WID) or employee ID of the worker. If omitted, queries the logged-in user."
+      },
+      "effective_date": {
+        "type": "string",
+        "description": "Effective date for the balance calculation in YYYY-MM-DD format. Defaults to current date."
+      }
+    }
+  },
+  "security_domain": "Self-Service: Time Off and Leave",
+  "read_only": true
+}
+

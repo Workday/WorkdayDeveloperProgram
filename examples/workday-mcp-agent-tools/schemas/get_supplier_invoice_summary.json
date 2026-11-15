@@ -1,0 +1,36 @@
+{
+  "name": "get_supplier_invoice_summary",
+  "description": "Queries Workday Financials for supplier invoices by invoice number, supplier WID, or status. Returns flattened invoice summaries including invoice number, supplier name, invoice date, due date, total amount, currency, invoice status, payment status, and hold reason. Masks or omits all banking and remittance account numbers.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "invoice_number": {
+        "type": "string",
+        "description": "The supplier's invoice number to look up."
+      },
+      "supplier_name": {
+        "type": "string",
+        "description": "Filter invoices by supplier name or substring."
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "Approved",
+          "In_Progress",
+          "On_Hold",
+          "Paid",
+          "All"
+        ],
+        "description": "Filter by invoice status."
+      },
+      "limit": {
+        "type": "integer",
+        "default": 10,
+        "description": "Maximum invoices to return."
+      }
+    }
+  },
+  "security_domain": "View: Supplier Invoice",
+  "read_only": true
+}
+

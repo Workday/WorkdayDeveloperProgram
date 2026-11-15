@@ -1,0 +1,17 @@
+{
+  "name": "get_worker_profile",
+  "description": "Retrieves core identity, job, and organization data for an active worker in Workday. Returns a flattened, token-efficient payload containing name, title, business title, manager, supervisory organization, location, primary work email, and hire date.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "worker_id": {
+        "type": "string",
+        "description": "The Workday ID (WID) or employee/contingent worker ID of the person to look up."
+      }
+    },
+    "required": ["worker_id"]
+  },
+  "security_domain": "Worker Data: Public",
+  "read_only": true
+}
+

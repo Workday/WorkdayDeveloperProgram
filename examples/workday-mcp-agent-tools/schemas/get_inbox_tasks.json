@@ -1,0 +1,27 @@
+{
+  "name": "get_inbox_tasks",
+  "description": "Retrieves pending awaiting-action inbox tasks and approval requests for the authenticated worker. Returns flattened task records including event title, business process type, initiator, due date, and task ID.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "status": {
+        "type": "string",
+        "enum": [
+          "Awaiting_Action",
+          "Completed",
+          "All"
+        ],
+        "default": "Awaiting_Action",
+        "description": "Filter inbox items by status. Defaults to 'Awaiting_Action'."
+      },
+      "limit": {
+        "type": "integer",
+        "description": "Maximum number of tasks to return (default: 20).",
+        "default": 20
+      }
+    }
+  },
+  "security_domain": "Self-Service: Business Process Actions",
+  "read_only": true
+}
+
