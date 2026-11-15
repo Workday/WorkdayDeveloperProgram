@@ -1,0 +1,18 @@
+{
+  "title": "Workday MCP Agent-Ready Tools",
+  "description": "A reference implementation and specification of Model Context Protocol (MCP) Agent-Ready Tools for Workday, providing flattened JSON-RPC schemas and security guardrails for AI agents.",
+  "type": "Reference",
+  "components": [
+    "Template",
+    "WQL"
+  ],
+  "products": [
+    "Workday REST API",
+    "Workday Extend"
+  ],
+  "authors": [
+    "srivilliamsai"
+  ],
+  "tutorial": "",
+  "source": "community"
+}

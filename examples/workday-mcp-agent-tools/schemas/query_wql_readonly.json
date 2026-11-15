@@ -1,0 +1,25 @@
+{
+  "name": "query_wql_readonly",
+  "description": "Executes a read-only SELECT query using Workday Query Language (WQL) against authorized tenant data sources. Returns tabular JSON rows without nested object wrappers. Queries must be SELECT statements only and cannot modify data.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "query": {
+        "type": "string",
+        "description": "The WQL SELECT statement to execute (e.g. 'SELECT worker, legalName, primaryWorkEmail FROM allWorkers WHERE primaryWorkEmail != null LIMIT 20')."
+      },
+      "limit": {
+        "type": "integer",
+        "description": "Maximum number of rows to return (default: 50, maximum: 200).",
+        "default": 50,
+        "maximum": 200
+      }
+    },
+    "required": [
+      "query"
+    ]
+  },
+  "security_domain": "Workday Reporting & WQL",
+  "read_only": true
+}
+

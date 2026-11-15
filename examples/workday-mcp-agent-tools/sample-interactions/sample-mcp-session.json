@@ -1,0 +1,112 @@
+[
+  {
+    "description": "Client initializes connection to Workday MCP Server",
+    "request": {
+      "jsonrpc": "2.0",
+      "id": 1,
+      "method": "initialize",
+      "params": {
+        "protocolVersion": "2024-11-05",
+        "capabilities": {
+          "roots": {
+            "listChanged": false
+          }
+        },
+        "clientInfo": {
+          "name": "ClaudeCode",
+          "version": "1.0.0"
+        }
+      }
+    },
+    "response": {
+      "jsonrpc": "2.0",
+      "id": 1,
+      "result": {
+        "protocolVersion": "2024-11-05",
+        "capabilities": {
+          "tools": {}
+        },
+        "serverInfo": {
+          "name": "workday-mcp-agent-tools",
+          "version": "1.0.0"
+        }
+      }
+    }
+  },
+  {
+    "description": "Agent discovers available Workday Agent-Ready Tools",
+    "request": {
+      "jsonrpc": "2.0",
+      "id": 2,
+      "method": "tools/list",
+      "params": {}
+    },
+    "response": {
+      "jsonrpc": "2.0",
+      "id": 2,
+      "result": {
+        "tools": [
+          {
+            "name": "get_worker_profile",
+            "description": "Retrieves core identity, job, and organization data for an active worker in Workday...",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "worker_id": {
+                  "type": "string",
+                  "description": "The Workday ID (WID) or employee ID"
+                }
+              },
+              "required": ["worker_id"]
+            }
+          },
+          {
+            "name": "query_wql_readonly",
+            "description": "Executes a read-only SELECT query using Workday Query Language (WQL)...",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "query": {
+                  "type": "string",
+                  "description": "WQL SELECT query"
+                },
+                "limit": {
+                  "type": "integer",
+                  "description": "Max rows"
+                }
+              },
+              "required": ["query"]
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "description": "Agent executes get_worker_profile tool call",
+    "request": {
+      "jsonrpc": "2.0",
+      "id": 3,
+      "method": "tools/call",
+      "params": {
+        "name": "get_worker_profile",
+        "arguments": {
+          "worker_id": "WID_101"
+        }
+      }
+    },
+    "response": {
+      "jsonrpc": "2.0",
+      "id": 3,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"worker_id\": \"WID_101\",\n  \"name\": \"Alex Morgan\",\n  \"business_title\": \"Senior Product Manager\",\n  \"supervisory_organization\": \"Digital Workplace Technologies\",\n  \"primary_email\": \"alex.morgan@example.com\",\n  \"hire_date\": \"2022-03-01\",\n  \"location\": \"San Francisco - Main Campus\"\n}"
+          }
+        ]
+      }
+    }
+  }
+]
+
