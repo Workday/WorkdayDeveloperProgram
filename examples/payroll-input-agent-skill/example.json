@@ -1,0 +1,16 @@
+{
+  "title": "Payroll Input Agent Skill",
+  "description": "A markdown skill for an agent that reads payroll inputs and payslip summaries and prepares payroll inputs or pay group assignments in Workday.",
+  "type": "Agent Skill",
+  "components": [],
+  "products": [
+    "Workday SOAP API",
+    "Workday REST API",
+    "Workday Payroll"
+  ],
+  "authors": [
+    "Daksh-Aneja-Projects"
+  ],
+  "tutorial": "",
+  "source": "community"
+}

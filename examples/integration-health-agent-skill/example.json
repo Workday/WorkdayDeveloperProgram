@@ -1,0 +1,15 @@
+{
+  "title": "Integration Health Agent Skill",
+  "description": "A markdown skill for an agent that reports how Workday integrations are doing from real event counts and prepares launches and cancellations.",
+  "type": "Agent Skill",
+  "components": [],
+  "products": [
+    "Workday SOAP API",
+    "Workday REST API"
+  ],
+  "authors": [
+    "Daksh-Aneja-Projects"
+  ],
+  "tutorial": "",
+  "source": "community"
+}
