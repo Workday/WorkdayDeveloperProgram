@@ -1,0 +1,14 @@
+{
+  "title": "Custom Agent template (ADK TypeScript)",
+  "description": "A buildable Google ADK (TypeScript) Custom Agent for the Workday custom-agent Early Access program. It keeps sessions, calls Workday tools, and runs model inference through Workday Agent Harness.",
+  "type": "Reference",
+  "components": [
+    "3rd-Party Technology"
+  ],
+  "products": [],
+  "authors": [
+    "Collin-Park"
+  ],
+  "tutorial": "",
+  "source": "community"
+}
