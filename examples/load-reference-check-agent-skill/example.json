@@ -1,0 +1,15 @@
+{
+  "title": "Load Reference Check Agent Skill",
+  "description": "A markdown skill for an agent that checks rows someone plans to load against what exists in the Workday tenant: job profiles, locations, supervisory organizations and workers.",
+  "type": "Agent Skill",
+  "components": [],
+  "products": [
+    "Workday REST API",
+    "Workday HCM"
+  ],
+  "authors": [
+    "Daksh-Aneja-Projects"
+  ],
+  "tutorial": "",
+  "source": "community"
+}

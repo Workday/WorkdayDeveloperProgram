@@ -1,0 +1,15 @@
+{
+  "title": "Workforce Insights Agent Skill",
+  "description": "A markdown skill for an agent that answers workforce questions with computed analysis of pay spread, organization span and missing data, always saying who was analysed.",
+  "type": "Agent Skill",
+  "components": [],
+  "products": [
+    "Workday REST API",
+    "Workday HCM"
+  ],
+  "authors": [
+    "Daksh-Aneja-Projects"
+  ],
+  "tutorial": "",
+  "source": "community"
+}

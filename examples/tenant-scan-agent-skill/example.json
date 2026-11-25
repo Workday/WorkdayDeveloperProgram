@@ -1,0 +1,15 @@
+{
+  "title": "Tenant Scan Agent Skill",
+  "description": "A markdown skill for an agent that summarises what a Workday tenant offers from a single scan of its data sources, worker and organization counts and live capabilities.",
+  "type": "Agent Skill",
+  "components": [],
+  "products": [
+    "Workday REST API",
+    "Workday HCM"
+  ],
+  "authors": [
+    "Daksh-Aneja-Projects"
+  ],
+  "tutorial": "",
+  "source": "community"
+}
