@@ -117,6 +117,7 @@ Community examples, open to everyone. This is the section external contributions
 | Example | Description | Type |
 | --- | --- | --- |
 | [`business-process-undo-agent-skill`](examples/business-process-undo-agent-skill) | A markdown skill that teaches an agent to read a Workday business process event and prepare a rescind or cancel for approval. | Agent Skill |
+| [`expenses-google-adk-agent`](examples/expenses-google-adk-agent) | A buildable Google ADK (TypeScript) Custom Agent for the Workday custom-agent Early Access program. It keeps sessions, calls Workday tools, and runs model inference through Workday Agent Harness. | Reference |
 | [`expense-policy-agent-skill`](examples/expense-policy-agent-skill) | A markdown skill that teaches an agent to answer expense policy questions and escalate anything it cannot verify. | Agent Skill |
 | [`expense-report-agent-skill`](examples/expense-report-agent-skill) | A markdown skill for an agent that prepares and submits expense reports and cancels reports that are not yet approved in Workday. | Agent Skill |
 | [`employee-data-orchestration`](examples/employee-data-orchestration) | An orchestration that reads worker data from one tenant and creates matching records through the Workday REST API. | Orchestration |

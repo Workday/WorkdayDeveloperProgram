@@ -1,0 +1,4 @@
+runtime: nodejs22
+buildCommand: npm run build
+startCommand: node dist/index.js
+artifactDir: dist

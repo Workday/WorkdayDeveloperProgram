@@ -1,0 +1,195 @@
+{
+  "name": "Expenses Agent",
+  "description": "Helps users work with Workday Expenses: search and retrieve expense reports and expense report lines, review corporate credit card transactions, create and edit expense lines, and submit expense reports for approval. Includes lookup tools for expense items, groups, statuses, payees, companies, projects, spend categories, and travel locations.",
+  "url": "https://example.com/agent/expenses",
+  "provider": {
+    "id": "9030a823ae1a10002d624e2d637e0000"
+  },
+  "platform": {
+    "id": "b49b32cfdbef10002184b61535490000"
+  },
+  "version": "1.0.0",
+  "overview": "I can help with expenses: find and review expense reports and lines, check credit card transactions, create or edit expense lines, and submit expense reports for approval.",
+  "agentFramework": {
+    "id": "9eb00d6350e8100014344d4309840000"
+  },
+  "agentFrameworkVersion": "2.5.0",
+  "skills": [
+    {
+      "id": "expenses",
+      "name": "Expenses",
+      "description": "Search, view, create, edit, and submit expense reports and expense lines, and review corporate credit card transactions."
+    }
+  ],
+  "workdayConfig": [
+    {
+      "skillId": "expenses",
+      "executionMode": {
+        "id": "d785eba56e9c100035d336a043ff0000"
+      },
+      "workdayResources": [
+        {
+          "tool_name": "find_expense_lines",
+          "description": "Retrieves a single expense report line by WID.",
+          "agent_resource": {
+            "id": "8797ce815d30100021e9f9365c9a0000"
+          }
+        },
+        {
+          "tool_name": "find_expense_reports",
+          "description": "Searches expense reports across the organization for audit purposes, filtering by company, payee, creator, report number, status, payment status, date ranges, amount ranges, project, spend category, expense item, and currency. Returns report headers only, without expense lines",
+          "agent_resource": {
+            "id": "b4018c35a49310000b0f815fa5290000"
+          }
+        },
+        {
+          "tool_name": "get_credit_card_transactions",
+          "description": "Lists or retrieves corporate credit card bank-feed transactions, including last-four card digits, amounts, merchant, and expense status, filterable by card account, Expenses or Procurement usage, status, and date ranges",
+          "agent_resource": {
+            "id": "6ead86b7d6e21000471dbda2f5380000"
+          }
+        },
+        {
+          "tool_name": "get_expense_reports",
+          "description": "Retrieves a single expense report.",
+          "agent_resource": {
+            "id": "a96cd36887b610000c6cbbcfe7c80000"
+          }
+        },
+        {
+          "tool_name": "create_expense_lines",
+          "description": "Create manual expense report line",
+          "agent_resource": {
+            "id": "5dfbde16ae27100016135f2f47340000"
+          }
+        },
+        {
+          "tool_name": "submit_expense_report",
+          "description": "Submits a draft expense report for approval, initiating the expense report approval business process. The report must be in Draft status and owned by the requesting worker. Use get_expense_reports to retrieve the expense report reference before submitting. To combine selected lines into a new report and submit in one call, use submit_expenses instead.",
+          "agent_resource": {
+            "id": "6fe7738a2775100009aca237db7d0000"
+          }
+        },
+        {
+          "tool_name": "submit_expenses",
+          "description": "Combines selected expense report lines into a new expense report and submits it for approval in a single request. Mirrors the Submit Expenses task. Use when you have ready-to-submit lines and want to create and submit the report in one step. To submit an existing draft report, use submit_expense_report instead.",
+          "agent_resource": {
+            "id": "cfb52c2d191e1000080923abaa740000"
+          }
+        },
+        {
+          "tool_name": "update_expense_lines",
+          "description": "Edits an existing line item within an expense report.",
+          "agent_resource": {
+            "id": "7b35460cf76910001d2975b2a5c80000"
+          }
+        },
+        {
+          "tool_name": "find_country_regions",
+          "description": "Lists country regions. Read-only. Use it to resolve the country region ID when editing expense report line. The country region for the expense report line.",
+          "agent_resource": {
+            "id": "e5958bc106f01000133136c020970000"
+          }
+        },
+        {
+          "tool_name": "find_expense_groups",
+          "description": "Lists expense group. Read-only. Use it to resolve the expense group ID on expense report line requests.",
+          "agent_resource": {
+            "id": "2de27347374e1000254d1e875bf90000"
+          }
+        },
+        {
+          "tool_name": "find_expense_items",
+          "description": "Lists expense item Read-only. Use it to choose a valid expense item based on expense item group.",
+          "agent_resource": {
+            "id": "1f0fc252d8f51000290f6a63a8cc0000"
+          }
+        },
+        {
+          "tool_name": "find_expense_line_statuses",
+          "description": "Lists expense status. Read-only. Use it to choose a valid expense status value.",
+          "agent_resource": {
+            "id": "414806a0e0a1100012cc47c7d82f0000"
+          }
+        },
+        {
+          "tool_name": "find_expense_report_companies",
+          "description": "Company lookup for expense report filters.",
+          "agent_resource": {
+            "id": "b4018c35a493100015394ddab62d0000"
+          }
+        },
+        {
+          "tool_name": "find_expense_report_expense_items",
+          "description": "Expense item lookup for expense report filters.",
+          "agent_resource": {
+            "id": "628fae93b76f100034600ff76f840000"
+          }
+        },
+        {
+          "tool_name": "find_expense_report_payee_types",
+          "description": "Payee type lookup for expense report filters.",
+          "agent_resource": {
+            "id": "628fae93b76f1000345fbabd47fa0000"
+          }
+        },
+        {
+          "tool_name": "find_expense_report_payees",
+          "description": "Payee lookup for expense reports.",
+          "agent_resource": {
+            "id": "b4018c35a4931000153b498183040000"
+          }
+        },
+        {
+          "tool_name": "find_expense_report_payment_statuses",
+          "description": "Expense report payment status lookup.",
+          "agent_resource": {
+            "id": "b4018c35a4931000153af870d7710000"
+          }
+        },
+        {
+          "tool_name": "find_expense_report_projects",
+          "description": "Project lookup for line-level filters.",
+          "agent_resource": {
+            "id": "b4018c35a4931000153c4615a3560000"
+          }
+        },
+        {
+          "tool_name": "find_expense_report_spend_categories",
+          "description": "Spend category lookup for expense report line-level filters.",
+          "agent_resource": {
+            "id": "8ae31ef9740a10001eb0d7eb509a0000"
+          }
+        },
+        {
+          "tool_name": "find_expense_report_statuses",
+          "description": "Expense report status lookup.",
+          "agent_resource": {
+            "id": "b4018c35a4931000153a91389c5f0000"
+          }
+        },
+        {
+          "tool_name": "find_frequently_used_countries",
+          "description": "Lists travel country (frequently used). Read-only. Use it to resolve the travel country ID when editing expense report line. The travel country for the expense report line.",
+          "agent_resource": {
+            "id": "e5958bc106f01000133145c5c44b0000"
+          }
+        },
+        {
+          "tool_name": "find_ready_to_submit_expense_report_lines",
+          "description": "Ready-to-Submit expense report lines for the processing worker.",
+          "agent_resource": {
+            "id": "e0b92ce1db7110002270f4b8abaa0000"
+          }
+        },
+        {
+          "tool_name": "find_travel_cities",
+          "description": "Lists destination location (cities). Read-only. Use it to resolve the destination location ID when editing expense report line. The travel destination for the expense line.",
+          "agent_resource": {
+            "id": "e5958bc106f0100013254bc242200000"
+          }
+        }
+      ]
+    }
+  ]
+}
