@@ -1,0 +1,13 @@
+{
+  "Change_Job": [
+    "Change_Job_Data/Worker_Reference",
+    "Change_Job_Data/Change_Job_Detail_Data/Position_Reference"
+  ],
+  "Update_Workday_Account": [
+    "Workday_Account_for_Worker_Data/User_Name",
+    "Workday_Account_for_Worker_Data/Exempt_from_Delegated_Authentication"
+  ],
+  "Put_Funding_Source": [
+    "Funding_Source_Data/Funding_Source_Name"
+  ]
+}

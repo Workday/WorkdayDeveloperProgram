@@ -1,0 +1,16 @@
+{
+  "title": "SOAP Version Compare",
+  "description": "A Python script that compares the request schemas of two published Workday web-service versions and reports what was added, removed, retyped or made required, including for the element paths your own requests send.",
+  "type": "Reference",
+  "components": [
+    "3rd-Party Technology"
+  ],
+  "products": [
+    "Workday SOAP API"
+  ],
+  "authors": [
+    "Daksh-Aneja-Projects"
+  ],
+  "tutorial": "",
+  "source": "community"
+}
